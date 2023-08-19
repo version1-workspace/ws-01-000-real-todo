@@ -1,0 +1,57 @@
+.footer {
+  background: #f9f9f9;
+  width: 100%;
+}
+
+.content {
+  margin: auto;
+  max-width: 1920px;
+  padding: 64px 128px;
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+
+  background: #f9f9f9;
+}
+
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  margin-bottom: 32px;
+}
+
+.menu {
+  display: flex;
+  margin-right: 16px;
+}
+
+.menuItem {
+  margin-right: 16px;
+}
+
+.left {
+  margin-right: auto;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+}
+
+.menu {
+
+}
+
+.menuItem {
+  margin-right: 64px;
+}
+
+.menuTitle {
+  margin-bottom: 32px;
+}
+
+.linkItem {
+  margin-bottom: 16px;
+}

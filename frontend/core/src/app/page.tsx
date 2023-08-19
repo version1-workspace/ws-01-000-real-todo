@@ -1,95 +1,63 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+import styles from "./page.module.css";
+import Header from "@/components/common/header";
+import Footer from "@/components/common/footer";
+import Button from "@/components/common/button";
+import Section from "@/components/section";
+import img1 from "@/assets/hero-features-1.png";
+import img2 from "@/assets/hero-features-2.png";
+import img3 from "@/assets/hero-features-3.png";
 
 export default function Home() {
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
+      <Header />
+      <section className={styles.hero}>
+        <div className={styles.copyContainer}>
+          <h1 className={styles.copy}>Turbo でより鮮明なゴール設定</h1>
+          <p className={styles.copyDescription}>
+            理想の生活は何で満たす？大切な時間をときめくタスクでみたそう。
+            <br />
+            Turbo はそんなあなたの希望を満たすアプリです。
           </p>
-        </a>
-      </div>
+          <div className={styles.entryContainer}>
+            <Button className={styles.entry}>Turboを始める</Button>
+          </div>
+        </div>
+      </section>
+      <Section
+        title="明確なゴール設定"
+        description={[
+          "大事なことから人生を埋めていこう。",
+          "ゴールから逆算する UI で目標へのタスクを可視化。",
+          "明確なゴールと鮮明なルートを手に入れて、",
+          "理想の生活と日々のモチベーションを手に入れよう。",
+        ]}
+        image={img1}
+        imageAlt="ゴール設定"
+      />
+      <Section
+        title="明確なマイルストーンとモチベーション管理"
+        description={[
+          "明確なマイルストーンがモチベーション維持の鍵。",
+          "Turbo は自由なマイルストーン設定を助けます。",
+          "適切な目標のブレイクダウンで、",
+          "理想の生活と日々のモチベーションを手に入れよう。",
+        ]}
+        image={img2}
+        imageAlt="マイルストーン管理"
+      />
+      <Section
+        title="直感的で柔軟性に富んだUI"
+        description={[
+          "最初に組んだ計画が計画通り進むのは稀。",
+          "柔軟性に富んだUI で計画の練り直しをサポート。",
+          "ストレスの少ないUIで、",
+          "シームレスなタスク管理を手に入れよう。",
+        ]}
+        image={img3}
+        imageAlt="ゴール設定"
+      />
+      <Footer />
     </main>
-  )
+  );
 }
