@@ -40,9 +40,10 @@
   --card-border-rgb: 131, 134, 135;
 
   --primary-color: #7A72FF;
-  --font-color-white: white;
+  --font-color-light: white;
   --font-color-dark: #2e2e2e;
   --font-color-weak: #B6B6B6;
+  --bg-color-light: #fefefe;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -101,6 +102,10 @@ a {
 
 ul {
   list-style-type: none;
+}
+
+input:focus {
+  outline: none;
 }
 
 @media (prefers-color-scheme: dark) {

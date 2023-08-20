@@ -1,5 +1,5 @@
 import styles from "./page.module.css";
-import Header from "@/components/common/header";
+import Header from "@/components/common/header/public";
 import Footer from "@/components/common/footer";
 import Button from "@/components/common/button";
 import Section from "@/components/section";
