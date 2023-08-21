@@ -44,6 +44,7 @@
   --font-color-dark: #2e2e2e;
   --font-color-weak: #B6B6B6;
   --bg-color-light: #fefefe;
+  --bg-color-light-2: #f9f9f9;
 }
 
 @media (prefers-color-scheme: dark) {

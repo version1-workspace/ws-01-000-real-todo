@@ -1,5 +1,4 @@
 import styles from "./index.module.css";
-import Button from "@/components/common/button";
 import {
   IoAddOutline as Plus,
   IoInformationCircleSharp as Info,
