@@ -1,3 +1,13 @@
+import styles from "@/app/main/projects/page.module.css";
+
 export default function Projects() {
-  return <h1>Projects</h1>
+  return (
+    <div className={styles.projects}>
+      <div className={styles.dashboard}>
+        <div className={styles.list}>
+          <h2>プロジェクト</h2>
+        </div>
+      </div>
+    </div>
+  );
 }

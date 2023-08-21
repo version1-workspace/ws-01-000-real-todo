@@ -1,0 +1,25 @@
+.projects {
+  width: 100%;
+}
+
+.content {
+  padding: 16px;
+}
+
+.list {
+}
+
+.stats {
+  width: 50%;
+}
+
+.dashboard {
+  padding: 32px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 100;
+}
