@@ -4,12 +4,13 @@
 
 .content {
   padding: 16px;
+  height: 100%;
 }
 
 .list {
 }
 
-.stats {
+.chart {
   width: 50%;
 }
 

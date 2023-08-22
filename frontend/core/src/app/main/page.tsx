@@ -3,16 +3,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "@/app/main/page.module.css";
-import { fetchProjects } from "@/services/api";
-import { Project } from "@/services/api/model";
+import api from "@/services/api";
+import { Project } from "@/services/api/models/project";
 import Card from "@/components/project/card";
+import Chart from "@/components/project/chart";
 
 export default function Main() {
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
     const init = async () => {
-      const res = await fetchProjects();
+      const res = await api.fetchProjects();
       setProjects(res.data);
     };
 
@@ -34,9 +35,11 @@ export default function Main() {
             })}
           </div>
         </div>
-        <div className={styles.stats}>
+        <div className={styles.chart}>
           <h2 className={styles.sectionTitle}>進捗</h2>
-          <div className={styles.content}></div>
+          <div className={styles.content}>
+            <Chart />
+          </div>
         </div>
       </div>
       <div className={styles.todos}>

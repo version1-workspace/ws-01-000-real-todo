@@ -5,3 +5,7 @@ export const classHelper = (obj: {[key: string]: boolean}) => Object.keys(obj).r
 
   return acc
 }, "")
+
+export const join = (...args: string[]) => {
+  return args.join(' ')
+}
