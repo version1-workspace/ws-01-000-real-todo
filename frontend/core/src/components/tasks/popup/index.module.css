@@ -1,0 +1,124 @@
+.container {
+  position: relative;
+}
+
+.content {
+  font-size: 10px;
+  position: absolute;
+  top: 4px;
+  right: 0;
+  border: 1px solid var(--border-color);
+  padding: 16px 24px;
+  padding-top: 8px;
+  background: #fefefe;
+  min-width: 320px;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  margin: 16px 0;
+}
+
+.label .icon {
+  margin-right: 4px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.option {
+  padding: 4px 0;
+  padding-left: 16px;
+}
+
+.item input {
+  margin-right: 8px;
+}
+
+.date {
+  margin-bottom: 8px;
+}
+
+.date input {
+  margin: 4px 0;
+  width: 100%;
+  padding: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.searchForm {
+  width: 100%;
+  padding: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.order {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  padding: 4px;
+}
+
+.direction {
+  padding: 16px;
+}
+
+.direction input {
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.footer {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.button {
+  cursor: pointer;
+  padding: 4px 16px;
+  margin-right: 4px;
+  background: var(--primary-color);
+  border: 0;
+  color: var(--font-color-light);
+}
+
+.cancel {
+  cursor: pointer;
+  padding: 4px 16px;
+  background: var(--font-color-light);
+  border: 1px solid var(--border-color);
+}
+
+.statusesContainer {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.statusesLabel {
+  margin-right: 8px;
+}
+
+.statuses {
+  display: flex;
+  padding: 8px 0;
+}
+
+.status {
+  margin-right: 8px;
+}
+
+.statusLabel {
+  display: flex;
+  align-items: center;
+}
+
+.status input {
+  display: inline-block;
+  margin-right: 4px;
+}

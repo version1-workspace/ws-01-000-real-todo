@@ -1,0 +1,93 @@
+.container {
+  display: flex;
+  max-width: 1200px;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom:  1px solid var(--border-color);
+}
+
+.header {
+  padding: 16px 0;
+}
+
+.title {
+
+}
+
+.date {
+  color: var(--font-color-weak);
+  font-size: 12px;
+  margin-right: 16px;
+}
+
+.date span {
+  font-size: 8px;
+}
+
+.meta {
+  display: flex;
+}
+
+.checkbox {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+}
+
+.completed {
+  background: var(--primary-color);
+  color: var(--font-color-light);
+}
+
+.left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.middle {
+ flex: 8;
+}
+
+.middle .body {
+  display: flex;
+}
+
+.right {
+ flex: 2;
+}
+
+.right .header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.deadline {
+  letter-spacing: 0.8px;
+}
+
+.deadline svg {
+  margin-right: 8px;
+}
+
+.project {
+  font-size: 12px;
+  text-align: right;
+  color: var(--font-color-weak);
+}
+
+.menu {
+  cursor: pointer;
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}

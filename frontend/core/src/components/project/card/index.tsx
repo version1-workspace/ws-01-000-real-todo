@@ -1,5 +1,5 @@
 import styles from "@/components/project/card/index.module.css";
-import { Project } from "@/services/api/model";
+import { Project } from "@/services/api/models/project";
 import {
   IoCalendarOutline as Calendar,
   IoGitCommit as Milestone,

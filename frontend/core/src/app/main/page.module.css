@@ -1,5 +1,6 @@
 .projects {
   width: 100%;
+  height: 100%;
 }
 
 .content {
@@ -12,15 +13,26 @@
 
 .chart {
   width: 50%;
+  background: #fefefe;
 }
 
 .dashboard {
   padding: 32px;
   display: flex;
   justify-content: space-between;
+  background: #fefefe;
 }
 
 .sectionTitle {
   font-size: 14px;
   font-weight: 100;
+}
+
+.todos {
+  padding: 32px;
+  background: #fefefe;
+}
+
+.todos .content {
+  max-width: 1200px;
 }

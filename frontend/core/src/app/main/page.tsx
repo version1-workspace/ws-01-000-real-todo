@@ -7,6 +7,7 @@ import api from "@/services/api";
 import { Project } from "@/services/api/models/project";
 import Card from "@/components/project/card";
 import Chart from "@/components/project/chart";
+import TaskList from "@/components/tasks/list";
 
 export default function Main() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -44,7 +45,9 @@ export default function Main() {
       </div>
       <div className={styles.todos}>
         <h2 className={styles.sectionTitle}>タスク</h2>
-        <div className={styles.content}></div>
+        <div className={styles.content}>
+          <TaskList />
+        </div>
       </div>
     </div>
   );

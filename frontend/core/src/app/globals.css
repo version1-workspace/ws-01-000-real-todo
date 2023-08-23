@@ -40,8 +40,10 @@
   --card-border-rgb: 131, 134, 135;
 
   --primary-color: #7A72FF;
-  --secondary-color: #9ED8DB;
+  --secondary-color: #1C3041;
+  --info-color: #9ED8DB;
   --danger-color: #d64045;
+
   --border-color: #b6b6b6;
   --font-color-light: white;
   --font-color-dark: #2e2e2e;

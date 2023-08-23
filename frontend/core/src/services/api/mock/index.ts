@@ -1,5 +1,7 @@
 import { builder } from "@/services/api/models";
 import dayjs from "dayjs";
+import { Pagination } from "@/services/api/models/pagination";
+import { Task } from "@/services/api/models/task";
 
 const mockApi = <T>({ data }: { data: T }) => {
   return {
@@ -130,9 +132,56 @@ const fetchStats = () => {
   );
 };
 
+interface FetchTasksParams {
+  page?: number;
+}
+
+export const fetchTasks = ({ page }: FetchTasksParams) => {
+  const total = 100;
+  const _page = page || 1;
+  const per = 10;
+  const _data = new Array(total)
+    .fill("")
+    .map((_, index) =>
+      builder.task({
+        id: index + 1,
+        title: `タスク ${index + 1}`,
+        status: "scheduled",
+        createdAt: "2023-08-23T00:00:00-07:00",
+        updatedAt: "2023-08-23T00:00:00-07:00",
+        deadline: "2023-08-30T00:00:00-07:00",
+        children: [],
+        project: {
+          name: "プログラミング",
+          deadline: "",
+          slug: "programming",
+          goal: "",
+          shouldbe: "",
+          stats: {
+            milestone: 0,
+            task: 0,
+            totalTask: 0,
+          },
+        },
+      }),
+    )
+    .slice((_page - 1) * per, _page * per);
+  const pagination = new Pagination<Task>({
+    list: _data,
+    pageInfo: {
+      page: _page,
+      per: per,
+      total,
+    },
+  });
+
+  return Promise.resolve(mockApi({ data: pagination }));
+};
+
 const api = {
   fetchProjects,
   fetchStats,
+  fetchTasks,
 };
 
 export default api;
