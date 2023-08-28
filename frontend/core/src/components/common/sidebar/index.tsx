@@ -56,31 +56,37 @@ export default function Sidebar() {
           {show ? (
             <>
               <ul className={styles.menu}>
-                <li
-                  className={classHelper({
-                    [styles.menuItem]: true,
-                    [styles.menuItemActive]: pathname === "/main",
-                  })}>
-                  <Link className={styles.menuTitle} href="/main">
-                    ダッシュボード
+                <li>
+                  <Link href="/main">
+                    <div
+                      className={classHelper({
+                        [styles.menuItem]: true,
+                        [styles.menuItemActive]: pathname === "/main",
+                      })}>
+                      <p className={styles.menuTitle}>ダッシュボード</p>
+                    </div>
                   </Link>
                 </li>
-                <li
-                  className={classHelper({
-                    [styles.menuItem]: true,
-                    [styles.menuItemActive]: pathname === "/main/todos",
-                  })}>
-                  <Link className={styles.menuTitle} href="/main/todos">
-                    タスク
+                <li>
+                  <Link href="/main/todos">
+                    <div
+                      className={classHelper({
+                        [styles.menuItem]: true,
+                        [styles.menuItemActive]: pathname === "/todos",
+                      })}>
+                      <p className={styles.menuTitle}>タスク</p>
+                    </div>
                   </Link>
                 </li>
-                <li
-                  className={classHelper({
-                    [styles.menuItem]: true,
-                    [styles.menuItemActive]: pathname === "/main/projects",
-                  })}>
-                  <Link className={styles.menuTitle} href="/main/projects">
-                    プロジェクト
+                <li>
+                  <Link href="/main/projects">
+                    <div
+                      className={classHelper({
+                        [styles.menuItem]: true,
+                        [styles.menuItemActive]: pathname === "/main/projects",
+                      })}>
+                      <p className={styles.menuTitle}>プロジェクト</p>
+                    </div>
                   </Link>
                 </li>
                 <ul className={styles.projects}>
@@ -92,17 +98,19 @@ export default function Sidebar() {
                           [styles.menuItem]: true,
                           [styles.menuItemActive]: pathname === item.href,
                         })}>
-                        <div className={styles.project}>
-                          <div>
-                            <span
-                              className={styles.dot}
-                              style={{ background: item.color }}></span>
-                            <Link href={item.href}>{item.name}</Link>
+                        <Link href={item.href}>
+                          <div className={styles.project}>
+                            <div>
+                              <span
+                                className={styles.dot}
+                                style={{ background: item.color }}></span>
+                              {item.name}
+                            </div>
+                            <span className={styles.deadline}>
+                              {item.deadline}
+                            </span>
                           </div>
-                          <span className={styles.deadline}>
-                            {item.deadline}
-                          </span>
-                        </div>
+                        </Link>
                       </li>
                     );
                   })}

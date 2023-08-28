@@ -26,10 +26,13 @@
 }
 
 .menuItem {
-  padding: 8px;
-  padding-right: 16px;
+  display:  block;
+  padding: 16px;
   padding-left: 32px;
-  margin-bottom: 16px;
+}
+
+.menuItem:hover {
+  background: #f0f0f0;
 }
 
 .menuItem > a {
