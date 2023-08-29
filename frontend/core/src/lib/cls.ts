@@ -1,11 +1,12 @@
-export const classHelper = (obj: {[key: string]: boolean}) => Object.keys(obj).reduce((acc, key) => {
-  if (obj[key]) {
-    return acc + ' ' + key
-  }
+export const classHelper = (obj: { [key: string]: boolean | undefined }) =>
+  Object.keys(obj).reduce((acc, key) => {
+    if (obj[key]) {
+      return acc + " " + key;
+    }
 
-  return acc
-}, "")
+    return acc;
+  }, "");
 
 export const join = (...args: string[]) => {
-  return args.join(' ')
-}
+  return args.join(" ");
+};

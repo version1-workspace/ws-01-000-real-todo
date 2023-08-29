@@ -10,7 +10,7 @@
   border: 1px solid var(--border-color);
   padding: 16px 24px;
   padding-top: 8px;
-  background: #fefefe;
+  background: var(--popup-bg-color);
   min-width: 320px;
 }
 

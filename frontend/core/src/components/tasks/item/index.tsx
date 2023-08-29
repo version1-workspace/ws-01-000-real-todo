@@ -3,23 +3,65 @@ import { Task } from "@/services/api/models/task";
 import {
   IoCalendarOutline as Calendar,
   IoCheckmark as Check,
-  IoEllipsisVerticalOutline as Menu
+  IoEllipsisVerticalOutline as Menu,
+  IoPencil as Edit,
+  IoCheckmark as Done,
+  IoArchiveOutline as Archive,
 } from "react-icons/io5";
 import { join } from "@/lib/cls";
+import PopupMenu from "@/components/tasks/popupMenu";
 
 interface Props {
   data: Task;
   containerStyle?: { [key: string]: any };
   onComplete: (task: Task) => void;
   onReopen: (task: Task) => void;
+  onArchive: (task: Task) => void;
+  onEdit: (task: Task) => void;
 }
+
+interface Actions {
+  onEdit: () => void;
+  onArchive: () => void;
+  onComplete: () => void;
+}
+
+const getActions = ({ onEdit, onComplete, onArchive }: Actions) => [
+  {
+    key: "edit",
+    logo: <Edit className={styles.logo} />,
+    text: "編集する",
+    onClick: onEdit,
+  },
+  {
+    key: "complete",
+    logo: <Done className={styles.logo} />,
+    text: "完了する",
+    onClick: onComplete,
+  },
+  {
+    key: "archive",
+    logo: <Archive className={styles.logo} />,
+    text: "アーカイブ",
+    danger: true,
+    onClick: onArchive,
+  },
+];
 
 export default function TaskItem({
   containerStyle,
   data,
   onReopen,
   onComplete,
+  onEdit,
+  onArchive,
 }: Props) {
+  const actions = getActions({
+    onEdit: () => onEdit(data),
+    onComplete: () => onComplete(data),
+    onArchive: () => onArchive(data),
+  });
+
   return (
     <div className={styles.container} style={containerStyle}>
       <div className={styles.left}>
@@ -71,7 +113,7 @@ export default function TaskItem({
         </div>
       </div>
       <div className={styles.menu}>
-        <Menu />
+        <PopupMenu trigger={<Menu />} actions={actions} />
       </div>
     </div>
   );

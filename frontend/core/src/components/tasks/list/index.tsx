@@ -121,6 +121,7 @@ export default function TaskList() {
                     : {}
                 }
                 onComplete={(task: Task) => {
+                  debugger
                   const newData = data.set(index, task.complete());
                   setData(newData);
                 }}

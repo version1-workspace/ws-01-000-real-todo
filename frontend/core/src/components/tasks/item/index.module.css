@@ -91,3 +91,25 @@
   align-items: center;
   justify-content: flex-end;
 }
+
+.popupMenuContainer {
+  position: relative;
+}
+
+.popupMenu {
+  right: 0;
+  z-index: 1;
+  min-width: 200px;
+  background: var(--popup-bg-color);
+  border: 1px solid var(--border-color);
+  position: absolute;
+  padding: 16px;
+}
+
+.danger {
+  color: var(--codanger);
+}
+
+.close {
+  margin-top: 16px;
+}

@@ -1,0 +1,62 @@
+.container {
+  position: relative;
+}
+
+.popupMenu {
+  right: 0px;
+  z-index: 1;
+  min-width: 120px;
+  background: var(--popup-bg-color);
+  border: 1px solid var(--border-color);
+  position: absolute;
+}
+
+.header {
+  font-size: 12px;
+  padding: 8px 16px;
+}
+
+.border {
+  margin: 8px 0;
+  background: var(--border-color);
+  width: 40%;
+  height: 1px;
+}
+
+.action {
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 8px;
+  /* border-bottom: 1px solid var(--border-color); */
+  padding: 4px;
+  padding-left: 16px;
+}
+
+.lastAction {
+  margin: 0;
+}
+
+.action:hover {
+}
+
+.logo {
+  margin-right: 8px;
+}
+
+.danger {
+  color: var(--danger-color);
+}
+
+.close {
+  padding: 8px 16px;
+}
+
+.close .text {
+  font-size: 12px;
+  width: 100%;
+}
+
+.text {
+  display: inline-block;
+}
+
