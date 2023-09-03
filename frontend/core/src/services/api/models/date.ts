@@ -36,4 +36,14 @@ export default class DateDecorator {
   day() {
     return this.date.day()
   }
+
+  greaterThanEqual(d: DateDecorator) {
+    return this.date.isAfter(d.date) || this.date.isSame(d.date, 'day')
+  }
+
+  lessThanEqual(d: DateDecorator) {
+    return this.date.isBefore(d.date) || this.date.isSame(d.date, 'day')
+  }
 }
+
+export const now = () => new DateDecorator(dayjs().format('YYYY-MM-DD'))

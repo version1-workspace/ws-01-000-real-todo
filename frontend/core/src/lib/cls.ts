@@ -7,6 +7,6 @@ export const classHelper = (obj: { [key: string]: boolean | undefined }) =>
     return acc;
   }, "");
 
-export const join = (...args: string[]) => {
+export const join = (...args: (string | undefined)[]) => {
   return args.join(" ");
 };

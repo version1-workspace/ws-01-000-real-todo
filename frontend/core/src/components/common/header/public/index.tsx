@@ -13,7 +13,7 @@ export default function Header() {
           <li className={styles.menuItem}>ドキュメント</li>
           <li className={styles.menuItem}>サインイン</li>
         </ul>
-        <Button>無料で始める</Button>
+        <Button variant="primary">無料で始める</Button>
       </div>
     </header>
   );

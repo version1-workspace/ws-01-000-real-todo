@@ -27,6 +27,10 @@
   margin-right: 16px;
 }
 
+.menuItem svg {
+  cursor: pointer;
+}
+
 .avatarIcon {
 
 }

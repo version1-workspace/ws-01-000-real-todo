@@ -1,0 +1,88 @@
+.container {
+  flex: 1; display:  flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px 0;
+  width: 100%;
+}
+
+.title {
+  width: 100%;
+  flex: 3;
+}
+
+.circle {
+  position: absolute;
+  left: -52px;
+  height: 32px;
+  width: 32px;
+  border-radius: 16px;
+  background: #fefefe;
+  border: 3px solid #f0f0f0;
+}
+
+.milestone {
+  flex: 3;
+  padding: 16px;
+  box-shadow: 0px 0px 4px 1px #b6b6b650;
+  border-radius: 8px;
+}
+
+.milestone:hover .action {
+  opacity: 1;
+}
+
+.date {
+  flex: 1;
+  letter-spacing: 0.8px;
+}
+
+.body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  opacity: 0;
+}
+
+.action svg {
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.show {
+  opacity: 1;
+}
+
+.input {
+  width: 100%;
+  padding: 8px;
+  padding-top: 32px;
+  border: 0;
+  border-bottom: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.dateInput {
+  max-width: 160px;
+}
+
+.editContainer {
+  cursor: pointer;
+  width: 100%;
+}
+
+.error {
+  font-size: 10px;
+  padding: 4px;
+  padding-bottom: 0;
+  color: var(--danger-color);
+  min-height: 32px;
+}
+

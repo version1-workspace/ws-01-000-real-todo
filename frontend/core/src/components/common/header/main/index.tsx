@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "./index.module.css";
 import {
   IoAddOutline as Plus,
@@ -25,7 +26,9 @@ export default function Header() {
         <div className={styles.right}>
           <ul className={styles.menu}>
             <li className={styles.menuItem}>
-              <Plus size="24px" />
+              <Link href="/main/projects/new">
+                <Plus size="24px" />
+              </Link>
             </li>
             <li className={styles.menuItem}>
               <Info size="24px" />

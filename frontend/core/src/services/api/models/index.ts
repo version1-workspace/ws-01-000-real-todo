@@ -8,7 +8,7 @@ import { Task, TaskParams, TaskModel } from "@/services/api/models/task";
 
 import DateDecorater from "@/services/api/models/date";
 
-interface params<T> {
+interface Params<T> {
   _raw: T;
 }
 
@@ -17,9 +17,9 @@ interface HandlerParams {
 }
 
 const handler = <T>({ dateFields }: HandlerParams | undefined = {}) => ({
-  get: function (target: params<T>, name: string) {
+  get: function (target: Params<T>, name: string) {
     if (name in target) {
-      return target[name as keyof params<T>];
+      return target[name as keyof Params<T>];
     }
 
     if (dateFields?.includes(name)) {
@@ -33,7 +33,12 @@ const handler = <T>({ dateFields }: HandlerParams | undefined = {}) => ({
 
 export const builder = {
   project: (params: ProjectParams) =>
-    new Proxy(new ProjectModel(params), handler<ProjectParams>()) as Project,
+    new Proxy(
+      new ProjectModel(params),
+      handler<ProjectParams>({
+        dateFields: ["createdAt", "updatedAt", "deadline"],
+      }),
+    ) as Project,
   stats: (params: StatsParams) =>
     new Proxy(new StatsModel(params), handler<StatsParams>()) as Stats,
   task: (params: TaskParams) =>

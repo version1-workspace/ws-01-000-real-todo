@@ -20,6 +20,7 @@ import { classHelper } from "@/lib/cls";
 export default function TaskList() {
   const [show, setShow] = useState(false);
   const [data, setData] = useState<Pagination<Task>>();
+  const [displayCount, setDisplayCount] = useState<number>(10);
   const {
     date,
     order,
@@ -58,53 +59,77 @@ export default function TaskList() {
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.control}>
-          <div className={styles.filterStates}>
-            <span className={styles.filterState}>
-              <label>フィルタ: </label>
-              {text || "なし"}
-              <div className={styles.close} onClick={() => resetState("text")}>
-                <Close size="12px" />
-              </div>
-            </span>
-            {isDateSet ? (
+          <div className={styles.number}>
+            <div className={styles.pageIndex}>
+              <span>
+                {data.page} / {data.pageCount}
+              </span>
+            </div>
+            <div className={styles.displayPageCount}>
+              <label>表示件数 : </label>
+              <select onChange={(e) => setDisplayCount(Number(e.target.value))}>
+                <option value="10">10 件</option>
+                <option value="50">50 件</option>
+                <option value="100">100 件</option>
+              </select>
+            </div>
+            <div className={styles.pageCount}>
+              <span className={styles.total}>{data.total} 件</span>
+            </div>
+          </div>
+          <div className={styles.layout}>
+            <div className={styles.filterStates}>
               <span className={styles.filterState}>
-                <label>{date.typeLabel} : </label>
-                {date.start} ~ {date.end}
+                <label>フィルタ: </label>
+                {text || "なし"}
                 <div
                   className={styles.close}
-                  onClick={() => resetState("date")}>
+                  onClick={() => resetState("text")}>
                   <Close size="12px" />
                 </div>
               </span>
-            ) : null}
-            <span className={styles.filterState}>
-              <label>並び替え: </label>
-              {order.label}
-              {order.type === "asc" ? <Up /> : <Down />}
-              <div className={styles.close} onClick={() => resetState("order")}>
-                <Close size="12px" />
-              </div>
-            </span>
-          </div>
-          <p className={styles.controller}>
-            <Layout onClick={showPopup} />
-            <div>
-              <p onClick={showPopup}>表示</p>
-              <Popup
-                show={show}
-                value={replica}
-                onSubmit={() => {
-                  save();
-                  setShow(false);
-                }}
-                onChange={update}
-                onCancel={() => {
-                  reset();
-                  setShow(false);
-                }}
-              />
+              {isDateSet ? (
+                <span className={styles.filterState}>
+                  <label>{date.typeLabel} : </label>
+                  {date.start} ~ {date.end}
+                  <div
+                    className={styles.close}
+                    onClick={() => resetState("date")}>
+                    <Close size="12px" />
+                  </div>
+                </span>
+              ) : null}
+              <span className={styles.filterState}>
+                <label>並び替え: </label>
+                {order.label}
+                {order.type === "asc" ? <Up /> : <Down />}
+                <div
+                  className={styles.close}
+                  onClick={() => resetState("order")}>
+                  <Close size="12px" />
+                </div>
+              </span>
             </div>
-          </p>
+            <p className={styles.controller}>
+              <Layout onClick={showPopup} />
+              <div>
+                <p onClick={showPopup}>表示</p>
+                <Popup
+                  show={show}
+                  value={replica}
+                  onSubmit={() => {
+                    save();
+                    setShow(false);
+                  }}
+                  onChange={update}
+                  onCancel={() => {
+                    reset();
+                    setShow(false);
+                  }}
+                />
+              </div>
+            </p>
+          </div>
         </div>
       </div>
       <ul>
@@ -121,7 +146,6 @@ export default function TaskList() {
                     : {}
                 }
                 onComplete={(task: Task) => {
-                  debugger
                   const newData = data.set(index, task.complete());
                   setData(newData);
                 }}
@@ -129,6 +153,8 @@ export default function TaskList() {
                   const newData = data.set(index, task.reopen());
                   setData(newData);
                 }}
+                onEdit={() => {}}
+                onArchive={() => {}}
               />
             </li>
           );

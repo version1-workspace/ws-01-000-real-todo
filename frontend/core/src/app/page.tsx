@@ -20,7 +20,9 @@ export default function Home() {
             Turbo はそんなあなたの希望を満たすアプリです。
           </p>
           <div className={styles.entryContainer}>
-            <Button className={styles.entry}>Turboを始める</Button>
+            <Button variant="primary" className={styles.entry}>
+              Turboを始める
+            </Button>
           </div>
         </div>
       </section>

@@ -1,0 +1,27 @@
+.container {
+  padding: 64px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: normal;
+  text-align: center;
+}
+
+.body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.body p {
+  letter-spacing: 0.8px;
+  margin: 8px;
+  font-size: 16px;
+}
+
+.icon {
+  padding: 64px;
+}
+

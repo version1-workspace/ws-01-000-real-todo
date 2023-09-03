@@ -7,11 +7,35 @@
   margin: 16px;
 }
 
+.layout {
+  display: flex;
+  align-items: center;
+}
+
 .control {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin: 8px 0;
+}
+
+.number {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.pageIndex {
+  margin-right: 16px;
+}
+
+.displayPageCount {
+  margin-right: 16px;
+}
+
+.total {
+  display: inline-block;
+  margin-right: 16px;
 }
 
 .controller {

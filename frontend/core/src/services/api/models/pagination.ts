@@ -22,6 +22,10 @@ export class Pagination<T> {
     return this.pageInfo.page;
   }
 
+  get total() {
+    return this.pageInfo.total;
+  }
+
   get hasNext() {
     const { per, page } = this.pageInfo;
     return this.pageInfo.total > per * page;
