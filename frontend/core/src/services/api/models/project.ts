@@ -2,7 +2,7 @@ import { Task, TaskParams } from "@/services/api/models/task";
 import { now } from "@/services/api/models/date";
 import { v4 as uuid } from "uuid";
 import DateDecorator from "./date";
-import { builder } from ".";
+import { factory } from ".";
 
 const Status = {
   initial: "initial",
@@ -47,7 +47,7 @@ export class ProjectModel {
     this.id = uuid();
     this._raw = params;
     if (params?.milestones) {
-      this._milestones = params.milestones.map((it) => builder.task(it));
+      this._milestones = params.milestones.map((it) => factory.task(it));
     } else {
       this._milestones = [];
     }
@@ -83,7 +83,7 @@ export class ProjectModel {
 
     params[key] = value;
 
-    return builder.project(params);
+    return factory.project(params);
   }
 
   withName(value: string) {
@@ -110,7 +110,7 @@ export class ProjectModel {
 
     params.deadline = value;
 
-    return builder.project(params);
+    return factory.project(params);
   }
 
   setMilestone(index: number, milestone: Task): Project | undefined {
@@ -121,7 +121,7 @@ export class ProjectModel {
 
     params.milestones[index] = milestone.params()!;
 
-    const project = builder.project(params);
+    const project = factory.project(params);
     return project.sortMilestones();
   }
 
@@ -130,7 +130,7 @@ export class ProjectModel {
       (it) => it.params()!,
     );
 
-    const project = builder.project({
+    const project = factory.project({
       ...this._raw!,
       milestones,
     });
@@ -142,7 +142,7 @@ export class ProjectModel {
     const milestones = [...this._milestones];
     milestones.splice(index, 1);
 
-    const project = builder.project({
+    const project = factory.project({
       ...this._raw!,
       milestones,
     });
@@ -155,7 +155,7 @@ export class ProjectModel {
       return a.deadline.greaterThanEqual(b.deadline) ? -1 : 1;
     });
 
-    const project = builder.project({
+    const project = factory.project({
       ...this._raw!,
       milestones: milestones.map((it) => it.params()!),
     });

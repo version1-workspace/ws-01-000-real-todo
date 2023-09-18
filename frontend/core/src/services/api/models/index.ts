@@ -31,7 +31,7 @@ const handler = <T>({ dateFields }: HandlerParams | undefined = {}) => ({
   },
 });
 
-export const builder = {
+export const factory = {
   project: (params: ProjectParams) =>
     new Proxy(
       new ProjectModel(params),

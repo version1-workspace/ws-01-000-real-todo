@@ -8,7 +8,7 @@ import Goal from "@/components/project/goal";
 import Item from "@/components/project/forms/milestone/item";
 import { join } from "@/lib/cls";
 import { IoAddOutline as Add } from "react-icons/io5";
-import { builder } from "@/services/api/models";
+import { factory } from "@/services/api/models";
 
 interface Props {
   readOnly?: boolean;
@@ -68,12 +68,12 @@ export default function Milestone({ className, readOnly }: Props) {
                   <div
                     className={styles.addButton}
                     onClick={() => {
-                      const milestone = builder.task({
+                      const milestone = factory.task({
                         title: "",
                         status: "initial",
 
-                        createdAt: dayjs().format("YYYY-MM-DD"),
-                        updatedAt: dayjs().format("YYYY-MM-DD"),
+                        createdAt: dayjs().format(),
+                        updatedAt: dayjs().format(),
                         deadline: dayjs().format("YYYY-MM-DD"),
                         project: project.params()!,
                         children: [],

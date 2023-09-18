@@ -1,4 +1,4 @@
-import { builder } from "@/services/api/models";
+import { factory } from "@/services/api/models";
 import dayjs from "dayjs";
 import { Pagination } from "@/services/api/models/pagination";
 import { Task } from "@/services/api/models/task";
@@ -14,7 +14,7 @@ const fetchProjects = () => {
   return Promise.resolve(
     mockApi({
       data: [
-        builder.project({
+        factory.project({
           name: "プログラミング",
           deadline: "2023/08/12",
           slug: "programming",
@@ -25,8 +25,12 @@ const fetchProjects = () => {
             task: 30,
             totalTask: 132,
           },
+          milestones: [],
+          status: "active",
+          createdAt: dayjs().format(),
+          updatedAt: dayjs().format(),
         }),
-        builder.project({
+        factory.project({
           name: "プログラミング",
           deadline: "2023/08/12",
           slug: "programming",
@@ -37,8 +41,12 @@ const fetchProjects = () => {
             task: 30,
             totalTask: 132,
           },
+          milestones: [],
+          status: "active",
+          createdAt: dayjs().format(),
+          updatedAt: dayjs().format(),
         }),
-        builder.project({
+        factory.project({
           name: "プログラミング",
           deadline: "2023/08/12",
           slug: "programming",
@@ -49,6 +57,10 @@ const fetchProjects = () => {
             task: 30,
             totalTask: 132,
           },
+          milestones: [],
+          status: "active",
+          createdAt: dayjs().format(),
+          updatedAt: dayjs().format(),
         }),
       ],
     }),
@@ -59,7 +71,7 @@ const fetchStats = () => {
   return Promise.resolve(
     mockApi({
       data: [
-        builder.stats({
+        factory.stats({
           label: "完了タスク",
           type: "completed",
           data: [
@@ -93,7 +105,7 @@ const fetchStats = () => {
             },
           ],
         }),
-        builder.stats({
+        factory.stats({
           label: "予定タスク",
           type: "todo",
           data: [
@@ -143,8 +155,7 @@ export const fetchTasks = ({ page }: FetchTasksParams) => {
   const _data = new Array(total)
     .fill("")
     .map((_, index) =>
-      builder.task({
-        id: index + 1,
+      factory.task({
         title: `タスク ${index + 1}`,
         status: "scheduled",
         createdAt: "2023-08-23T00:00:00-07:00",
@@ -162,6 +173,10 @@ export const fetchTasks = ({ page }: FetchTasksParams) => {
             task: 0,
             totalTask: 0,
           },
+          milestones: [],
+          status: "active",
+          createdAt: dayjs().format(),
+          updatedAt: dayjs().format(),
         },
       }),
     )

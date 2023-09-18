@@ -4,7 +4,7 @@ import { useState } from "react";
 import styles from "@/app/main/projects/new/page.module.css";
 import Button from "@/components/common/button";
 import { Project } from "@/services/api/models/project";
-import { builder } from "@/services/api/models";
+import { factory } from "@/services/api/models";
 import GoalForm from "@/components/project/forms/goal";
 import MilestoneForm from "@/components/project/forms/milestone";
 import ConfirmForm from "@/components/project/forms/confirm";
@@ -103,7 +103,7 @@ export default function ProjectsNew() {
   const [index, setIndex] = useState(0);
   const [errors, setErrors] = useState<undefined | Errors>();
   const [project, setProject] = useState<Project>(
-    builder.project({
+    factory.project({
       name: "",
       deadline: dayjs().format("YYYY-MM-DD"),
       slug: "",
@@ -111,8 +111,8 @@ export default function ProjectsNew() {
       shouldbe: "",
       milestones: [],
       status: "initial",
-      createdAt: dayjs().format("YYYY-MM-DD"),
-      updatedAt: dayjs().format("YYYY-MM-DD"),
+      createdAt: dayjs().format(),
+      updatedAt: dayjs().format(),
     }),
   );
 

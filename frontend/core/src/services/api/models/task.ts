@@ -1,7 +1,7 @@
 import DateDecorator from "./date";
 import { Project, ProjectParams } from "@/services/api/models/project";
 import { v4 as uuid } from "uuid";
-import { builder } from ".";
+import { factory } from ".";
 
 const Status = {
   initial: "initial",
@@ -47,11 +47,11 @@ export class TaskModel {
     this.id = uuid();
     this._raw = params;
 
-    this._children = params.children?.map((it) => builder.task(it)) || [];
-    this._project = builder.project(params.project);
+    this._children = params.children?.map((it) => factory.task(it)) || [];
+    this._project = factory.project(params.project);
 
     if (params.parent) {
-      this._parent = builder.task(params.parent);
+      this._parent = factory.task(params.parent);
     }
   }
 
@@ -104,7 +104,7 @@ export class TaskModel {
 
     params.deadline = value;
 
-    return builder.task(params);
+    return factory.task(params);
   }
 
   withTitle(value: string): Task | undefined {
@@ -115,7 +115,7 @@ export class TaskModel {
 
     params.title = value;
 
-    return builder.task(params);
+    return factory.task(params);
   }
 
   scheduled() {
@@ -140,7 +140,7 @@ export class TaskModel {
       status,
     };
 
-    return builder.task(raw);
+    return factory.task(raw);
   }
 }
 
