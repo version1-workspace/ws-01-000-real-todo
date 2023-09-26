@@ -1,0 +1,10 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.1.0
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql:cached
