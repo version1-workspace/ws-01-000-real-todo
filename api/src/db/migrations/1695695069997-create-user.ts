@@ -12,14 +12,20 @@ export class CreateUser1695695069997 implements MigrationInterface {
             name: 'id',
             type: 'int',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+            isUnique: true,
           },
           {
             name: 'uuid',
             type: 'varchar',
+            default: '(uuid())',
+            isUnique: true,
           },
           {
             name: 'username',
             type: 'varchar',
+            isUnique: true,
           },
           {
             name: 'status',
