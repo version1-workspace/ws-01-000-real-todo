@@ -18,6 +18,10 @@ export interface ProjectParams {
   createdAt: string;
   updatedAt: string;
   deadline: string;
+  startingAt?: string;
+  startedAt?: string;
+  finishedAt?: string;
+  archivedAt?: string;
 
   status: StatusType;
 
@@ -36,6 +40,9 @@ export interface ProjectDateProps {
   createdAt: DateDecorator;
   updatedAt: DateDecorator;
   deadline: DateDecorator;
+  startedAt?: DateDecorator;
+  archivedAt?: DateDecorator;
+  startingAt?: DateDecorator;
 }
 
 export class ProjectModel {

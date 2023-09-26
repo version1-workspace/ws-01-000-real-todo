@@ -4,13 +4,19 @@ import { Base } from '../entities/base.entity';
 @Entity('projects')
 export class Project extends Base {
   @Column()
-  name: string;
+  title: string;
 
   @Column({ default: 'initial' })
-  status: 'initital' | 'active' | 'archived';
+  status: 'initital' | 'scheduled' | 'completed' | 'archived';
 
   @Column()
   deadline: Date;
+
+  @Column()
+  finishedAt?: Date;
+
+  @Column()
+  archivedAt?: Date;
 
   @Column()
   startingAt?: Date;
@@ -19,14 +25,5 @@ export class Project extends Base {
   startedAt?: Date;
 
   @Column()
-  archivedAt?: Date;
-
-  @Column()
-  finishedAt?: Date;
-
-  @Column()
-  goal: string;
-
-  @Column()
-  shouldbe: string;
+  parentId?: number;
 }

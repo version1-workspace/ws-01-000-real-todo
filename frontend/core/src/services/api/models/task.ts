@@ -19,6 +19,8 @@ export interface TaskParams {
   createdAt: string;
   updatedAt: string;
   finishedAt?: string;
+  startedAt?: string;
+  archivedAt?: string;
   startingAt?: string;
   deadline: string;
 
@@ -32,6 +34,8 @@ export interface TaskDateProps {
   createdAt: DateDecorator;
   updatedAt: DateDecorator;
   finishedAt?: DateDecorator;
+  startedAt?: DateDecorator;
+  archivedAt?: DateDecorator;
   startingAt?: DateDecorator;
   deadline: DateDecorator;
 }
