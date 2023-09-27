@@ -10,9 +10,22 @@ export class CreateUsers1695695069997 implements MigrationInterface {
         name: tableName,
         columns: withDefaultColumns([
           {
+            name: 'email',
+            type: 'varchar',
+            isUnique: true,
+          },
+          {
             name: 'username',
             type: 'varchar',
             isUnique: true,
+          },
+          {
+            name: 'password',
+            type: 'varchar',
+          },
+          {
+            name: 'refreshToken',
+            type: 'varchar',
           },
           {
             name: 'status',

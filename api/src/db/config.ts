@@ -1,11 +1,11 @@
 import { User } from '../users/user.entity';
 import { Project } from '../projects/project.entity';
-import { DataSource } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import { CreateUsers1695695069997 } from '../db/migrations/1695695069997-create-users';
 import { CreateProjects1695712427995 } from '../db/migrations/1695712427995-create-projects';
 import { CreateTasks1695712437991 } from '../db/migrations/1695712437991-create-tasks';
 
-export const AppDataSource = new DataSource({
+export const dataSourceOptions = {
   type: 'mysql',
   host: 'localhost',
   port: 3306,
@@ -20,4 +20,8 @@ export const AppDataSource = new DataSource({
   ],
   synchronize: false,
   logging: true,
-});
+};
+
+export const AppDataSource = new DataSource(
+  dataSourceOptions as DataSourceOptions,
+);

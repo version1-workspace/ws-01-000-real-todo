@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
-import { withDefaultColumns } from './helper';
+import { withDefaultColumns, indexFactory } from './helper';
 
 const tableName = 'tasks';
 
@@ -9,6 +9,14 @@ export class CreateTasks1695712437991 implements MigrationInterface {
       new Table({
         name: tableName,
         columns: withDefaultColumns([
+          {
+            name: 'userId',
+            type: 'int',
+          },
+          {
+            name: 'projectId',
+            type: 'int',
+          },
           {
             name: 'parentId',
             type: 'int',
@@ -50,6 +58,16 @@ export class CreateTasks1695712437991 implements MigrationInterface {
         ]),
       }),
       true,
+    );
+
+    await queryRunner.createIndex(
+      tableName,
+      indexFactory(tableName, ['userId']),
+    );
+
+    await queryRunner.createIndex(
+      tableName,
+      indexFactory(tableName, ['projectId']),
     );
   }
 

@@ -1,24 +1,12 @@
+import { NestFactory } from '@nestjs/core';
+import { INestApplication } from '@nestjs/common';
 import { DataSource } from 'typeorm';
+import { AppModule } from '../../app.module';
 import { AppDataSource } from '../config';
 import { seed } from './seeds';
+import { LoggerService } from '../../logger/logger.service';
 
-class Logger {
-  info(...msg: any[]) {
-    console.log('[INFO]', ...msg);
-  }
-
-  debug(...msg: any[]) {
-    console.log('[DEBUG]', ...msg);
-  }
-
-  error(...msg: any[]) {
-    console.log('[ERROR]', ...msg);
-  }
-}
-
-const logger = new Logger();
-
-interface ILogger {
+interface Logger {
   info(...msg: any[]);
   debug(...msg: any[]);
   error(...msg: any[]);
@@ -26,13 +14,18 @@ interface ILogger {
 
 type Context = {
   dataSource: DataSource;
-  logger: ILogger;
+  logger: Logger;
+  app: INestApplication<any>;
 };
 
-const commands = {
+const commands: { [key: string]: (ctx: Context) => Promise<void> } = {
   reset: async ({ dataSource, logger }: Context) => {
     logger.info('drop database: ', dataSource.options.database);
     await dataSource.dropDatabase();
+    logger.info('migration run');
+    await dataSource.runMigrations();
+  },
+  migrate: async ({ dataSource, logger }: Context) => {
     logger.info('migration run');
     await dataSource.runMigrations();
   },
@@ -40,6 +33,9 @@ const commands = {
 };
 
 const main = async (command: keyof typeof commands) => {
+  const app = await NestFactory.create(AppModule);
+  const logger = app.get(LoggerService).logger;
+
   try {
     logger.info(`start command: ${command}`);
     await AppDataSource.initialize();
@@ -50,7 +46,7 @@ const main = async (command: keyof typeof commands) => {
       return;
     }
 
-    await cmd({ dataSource: AppDataSource, logger } as Context);
+    await cmd({ app, dataSource: AppDataSource, logger } as Context);
     logger.info(`end command.`);
     process.exit();
   } catch (e) {

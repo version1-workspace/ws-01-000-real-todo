@@ -1,8 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { v4 as uuid } from 'uuid';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Base {
+  @Exclude()
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -14,9 +16,5 @@ export class Base {
 
   @Column()
   updatedAt: Date;
-
-  json() {
-    return JSON.parse(JSON.stringify(this));
-  }
 }
 

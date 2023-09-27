@@ -1,18 +1,16 @@
-import { User } from '../../../users/user.entity';
+import { UsersService } from '../../../users/users.service';
 
-export const seed = async ({ dataSource, logger }) => {
+export const seed = async ({ app, dataSource, logger }) => {
+  const usersService = app.get(UsersService);
   console.log('connection is establised');
-  await dataSource.transaction(async (manager) => {
-    return await Promise.all(
-      new Array(10).fill('').map(async (_, index) => {
-        logger.info(`seeding for a user. index: ${index + 1}`);
-        await manager.insert(User, {
-          username: `user ${index + 1}`,
-          status: 'active',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        });
-      }),
-    );
+  await dataSource.transaction(async () => {
+    for (let i = 1; i <= 10; i++) {
+      logger.info(`seeding for a user. index: ${i}`);
+      await usersService.signup(
+        `user ${i}`,
+        `user.${i}@example.com`,
+        'password',
+      );
+    }
   });
 };

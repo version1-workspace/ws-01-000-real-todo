@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
-import { withDefaultColumns } from './helper';
+import { withDefaultColumns, indexFactory } from './helper';
 
 const tableName = 'projects';
 
@@ -14,9 +14,12 @@ export class CreateProjects1695712427995 implements MigrationInterface {
             type: 'varchar',
           },
           {
+            name: 'userId',
+            type: 'int',
+          },
+          {
             name: 'slug',
             type: 'varchar',
-            isUnique: true,
           },
           {
             name: 'goal',
@@ -58,6 +61,11 @@ export class CreateProjects1695712427995 implements MigrationInterface {
         ]),
       }),
       true,
+    );
+
+    await queryRunner.createIndex(
+      tableName,
+      indexFactory(tableName, ['userId']),
     );
   }
 
