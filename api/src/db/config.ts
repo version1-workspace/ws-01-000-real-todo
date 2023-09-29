@@ -20,6 +20,7 @@ export const dataSourceOptions = {
   ],
   synchronize: false,
   logging: true,
+  autoLoadEntities: true,
 };
 
 export const AppDataSource = new DataSource(

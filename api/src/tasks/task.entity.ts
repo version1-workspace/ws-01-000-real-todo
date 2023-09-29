@@ -1,9 +1,11 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Base } from '../entities/base.entity';
+import { User } from '../users/user.entity';
+import { Project } from '../projects/project.entity';
 import { IsNotEmpty, IsDate, IsIn, IsNumber } from 'class-validator';
 
 @Entity('tasks')
-export class Project extends Base {
+export class Task extends Base {
   @Column()
   @IsNotEmpty()
   title: string;
@@ -41,4 +43,16 @@ export class Project extends Base {
   @IsNumber()
   @IsNotEmpty()
   userId: number;
+
+  @ManyToOne(() => User)
+  user: User;
+
+  @ManyToOne(() => Project)
+  project: Project;
+
+  @OneToMany(() => Task, (parent) => parent.children)
+  parent: Task
+
+  @ManyToOne(() => Task, (task) => task.parent)
+  children: Task[]
 }
