@@ -28,6 +28,7 @@ export class CreateProjects1695712427995 implements MigrationInterface {
           {
             name: 'shouldbe',
             type: 'text',
+            isNullable: true,
           },
           {
             name: 'status',
@@ -41,22 +42,22 @@ export class CreateProjects1695712427995 implements MigrationInterface {
           {
             name: 'startingAt',
             type: 'timestamp',
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: 'startedAt',
             type: 'timestamp',
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: 'finishedAt',
             type: 'timestamp',
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: 'archivedAt',
             type: 'timestamp',
-            isNullable: false,
+            isNullable: true,
           },
         ]),
       }),

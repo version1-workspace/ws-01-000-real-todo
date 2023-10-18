@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from '../entities/base.entity';
 import { User } from '../users/user.entity';
 import { Task } from '../tasks/task.entity';
@@ -37,6 +37,10 @@ export class Project extends Base {
 
   @Column()
   @IsNotEmpty()
+  slug: string;
+
+  @Column()
+  @IsNotEmpty()
   goal: string;
 
   @Column()
@@ -51,6 +55,5 @@ export class Project extends Base {
   user: User
 
   @OneToMany(() => Task, (task) => task.project)
-  @JoinColumn({ name: "projectId", referencedColumnName: "id" })
   tasks: Task[]
 }

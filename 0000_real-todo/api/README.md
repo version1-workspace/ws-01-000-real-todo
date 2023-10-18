@@ -20,3 +20,14 @@ npm run db:setup
 npm run db:seed
 npm run start:dev
 ```
+
+### Commands
+
+
+#### generate migration
+
+example creating `create-tags` migration
+
+```bash
+npm run migration:create src/db/migrations/create-tags.ts
+```
