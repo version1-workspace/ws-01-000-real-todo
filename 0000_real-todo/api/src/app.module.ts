@@ -7,13 +7,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { dataSourceOptions } from './db/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { ProjectsModule } from './projects/projects.module';
-import { TasksModule } from './tasks/tasks.module';
-import { AuthModule } from './auth/auth.module';
-import { AuthGuard } from './auth/auth.guard';
+import { UsersModule } from './domains/users/users.module';
+import { ProjectsModule } from './domains/projects/projects.module';
+import { TasksModule } from './domains/tasks/tasks.module';
+import { AuthModule } from './domains/auth/auth.module';
+import { AuthGuard } from './domains/auth/auth.guard';
 import appConfig from './config/app.config';
-import { LoggerModule } from './logger/logger.module';
+import { LoggerModule } from './lib/modules/logger/logger.module';
 
 const config = appConfig()
 

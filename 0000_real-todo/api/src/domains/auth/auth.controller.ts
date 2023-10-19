@@ -12,7 +12,7 @@ import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import { Public } from './auth.decorator';
 import { AuthService } from './auth.service';
-import { LoggerService } from '../logger/logger.service';
+import { LoggerService } from '../../lib/modules/logger/logger.service';
 
 @Controller('auth')
 export class AuthController {

@@ -9,7 +9,7 @@ import { Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { UsersService } from '../users/users.service';
-import { LoggerService } from '../logger/logger.service';
+import { LoggerService } from '../../lib/modules/logger/logger.service';
 import { IS_PUBLIC_KEY } from './auth.decorator';
 
 @Injectable()
@@ -41,9 +41,12 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get('AUTH_SECRET'),
       });
-
       request.jwtPayload = payload;
       request.user = await this.usersService.findByUsername(payload.sub)
+      if (!request.user) {
+        this.loggerService.logger.error(new Error(`user is not found: ${payload.sub}`))
+        throw new UnauthorizedException();
+      }
     } catch (e) {
       this.loggerService.logger.error(e)
       throw new UnauthorizedException();

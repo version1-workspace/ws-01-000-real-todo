@@ -1,8 +1,8 @@
-import { User } from '../users/user.entity';
-import { Project } from '../projects/project.entity';
-import { Task } from '../tasks/task.entity';
-import { TagTask } from '../relations/tagTask.entity';
-import { Tag } from '../tags/tag.entity';
+import { User } from '../domains/users/user.entity';
+import { Project } from '../domains/projects/project.entity';
+import { Task } from '../domains/tasks/task.entity';
+import { TagTask } from '../domains/relations/tagTask.entity';
+import { Tag } from '../domains/tags/tag.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import migrations from '../db/migrations';
 

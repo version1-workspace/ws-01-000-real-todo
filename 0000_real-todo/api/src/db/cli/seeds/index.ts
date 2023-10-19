@@ -1,12 +1,13 @@
 import { EntityManager, DeepPartial } from 'typeorm';
 import dayjs from 'dayjs';
-import { UsersService } from '../../../users/users.service';
-import { User } from '../../../users/user.entity';
-import { Project } from '../../../projects/project.entity';
-import { Task } from '../../../tasks/task.entity';
+import { UsersService } from '../../../domains/users/users.service';
+import { User } from '../../../domains/users/user.entity';
+import { Project } from '../../../domains/projects/project.entity';
+import { Task } from '../../../domains/tasks/task.entity';
 
 export const seed = async ({ app, dataSource, logger }) => {
   const usersService = app.get(UsersService);
+  const now = dayjs()
   console.log('connection is establised');
 
   console.log('users ========');
@@ -37,7 +38,6 @@ export const seed = async ({ app, dataSource, logger }) => {
         {
           userId: user.id,
           name: 'プログラミング',
-          deadline: dayjs('2024/08/12').toDate(),
           slug: 'programming',
           goal: '期限日までにフロントエンドエンジニアとして就職する。',
           shouldbe: 'エンジニアとしての学習習慣を身につけて生活する。',
@@ -46,7 +46,6 @@ export const seed = async ({ app, dataSource, logger }) => {
         {
           userId: user.id,
           name: '英語',
-          deadline: dayjs('2024/08/12').toDate(),
           slug: 'english',
           goal: 'IELTS Over All 7.0',
           shouldbe: '英語に浸る',
@@ -55,12 +54,17 @@ export const seed = async ({ app, dataSource, logger }) => {
         {
           userId: user.id,
           name: 'プライベート',
-          deadline: dayjs('2024/08/12').toDate(),
           slug: 'private',
           goal: '長期休みに海外旅行する',
           status: 'active' as 'active',
         },
-      ].map(async (it: DeepPartial<Project>) => {
+      ].map(async (it: DeepPartial<Project>, index: number) => {
+        const day = (30-index).toString().padStart(2, '0')
+        it.deadline = dayjs(`2024/08/${day}`).toDate()
+        const timestamp = now.add(index, 'second').toDate()
+        it.createdAt = timestamp
+        it.updatedAt = timestamp
+
         const project = manager.create(Project, it);
         await manager.save(project);
 
@@ -76,11 +80,38 @@ export const seed = async ({ app, dataSource, logger }) => {
         {
           userId: user.id,
           projectId: project.id,
-          deadline: dayjs('2024/08/12').toDate(),
-          title: 'プログラミング',
           status: 'scheduled' as 'scheduled',
         },
-      ].map(async (it: DeepPartial<Task>) => {
+        {
+          userId: user.id,
+          projectId: project.id,
+          status: 'scheduled' as 'scheduled',
+        },
+        {
+          userId: user.id,
+          projectId: project.id,
+          status: 'scheduled' as 'scheduled',
+        },
+        {
+          userId: user.id,
+          projectId: project.id,
+          status: 'scheduled' as 'scheduled',
+        },
+        {
+          userId: user.id,
+          projectId: project.id,
+          deadline: dayjs('2024/08/12').toDate(),
+          title: 'タスク ',
+          status: 'scheduled' as 'scheduled',
+        },
+      ].map(async (it: DeepPartial<Task>, index: number) => {
+        it.title = `Task ${index.toString()}`
+        const day = (30-index).toString().padStart(2, '0')
+        it.deadline = dayjs(`2024/08/${day}`).toDate()
+        const timestamp = now.add(index, 'second').toDate()
+        it.createdAt = timestamp
+        it.updatedAt = timestamp
+
         const task = manager.create(Task, it);
         await manager.save(task);
 
@@ -89,3 +120,4 @@ export const seed = async ({ app, dataSource, logger }) => {
     );
   });
 };
+

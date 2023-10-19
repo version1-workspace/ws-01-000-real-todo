@@ -4,7 +4,7 @@ import { DataSource } from 'typeorm';
 import { AppModule } from '../../app.module';
 import { AppDataSource } from '../config';
 import { seed } from './seeds';
-import { LoggerService } from '../../logger/logger.service';
+import { LoggerService } from '../../lib/modules/logger/logger.service';
 
 interface Logger {
   info(...msg: any[]);

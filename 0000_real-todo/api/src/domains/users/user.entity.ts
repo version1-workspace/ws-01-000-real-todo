@@ -1,5 +1,5 @@
 import { Entity, Column, OneToMany } from 'typeorm';
-import { Base } from '../entities/base.entity';
+import { Base } from '../../entities/base.entity';
 import { Project } from '../projects/project.entity';
 import { Task } from '../tasks/task.entity';
 import { IsNotEmpty, IsEmail, IsIn } from 'class-validator';

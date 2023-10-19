@@ -1,9 +1,18 @@
 import { Entity, Column, ManyToOne, OneToMany, ManyToMany } from 'typeorm';
-import { Base } from '../entities/base.entity';
+import { Base } from '../../entities/base.entity';
 import { User } from '../users/user.entity';
 import { Project } from '../projects/project.entity';
 import { IsNotEmpty, IsDate, IsIn, IsNumber } from 'class-validator';
 import { Tag } from '../tags/tag.entity';
+
+export const TaskStatus =  {
+  initial: 'initial',
+  scheduled: 'scheduled',
+  completed: 'completed',
+  archived: 'archived',
+}
+
+export type TaskStatuses = keyof typeof TaskStatus
 
 @Entity('tasks')
 export class Task extends Base {
@@ -12,8 +21,8 @@ export class Task extends Base {
   title: string;
 
   @Column({ default: 'initial' })
-  @IsIn(['initial', 'scheduled', 'completed', 'archived'])
-  status: 'initital' | 'scheduled' | 'completed' | 'archived';
+  @IsIn(Object.keys(TaskStatus))
+  status: TaskStatuses;
 
   @Column()
   @IsDate()

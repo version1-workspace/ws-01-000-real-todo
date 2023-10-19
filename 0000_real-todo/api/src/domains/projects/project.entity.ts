@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
-import { Base } from '../entities/base.entity';
+import { Base } from '../../entities/base.entity';
 import { User } from '../users/user.entity';
 import { Task } from '../tasks/task.entity';
 import { IsNotEmpty, IsDate, IsIn, IsNumber } from 'class-validator';

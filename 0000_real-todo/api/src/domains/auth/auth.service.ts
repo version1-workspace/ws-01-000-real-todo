@@ -3,8 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { User } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
-import { LoggerService } from '../logger/logger.service';
-import * as bcrypt from 'bcrypt';
+import { LoggerService } from '../../lib/modules/logger/logger.service';
 
 interface JwtPayload {
   sub: string;
