@@ -4,10 +4,11 @@ import { UsersService } from '../../../domains/users/users.service';
 import { User } from '../../../domains/users/user.entity';
 import { Project } from '../../../domains/projects/project.entity';
 import { Task } from '../../../domains/tasks/task.entity';
+import { Tag } from '../../../domains/tags/tag.entity';
 
 export const seed = async ({ app, dataSource, logger }) => {
   const usersService = app.get(UsersService);
-  const now = dayjs()
+  const now = dayjs();
   console.log('connection is establised');
 
   console.log('users ========');
@@ -30,8 +31,39 @@ export const seed = async ({ app, dataSource, logger }) => {
       users.push(user);
     }
 
-    console.log('projects ========');
+    console.log('tags ========');
     const user = users[0];
+    const tags = [];
+    await Promise.all(
+      [
+        {
+          name: 'インプット',
+          userId: user.id,
+          status: 'enabled' as const,
+        },
+        {
+          name: 'アウトプット',
+          userId: user.id,
+          status: 'enabled' as const,
+        },
+        {
+          name: '調査',
+          userId: user.id,
+          status: 'enabled' as const,
+        },
+      ].map(async (it: DeepPartial<Tag>, index: number) => {
+        const timestamp = now.add(index, 'second').toDate();
+        it.createdAt = timestamp;
+        it.updatedAt = timestamp;
+
+        const tag = manager.create(Tag, it);
+        await manager.save(tag);
+
+        tags.push(tag);
+      }),
+    );
+
+    console.log('projects ========');
     const projects = [];
     await Promise.all(
       [
@@ -59,11 +91,11 @@ export const seed = async ({ app, dataSource, logger }) => {
           status: 'active' as 'active',
         },
       ].map(async (it: DeepPartial<Project>, index: number) => {
-        const day = (30-index).toString().padStart(2, '0')
-        it.deadline = dayjs(`2024/08/${day}`).toDate()
-        const timestamp = now.add(index, 'second').toDate()
-        it.createdAt = timestamp
-        it.updatedAt = timestamp
+        const day = (30 - index).toString().padStart(2, '0');
+        it.deadline = dayjs(`2024/08/${day}`).toDate();
+        const timestamp = now.add(index, 'second').toDate();
+        it.createdAt = timestamp;
+        it.updatedAt = timestamp;
 
         const project = manager.create(Project, it);
         await manager.save(project);
@@ -105,12 +137,12 @@ export const seed = async ({ app, dataSource, logger }) => {
           status: 'scheduled' as 'scheduled',
         },
       ].map(async (it: DeepPartial<Task>, index: number) => {
-        it.title = `Task ${index.toString()}`
-        const day = (30-index).toString().padStart(2, '0')
-        it.deadline = dayjs(`2024/08/${day}`).toDate()
-        const timestamp = now.add(index, 'second').toDate()
-        it.createdAt = timestamp
-        it.updatedAt = timestamp
+        it.title = `Task ${index.toString()}`;
+        const day = (30 - index).toString().padStart(2, '0');
+        it.deadline = dayjs(`2024/08/${day}`).toDate();
+        const timestamp = now.add(index, 'second').toDate();
+        it.createdAt = timestamp;
+        it.updatedAt = timestamp;
 
         const task = manager.create(Task, it);
         await manager.save(task);
@@ -118,6 +150,6 @@ export const seed = async ({ app, dataSource, logger }) => {
         tasks.push(task);
       }),
     );
+
   });
 };
-

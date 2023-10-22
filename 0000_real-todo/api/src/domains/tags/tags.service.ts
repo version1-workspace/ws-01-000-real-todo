@@ -1,29 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { Task } from './task.entity';
+import { Tag } from './tag.entity';
 import { Pagination } from '../../entities/pagination.entity';
 import { User } from '../users/user.entity';
-import { TaskStatuses } from './task.entity';
 
-type SortType = 'deadline' | 'started' | 'updated' | 'created';
-type OrderType = 'asc' | 'desc';
+export type SortType = 'updated' | 'created';
+export type SortOrder = 'asc' | 'desc';
+export type StatusType = 'enabled' | 'disabled'
 
 interface SearchParams {
-  projectId: string;
   user: User;
   limit?: number;
   sortType?: SortType;
-  sortOrder?: OrderType;
-  status?: TaskStatuses[];
+  sortOrder?: SortOrder;
+  status?: StatusType[];
   page?: number;
 }
 
-const sortOptions = (t: SortType, o: OrderType) => {
+const sortOptions = (t: SortType, o: SortOrder) => {
   return {
-    deadline: {
-      deadline: o,
-    },
     created: {
       createdAt: o,
     },
@@ -34,47 +30,41 @@ const sortOptions = (t: SortType, o: OrderType) => {
 };
 
 @Injectable()
-export class TasksService {
+export class TagsService {
   constructor(
-    @InjectRepository(Task)
-    private tasksRepository: Repository<Task>,
+    @InjectRepository(Tag)
+    private tagsRepository: Repository<Tag>,
   ) {}
 
   async search({
-    projectId,
     user,
     sortType,
     sortOrder,
     limit,
     page,
     status,
-  }: SearchParams): Promise<Pagination<Task, SortType>> {
+  }: SearchParams): Promise<Pagination<Tag, SortType>> {
     const options = {
-      status: status || [],
+      status: status || [] as StatusType[],
       take: limit || 20,
       page: page || 1,
       skip: undefined,
-      sortType: sortType || 'deadline',
-      sortOrder: sortOrder || 'asc',
+      sortType: sortType || 'created' as const,
+      sortOrder: sortOrder || 'desc' as const,
     };
     options.skip = (options.page - 1) * options.take;
 
     const order = sortOptions(options.sortType, options.sortOrder) || {
-      deadline: 'asc',
+      createdAt: 'asc',
     };
     const { take, skip } = options;
-    const [tasks, totalCount] = await this.tasksRepository.findAndCount({
+    const [tasks, totalCount] = await this.tagsRepository.findAndCount({
       where: {
-        project: {
-          uuid: projectId,
-        },
         userId: user.id,
         status: In(options.status),
       },
       relations: {
-        project: true,
         user: true,
-        tags: true
       },
       order,
       take,

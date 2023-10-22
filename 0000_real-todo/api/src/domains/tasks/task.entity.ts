@@ -1,18 +1,25 @@
-import { Entity, Column, ManyToOne, OneToMany, ManyToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import { Base } from '../../entities/base.entity';
 import { User } from '../users/user.entity';
 import { Project } from '../projects/project.entity';
 import { IsNotEmpty, IsDate, IsIn, IsNumber } from 'class-validator';
 import { Tag } from '../tags/tag.entity';
 
-export const TaskStatus =  {
+export const TaskStatus = {
   initial: 'initial',
   scheduled: 'scheduled',
   completed: 'completed',
   archived: 'archived',
-}
+};
 
-export type TaskStatuses = keyof typeof TaskStatus
+export type TaskStatuses = keyof typeof TaskStatus;
 
 @Entity('tasks')
 export class Task extends Base {
@@ -72,5 +79,16 @@ export class Task extends Base {
   children: Task[];
 
   @ManyToMany(() => Tag)
-  tag: Tag;
+  @JoinTable({
+    name: 'tagTasks',
+    joinColumn: {
+        name: "taskId",
+        referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+        name: "tagId",
+        referencedColumnName: "id"
+    }
+  })
+  tags: Tag[];
 }

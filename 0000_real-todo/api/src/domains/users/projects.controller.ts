@@ -4,11 +4,11 @@ import { ProjectsService } from '../projects/projects.service';
 import { User as DUser } from './user.decorator';
 import { User } from './user.entity';
 
-@Controller('users')
+@Controller('users/projects')
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
-  @Get('projects')
+  @Get('')
   async index(
     @DUser() user: User,
     @Query('limit') limit: number,

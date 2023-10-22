@@ -23,9 +23,6 @@ export class Tag extends Base {
   @ManyToOne(() => User)
   user: User;
 
-  @ManyToOne(() => TagTask)
-  project: TagTask;
-
   @OneToMany(() => TagTask, (tagTask) => tagTask.task)
   tagTask: TagTask;
 
