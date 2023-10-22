@@ -14,23 +14,10 @@ export class ProjectsController {
     @Query('limit') limit: number,
     @Query('page') page: number,
   ): Promise<Record<string, any>> {
-    const sortOptions = {
-      sortType: 'deadline' as const,
-      sortOrder: 'asc' as const,
-    };
-    const [projects, totalCount] = await this.projectsService.search({
+    const result = await this.projectsService.search({
       user,
       limit,
       page,
-      ...sortOptions,
-    });
-
-    const result = new Pagination({
-      data: projects,
-      limit,
-      page,
-      totalCount,
-      ...sortOptions,
     });
 
     return result.serialize;

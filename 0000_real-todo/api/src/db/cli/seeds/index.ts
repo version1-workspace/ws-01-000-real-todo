@@ -112,27 +112,32 @@ export const seed = async ({ app, dataSource, logger }) => {
         {
           userId: user.id,
           projectId: project.id,
+          kind: 'task' as const,
           status: 'scheduled' as 'scheduled',
         },
         {
           userId: user.id,
           projectId: project.id,
+          kind: 'task' as const,
           status: 'scheduled' as 'scheduled',
         },
         {
           userId: user.id,
           projectId: project.id,
+          kind: 'task' as const,
           status: 'scheduled' as 'scheduled',
         },
         {
           userId: user.id,
           projectId: project.id,
+          kind: 'task' as const,
           status: 'scheduled' as 'scheduled',
         },
         {
           userId: user.id,
           projectId: project.id,
           deadline: dayjs('2024/08/12').toDate(),
+          kind: 'task' as const,
           title: 'タスク ',
           status: 'scheduled' as 'scheduled',
         },
@@ -150,6 +155,5 @@ export const seed = async ({ app, dataSource, logger }) => {
         tasks.push(task);
       }),
     );
-
   });
 };

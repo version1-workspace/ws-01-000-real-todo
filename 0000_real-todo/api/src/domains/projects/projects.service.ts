@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DeepPartial, Repository, In } from 'typeorm';
+import { Pagination } from '../../entities/pagination.entity';
 import { User } from '../users/user.entity';
-import { DeepPartial, Repository } from 'typeorm';
 import { Project } from './project.entity';
+import { TasksService } from '../tasks/tasks.service';
 
 interface SearchParams {
   user: User;
   limit?: number;
   page?: number;
-  sortOrder: 'asc' | 'desc';
 }
 
 @Injectable()
@@ -16,17 +17,22 @@ export class ProjectsService {
   constructor(
     @InjectRepository(Project)
     private projectsRepository: Repository<Project>,
+    private tasksService: TasksService,
   ) {}
 
   async search({
     user,
     limit,
     page,
-    sortOrder,
-  }: SearchParams): Promise<[Project[], number]> {
-    const take = limit || 5
+  }: SearchParams): Promise<Pagination<Project, 'deadline'>> {
+    const sortOptions = {
+      sortType: 'deadline' as const,
+      sortOrder: 'asc' as const,
+    };
+
+    const take = limit || 5;
     const skip = take * ((page || 1) - 1);
-    return this.projectsRepository.findAndCount({
+    const [projects, totalCount] = await this.projectsRepository.findAndCount({
       where: {
         userId: user.id,
       },
@@ -34,11 +40,27 @@ export class ProjectsService {
         user: true,
       },
       order: {
-        deadline: sortOrder,
+        deadline: sortOptions.sortOrder,
       },
       skip,
       take,
     });
+
+    const projectIds = projects.map((it) => it.id);
+    const milestones = await this.tasksService.milestones(projectIds);
+    projects.forEach((project) => {
+      project.milestones = milestones[project.id] || []
+    })
+
+    const result = new Pagination({
+      data: projects,
+      limit,
+      page,
+      totalCount,
+      ...sortOptions,
+    });
+
+    return result;
   }
 
   async create(params: DeepPartial<Project>): Promise<Project> {

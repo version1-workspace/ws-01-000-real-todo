@@ -21,6 +21,13 @@ export const TaskStatus = {
 
 export type TaskStatuses = keyof typeof TaskStatus;
 
+export const TaskKind = {
+  task: 'task',
+  milestone: 'milestone'
+}
+
+export type TaskKinds = keyof typeof TaskKind;
+
 @Entity('tasks')
 export class Task extends Base {
   @Column()
@@ -30,6 +37,10 @@ export class Task extends Base {
   @Column({ default: 'initial' })
   @IsIn(Object.keys(TaskStatus))
   status: TaskStatuses;
+
+  @Column({ default: 'task' })
+  @IsIn(Object.keys(TaskKind))
+  kind: TaskKinds;
 
   @Column()
   @IsDate()

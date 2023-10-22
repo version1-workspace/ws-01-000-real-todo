@@ -74,7 +74,7 @@ export class TasksService {
       relations: {
         project: true,
         user: true,
-        tags: true
+        tags: true,
       },
       order,
       take,
@@ -89,5 +89,19 @@ export class TasksService {
       sortType: options.sortType,
       sortOrder: options.sortOrder,
     });
+  }
+
+  async milestones(ids: number[]): Promise<Record<number, Task[]>> {
+    const milestones = await this.tasksRepository.find({
+      where: {
+        projectId: In(ids),
+        kind: 'milestone' as const,
+      },
+    });
+
+    return milestones.reduce((acc: Record<number, Task[]>, it: Task) => {
+      const list = acc[it.projectId] || []
+      return { ...acc, [it.projectId]: [...list, it] };
+    }, {});
   }
 }

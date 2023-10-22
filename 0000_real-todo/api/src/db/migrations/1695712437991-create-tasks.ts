@@ -23,6 +23,10 @@ export class CreateTasks1695712437991 implements MigrationInterface {
             isNullable: true,
           },
           {
+            name: 'kind',
+            type: 'varchar',
+          },
+          {
             name: 'title',
             type: 'text',
           },

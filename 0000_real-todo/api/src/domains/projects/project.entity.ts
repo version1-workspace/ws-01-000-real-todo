@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, VirtualColumn } from 'typeorm';
 import { Base } from '../../entities/base.entity';
 import { User } from '../users/user.entity';
 import { Task } from '../tasks/task.entity';
@@ -52,8 +52,10 @@ export class Project extends Base {
   userId: number;
 
   @ManyToOne(() => User)
-  user: User
+  user: User;
 
   @OneToMany(() => Task, (task) => task.project)
-  tasks: Task[]
+  tasks: Task[];
+
+  milestones: Task[];
 }
