@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeepPartial, Repository, In } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { Pagination } from '../../entities/pagination.entity';
 import { User } from '../users/user.entity';
 import { Project } from './project.entity';
@@ -50,6 +50,11 @@ export class ProjectsService {
     const milestones = await this.tasksService.milestones(projectIds);
     projects.forEach((project) => {
       project.milestones = milestones[project.id] || []
+    })
+
+    const stats = await this.tasksService.statics(projectIds)
+    projects.forEach((p: Project) => {
+      p.stats = stats[p.id] || { total: 0 }
     })
 
     const result = new Pagination({

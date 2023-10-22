@@ -1,5 +1,6 @@
-import { Entity, Column, ManyToOne, OneToMany, VirtualColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from '../../entities/base.entity';
+import { Stat } from '../../entities/stat.entity';
 import { User } from '../users/user.entity';
 import { Task } from '../tasks/task.entity';
 import { IsNotEmpty, IsDate, IsIn, IsNumber } from 'class-validator';
@@ -58,4 +59,6 @@ export class Project extends Base {
   tasks: Task[];
 
   milestones: Task[];
+
+  stats: Stat;
 }

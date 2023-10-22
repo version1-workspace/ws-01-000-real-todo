@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Task } from './task.entity';
 import { Pagination } from '../../entities/pagination.entity';
+import { Stat } from '../../entities/stat.entity';
 import { User } from '../users/user.entity';
 import { TaskStatuses } from './task.entity';
 
@@ -103,5 +104,25 @@ export class TasksService {
       const list = acc[it.projectId] || []
       return { ...acc, [it.projectId]: [...list, it] };
     }, {});
+  }
+
+  async statics(ids: number[]): Promise<Record<number, Stat>> {
+    const stats = await this.tasksRepository.createQueryBuilder("tasks")
+    .select("projectId, kind, count(*) as count")
+    .where("tasks.projectId IN(:id)", { id: ids })
+    .groupBy("projectId")
+    .addGroupBy("kind")
+    .getRawMany()
+
+    return stats.reduce((acc, it) => {
+      const summary = acc[it.projectId] || { total: 0 }
+      summary[it.kind] = Number(it.count)
+      summary.total = (summary.total || 0) + Number(it.count)
+
+      return {
+        ...acc,
+        [it.projectId]: summary
+      }
+    }, {})
   }
 }
