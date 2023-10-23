@@ -6,7 +6,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const api = await NestFactory.create(AppModule);
   api.setGlobalPrefix('api');
-  api.useGlobalPipes(new ValidationPipe({}));
+  api.useGlobalPipes(new ValidationPipe({
+    transform: true
+  }));
   api.useGlobalInterceptors(new ClassSerializerInterceptor(api.get(Reflector)));
   api.enableVersioning({
     defaultVersion: '1',

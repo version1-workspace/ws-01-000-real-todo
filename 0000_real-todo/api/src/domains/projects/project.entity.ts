@@ -5,6 +5,14 @@ import { User } from '../users/user.entity';
 import { Task } from '../tasks/task.entity';
 import { IsNotEmpty, IsDate, IsIn, IsNumber } from 'class-validator';
 
+export const Status = {
+  initial: 'initial',
+  active: 'active',
+  archived: 'archived'
+}
+
+export type StatusType = keyof typeof Status
+
 @Entity('projects')
 export class Project extends Base {
   @Column()
@@ -12,8 +20,8 @@ export class Project extends Base {
   name: string;
 
   @Column({ default: 'initial' })
-  @IsIn(['initial', 'active', 'archived'])
-  status: 'initital' | 'active' | 'archived';
+  @IsIn(Object.keys(Status))
+  status: StatusType;
 
   @Column()
   @IsNotEmpty()

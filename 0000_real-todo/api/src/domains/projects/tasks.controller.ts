@@ -2,6 +2,7 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { TasksService } from '../tasks/tasks.service';
 import { User as DUser } from '../users/user.decorator';
 import { User } from '../users/user.entity';
+import { Dto } from '../../entities/dto.entity';
 import { TaskStatuses } from '../tasks/task.entity';
 import {
   IsNumberString,
@@ -11,7 +12,7 @@ import {
   IsDefined,
 } from 'class-validator';
 
-class TaskIndexDto {
+class TaskIndexDto extends Dto<TaskIndexDto> {
   @IsOptional()
   @IsIn(['deadline', 'created', 'updated'])
   sortType?: 'deadline' | 'created' | 'updated';
@@ -27,12 +28,6 @@ class TaskIndexDto {
   @IsDefined()
   @IsArray()
   status: TaskStatuses[];
-
-  get object() {
-    return Object.keys(this).reduce((acc, it) => {
-      return { ...acc, [it]: acc[it] };
-    }, {});
-  }
 }
 
 @Controller('projects')
