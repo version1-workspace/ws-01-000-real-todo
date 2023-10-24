@@ -116,7 +116,16 @@ export class ProjectsService {
   }
 
   async create(params: DeepPartial<Project>): Promise<Project> {
-    const project = this.projectsRepository.create(params);
+    const { milestones, ...rest } = params
+    const project = this.projectsRepository.create(rest);
+
+    project.tasks = milestones.map((it: DeepPartial<Task>) => {
+      return this.tasksService.build({
+        ...it,
+        userId: params.userId,
+        kind: 'milestone'
+      })[0]
+    })
 
     await this.projectsRepository.save(project);
 

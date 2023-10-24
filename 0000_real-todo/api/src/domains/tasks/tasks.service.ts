@@ -125,4 +125,6 @@ export class TasksService {
       }
     }, {})
   }
+
+  build = this.tasksRepository.create
 }
