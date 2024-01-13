@@ -10,7 +10,7 @@ export class AppController {
   @Get()
   index(): { version: string } {
     const res = this.appService.index();
-    console.log(res)
-    return res
+    console.log(res);
+    return res;
   }
 }

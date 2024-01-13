@@ -19,7 +19,7 @@ export default function Projet({ data }: Props) {
           <span>
             <Calendar size="10px" />
           </span>
-          <p> {data.deadline}</p>
+          <p> {data.deadline.format()}</p>
         </p>
       </div>
       <div className={styles.body}>

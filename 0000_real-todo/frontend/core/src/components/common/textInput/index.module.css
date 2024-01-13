@@ -1,0 +1,11 @@
+.container {
+
+}
+
+.text {
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  width: 100%;
+}
+

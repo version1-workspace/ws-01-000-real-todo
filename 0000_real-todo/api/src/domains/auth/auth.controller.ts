@@ -26,8 +26,23 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() body: Record<string, any>) {
-    return this.authService.signIn(body.email, body.password);
+  async signIn(
+    @Body() body: Record<string, any>,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { email, password, rememberMe } = body;
+    const json = await this.authService.signIn(email, password);
+
+    if (rememberMe) {
+      res.cookie('refershToken', json.refreshToken, {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        path: '/',
+        domain: 'localhost:3000',
+      });
+    }
+
+    return json;
   }
 
   @Public()
@@ -38,15 +53,10 @@ export class AuthController {
     @Body() body: Record<string, any>,
     @Res({ passthrough: true }) response: Response,
   ): Promise<Record<string, any>> {
-    const token = this.extractTokenFromHeader(request);
+    const refreshToken = this.extractTokenFromCookie(request);
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get('AUTH_SECRET'),
-        ignoreExpiration: true,
-      });
-
-      const { uuid, refreshToken } = body;
-      const result = await this.authService.verifyRefreshToken(payload, {
+      const { uuid } = body;
+      const result = await this.authService.verifyRefreshToken(uuid, {
         uuid,
         refreshToken,
       });
@@ -63,8 +73,7 @@ export class AuthController {
     }
   }
 
-  private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+  private extractTokenFromCookie(request: Request): string | undefined {
+    return request.cookies.refreshToken;
   }
 }

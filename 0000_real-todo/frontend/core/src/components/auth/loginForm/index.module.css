@@ -1,0 +1,34 @@
+.content {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 80px;
+  min-height: 1000px;
+  width: 100%;
+}
+
+.form {
+  padding: 32px 16px;
+}
+
+.formTitle {
+  margin: 32px 0;
+  font-weight: normal;
+  font-size: 18px;
+}
+
+.field {
+  margin: 32px 0;
+}
+
+.details {
+  margin: 16px 0;
+}
+
+.link {
+  color: var(--info-color);
+  border-bottom: 1px solid var(--info-color);
+}
+
+.errorMessage {
+  color: var(--danger-color);
+}

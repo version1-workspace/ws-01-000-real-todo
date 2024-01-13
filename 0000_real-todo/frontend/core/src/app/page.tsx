@@ -6,6 +6,7 @@ import Section from "@/components/section";
 import img1 from "@/assets/hero-features-1.png";
 import img2 from "@/assets/hero-features-2.png";
 import img3 from "@/assets/hero-features-3.png";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -20,9 +21,11 @@ export default function Home() {
             Turbo はそんなあなたの希望を満たすアプリです。
           </p>
           <div className={styles.entryContainer}>
-            <Button variant="primary" className={styles.entry}>
-              Turboを始める
-            </Button>
+            <Link href="/login">
+              <Button variant="primary" className={styles.entry}>
+                Turboを始める
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

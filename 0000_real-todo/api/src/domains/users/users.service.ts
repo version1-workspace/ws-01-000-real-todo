@@ -23,6 +23,13 @@ export class UsersService {
     return this.usersRepository.findOneBy({ id });
   }
 
+  findByUUID(uuid: string): Promise<User | null> {
+    if (!uuid) {
+      return null
+    }
+    return this.usersRepository.findOneBy({ uuid });
+  }
+
   findByUsername(username: string): Promise<User | null> {
     if (!username) {
       return null

@@ -30,39 +30,32 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    return this.returnToken(user);
+    const res = this.token(user);
+    return res;
   }
 
   async verifyRefreshToken(
-    payload: JwtPayload,
+    uuid: string,
     body: {
       uuid: string;
       refreshToken: string;
     },
   ) {
-    const user = await this.usersService.findByUsername(payload.sub);
+    const user = await this.usersService.findByUUID(uuid);
     if (!user) {
-      this.loggerService.logger.info(
-        `username: ${payload.sub} / user is not found.`,
-      );
+      this.loggerService.logger.info(`id: ${uuid}. user is not found.`);
       return undefined;
     }
 
-    if (
-      body.uuid !== user.uuid ||
-      payload.refreshToken !== body.refreshToken ||
-      user.refreshToken !== body.refreshToken
-    ) {
-      this.loggerService.logger.info(
-        `username: ${payload.sub} / refresh token is invalid.`,
-      );
+    if (body.uuid !== user.uuid || user.refreshToken !== body.refreshToken) {
+      this.loggerService.logger.info(`id: ${uuid} / refresh token is invalid.`);
       return undefined;
     }
 
-    return this.returnToken(user);
+    return this.token(user);
   }
 
-  async returnToken(user: User) {
+  async token(user: User) {
     await this.usersService.updateRefreshToken(user);
 
     const payload = {
@@ -70,10 +63,12 @@ export class AuthService {
       refreshToken: user.refreshToken,
     };
 
+    const accessTokens = await this.jwtService.signAsync(payload);
+
     return {
       uuid: user.uuid,
       accessToken: await this.jwtService.signAsync(payload),
-      refreshToken: user.refreshToken
+      refreshToken: user.refreshToken,
     };
   }
 
