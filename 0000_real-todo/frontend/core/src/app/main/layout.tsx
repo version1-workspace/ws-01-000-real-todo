@@ -1,11 +1,6 @@
-import styles from "@/app/main/layout.module.css";
-import Header from "@/components/common/header/main";
-import Sidebar from "@/components/common/sidebar";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import Head from "next/head";
-
-const inter = Inter({ subsets: ["latin"] });
+import Body from "@/components/common/content";
 
 export const metadata: Metadata = {
   title: "Turbo",
@@ -18,17 +13,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="ja">
       <Head>
         <title>Turbo | Main</title>
       </Head>
-      <body className={[inter.className, styles.body].join(" ")}>
-        <Header />
-        <main className={styles.main}>
-          <Sidebar />
-          <div className={styles.mainContent}>{children}</div>
-        </main>
-      </body>
+      <Body>{children}</Body>
     </html>
   );
 }

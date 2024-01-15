@@ -5,8 +5,9 @@ import styles from "./index.module.css";
 import Input from "@/components/common/textInput";
 import Button from "@/components/common/button";
 import ShowIf from "@/components/common/showIf";
-import { useForm, Errors } from "@/hooks/useForm";
+import { useForm } from "@/hooks/useForm";
 import api from "@/services/api";
+import { useToast } from "@/lib/toast/hook";
 
 export const metadata: Metadata = {
   title: "Turbo | ログイン",
@@ -23,6 +24,7 @@ const mailFormat =
   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export default function Login() {
+  const { error } = useToast();
   const { submit, change, errors, form } = useForm<Form>({
     initialValues: { email: "", password: "", rememberMe: false },
     validate: (values, { errors }) => {
@@ -40,14 +42,12 @@ export default function Login() {
 
       return errors;
     },
-    onSubmit: async (values: Form, { setErrors }) => {
+    onSubmit: async (values: Form) => {
       try {
         const res = await api.authenticate(values);
         api.client.setAccessToken(res.accessToken);
       } catch (e) {
-        const requestErrors = new Errors<Form>();
-        requestErrors.set("authentication", "ログイン情報に誤りがあります");
-        setErrors(requestErrors);
+        error("メールアドレスかパスワードに誤りがあります。")
       }
     },
   });

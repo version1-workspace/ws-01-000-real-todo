@@ -1,0 +1,159 @@
+.toastContainer {
+  position: absolute;
+}
+
+.container {
+  background: white;
+  min-width: 300px;
+  display: flex;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  box-shadow: 1px 1px 7px 1px #22222230;
+  width: 100%;
+  animation-duration: 0.2s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes slideinFromRight {
+  from {
+    margin-left: 100%;
+  }
+
+  80% {
+    margin-left: -10%;
+  }
+
+  to {
+    margin-left: 0%;
+  }
+}
+
+@keyframes slideinFromTop {
+  from {
+    margin-top: -100%;
+  }
+
+  80% {
+    margin-top: 10%;
+  }
+
+  to {
+    margin-top: 0%;
+  }
+}
+
+@keyframes slideinFromBottom {
+  from {
+    margin-bottom: -100%;
+  }
+
+  80% {
+    margin-bottom: 10%;
+  }
+
+  to {
+    margin-bottom: 0%;
+  }
+}
+
+@keyframes slideinFromLeft {
+  from {
+    margin-left: -100%;
+  }
+
+  80% {
+    margin-left: 10%;
+  }
+
+  to {
+    margin-left: 0%;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px;
+  padding-bottom: 0;
+}
+
+.body {
+  padding: 16px;
+  padding-left: 24px;
+  padding-top: 0px;
+}
+
+.content {
+  width: 100%;
+}
+
+.close {
+  cursor: pointer;
+}
+
+.positionTopRight {
+  top: 32px;
+  right: 32px;
+}
+
+.positionTopRight .container {
+  animation-name: slideinFromRight;
+}
+
+.positionTop {
+  top: 32px;
+  right: 40%;
+}
+
+.positionTop .container {
+  animation-name: slideinFromTop;
+}
+
+.positionTopLeft {
+  top: 32px;
+  left: 32px;
+}
+
+.positionTopLeft .container {
+  animation-name: slideinFromLeft;
+}
+
+.positionBottom {
+  bottom: 32px;
+  right: 40%;
+}
+
+.positionBottom .container {
+  animation-name: slideinFromBottom;
+}
+
+.positionBottomLeft {
+  bottom: 32px;
+  left: 32px;
+}
+
+.positionBottomLeft .container {
+  animation-name: slideinFromLeft;
+}
+
+.positionBottomRight {
+  bottom: 32px;
+  right: 32px;
+}
+
+.positionBottomRight .container {
+  animation-name: slideinFromRight;
+}
+
+
+.info {
+  border-bottom: 8px solid var(--info-color);
+}
+
+.success {
+  border-bottom: 8px solid var(--success-color);
+}
+
+.error {
+  border-bottom: 8px solid var(--danger-color);
+}
