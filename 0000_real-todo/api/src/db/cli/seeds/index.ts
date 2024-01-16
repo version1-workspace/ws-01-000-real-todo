@@ -73,7 +73,7 @@ export const seed = async ({ app, dataSource, logger }) => {
           slug: 'programming',
           goal: '期限日までにフロントエンドエンジニアとして就職する。',
           shouldbe: 'エンジニアとしての学習習慣を身につけて生活する。',
-          status: 'active' as 'active',
+          status: 'active' as const,
         },
         {
           userId: user.id,
@@ -81,14 +81,14 @@ export const seed = async ({ app, dataSource, logger }) => {
           slug: 'english',
           goal: 'IELTS Over All 7.0',
           shouldbe: '英語に浸る',
-          status: 'active' as 'active',
+          status: 'active' as const,
         },
         {
           userId: user.id,
           name: 'プライベート',
           slug: 'private',
           goal: '長期休みに海外旅行する',
-          status: 'active' as 'active',
+          status: 'active' as const,
         },
       ].map(async (it: DeepPartial<Project>, index: number) => {
         const day = (30 - index).toString().padStart(2, '0');
@@ -113,25 +113,25 @@ export const seed = async ({ app, dataSource, logger }) => {
           userId: user.id,
           projectId: project.id,
           kind: 'task' as const,
-          status: 'scheduled' as 'scheduled',
+          status: 'scheduled' as const,
         },
         {
           userId: user.id,
           projectId: project.id,
           kind: 'task' as const,
-          status: 'scheduled' as 'scheduled',
+          status: 'scheduled' as const,
         },
         {
           userId: user.id,
           projectId: project.id,
           kind: 'task' as const,
-          status: 'scheduled' as 'scheduled',
+          status: 'scheduled' as const,
         },
         {
           userId: user.id,
           projectId: project.id,
           kind: 'task' as const,
-          status: 'scheduled' as 'scheduled',
+          status: 'scheduled' as const,
         },
         {
           userId: user.id,
@@ -139,7 +139,7 @@ export const seed = async ({ app, dataSource, logger }) => {
           deadline: dayjs('2024/08/12').toDate(),
           kind: 'task' as const,
           title: 'タスク ',
-          status: 'scheduled' as 'scheduled',
+          status: 'scheduled' as const,
         },
       ].map(async (it: DeepPartial<Task>, index: number) => {
         it.title = `Task ${index.toString()}`;

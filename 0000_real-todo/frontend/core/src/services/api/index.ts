@@ -1,4 +1,3 @@
-import mockAPI from "@/services/api/mock";
 import axios, { AxiosError, AxiosInstance } from "axios";
 
 let accessToken: string;

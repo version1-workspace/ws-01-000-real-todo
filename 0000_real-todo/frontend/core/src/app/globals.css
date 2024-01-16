@@ -72,9 +72,15 @@ body {
 
 body {
   color: var(--font-color-dark);
+  background: var(--background-color);
 }
 
-a {
+input {
+  color: var(--font-color-dark);
+  background: var(--background-color);
+
+  color: var(--font-color-dark);
+
   color: inherit;
   text-decoration: none;
 }

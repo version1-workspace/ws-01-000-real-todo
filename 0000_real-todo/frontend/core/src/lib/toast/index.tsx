@@ -119,7 +119,6 @@ export const ToastContainer = ({
         {list.map((item: Element) => {
           return (
             <li key={item.id}>
-              {item.id}
               <Toast config={item.config} onClose={() => remove(item.id)} />
             </li>
           );

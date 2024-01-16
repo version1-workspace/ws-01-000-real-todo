@@ -12,7 +12,7 @@ export const dataSourceOptions = {
   port: 3306,
   username: process.env['DATABASE_USERNAME'] || 'root',
   password: process.env['DATABASE_PASSWORD'],
-  database: process.env['DATABASE_NAME'] || 'todo_develpoment',
+  database: process.env['DATABASE_NAME'] || 'todo_development',
   entities: [User, Project, Task, TagTask, Tag],
   migrations,
   synchronize: false,

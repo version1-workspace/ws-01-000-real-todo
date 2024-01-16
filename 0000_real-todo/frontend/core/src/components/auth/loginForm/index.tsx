@@ -8,6 +8,7 @@ import ShowIf from "@/components/common/showIf";
 import { useForm } from "@/hooks/useForm";
 import api from "@/services/api";
 import { useToast } from "@/lib/toast/hook";
+import Checkbox from "@/components/common/checkbox";
 
 export const metadata: Metadata = {
   title: "Turbo | ログイン",
@@ -47,7 +48,7 @@ export default function Login() {
         const res = await api.authenticate(values);
         api.client.setAccessToken(res.accessToken);
       } catch (e) {
-        error("メールアドレスかパスワードに誤りがあります。")
+        error("メールアドレスかパスワードに誤りがあります。");
       }
     },
   });
@@ -83,17 +84,11 @@ export default function Login() {
         </ShowIf>
       </div>
       <div className={styles.field}>
-        <label>
-          <input
-            type="checkbox"
-            checked={form.rememberMe}
-            placeholder="***********"
-            onChange={(e) => {
-              change({ rememberMe: !!e.target.value });
-            }}
-          />
-          自動的にログインする
-        </label>
+        <Checkbox
+          label="自動的にログインする"
+          defaultValue={form.rememberMe}
+          onClick={(checked) => change({ rememberMe: checked })}
+        />
       </div>
       <div className={styles.field}>
         <Button variant="primary" onClick={submit}>
