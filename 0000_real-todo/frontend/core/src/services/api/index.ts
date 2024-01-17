@@ -1,9 +1,11 @@
-import Projet from "@/components/project/card";
 import axios, { AxiosError, AxiosInstance } from "axios";
 
 let accessToken: string;
 
 export const getAccessToken = () => accessToken;
+
+export const setUserId = (uuid: string) => localStorage.setItem("uuid", uuid);
+export const getUserId = () => localStorage.getItem("uuid") || "";
 
 class Client {
   _instance?: AxiosInstance;
@@ -56,8 +58,16 @@ const client = new Client({
 
 const api = {
   client,
+  refreshToken: ({ uuid }: { uuid: string }) => {
+    return client.instance.post("/auth/refresh", {
+      uuid,
+    });
+  },
+  fetchUser: () => {
+    return client.instance.get("/users/me");
+  },
   fetchProjects: () => {
-    return client.instance.get("/users/projects")
+    return client.instance.get("/users/projects");
   },
   fetchStats: () => [],
   fetchTasks: () => [],

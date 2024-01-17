@@ -24,7 +24,6 @@ export default function Main() {
         const res = await api.fetchProjects();
         const list = res.data.data;
         const projects = list.map((it: ProjectParams) => new ProjectModel(it));
-        debugger
 
         setProjects(projects);
       } catch {

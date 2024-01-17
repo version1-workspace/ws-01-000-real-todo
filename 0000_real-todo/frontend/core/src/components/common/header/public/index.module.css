@@ -12,6 +12,11 @@
   display: flex;
 }
 
+.logo a {
+  color: var(--font-color);
+  text-decoration: none;
+}
+
 .menu {
   display: flex;
   margin-right: 16px;

@@ -1,4 +1,5 @@
 import styles from "@/app/main/layout.module.css";
+import AuthContainer from "@/components/auth";
 import Header from "@/components/common/header/main";
 import Sidebar from "@/components/common/sidebar";
 import { ToastContainer } from "@/lib/toast";
@@ -13,11 +14,13 @@ export default function Body({ children }: { children: React.ReactNode }) {
         config={{
           position: position.TOP_RIGHT,
         }}>
-        <Header />
-        <main className={styles.main}>
-          <Sidebar />
-          <div className={styles.mainContent}>{children}</div>
-        </main>
+        <AuthContainer>
+          <Header />
+          <main className={styles.main}>
+            <Sidebar />
+            <div className={styles.mainContent}>{children}</div>
+          </main>
+        </AuthContainer>
       </ToastContainer>
     </body>
   );

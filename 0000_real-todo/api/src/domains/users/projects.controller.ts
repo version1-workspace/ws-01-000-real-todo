@@ -102,7 +102,6 @@ export class ProjectsController {
   async update(
     @DUser() user: User,
     @Param('slug') slug: string,
-    @Body() body: any,
   ): Promise<Record<string, any>> {
     return await this.projectsService.findOne({
       user,

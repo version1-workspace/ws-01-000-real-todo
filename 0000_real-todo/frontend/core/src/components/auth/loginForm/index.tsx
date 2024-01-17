@@ -7,7 +7,7 @@ import Input from "@/components/common/textInput";
 import Button from "@/components/common/button";
 import ShowIf from "@/components/common/showIf";
 import { useForm } from "@/hooks/useForm";
-import api from "@/services/api";
+import api, {setUserId} from "@/services/api";
 import { useToast } from "@/lib/toast/hook";
 import Checkbox from "@/components/common/checkbox";
 
@@ -49,6 +49,7 @@ export default function Login() {
       try {
         const res = await api.authenticate(values);
         api.client.setAccessToken(res.accessToken);
+        setUserId(res.uuid)
 
         router.push("/main")
       } catch (e) {

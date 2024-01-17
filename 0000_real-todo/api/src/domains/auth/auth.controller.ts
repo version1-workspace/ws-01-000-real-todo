@@ -30,11 +30,7 @@ export class AuthController {
     const json = await this.authService.signIn(email, password);
 
     if (rememberMe) {
-      res.cookie('refershToken', json.refreshToken, {
-        secure: true,
-        httpOnly: true,
-        sameSite: 'none',
-      });
+      this.setRefreshToken(res, json.refreshToken);
     }
 
     return json;
@@ -60,6 +56,8 @@ export class AuthController {
         return { message: 'invalid refresh token' };
       }
 
+      this.setRefreshToken(response, result.refreshToken);
+
       return result;
     } catch (e) {
       response.status(401);
@@ -70,5 +68,13 @@ export class AuthController {
 
   private extractTokenFromCookie(request: Request): string | undefined {
     return request.cookies.refreshToken;
+  }
+
+  private setRefreshToken(res: Response, token: string) {
+    res.cookie('refreshToken', token, {
+      secure: true,
+      httpOnly: true,
+      sameSite: 'none',
+    });
   }
 }
