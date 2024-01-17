@@ -13,7 +13,14 @@ async function bootstrap() {
     cors: {
       origin: ['http://localhost:3000'],
       methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'OPTIONS', 'DELETE'],
-      allowedHeaders: ['Authorization', 'Content-Type'],
+      allowedHeaders: [
+        'Origin',
+        'X-Requested-With',
+        'Authorization',
+        'Content-Type',
+        'Accept',
+      ],
+      credentials: true,
       preflightContinue: false,
       optionsSuccessStatus: 204,
     },

@@ -1,6 +1,7 @@
 "use client";
 import { Metadata } from "next";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import styles from "./index.module.css";
 import Input from "@/components/common/textInput";
 import Button from "@/components/common/button";
@@ -25,6 +26,7 @@ const mailFormat =
   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export default function Login() {
+  const router = useRouter()
   const { error } = useToast();
   const { submit, change, errors, form } = useForm<Form>({
     initialValues: { email: "", password: "", rememberMe: false },
@@ -47,6 +49,8 @@ export default function Login() {
       try {
         const res = await api.authenticate(values);
         api.client.setAccessToken(res.accessToken);
+
+        router.push("/main")
       } catch (e) {
         error("メールアドレスかパスワードに誤りがあります。");
       }

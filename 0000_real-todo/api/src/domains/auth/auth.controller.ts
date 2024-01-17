@@ -7,8 +7,6 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import { Public } from './auth.decorator';
 import { AuthService } from './auth.service';
@@ -18,9 +16,7 @@ import { LoggerService } from '../../lib/modules/logger/logger.service';
 export class AuthController {
   constructor(
     private authService: AuthService,
-    private configService: ConfigService,
     private loggerService: LoggerService,
-    private jwtService: JwtService,
   ) {}
 
   @Public()
@@ -35,10 +31,9 @@ export class AuthController {
 
     if (rememberMe) {
       res.cookie('refershToken', json.refreshToken, {
-        secure: process.env.NODE_ENV === 'production',
+        secure: true,
         httpOnly: true,
-        path: '/',
-        domain: 'localhost:3000',
+        sameSite: 'none',
       });
     }
 

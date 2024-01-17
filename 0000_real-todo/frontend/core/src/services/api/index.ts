@@ -1,19 +1,9 @@
+import Projet from "@/components/project/card";
 import axios, { AxiosError, AxiosInstance } from "axios";
 
 let accessToken: string;
 
 export const getAccessToken = () => accessToken;
-
-const instance = axios.create({
-  baseURL: "http://localhost:7000/api/v1",
-  timeout: 1000,
-  headers: { Authorization: getAccessToken() },
-});
-
-export const setAccessToken = (token: string) => {
-  accessToken = token;
-  instance.defaults.headers.common["Authorization"];
-};
 
 class Client {
   _instance?: AxiosInstance;
@@ -22,6 +12,7 @@ class Client {
   constructor(config: {
     baseURL: string;
     timeout: number;
+    withCredentials?: boolean;
     headers: {
       Authorization?: string;
     };
@@ -29,7 +20,6 @@ class Client {
     this._instance = axios.create({
       ...config,
       headers: {
-        Authorization: accessToken,
         ...(config.headers || {}),
       },
     });
@@ -46,7 +36,7 @@ class Client {
   setAccessToken = (token: string) => {
     accessToken = token;
     if (this._instance) {
-      this._instance.defaults.headers.common["Authorization"] = token;
+      this._instance.defaults.headers["Authorization"] = `Bearer ${token}`;
     }
   };
 
@@ -60,24 +50,30 @@ class Client {
 const client = new Client({
   baseURL: "http://localhost:7000/api/v1",
   timeout: 1000,
+  withCredentials: true,
   headers: { Authorization: getAccessToken() },
 });
 
 const api = {
   client,
-  fetchProducts: () => [],
+  fetchProjects: () => {
+    return client.instance.get("/users/projects")
+  },
   fetchStats: () => [],
   fetchTasks: () => [],
   authenticate: async ({
     email,
     password,
+    rememberMe,
   }: {
     email: string;
     password: string;
+    rememberMe: boolean;
   }) => {
     const res = await client.instance.post("/auth/login", {
       email,
       password,
+      rememberMe,
     });
 
     return res.data;

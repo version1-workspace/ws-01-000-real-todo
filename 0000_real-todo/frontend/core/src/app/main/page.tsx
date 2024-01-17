@@ -4,18 +4,32 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "@/app/main/page.module.css";
 import api from "@/services/api";
-import { Project } from "@/services/api/models/project";
+import {
+  Project,
+  ProjectModel,
+  ProjectParams,
+} from "@/services/api/models/project";
 import Card from "@/components/project/card";
 import Chart from "@/components/project/chart";
 import TaskList from "@/components/tasks/list";
+import { useToast } from "@/lib/toast/hook";
 
 export default function Main() {
+  const toast = useToast();
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
     const init = async () => {
-      const res = await api.fetchProjects();
-      setProjects(res.data);
+      try {
+        const res = await api.fetchProjects();
+        const list = res.data.data;
+        const projects = list.map((it: ProjectParams) => new ProjectModel(it));
+        debugger
+
+        setProjects(projects);
+      } catch {
+        toast.error("プロジェクトの取得に失敗しました");
+      }
     };
 
     init();
