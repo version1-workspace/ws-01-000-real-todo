@@ -8,15 +8,23 @@ import { Project } from '../projects/project.entity';
 import { ProjectsModule } from '../projects/projects.module';
 import { TagsController } from './tags.controller';
 import { TagsModule } from '../tags/tags.module';
+import { TasksController } from './tasks.controller';
+import { TasksModule } from '../tasks/tasks.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, Project]),
     ProjectsModule,
+    TasksModule,
     TagsModule,
   ],
   exports: [UsersService],
   providers: [UsersService],
-  controllers: [UserController, ProjectsController, TagsController],
+  controllers: [
+    UserController,
+    ProjectsController,
+    TagsController,
+    TasksController,
+  ],
 })
 export class UsersModule {}

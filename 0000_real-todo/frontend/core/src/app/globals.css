@@ -8,8 +8,6 @@
   --popup-bg-color: #fefefe;
   --background-color: #fefefe;
 
-
-
   --primary-color: #7A72FF;
   --secondary-color: #1C3041;
   --info-color: #9ED8DB;
@@ -91,6 +89,10 @@ ul {
 
 input:focus {
   outline: none;
+}
+
+a {
+  text-decoration: none;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -69,8 +69,10 @@ const api = {
   fetchProjects: () => {
     return client.instance.get("/users/projects");
   },
-  fetchStats: () => [],
-  fetchTasks: () => [],
+  fetchStats: async () => ({ data: [] }),
+  fetchTasks: ({ page }: { page: number }) => {
+    return client.instance.get("/users/tasks", { params: { page } });
+  },
   authenticate: async ({
     email,
     password,

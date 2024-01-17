@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import styles from "@/components/tasks/list/index.module.css";
 import api from "@/services/api";
-import { Task } from "@/services/api/models/task";
+import { Task, TaskParams } from "@/services/api/models/task";
 import { Pagination } from "@/services/api/models/pagination";
 import TaskItem from "@/components/tasks/item";
 import Popup from "@/components/tasks/popup";
@@ -16,6 +16,7 @@ import {
   IoCloseCircle as Close,
 } from "react-icons/io5";
 import { classHelper } from "@/lib/cls";
+import { factory } from "@/services/api/models";
 
 export default function TaskList() {
   const [show, setShow] = useState(false);
@@ -35,7 +36,14 @@ export default function TaskList() {
 
   const fetch = async ({ page }: { page: number }) => {
     const res = await api.fetchTasks({ page });
-    setData(res.data);
+    const { data, pageInfo } = res.data;
+    const list = data.map((it: TaskParams) => factory.task(it));
+    setData(
+      new Pagination<Task>({
+        list,
+        pageInfo,
+      }),
+    );
   };
 
   useEffect(() => {
@@ -159,6 +167,11 @@ export default function TaskList() {
             </li>
           );
         })}
+        {data.list.length === 0 ? (
+          <li>
+            <p className={styles.empty}>タスクが未登録です。</p>
+          </li>
+        ) : null}
       </ul>
       <div className={styles.footer}>
         <ul className={styles.pagination}>

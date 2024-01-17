@@ -13,6 +13,7 @@ import Card from "@/components/project/card";
 import Chart from "@/components/project/chart";
 import TaskList from "@/components/tasks/list";
 import { useToast } from "@/lib/toast/hook";
+import {factory} from "@/services/api/models";
 
 export default function Main() {
   const toast = useToast();
@@ -23,7 +24,7 @@ export default function Main() {
       try {
         const res = await api.fetchProjects();
         const list = res.data.data;
-        const projects = list.map((it: ProjectParams) => new ProjectModel(it));
+        const projects = list.map((it: ProjectParams) => factory.project(it));
 
         setProjects(projects);
       } catch {

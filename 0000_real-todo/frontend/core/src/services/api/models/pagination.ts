@@ -1,7 +1,7 @@
 interface PageInfo {
   page: number;
-  per: number;
-  total: number;
+  limit: number;
+  totalCount: number;
 }
 
 export interface PaginationParams<T> {
@@ -23,20 +23,20 @@ export class Pagination<T> {
   }
 
   get total() {
-    return this.pageInfo.total;
+    return this.pageInfo.totalCount;
   }
 
   get hasNext() {
-    const { per, page } = this.pageInfo;
-    return this.pageInfo.total > per * page;
+    const { limit } = this.pageInfo;
+    return this.total > limit * this.page;
   }
 
   get hasPrevious() {
-    return this.pageInfo.page > 1;
+    return this.page > 1;
   }
 
   get pageCount() {
-    return Math.ceil(this.pageInfo.total / this.pageInfo.per);
+    return Math.ceil(this.total / this.pageInfo.limit);
   }
 
   set(index: number, data: T) {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { FindOperator, In, Repository } from 'typeorm';
 import { Task } from './task.entity';
 import { Pagination } from '../../entities/pagination.entity';
 import { Stat } from '../../entities/stat.entity';
@@ -11,13 +11,23 @@ type SortType = 'deadline' | 'started' | 'updated' | 'created';
 type OrderType = 'asc' | 'desc';
 
 interface SearchParams {
-  projectId: string;
   user: User;
+  projectId?: string;
+  slug?: string;
   limit?: number;
   sortType?: SortType;
   sortOrder?: OrderType;
   status?: TaskStatuses[];
   page?: number;
+}
+
+interface WhereParms {
+  project?: {
+    uuid?: string;
+    slug?: string;
+  };
+  userId: number;
+  status: FindOperator<any>;
 }
 
 const sortOptions = (t: SortType, o: OrderType) => {
@@ -42,8 +52,9 @@ export class TasksService {
   ) {}
 
   async search({
-    projectId,
     user,
+    projectId,
+    slug,
     sortType,
     sortOrder,
     limit,
@@ -64,14 +75,27 @@ export class TasksService {
       deadline: 'asc',
     };
     const { take, skip } = options;
+
+    let where: WhereParms = {
+      userId: user.id,
+      status: In(options.status),
+    };
+
+    if (projectId) {
+      where = {
+        ...where,
+        project: { uuid: projectId },
+      };
+    }
+    if (slug) {
+      where = {
+        ...where,
+        project: { slug },
+      };
+    }
+
     const [tasks, totalCount] = await this.tasksRepository.findAndCount({
-      where: {
-        project: {
-          uuid: projectId,
-        },
-        userId: user.id,
-        status: In(options.status),
-      },
+      where,
       relations: {
         project: true,
         user: true,
@@ -101,30 +125,31 @@ export class TasksService {
     });
 
     return milestones.reduce((acc: Record<number, Task[]>, it: Task) => {
-      const list = acc[it.projectId] || []
+      const list = acc[it.projectId] || [];
       return { ...acc, [it.projectId]: [...list, it] };
     }, {});
   }
 
   async statics(ids: number[]): Promise<Record<number, Stat>> {
-    const stats = await this.tasksRepository.createQueryBuilder("tasks")
-    .select("projectId, kind, count(*) as count")
-    .where("tasks.projectId IN(:id)", { id: ids })
-    .groupBy("projectId")
-    .addGroupBy("kind")
-    .getRawMany()
+    const stats = await this.tasksRepository
+      .createQueryBuilder('tasks')
+      .select('projectId, kind, count(*) as count')
+      .where('tasks.projectId IN(:id)', { id: ids })
+      .groupBy('projectId')
+      .addGroupBy('kind')
+      .getRawMany();
 
     return stats.reduce((acc, it) => {
-      const summary = acc[it.projectId] || { total: 0 }
-      summary[it.kind] = Number(it.count)
-      summary.total = (summary.total || 0) + Number(it.count)
+      const summary = acc[it.projectId] || { total: 0 };
+      summary[it.kind] = Number(it.count);
+      summary.total = (summary.total || 0) + Number(it.count);
 
       return {
         ...acc,
-        [it.projectId]: summary
-      }
-    }, {})
+        [it.projectId]: summary,
+      };
+    }, {});
   }
 
-  build = this.tasksRepository.create
+  build = this.tasksRepository.create;
 }

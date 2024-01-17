@@ -117,3 +117,9 @@
   border-left: 1px solid white;
   padding: 4px;
 }
+
+.empty {
+  padding: 64px;
+  text-align: center;
+  color: var(--font-color-weak);
+}

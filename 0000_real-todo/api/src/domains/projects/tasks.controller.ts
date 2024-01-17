@@ -34,14 +34,14 @@ class TaskIndexDto extends Dto<TaskIndexDto> {
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
-  @Get(':projectId/tasks')
+  @Get(':slug/tasks')
   async index(
     @DUser() user: User,
-    @Param('projectId') projectId: string,
+    @Param('slug') slug: string,
     @Query() query: TaskIndexDto,
   ): Promise<Record<string, any>> {
     const result = await this.tasksService.search({
-      projectId,
+      slug,
       user,
       ...query,
     });

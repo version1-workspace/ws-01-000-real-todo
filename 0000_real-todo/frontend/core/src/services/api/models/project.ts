@@ -64,18 +64,6 @@ export class ProjectModel {
     return this._milestones;
   }
 
-  get slug() {
-    return this._raw.slug
-  }
-
-  get deadline() {
-    return new DateDecorator(this._raw.deadline)
-  }
-
-  get stats() {
-    return this._raw.stats
-  }
-
   params(): ProjectParams | undefined {
     if (!this._raw) {
       return;
