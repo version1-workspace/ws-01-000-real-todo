@@ -88,6 +88,7 @@ export const ToastContainer = ({
     };
 
     rerender({});
+    scrollTo(0, 0);
 
     return id;
   };
