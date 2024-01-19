@@ -23,8 +23,8 @@ export type TaskStatuses = keyof typeof TaskStatus;
 
 export const TaskKind = {
   task: 'task',
-  milestone: 'milestone'
-}
+  milestone: 'milestone',
+};
 
 export type TaskKinds = keyof typeof TaskKind;
 
@@ -93,13 +93,13 @@ export class Task extends Base {
   @JoinTable({
     name: 'tagTasks',
     joinColumn: {
-        name: "taskId",
-        referencedColumnName: "id"
+      name: 'taskId',
+      referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-        name: "tagId",
-        referencedColumnName: "id"
-    }
+      name: 'tagId',
+      referencedColumnName: 'id',
+    },
   })
   tags: Tag[];
 }

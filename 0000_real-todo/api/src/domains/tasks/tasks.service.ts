@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import dayjs from 'dayjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOperator, In, Repository } from 'typeorm';
-import { Task } from './task.entity';
+import { Task, TaskKinds } from './task.entity';
 import { Pagination } from '../../entities/pagination.entity';
 import { Stat } from '../../entities/stat.entity';
 import { User } from '../users/user.entity';
@@ -93,7 +94,6 @@ export class TasksService {
         project: { slug },
       };
     }
-    console.log('where ======', where);
 
     const [tasks, totalCount] = await this.tasksRepository.findAndCount({
       where,
@@ -153,4 +153,42 @@ export class TasksService {
   }
 
   build = this.tasksRepository.create;
+
+  async update(
+    userId: string,
+    taskId: string,
+    values: Partial<{
+      status: TaskStatuses;
+      title: string;
+      kind: TaskKinds;
+      deadline: string;
+      startingAt: string;
+      startedAt: string;
+      finishedAt: string;
+      archivedAt: string;
+    }>,
+  ) {
+    const task = await this.tasksRepository.update(
+      { uuid: taskId, user: { uuid: userId } },
+      values,
+    );
+
+    return task;
+  }
+
+  async archive(userId: string, taskId: string) {
+    const now = dayjs();
+    return this.update(userId, taskId, {
+      status: 'archived',
+      archivedAt: now.format(),
+    });
+  }
+
+  async complete(userId: string, taskId: string) {
+    const now = dayjs();
+    return this.update(userId, taskId, {
+      status: 'completed',
+      finishedAt: now.format(),
+    });
+  }
 }

@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
+import mockApi from "./mock";
 
 let accessToken: string;
 
@@ -69,7 +70,7 @@ const api = {
   fetchProjects: () => {
     return client.instance.get("/users/projects");
   },
-  fetchStats: async () => ({ data: [] }),
+  fetchStats: mockApi.fetchStats,
   fetchTasks: ({ page }: { page: number }) => {
     return client.instance.get("/users/tasks", {
       params: { page, status: ["scheduled"] },

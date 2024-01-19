@@ -1,4 +1,12 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Patch,
+  Put,
+  Body,
+  Query,
+  Param,
+} from '@nestjs/common';
 import { TasksService } from '../tasks/tasks.service';
 import { User as DUser } from './user.decorator';
 import { User } from './user.entity';
@@ -23,5 +31,38 @@ export class TasksController {
     });
 
     return result.serialize;
+  }
+
+  @Patch(':taskId')
+  async update(
+    @DUser() user: User,
+    @Param('taskId') taskId: string,
+    @Body() body: Record<string, any>,
+  ): Promise<Record<string, any>> {
+    const { status } = body;
+    const result = await this.tasksService.update(user.uuid, taskId, {
+      status,
+    });
+
+    return { data: result };
+  }
+
+  @Put(':taskId/arvchive')
+  async archive(
+    @DUser() user: User,
+    @Param('taskId') taskId: string,
+  ): Promise<Record<string, any>> {
+    const result = await this.tasksService.archive(user.uuid, taskId);
+
+    return { data: result };
+  }
+  @Put(':taskId/complete')
+  async complete(
+    @DUser() user: User,
+    @Param('taskId') taskId: string,
+  ): Promise<Record<string, any>> {
+    const result = await this.tasksService.complete(user.uuid, taskId);
+
+    return { data: result };
   }
 }

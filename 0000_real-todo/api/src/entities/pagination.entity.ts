@@ -21,8 +21,7 @@ export class Pagination<T, K> {
   }
 
   get serialize() {
-    const { data, limit, page, sortOrder, sortType, totalCount } =
-      this._params;
+    const { data, limit, page, sortOrder, sortType, totalCount } = this._params;
     return {
       data,
       pageInfo: {
