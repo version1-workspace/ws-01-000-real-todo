@@ -31,8 +31,8 @@
   cursor: pointer;
 }
 
-.avatarIcon {
-
+.addIcon {
+  color: var(--font-color-light);
 }
 
 .avatarCircleContaiener {

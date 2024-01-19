@@ -27,22 +27,28 @@ export default function Projet({ data }: Props) {
           <span>ゴール : </span>
           <p>{data.goal}</p>
         </div>
-        <div className={styles.shouldbe}>
-          <span>あり方 : </span>
-          <p>{data.shouldbe}</p>
-        </div>
+        {data.shouldbe ? (
+          <div className={styles.shouldbe}>
+            <span>あり方 : </span>
+            <p>{data.shouldbe}</p>
+          </div>
+        ) : null}
       </div>
       <div className={styles.footer}>
         <div className={styles.stats}>
           <p className={styles.milestone}>
-            <span className={styles.icon}><Milestone size="12px" /></span>
-            <span className={styles.statsText}>{data.stats.milestone}</span>
+            <span className={styles.icon}>
+              <Milestone size="12px" />
+            </span>
+            <span className={styles.statsText}>{data.stats?.milestone}</span>
           </p>
           <p className={styles.task}>
-            <span className={styles.icon}><Task size="12px"/></span>
-            <span className={styles.statsText}>{data.stats.task}</span>
+            <span className={styles.icon}>
+              <Task size="12px" />
+            </span>
+            <span className={styles.statsText}>{data.stats?.task}</span>
             <span className={styles.slash}>/</span>
-            <span className={styles.statsText}>{data.stats.totalTask}</span>
+            <span className={styles.statsText}>{data.stats?.totalTask}</span>
           </p>
         </div>
       </div>

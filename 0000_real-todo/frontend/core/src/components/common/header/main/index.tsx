@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Link from "next/link";
 import styles from "./index.module.css";
 import {
@@ -28,7 +28,7 @@ export default function Header() {
           <ul className={styles.menu}>
             <li className={styles.menuItem}>
               <Link href="/main/projects/new">
-                <Plus size="24px" />
+                <Plus className={styles.addIcon} size="24px" />
               </Link>
             </li>
             <li className={styles.menuItem}>
