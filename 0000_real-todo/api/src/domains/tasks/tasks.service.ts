@@ -93,6 +93,7 @@ export class TasksService {
         project: { slug },
       };
     }
+    console.log('where ======', where);
 
     const [tasks, totalCount] = await this.tasksRepository.findAndCount({
       where,

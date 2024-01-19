@@ -60,6 +60,7 @@
 }
 
 .menuTitle {
+  color: var(--font-color-dark-weak);
   font-weight: 500;
   letter-spacing: 0.8px;
 }
@@ -68,6 +69,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  color: var(--font-color-dark-weak);
 }
 
 .deadline {

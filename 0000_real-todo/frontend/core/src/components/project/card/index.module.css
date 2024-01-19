@@ -17,6 +17,7 @@
 .deadline {
   display: flex;
   align-items: center;
+  color: var(--font-color-dark-weak);
 }
 
 .title {
@@ -44,6 +45,7 @@
   margin-right: 16px;
   margin-bottom: 8px;
   font-size: 16px;
+  color: var(--font-color-dark-weak);
 }
 
 .goal > span {

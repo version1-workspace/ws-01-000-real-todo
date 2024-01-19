@@ -71,7 +71,9 @@ const api = {
   },
   fetchStats: async () => ({ data: [] }),
   fetchTasks: ({ page }: { page: number }) => {
-    return client.instance.get("/users/tasks", { params: { page } });
+    return client.instance.get("/users/tasks", {
+      params: { page, status: ["scheduled"] },
+    });
   },
   authenticate: async ({
     email,
