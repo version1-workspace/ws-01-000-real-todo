@@ -28,7 +28,7 @@ interface OrderParams {
   type: OrderType;
 }
 
-interface Params {
+export interface Params {
   text: string;
   date: DateParams;
   order: OrderParams;
@@ -71,7 +71,7 @@ export default function useFilter() {
     };
 
     if (type === "text") {
-      newValue.statuses = {...initialValue.statuses}
+      newValue.statuses = { ...initialValue.statuses };
     }
 
     setOriginal(newValue);

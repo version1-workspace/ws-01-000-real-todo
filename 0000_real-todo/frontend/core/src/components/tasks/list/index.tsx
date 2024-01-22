@@ -6,7 +6,9 @@ import { Task, TaskParams } from "@/services/api/models/task";
 import { Pagination } from "@/services/api/models/pagination";
 import TaskItem from "@/components/tasks/item";
 import Popup from "@/components/tasks/popup";
-import useFilter from "@/components/tasks/list/hooks/useFilter";
+import useFilter, {
+  Params as FilterParams,
+} from "@/components/tasks/list/hooks/useFilter";
 import {
   IoListOutline as Layout,
   IoChevronForward as Forward,
@@ -16,7 +18,10 @@ import {
   IoCloseCircle as Close,
 } from "react-icons/io5";
 import { classHelper } from "@/lib/cls";
+import { ja } from "@/lib/transltate";
 import { factory } from "@/services/api/models";
+
+const taskStatuses = ja.derive("task.status")!;
 
 export default function TaskList() {
   const [show, setShow] = useState(false);
@@ -26,19 +31,22 @@ export default function TaskList() {
     date,
     order,
     text,
+    statuses,
     isDateSet,
     replica,
     update,
-    statuses,
     reset,
     resetState,
     save,
   } = useFilter();
 
-  const fetch = async () => {
+  const fetch = async ({
+    page,
+    statuses,
+  }: { page?: number } & Partial<FilterParams>) => {
     const res = await api.fetchTasks({
-      page: data?.page || 1,
-      status: Object.keys(statuses),
+      page: page || 1,
+      status: Object.keys(statuses || {}),
     });
     const { data: tasks, pageInfo } = res.data;
     const list = tasks.map((it: TaskParams) => factory.task(it));
@@ -51,7 +59,7 @@ export default function TaskList() {
   };
 
   useEffect(() => {
-    fetch();
+    fetch(replica);
   }, []);
 
   if (!data) {
@@ -94,6 +102,17 @@ export default function TaskList() {
           <div className={styles.layout}>
             <div className={styles.filterStates}>
               <span className={styles.filterState}>
+                <label>ステータス: </label>
+                {Object.keys(statuses || {})
+                  .map((key) => taskStatuses.t(key))
+                  .join("、") || "なし"}
+                <div
+                  className={styles.close}
+                  onClick={() => resetState("statuses")}>
+                  <Close size="12px" />
+                </div>
+              </span>
+              <span className={styles.filterState}>
                 <label>フィルタ: </label>
                 {text || "なし"}
                 <div
@@ -133,13 +152,13 @@ export default function TaskList() {
                   value={replica}
                   onSubmit={() => {
                     save();
-                    fetch();
+                    fetch(replica);
                     setShow(false);
                   }}
                   onChange={update}
                   onCancel={() => {
                     reset();
-                    fetch();
+                    fetch(replica);
                     setShow(false);
                   }}
                 />
@@ -163,18 +182,18 @@ export default function TaskList() {
                 }
                 onComplete={(task: Task) => {
                   const newData = data.set(index, task.complete());
-                  api.completeTask({ id: task.id })
+                  api.completeTask({ id: task.id });
                   setData(newData);
                 }}
                 onReopen={(task: Task) => {
                   const newData = data.set(index, task.reopen());
-                  api.reopenTask({ id: task.id })
+                  api.reopenTask({ id: task.id });
                   setData(newData);
                 }}
                 onEdit={() => {}}
                 onArchive={(task: Task) => {
                   const newData = data.set(index, task.archive());
-                  api.archiveTask({ id: task.id })
+                  api.archiveTask({ id: task.id });
                   setData(newData);
                 }}
               />
@@ -195,7 +214,7 @@ export default function TaskList() {
               if (!data.hasPrevious) {
                 return;
               }
-              fetch({ page: data.page - 1 });
+              fetch({ page: data.page - 1, ...replica });
             }}>
             <Back />
           </li>
@@ -211,7 +230,7 @@ export default function TaskList() {
                   if (index + 1 === data.page) {
                     return;
                   }
-                  fetch({ page: index + 1 });
+                  fetch({ page: index + 1, ...replica });
                 }}>
                 {index + 1}
               </li>
@@ -224,7 +243,7 @@ export default function TaskList() {
                 return;
               }
 
-              fetch({ page: data.page + 1 });
+              fetch({ page: data.page + 1, ...replica });
             }}>
             <Forward />
           </li>
