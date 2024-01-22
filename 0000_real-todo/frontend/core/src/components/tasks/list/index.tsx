@@ -29,15 +29,19 @@ export default function TaskList() {
     isDateSet,
     replica,
     update,
+    statuses,
     reset,
     resetState,
     save,
   } = useFilter();
 
-  const fetch = async ({ page }: { page: number }) => {
-    const res = await api.fetchTasks({ page });
-    const { data, pageInfo } = res.data;
-    const list = data.map((it: TaskParams) => factory.task(it));
+  const fetch = async () => {
+    const res = await api.fetchTasks({
+      page: data?.page || 1,
+      status: Object.keys(statuses),
+    });
+    const { data: tasks, pageInfo } = res.data;
+    const list = tasks.map((it: TaskParams) => factory.task(it));
     setData(
       new Pagination<Task>({
         list,
@@ -47,7 +51,7 @@ export default function TaskList() {
   };
 
   useEffect(() => {
-    fetch({ page: 1 });
+    fetch();
   }, []);
 
   if (!data) {
@@ -75,7 +79,9 @@ export default function TaskList() {
             </div>
             <div className={styles.displayPageCount}>
               <label>表示件数 : </label>
-              <select onChange={(e) => setDisplayCount(Number(e.target.value))}>
+              <select
+                onChange={(e) => setDisplayCount(Number(e.target.value))}
+                value={displayCount}>
                 <option value="10">10 件</option>
                 <option value="50">50 件</option>
                 <option value="100">100 件</option>
@@ -127,11 +133,13 @@ export default function TaskList() {
                   value={replica}
                   onSubmit={() => {
                     save();
+                    fetch();
                     setShow(false);
                   }}
                   onChange={update}
                   onCancel={() => {
                     reset();
+                    fetch();
                     setShow(false);
                   }}
                 />
@@ -155,14 +163,20 @@ export default function TaskList() {
                 }
                 onComplete={(task: Task) => {
                   const newData = data.set(index, task.complete());
+                  api.completeTask({ id: task.id })
                   setData(newData);
                 }}
                 onReopen={(task: Task) => {
                   const newData = data.set(index, task.reopen());
+                  api.reopenTask({ id: task.id })
                   setData(newData);
                 }}
                 onEdit={() => {}}
-                onArchive={() => {}}
+                onArchive={(task: Task) => {
+                  const newData = data.set(index, task.archive());
+                  api.archiveTask({ id: task.id })
+                  setData(newData);
+                }}
               />
             </li>
           );

@@ -4,16 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "@/app/main/page.module.css";
 import api from "@/services/api";
-import {
-  Project,
-  ProjectModel,
-  ProjectParams,
-} from "@/services/api/models/project";
+import { Project, ProjectParams } from "@/services/api/models/project";
 import Card from "@/components/project/card";
 import Chart from "@/components/project/chart";
 import TaskList from "@/components/tasks/list";
 import { useToast } from "@/lib/toast/hook";
-import {factory} from "@/services/api/models";
+import { factory } from "@/services/api/models";
+import route from "@/lib/route";
 
 export default function Main() {
   const toast = useToast();
@@ -43,7 +40,7 @@ export default function Main() {
           <div className={styles.content}>
             {projects.map((item) => {
               return (
-                <Link key={item.slug} href={item.slug}>
+                <Link key={item.slug} href={route.main.child(item.slug)}>
                   <Card data={item} />
                 </Link>
               );

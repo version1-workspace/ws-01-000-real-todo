@@ -13,6 +13,7 @@ const Status = {
 type StatusType = keyof typeof Status;
 
 export interface TaskParams {
+  uuid: string;
   title: string;
   status: StatusType;
 
@@ -48,7 +49,7 @@ export class TaskModel {
   readonly _project: Project;
 
   constructor(params: TaskParams) {
-    this.id = uuid();
+    this.id = params.uuid || uuid();
     this._raw = params;
 
     this._children = params.children?.map((it) => factory.task(it)) || [];

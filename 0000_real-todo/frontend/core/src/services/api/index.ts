@@ -71,11 +71,21 @@ const api = {
     return client.instance.get("/users/projects");
   },
   fetchStats: mockApi.fetchStats,
-  fetchTasks: ({ page }: { page: number }) => {
+  fetchTasks: ({ page, status }: { page: number; status: string[] }) => {
     return client.instance.get("/users/tasks", {
-      params: { page, status: ["scheduled"] },
+      params: { page, status },
     });
   },
+  completeTask: ({ id }: { id: string }) => {
+    return client.instance.put(`/users/tasks/${id}/complete`);
+  },
+  reopenTask: ({ id }: { id: string }) => {
+    return client.instance.put(`/users/tasks/${id}/archive`);
+  },
+  archiveTask: ({ id }: { id: string }) => {
+    return client.instance.put(`/users/tasks/${id}/archive`);
+  },
+  updateTask: ({ userId, taskId }: { userId: string; taskId: string }) => {},
   authenticate: async ({
     email,
     password,

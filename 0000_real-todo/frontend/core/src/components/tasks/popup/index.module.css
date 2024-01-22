@@ -12,6 +12,7 @@
   padding-top: 8px;
   background: var(--popup-bg-color);
   min-width: 320px;
+  z-index: 1;
 }
 
 .label {

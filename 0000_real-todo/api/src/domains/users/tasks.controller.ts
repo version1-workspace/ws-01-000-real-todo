@@ -47,7 +47,7 @@ export class TasksController {
     return { data: result };
   }
 
-  @Put(':taskId/arvchive')
+  @Put(':taskId/archive')
   async archive(
     @DUser() user: User,
     @Param('taskId') taskId: string,
@@ -56,12 +56,23 @@ export class TasksController {
 
     return { data: result };
   }
+
   @Put(':taskId/complete')
   async complete(
     @DUser() user: User,
     @Param('taskId') taskId: string,
   ): Promise<Record<string, any>> {
     const result = await this.tasksService.complete(user.uuid, taskId);
+
+    return { data: result };
+  }
+
+  @Put(':taskId/reopen')
+  async reopen(
+    @DUser() user: User,
+    @Param('taskId') taskId: string,
+  ): Promise<Record<string, any>> {
+    const result = await this.tasksService.reopen(user.uuid, taskId);
 
     return { data: result };
   }

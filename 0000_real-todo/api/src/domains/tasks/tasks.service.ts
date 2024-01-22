@@ -7,6 +7,7 @@ import { Pagination } from '../../entities/pagination.entity';
 import { Stat } from '../../entities/stat.entity';
 import { User } from '../users/user.entity';
 import { TaskStatuses } from './task.entity';
+import { ppid } from 'process';
 
 type SortType = 'deadline' | 'started' | 'updated' | 'created';
 type OrderType = 'asc' | 'desc';
@@ -50,6 +51,8 @@ export class TasksService {
   constructor(
     @InjectRepository(Task)
     private tasksRepository: Repository<Task>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   async search({
@@ -168,10 +171,23 @@ export class TasksService {
       archivedAt: string;
     }>,
   ) {
-    const task = await this.tasksRepository.update(
-      { uuid: taskId, user: { uuid: userId } },
-      values,
-    );
+    const task = await this.tasksRepository.findOne({
+      relations: {
+        user: true,
+      },
+      where: {
+        uuid: taskId,
+        user: {
+          uuid: userId,
+        },
+      },
+    });
+    Object.keys(values).forEach((key: string) => {
+      task[key] = values[key];
+    });
+
+    const manager = this.tasksRepository.manager;
+    await manager.save(task);
 
     return task;
   }
@@ -188,6 +204,14 @@ export class TasksService {
     const now = dayjs();
     return this.update(userId, taskId, {
       status: 'completed',
+      finishedAt: now.format(),
+    });
+  }
+
+  async reopen(userId: string, taskId: string) {
+    const now = dayjs();
+    return this.update(userId, taskId, {
+      status: 'scheduled',
       finishedAt: now.format(),
     });
   }

@@ -32,8 +32,8 @@ export class User extends Base {
   status: 'active' | 'deactive';
 
   @OneToMany(() => Project, (project) => project.user)
-  projects: Project[]
+  projects: Project[];
 
   @OneToMany(() => Task, (task) => task.user)
-  tasks: Task[]
+  tasks: Task[];
 }
