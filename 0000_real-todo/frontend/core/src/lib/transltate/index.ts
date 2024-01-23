@@ -20,7 +20,10 @@ class Translate {
   }
 
   derive(namespace: string) {
-    const res = find(this.translations, [this.defaultNamespace, namespace].join("."));
+    const res = find(
+      this.translations,
+      [this.defaultNamespace, namespace].join("."),
+    );
     if (typeof res !== "object") {
       return;
     }
@@ -29,15 +32,14 @@ class Translate {
   }
 
   t(str: string) {
-    const namespace = this.defaultNamespace ? [this.defaultNamespace, str].join('.') : str
+    const namespace = this.defaultNamespace
+      ? [this.defaultNamespace, str].join(".")
+      : str;
     return find(this.translations, namespace);
   }
 }
 
-const find = (
-  obj: { [key: string]: any },
-  str: string,
-): string | { [key: string]: any } => {
+const find = (obj: { [key: string]: any }, str: string): string => {
   let search = str;
   const delimited = str.split(".");
   if (delimited.length > 1) {

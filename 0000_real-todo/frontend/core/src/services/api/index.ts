@@ -80,7 +80,7 @@ const api = {
     return client.instance.put(`/users/tasks/${id}/complete`);
   },
   reopenTask: ({ id }: { id: string }) => {
-    return client.instance.put(`/users/tasks/${id}/archive`);
+    return client.instance.put(`/users/tasks/${id}/reopen`);
   },
   archiveTask: ({ id }: { id: string }) => {
     return client.instance.put(`/users/tasks/${id}/archive`);

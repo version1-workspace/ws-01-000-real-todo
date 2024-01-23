@@ -1,11 +1,6 @@
 "use client";
-import { SyntheticEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "@/components/tasks/popupMenu/index.module.css";
-import {
-  IoPencil as Edit,
-  IoCheckmark as Done,
-  IoArchiveOutline as Archive,
-} from "react-icons/io5";
 import { classHelper } from "@/lib/cls";
 
 interface Props {
@@ -47,6 +42,7 @@ export default function PopupMenu({ trigger, actions }: Props) {
           {(actions || []).map((it, index) => {
             return (
               <li
+                key={it.text}
                 className={classHelper({
                   [styles.action]: true,
                   [styles.danger]: it.danger,

@@ -6,6 +6,7 @@ import { Task, TaskParams } from "@/services/api/models/task";
 import { Pagination } from "@/services/api/models/pagination";
 import TaskItem from "@/components/tasks/item";
 import Popup from "@/components/tasks/popup";
+import TaskForm from "@/components/tasks/form";
 import useFilter, {
   Params as FilterParams,
 } from "@/components/tasks/list/hooks/useFilter";
@@ -20,6 +21,7 @@ import {
 import { classHelper } from "@/lib/cls";
 import { ja } from "@/lib/transltate";
 import { factory } from "@/services/api/models";
+import { useModal } from "@/lib/modal";
 
 const taskStatuses = ja.derive("task.status")!;
 
@@ -39,6 +41,7 @@ export default function TaskList() {
     resetState,
     save,
   } = useFilter();
+  const { open, hide } = useModal();
 
   const fetch = async ({
     page,
@@ -190,7 +193,11 @@ export default function TaskList() {
                   api.reopenTask({ id: task.id });
                   setData(newData);
                 }}
-                onEdit={() => {}}
+                onEdit={() => {
+                  open({
+                    content: <TaskForm />,
+                  });
+                }}
                 onArchive={(task: Task) => {
                   const newData = data.set(index, task.archive());
                   api.archiveTask({ id: task.id });

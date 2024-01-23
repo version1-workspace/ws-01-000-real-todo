@@ -54,16 +54,12 @@ const steps = [
   {
     label: "確認",
     submitLabel: "作成",
-    onNext: (_project: Project) => {
-
-    }
+    onNext: (_project: Project) => {},
   },
   {
     label: "完了",
     submitLabel: "プロジェクト詳細へ",
-    onNext: (_project: Project) => {
-
-    }
+    onNext: (_project: Project) => {},
   },
 ];
 
@@ -81,7 +77,7 @@ function Steps({ index, steps }: StepsProps) {
         </div>
         <ul className={styles.steps}>
           {steps.map((it, number) => (
-            <li className={styles.step}>
+            <li key={it.label} className={styles.step}>
               <div className={styles.item}>
                 <div className={styles.circle}>
                   {index !== number ? <div className={styles.overlay} /> : null}
@@ -127,7 +123,14 @@ export default function ProjectsNew() {
           <Steps steps={steps} index={index} />
           <div className={styles.body}>
             <div className={styles.form}>
-              {[<GoalForm />, <MilestoneForm />, <ConfirmForm />, <CompleteForm />][index]}
+              {
+                [
+                  <GoalForm />,
+                  <MilestoneForm />,
+                  <ConfirmForm />,
+                  <CompleteForm />,
+                ][index]
+              }
             </div>
           </div>
           <div className={styles.footer}>
@@ -149,26 +152,26 @@ export default function ProjectsNew() {
                 ) : null}
               </div>
               <div className={styles.next}>
-                  <Button
-                    variant="primary"
-                    onClick={() => {
-                      if (step.validation) {
-                        const validator = step.validation(project);
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    if (step.validation) {
+                      const validator = step.validation(project);
 
-                        if (!validator.valid) {
-                          setErrors(validator.errors);
-                          return;
-                        }
+                      if (!validator.valid) {
+                        setErrors(validator.errors);
+                        return;
                       }
+                    }
 
-                      setErrors(undefined);
-                      step.onNext?.(project)
-                      if (index < steps.length - 1) {
-                        setIndex((index) => index + 1);
-                      }
-                    }}>
-                    {step.submitLabel ? step.submitLabel : "次へ"}
-                  </Button>
+                    setErrors(undefined);
+                    step.onNext?.(project);
+                    if (index < steps.length - 1) {
+                      setIndex((index) => index + 1);
+                    }
+                  }}>
+                  {step.submitLabel ? step.submitLabel : "次へ"}
+                </Button>
               </div>
             </div>
           </div>
