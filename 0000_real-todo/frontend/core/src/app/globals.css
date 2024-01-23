@@ -24,6 +24,11 @@
   --bg-color-light: #fefefe;
   --bg-color-light-2: #f9f9f9;
 
+  --input-outline-color: #22222240;
+
+  /* shadow */
+  --button-shadow: #22222220;
+
 
   /* z-index */
   --z-index-modal: 10;
@@ -80,25 +85,21 @@ body {
   background: var(--background-color);
 }
 
-input {
+input, textarea {
   color: var(--font-color-dark);
   background: var(--background-color);
+}
 
-  color: var(--font-color-dark);
-
-  color: inherit;
-  text-decoration: none;
+input:focus, textarea:focus, select:focus {
+  outline: none;
 }
 
 ul {
   list-style-type: none;
 }
 
-input:focus {
-  outline: none;
-}
-
 a {
+  color: inherit;
   text-decoration: none;
 }
 

@@ -1,36 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "@/app/main/page.module.css";
-import api from "@/services/api";
-import { Project, ProjectParams } from "@/services/api/models/project";
 import Card from "@/components/project/card";
 import Chart from "@/components/project/chart";
 import TaskList from "@/components/tasks/list";
-import { useToast } from "@/lib/toast/hook";
-import { factory } from "@/services/api/models";
 import route from "@/lib/route";
+import { useProjects } from "@/hooks/useProjects";
 
 export default function Main() {
-  const toast = useToast();
-  const [projects, setProjects] = useState<Project[]>([]);
-
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const res = await api.fetchProjects();
-        const list = res.data.data;
-        const projects = list.map((it: ProjectParams) => factory.project(it));
-
-        setProjects(projects);
-      } catch {
-        toast.error("プロジェクトの取得に失敗しました");
-      }
-    };
-
-    init();
-  }, []);
+  const { projects } = useProjects();
 
   return (
     <div className={styles.projects}>
@@ -40,7 +19,9 @@ export default function Main() {
           <div className={styles.content}>
             {projects.map((item) => {
               return (
-                <Link key={item.slug} href={route.main.child(item.slug)}>
+                <Link
+                  key={item.slug}
+                  href={route.main.projects.child(item.slug)}>
                   <Card data={item} />
                 </Link>
               );

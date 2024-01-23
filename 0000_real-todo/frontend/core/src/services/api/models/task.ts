@@ -10,7 +10,7 @@ const Status = {
   archived: "archived",
 };
 
-type StatusType = keyof typeof Status;
+export type StatusType = keyof typeof Status;
 
 export interface TaskParams {
   uuid: string;

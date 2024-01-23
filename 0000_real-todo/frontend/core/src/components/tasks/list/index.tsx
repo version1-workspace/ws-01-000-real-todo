@@ -195,7 +195,13 @@ export default function TaskList() {
                 }}
                 onEdit={() => {
                   open({
-                    content: <TaskForm />,
+                    content: (
+                      <TaskForm
+                        title="タスクを編集"
+                        onSubmit={hide}
+                        onCancel={hide}
+                      />
+                    ),
                   });
                 }}
                 onArchive={(task: Task) => {

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import styles from "./page.module.css";
 import Header from "@/components/common/header/public";
 import Footer from "@/components/common/footer";
-import Input from "@/components/common/textInput";
+import Input from "@/components/common/input/text";
 import Button from "@/components/common/button";
 import LoginForm from "@/components/auth/loginForm";
 import { useToast } from "@/lib/toast/hook";

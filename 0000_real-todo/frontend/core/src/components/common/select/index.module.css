@@ -1,4 +1,9 @@
 .container {
   border: 1px solid var(--border-color);
-  padding: 8px;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.container:focus {
+  outline: 1.5px solid #22222240;
 }

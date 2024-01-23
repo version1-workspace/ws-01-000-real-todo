@@ -1,14 +1,13 @@
-import { useState } from "react";
 import styles from "@/components/common/select/index.module.css";
 
 interface Props {
   data: OptionItem[];
-  value: string;
+  value?: string;
   defaultOption: OptionItem;
   onSelect: (item: OptionItem) => void;
 }
 
-interface OptionItem {
+export interface OptionItem {
   label: string | React.ReactNode;
   value: string;
 }
@@ -22,6 +21,7 @@ export default function Select({
   return (
     <select
       className={styles.container}
+      value={value}
       onChange={(e) =>
         onSelect({ label: e.target.innerText, value: e.target.value })
       }>

@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./index.module.css";
-import Input from "@/components/common/textInput";
+import Input from "@/components/common/input/text";
 import Button from "@/components/common/button";
 import ShowIf from "@/components/common/showIf";
 import { useForm } from "@/hooks/useForm";

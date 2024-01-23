@@ -50,7 +50,6 @@ export const ModalContainer = ({ config, children }: Props) => {
   };
 
   const hide = () => {
-    debugger;
     pop();
     setShow(false);
   };

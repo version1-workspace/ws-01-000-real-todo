@@ -9,3 +9,6 @@
   width: 100%;
 }
 
+.text:focus {
+  outline: 1.5px solid var(--input-outline-color);
+}

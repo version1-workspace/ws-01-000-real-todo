@@ -5,6 +5,11 @@
   border-radius: 8px;
   letter-spacing: 1.4px;
   width: 100%;
+  transition: box-shadow 0.5s;
+}
+
+.button:hover {
+  box-shadow: 2px 2px 4px 1px var(--button-shadow);
 }
 
 .default {

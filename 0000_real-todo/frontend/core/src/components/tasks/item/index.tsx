@@ -63,7 +63,10 @@ export default function TaskItem({
   });
 
   return (
-    <div className={styles.container} style={containerStyle}>
+    <div
+      className={styles.container}
+      style={containerStyle}
+      onClick={() => onEdit(data)}>
       <div className={styles.left}>
         {data.isCompleted ? (
           <div

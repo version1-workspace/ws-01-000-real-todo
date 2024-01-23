@@ -21,8 +21,12 @@ const Modal = ({ config, show, children, onClose }: Props) => {
         [styles.container]: true,
         [styles.show]: show,
         [styles.hide]: !show,
-      })}>
-      <div style={{ width: config.width }} className={styles.content}>
+      })}
+      onClick={onClose}>
+      <div
+        style={{ width: config.width }}
+        className={styles.content}
+        onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <Close className={styles.close} onClick={onClose} />
         </div>

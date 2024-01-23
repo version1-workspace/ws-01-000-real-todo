@@ -1,0 +1,12 @@
+.container {
+}
+
+.input {
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  padding: 16px;
+}
+
+.input:focus {
+  outline: 1.5px solid var(--input-outline-color);
+}
