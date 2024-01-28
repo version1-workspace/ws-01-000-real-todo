@@ -105,54 +105,52 @@ export const seed = async ({ app, dataSource, logger }) => {
     );
 
     console.log('tasks ========');
-    const project = projects[0];
-    const tasks = [];
+    const args = [
+      {
+        project: projects[0],
+        tasks: [],
+        count: 100,
+        baseDate: dayjs().add(1, 'year'),
+      },
+      {
+        project: projects[1],
+        tasks: [],
+        count: 30,
+        baseDate: dayjs().add(1, 'year'),
+      },
+      {
+        project: projects[2],
+        tasks: [],
+        count: 10,
+        baseDate: dayjs().add(1, 'year'),
+      },
+    ];
+
     await Promise.all(
-      [
-        {
-          userId: user.id,
-          projectId: project.id,
-          kind: 'task' as const,
-          status: 'scheduled' as const,
-        },
-        {
-          userId: user.id,
-          projectId: project.id,
-          kind: 'task' as const,
-          status: 'scheduled' as const,
-        },
-        {
-          userId: user.id,
-          projectId: project.id,
-          kind: 'task' as const,
-          status: 'scheduled' as const,
-        },
-        {
-          userId: user.id,
-          projectId: project.id,
-          kind: 'task' as const,
-          status: 'scheduled' as const,
-        },
-        {
-          userId: user.id,
-          projectId: project.id,
-          deadline: dayjs('2024/08/12').toDate(),
-          kind: 'task' as const,
-          title: 'タスク ',
-          status: 'scheduled' as const,
-        },
-      ].map(async (it: DeepPartial<Task>, index: number) => {
-        it.title = `Task ${index.toString()}`;
-        const day = (30 - index).toString().padStart(2, '0');
-        it.deadline = dayjs(`2024/08/${day}`).toDate();
-        const timestamp = now.add(index, 'second').toDate();
-        it.createdAt = timestamp;
-        it.updatedAt = timestamp;
+      args.map(async (arg, index) => {
+        console.log('tasks ========', index);
+        const { project, tasks, count, baseDate } = arg;
+        for (let i = 0; i < count; i++) {
+          tasks.push({
+            userId: user.id,
+            projectId: project.id,
+            kind: 'task' as const,
+            status: 'scheduled' as const,
+          });
+        }
 
-        const task = manager.create(Task, it);
-        await manager.save(task);
+        await Promise.all(
+          tasks.map(async (it: DeepPartial<Task>, index: number) => {
+            it.title = `Task ${index.toString()}`;
+            it.deadline = baseDate.add(-index, 'day').toDate();
+            const timestamp = now.add(index, 'second').toDate();
+            it.createdAt = timestamp;
+            it.updatedAt = timestamp;
 
-        tasks.push(task);
+            const task = manager.create(Task, it);
+            await manager.save(task);
+          }),
+        );
       }),
     );
   });
