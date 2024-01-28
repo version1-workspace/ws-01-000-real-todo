@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import mockApi from "./mock";
+import { TaskParams } from "./models/task";
 
 let accessToken: string;
 
@@ -84,6 +85,20 @@ const api = {
   },
   archiveTask: ({ id }: { id: string }) => {
     return client.instance.put(`/users/tasks/${id}/archive`);
+  },
+  createTask: ({
+    data,
+  }: {
+    data: Partial<{
+      title: string;
+      projectId: string;
+      deadline: string;
+      startingAt: string;
+      status: string;
+      kind: string;
+    }>;
+  }) => {
+    return client.instance.post(`/users/tasks`, data);
   },
   updateTask: ({ userId, taskId }: { userId: string; taskId: string }) => {},
   authenticate: async ({

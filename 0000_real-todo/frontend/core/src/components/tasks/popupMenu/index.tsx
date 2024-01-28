@@ -35,7 +35,13 @@ export default function PopupMenu({ trigger, actions }: Props) {
 
   return (
     <div className={styles.container}>
-      <div onClick={() => setShow(true)}>{trigger}</div>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          setShow(true);
+        }}>
+        {trigger}
+      </div>
       {show ? (
         <ul className={styles.popupMenu}>
           <li className={styles.header}></li>

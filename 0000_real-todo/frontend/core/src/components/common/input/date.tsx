@@ -16,7 +16,6 @@ export default function DateInput({
   min,
   onChange,
 }: Props) {
-  console.log('date ', value)
   return (
     <div className={styles.container}>
       <input

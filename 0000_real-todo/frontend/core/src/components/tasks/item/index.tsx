@@ -3,11 +3,11 @@ import { Task } from "@/services/api/models/task";
 import {
   IoCalendarOutline as Calendar,
   IoCheckmark as Check,
-  IoEllipsisVerticalOutline as Menu,
   IoPencil as Edit,
   IoCheckmark as Done,
   IoArchiveOutline as Archive,
 } from "react-icons/io5";
+import Icon from "@/components/common/icon";
 import { join } from "@/lib/cls";
 import PopupMenu from "@/components/tasks/popupMenu";
 
@@ -116,7 +116,10 @@ export default function TaskItem({
         </div>
       </div>
       <div className={styles.menu}>
-        <PopupMenu trigger={<Menu />} actions={actions} />
+        <PopupMenu
+          trigger={<Icon name="menu" interactive="pulse" />}
+          actions={actions}
+        />
       </div>
     </div>
   );

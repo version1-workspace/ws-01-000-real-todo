@@ -21,6 +21,7 @@
 .menu {
   display: flex;
   margin-right: 16px;
+  align-items: center;
 }
 
 .menuItem {
@@ -29,10 +30,6 @@
 
 .menuItem svg {
   cursor: pointer;
-}
-
-.addIcon {
-  color: var(--font-color-light);
 }
 
 .avatarCircleContaiener {

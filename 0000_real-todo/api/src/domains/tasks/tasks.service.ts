@@ -7,7 +7,7 @@ import { Pagination } from '../../entities/pagination.entity';
 import { Stat } from '../../entities/stat.entity';
 import { User } from '../users/user.entity';
 import { TaskStatuses } from './task.entity';
-import { ppid } from 'process';
+import { Project } from '../projects/project.entity';
 
 type SortType = 'deadline' | 'started' | 'updated' | 'created';
 type OrderType = 'asc' | 'desc';
@@ -51,8 +51,8 @@ export class TasksService {
   constructor(
     @InjectRepository(Task)
     private tasksRepository: Repository<Task>,
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    @InjectRepository(Project)
+    private projectRepository: Repository<Project>,
   ) {}
 
   async search({
@@ -156,6 +156,34 @@ export class TasksService {
   }
 
   build = this.tasksRepository.create;
+
+  async create(
+    userId: number,
+    projectId: string,
+    values: {
+      status: TaskStatuses;
+      title: string;
+      kind: TaskKinds;
+      deadline: string;
+      startingAt: string;
+    },
+  ) {
+    const project = await this.projectRepository.findOne({
+      where: { uuid: projectId },
+    });
+    const task = this.tasksRepository.create([
+      {
+        ...values,
+        userId,
+        projectId: project.id,
+      },
+    ]);
+
+    const manager = this.tasksRepository.manager;
+    await manager.save(task);
+
+    return task;
+  }
 
   async update(
     userId: string,

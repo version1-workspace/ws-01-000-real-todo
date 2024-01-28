@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.interactivePulse {
+  border-radius: 50%;
+  padding: 8px;
+  transition: opacity 0.5s, background 0.5s, color 0.5s;
+}
+
+.interactivePulse:hover {
+  background: #88888810;
+  opacity: 0.9px;
+}
+
+.interactivePulse:active {
+  color: #fefefe;
+  background: #8888820;
+  opacity: 0.8px;
+}
+
+.interactiveHover {
+  transition: opacity 0.5s;
+}
+
+.interactiveHover:hover {
+  opacity: 0.6;
+}
+
+.interactiveHoverDark {
+  transition: color 0.5s;
+}
+
+.interactiveHoverDark:hover {
+  color: #eeeeee60;
+}

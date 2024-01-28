@@ -55,6 +55,7 @@ export const useForm = <T>({ initialValues, validate, onSubmit }: Props<T>) => {
   const [errors, setErrors] = useState<Errors<typeof initialValues>>(
     new Errors(),
   );
+
   const handleSubmit = useCallback(() => {
     const errors = new Errors<T>()
     const result = validate(form, {

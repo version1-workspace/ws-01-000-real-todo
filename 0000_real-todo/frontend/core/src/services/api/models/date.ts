@@ -17,6 +17,10 @@ export default class DateDecorator {
     return this._date
   }
 
+  get forHtml() {
+    return this.date.format('YYYY-MM-DD')
+  }
+
   humanize() {
     return this._raw
   }

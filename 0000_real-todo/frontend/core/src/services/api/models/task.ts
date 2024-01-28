@@ -15,6 +15,7 @@ export type StatusType = keyof typeof Status;
 export interface TaskParams {
   uuid: string;
   title: string;
+  description: string;
   status: StatusType;
 
   createdAt: string;

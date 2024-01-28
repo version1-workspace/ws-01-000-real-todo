@@ -13,6 +13,7 @@ const Status = {
 type StatusType = keyof typeof Status;
 
 export interface ProjectParams {
+  uuid: string;
   name: string;
 
   createdAt: string;
@@ -51,7 +52,7 @@ export class ProjectModel {
   readonly _milestones: Task[] = [];
 
   constructor(params: ProjectParams) {
-    this.id = uuid();
+    this.id = params.uuid || uuid();
     this._raw = params;
     if (params?.milestones) {
       this._milestones = params.milestones.map((it) => factory.task(it));

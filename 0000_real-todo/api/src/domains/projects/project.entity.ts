@@ -8,10 +8,10 @@ import { IsNotEmpty, IsDate, IsIn, IsNumber } from 'class-validator';
 export const Status = {
   initial: 'initial',
   active: 'active',
-  archived: 'archived'
-}
+  archived: 'archived',
+};
 
-export type StatusType = keyof typeof Status
+export type StatusType = keyof typeof Status;
 
 @Entity('projects')
 export class Project extends Base {

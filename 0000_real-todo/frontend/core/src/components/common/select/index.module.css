@@ -1,7 +1,7 @@
 .container {
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 12px;
+  border-radius: 4px;
+  padding: 4px 12px;
 }
 
 .container:focus {

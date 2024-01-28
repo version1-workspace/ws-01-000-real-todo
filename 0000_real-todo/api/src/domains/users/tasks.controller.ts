@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Post,
   Patch,
   Put,
   Body,
@@ -10,7 +11,16 @@ import {
 import { TasksService } from '../tasks/tasks.service';
 import { User as DUser } from './user.decorator';
 import { User } from './user.entity';
-import { TaskStatuses } from '../tasks/task.entity';
+import { TaskKinds, TaskStatuses } from '../tasks/task.entity';
+
+interface CreateParams {
+  title: string;
+  projectId: string;
+  deadline: string;
+  startingAt: string;
+  status: TaskStatuses;
+  kind: TaskKinds;
+}
 
 @Controller('users/tasks')
 export class TasksController {
@@ -31,6 +41,37 @@ export class TasksController {
     });
 
     return result.serialize;
+  }
+
+  @Post('')
+  async create(
+    @DUser() user: User,
+    @Body() body: CreateParams,
+  ): Promise<Record<string, any>> {
+    const { title, projectId, status, kind, deadline, startingAt } = body;
+    const result = await this.tasksService.create(user.id, projectId, {
+      title,
+      kind,
+      status,
+      deadline,
+      startingAt,
+    });
+
+    return { data: result };
+  }
+
+  @Patch(':taskId')
+  async show(
+    @DUser() user: User,
+    @Param('taskId') taskId: string,
+    @Body() body: Record<string, any>,
+  ): Promise<Record<string, any>> {
+    const { status } = body;
+    const result = await this.tasksService.update(user.uuid, taskId, {
+      status,
+    });
+
+    return { data: result };
   }
 
   @Patch(':taskId')

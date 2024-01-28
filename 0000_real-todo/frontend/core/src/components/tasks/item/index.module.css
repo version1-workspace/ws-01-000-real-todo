@@ -5,12 +5,12 @@
   padding: 16px;
   border-bottom:  1px solid var(--border-color);
   cursor: pointer;
-  transition: opacity 0.5s;
+  transition: opacity 0.3s;
 }
 
-.container:hover {
+.container:active {
   opacity: 0.6;
-  transition: opacity 0.5s;
+  transition: opacity 0.3s;
 }
 
 .header {

@@ -197,6 +197,7 @@ export default function TaskList() {
                   open({
                     content: (
                       <TaskForm
+                        data={it}
                         title="タスクを編集"
                         onSubmit={hide}
                         onCancel={hide}

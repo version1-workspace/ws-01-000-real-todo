@@ -1,15 +1,12 @@
 "use client";
-import Link from "next/link";
 import styles from "./index.module.css";
-import {
-  IoAddOutline as Plus,
-  IoInformationCircleSharp as Info,
-  IoNotificationsSharp as Notification,
-  IoPerson as Person,
-  IoSearch as Search,
-} from "react-icons/io5";
+import { useModal } from "@/lib/modal";
+import TaskForm from "@/components/tasks/form";
+import Icon from "../../icon";
 
 export default function Header() {
+  const { open, hide } = useModal();
+
   return (
     <header className={styles.header}>
       <div className={styles.content}>
@@ -19,7 +16,7 @@ export default function Header() {
           </div>
           <div className={styles.searchForm}>
             <div className={styles.search}>
-              <Search size="24px" color="#2e2e2e" />
+              <Icon name="search" size="24px" color="#2e2e2e" />
               <input type="text" placeholder="タスクタイトルで検索" />
             </div>
           </div>
@@ -27,20 +24,35 @@ export default function Header() {
         <div className={styles.right}>
           <ul className={styles.menu}>
             <li className={styles.menuItem}>
-              <Link href="/main/projects/new">
-                <Plus className={styles.addIcon} size="24px" />
-              </Link>
+              <Icon
+                interactive="hoverDark"
+                name="add"
+                size="24px"
+                onClick={() => {
+                  open({
+                    content: (
+                      <TaskForm
+                        title="タスクを追加"
+                        onSubmit={() => {
+                          hide();
+                        }}
+                        onCancel={hide}
+                      />
+                    ),
+                  });
+                }}
+              />
             </li>
             <li className={styles.menuItem}>
-              <Info size="24px" />
+              <Icon name="info" interactive="hoverDark" size="24px" />
             </li>
             <li className={styles.menuItem}>
-              <Notification size="24px" />
+              <Icon name="notification" interactive="hoverDark" size="24px" />
             </li>
           </ul>
           <div className={styles.avatarIcon}>
             <div className={styles.avatarCircleContaiener}>
-              <Person size="20px" />
+              <Icon name="person" interactive="hover" size="20px" />
             </div>
           </div>
         </div>

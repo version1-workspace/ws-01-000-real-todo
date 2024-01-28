@@ -11,11 +11,11 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Body({ children }: { children: React.ReactNode }) {
   return (
     <body className={[inter.className, styles.body].join(" ")}>
-      <ModalContainer config={{ width: "60%" }}>
-        <ToastContainer
-          config={{
-            position: position.TOP_RIGHT,
-          }}>
+      <ToastContainer
+        config={{
+          position: position.TOP_RIGHT,
+        }}>
+        <ModalContainer config={{ width: "60%" }}>
           <AuthContainer>
             <Header />
             <main className={styles.main}>
@@ -23,8 +23,8 @@ export default function Body({ children }: { children: React.ReactNode }) {
               <div className={styles.mainContent}>{children}</div>
             </main>
           </AuthContainer>
-        </ToastContainer>
-      </ModalContainer>
+        </ModalContainer>
+      </ToastContainer>
     </body>
   );
 }
