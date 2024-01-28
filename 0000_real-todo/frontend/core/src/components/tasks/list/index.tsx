@@ -2,14 +2,11 @@
 import { useEffect, useState } from "react";
 import styles from "@/components/tasks/list/index.module.css";
 import api from "@/services/api";
-import { Task, TaskParams } from "@/services/api/models/task";
-import { Pagination } from "@/services/api/models/pagination";
+import { Task } from "@/services/api/models/task";
 import TaskItem from "@/components/tasks/item";
 import Popup from "@/components/tasks/popup";
 import TaskForm from "@/components/tasks/form";
-import useFilter, {
-  Params as FilterParams,
-} from "@/components/tasks/list/hooks/useFilter";
+import useFilter from "@/components/tasks/list/hooks/useFilter";
 import {
   IoListOutline as Layout,
   IoChevronForward as Forward,
@@ -20,14 +17,13 @@ import {
 } from "react-icons/io5";
 import { classHelper } from "@/lib/cls";
 import { ja } from "@/lib/transltate";
-import { factory } from "@/services/api/models";
 import { useModal } from "@/lib/modal";
+import useTasks from "@/hooks/useTask";
 
 const taskStatuses = ja.derive("task.status")!;
 
 export default function TaskList() {
   const [show, setShow] = useState(false);
-  const [data, setData] = useState<Pagination<Task>>();
   const [displayCount, setDisplayCount] = useState<number>(10);
   const {
     date,
@@ -42,24 +38,7 @@ export default function TaskList() {
     save,
   } = useFilter();
   const { open, hide } = useModal();
-
-  const fetch = async ({
-    page,
-    statuses,
-  }: { page?: number } & Partial<FilterParams>) => {
-    const res = await api.fetchTasks({
-      page: page || 1,
-      status: Object.keys(statuses || {}),
-    });
-    const { data: tasks, pageInfo } = res.data;
-    const list = tasks.map((it: TaskParams) => factory.task(it));
-    setData(
-      new Pagination<Task>({
-        list,
-        pageInfo,
-      }),
-    );
-  };
+  const { data, fetch } = useTasks();
 
   useEffect(() => {
     fetch(replica);

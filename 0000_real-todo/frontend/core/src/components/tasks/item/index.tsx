@@ -71,7 +71,8 @@ export default function TaskItem({
         {data.isCompleted ? (
           <div
             className={join(styles.checkbox, styles.completed)}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation()
               if (!confirm("このタスクを未完了にしますか？")) {
                 return;
               }
@@ -83,7 +84,10 @@ export default function TaskItem({
         ) : (
           <div
             className={styles.checkbox}
-            onClick={() => onComplete(data)}></div>
+            onClick={(e) => {
+              e.stopPropagation()
+              onComplete(data)
+            }}></div>
         )}
       </div>
       <div className={styles.middle}>

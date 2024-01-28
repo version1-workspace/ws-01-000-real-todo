@@ -15,6 +15,7 @@ import { join } from "@/lib/cls";
 import Button from "@/components/common/button";
 import { useToast } from "@/lib/toast/hook";
 import ErrorMessage from "@/components/common/errorMessage";
+import useTasks from "@/hooks/useTask";
 
 interface Props {
   title: string;
@@ -43,6 +44,7 @@ const statusOptions = selectableStatus.map((it) => {
 
 const Form = ({ title, data, onSubmit, onCancel }: Props) => {
   const { projects } = useProjects();
+  const { fetch: fetchTasks } = useTasks();
   const toast = useToast();
   const { submit, change, errors, form } = useForm<Form>({
     initialValues: {
@@ -74,6 +76,10 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
       try {
         await api.createTask({
           data: { ...rest, projectId: project?.id, kind: "task" },
+        });
+        await fetchTasks({
+          page: 1,
+          statuses: { scheduled: true },
         });
 
         onSubmit();
