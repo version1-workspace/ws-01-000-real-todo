@@ -2,8 +2,55 @@
   border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 4px 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  cursor: pointer;
 }
 
 .container:focus {
   outline: 1.5px solid #22222240;
+}
+
+.value {
+
+}
+
+.valueContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.pullDownContainer {
+  position: relative;
+  top: 8px;
+  left: -12px;
+  display: none;
+  width: 100%;
+}
+
+.pullDown {
+  padding: 8px 0;
+  position: absolute;
+  z-index: var(--z-index-select);
+  border: 1px solid var(--border-color);
+  box-shadow: 1px 1px 6px 1px var(--border-color);
+  background: white;
+  min-width: 120px;
+}
+
+.pullDownShow {
+  display: block;
+}
+
+.option {
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.option:hover {
+  background: var(--table-border-color);
 }

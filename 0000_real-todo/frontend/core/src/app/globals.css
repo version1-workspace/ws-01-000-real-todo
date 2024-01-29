@@ -17,6 +17,7 @@
   --overlay-color: #22222220;
   --content-bg-color: #fbfbfb;
   --border-color: #b6b6b6;
+  --table-border-color: #e2e2e290;
   --font-color-light: white;
   --font-color-dark: #2e2e2e;
   --font-color-dark-weak: #666;
@@ -33,6 +34,7 @@
   /* z-index */
   --z-index-modal: 10;
   --z-index-popup: 1;
+  --z-index-select: 1;
 }
 
 @media (prefers-color-scheme: dark) {

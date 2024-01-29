@@ -3,7 +3,7 @@
 }
 
 .header {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--table-border-color);
   margin: 16px;
 }
 
@@ -123,3 +123,4 @@
   text-align: center;
   color: var(--font-color-weak);
 }
+

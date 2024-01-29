@@ -1,15 +1,19 @@
 import styles from "./index.module.css";
 import { useForm } from "@/hooks/useForm";
-import { ja } from "@/lib/transltate";
 import api from "@/services/api";
 import TextInput from "@/components/common/input/text";
 import DateInput from "@/components/common/input/date";
 import { Project } from "@/services/api/models/project";
 import { AppDate } from "@/lib/date";
-import { StatusType, Task, TaskParams } from "@/services/api/models/task";
-import { useProjects } from "@/hooks/useProjects";
-import Select, { OptionItem } from "@/components/common/select";
-import { useMemo } from "react";
+import {
+  selectableStatus,
+  statusOptions,
+  StatusType,
+  Task,
+  TaskParams,
+} from "@/services/api/models/task";
+import useProjects from "@/hooks/useProjects";
+import Select from "@/components/common/select";
 import TextArea from "@/components/common/input/textarea";
 import { join } from "@/lib/cls";
 import Button from "@/components/common/button";
@@ -34,16 +38,8 @@ interface Form {
   children: TaskParams[];
 }
 
-const taskStatuses = ja.derive("task.status")!;
-
-const selectableStatus: StatusType[] = ["scheduled", "completed", "archived"];
-
-const statusOptions = selectableStatus.map((it) => {
-  return { label: taskStatuses.t(it), value: it };
-});
-
 const Form = ({ title, data, onSubmit, onCancel }: Props) => {
-  const { projects } = useProjects();
+  const { projects, options } = useProjects();
   const { fetch: fetchTasks } = useTasks();
   const toast = useToast();
   const { submit, change, errors, form } = useForm<Form>({
@@ -91,12 +87,6 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
     },
   });
 
-  const projectOptions = useMemo(() => {
-    return projects.reduce((acc: OptionItem[], it: Project) => {
-      return [...acc, { label: it.name, value: it.id }];
-    }, []);
-  }, [projects]);
-
   const errorMessages = errors.object;
 
   return (
@@ -112,7 +102,7 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
             </div>
             <div className={styles.input}>
               <Select
-                data={projectOptions}
+                data={options}
                 value={form.project?.id}
                 defaultOption={{
                   label: "プログラムを選択してください",

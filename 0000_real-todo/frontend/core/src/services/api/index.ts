@@ -94,13 +94,41 @@ const api = {
       projectId: string;
       deadline: string;
       startingAt: string;
+      finishedAt: string;
       status: string;
       kind: string;
     }>;
   }) => {
     return client.instance.post(`/users/tasks`, data);
   },
-  updateTask: ({ userId, taskId }: { userId: string; taskId: string }) => {},
+  updateTask: (
+    id: string,
+    data: Partial<{
+      title: string;
+      projectId: string;
+      deadline: string;
+      startingAt: string;
+      finishedAt: string;
+      status: string;
+      kind: string;
+    }>,
+  ) => {
+    const _data = Object.keys(data).reduce((acc, key) => {
+      const v = data[key]
+      if (["deadline", "startingAt", "finishedAt"].includes(key)) {
+        return {
+          ...acc,
+          [key]: v.replaceAll("/", "-"),
+        };
+      }
+
+      return {
+        ...acc,
+        [key]: v,
+      };
+    }, {});
+    return client.instance.patch(`/users/tasks/${id}`, _data);
+  },
   authenticate: async ({
     email,
     password,

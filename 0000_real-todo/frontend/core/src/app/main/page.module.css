@@ -34,5 +34,5 @@
 }
 
 .todos .content {
-  max-width: 1200px;
+  min-width: 100%;
 }

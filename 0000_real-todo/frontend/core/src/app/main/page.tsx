@@ -6,7 +6,7 @@ import Card from "@/components/project/card";
 import Chart from "@/components/project/chart";
 import TaskList from "@/components/tasks/list";
 import route from "@/lib/route";
-import { useProjects } from "@/hooks/useProjects";
+import useProjects from "@/hooks/useProjects";
 
 export default function Main() {
   const { projects } = useProjects();

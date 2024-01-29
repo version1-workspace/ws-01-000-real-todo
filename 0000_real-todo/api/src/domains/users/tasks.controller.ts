@@ -60,30 +60,46 @@ export class TasksController {
     return { data: result };
   }
 
-  @Patch(':taskId')
-  async show(
-    @DUser() user: User,
-    @Param('taskId') taskId: string,
-    @Body() body: Record<string, any>,
-  ): Promise<Record<string, any>> {
-    const { status } = body;
-    const result = await this.tasksService.update(user.uuid, taskId, {
-      status,
-    });
-
-    return { data: result };
-  }
-
-  @Patch(':taskId')
+  // @Get(':id')
+  // async show(
+  //   @DUser() user: User,
+  //   @Param('id') taskId: string,
+  //   @Body() body: Record<string, any>,
+  // ): Promise<Record<string, any>> {
+  //   const { status } = body;
+  //   const result = await this.tasksService.findOne({
+  //     status,
+  //   });
+  //
+  //   return { data: result };
+  // }
+  //
+  @Patch(':id')
   async update(
     @DUser() user: User,
-    @Param('taskId') taskId: string,
+    @Param('id') id: string,
     @Body() body: Record<string, any>,
   ): Promise<Record<string, any>> {
-    const { status } = body;
-    const result = await this.tasksService.update(user.uuid, taskId, {
-      status,
-    });
+    console.log('body ==========', id, body);
+    const _body = Object.keys(body).reduce((acc: any, key: string) => {
+      if (
+        [
+          'title',
+          'projectId',
+          'status',
+          'kind',
+          'deadline',
+          'finishedAt',
+          'startingAt',
+        ].includes(key)
+      ) {
+        return {
+          ...acc,
+          [key]: body[key],
+        };
+      }
+    }, {});
+    const result = await this.tasksService.update(user.uuid, id, _body);
 
     return { data: result };
   }

@@ -19,6 +19,7 @@ import { classHelper } from "@/lib/cls";
 import { ja } from "@/lib/transltate";
 import { useModal } from "@/lib/modal";
 import useTasks from "@/hooks/useTask";
+import TaskTable from "../table";
 
 const taskStatuses = ja.derive("task.status")!;
 
@@ -149,56 +150,7 @@ export default function TaskList() {
           </div>
         </div>
       </div>
-      <ul>
-        {data.list.map((it, index) => {
-          return (
-            <li key={it.id}>
-              <TaskItem
-                data={it}
-                containerStyle={
-                  index % 2 !== 0
-                    ? {
-                        background: "#f9f9fd",
-                      }
-                    : {}
-                }
-                onComplete={(task: Task) => {
-                  const newData = data.set(index, task.complete());
-                  api.completeTask({ id: task.id });
-                  setData(newData);
-                }}
-                onReopen={(task: Task) => {
-                  const newData = data.set(index, task.reopen());
-                  api.reopenTask({ id: task.id });
-                  setData(newData);
-                }}
-                onEdit={() => {
-                  open({
-                    content: (
-                      <TaskForm
-                        data={it}
-                        title="タスクを編集"
-                        onSubmit={hide}
-                        onCancel={hide}
-                      />
-                    ),
-                  });
-                }}
-                onArchive={(task: Task) => {
-                  const newData = data.set(index, task.archive());
-                  api.archiveTask({ id: task.id });
-                  setData(newData);
-                }}
-              />
-            </li>
-          );
-        })}
-        {data.list.length === 0 ? (
-          <li>
-            <p className={styles.empty}>タスクが未登録です。</p>
-          </li>
-        ) : null}
-      </ul>
+      <TaskTable data={data} />
       <div className={styles.footer}>
         <ul className={styles.pagination}>
           <li

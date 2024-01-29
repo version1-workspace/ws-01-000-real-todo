@@ -8,10 +8,12 @@ import {
   IoCalendarOutline,
   IoCheckmark,
   IoCheckmarkCircle,
+  IoCheckmarkOutline,
   IoChevronBack,
   IoChevronForward,
   IoCloseCircle,
   IoCloseOutline,
+  IoCaretDown,
   IoDocumentText,
   IoEllipsisVerticalOutline,
   IoGitCommit,
@@ -33,6 +35,7 @@ const icons = {
   back: IoChevronBack,
   up: IoArrowUpOutline,
   down: IoArrowDown,
+  caretDown: IoCaretDown,
   person: IoPerson,
   search: IoSearch,
   notification: IoNotificationsSharp,
@@ -40,6 +43,7 @@ const icons = {
   calendar: IoCalendarOutline,
   order: IoSwapVertical,
   check: IoCheckmarkCircle,
+  checkOutline: IoCheckmarkOutline,
   add: IoAddOutline,
   save: IoCheckmark,
   edit: IoPencil,
@@ -56,13 +60,21 @@ type IconType = typeof icons;
 
 interface Props {
   name: keyof IconType;
-  interactive?: "pulse" | 'hover' | "hoverDark";
+  className?: string;
+  interactive?: "pulse" | "hover" | "hoverDark";
   size?: string;
   color?: string;
   onClick?: () => void;
 }
 
-const Icon = ({ name, size, color, interactive, onClick }: Props) => {
+const Icon = ({
+  name,
+  size,
+  color,
+  interactive,
+  className,
+  onClick,
+}: Props) => {
   const Component = icons[name];
   return (
     <div
@@ -73,7 +85,7 @@ const Icon = ({ name, size, color, interactive, onClick }: Props) => {
         [styles.interactiveHoverDark]: interactive === "hoverDark",
       })}
       onClick={onClick}>
-      {<Component size={size} color={color} />}
+      {<Component className={className} size={size} color={color} />}
     </div>
   );
 };

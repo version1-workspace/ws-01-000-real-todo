@@ -24,7 +24,7 @@ export const seed = async ({ app, dataSource, logger }) => {
         updatedAt: timestamp,
         status: 'active',
       });
-      user.password = await usersService.hash(user, 'password');
+      user.password = await usersService.hash(user, 'AndyBobCharrie');
       user.refreshToken = await usersService.hashRefreshToken();
 
       await manager.save(user);

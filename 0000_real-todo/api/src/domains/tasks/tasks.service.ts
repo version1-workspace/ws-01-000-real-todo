@@ -191,6 +191,7 @@ export class TasksService {
     values: Partial<{
       status: TaskStatuses;
       title: string;
+      projectId: string;
       kind: TaskKinds;
       deadline: string;
       startingAt: string;
@@ -210,7 +211,17 @@ export class TasksService {
         },
       },
     });
-    Object.keys(values).forEach((key: string) => {
+    const { projectId, ...rest } = values;
+    const project = await this.projectRepository.findOne({
+      where: {
+        uuid: projectId,
+      },
+    });
+    if (project) {
+      task.projectId = project.id;
+    }
+
+    Object.keys(rest).forEach((key: string) => {
       task[key] = values[key];
     });
 

@@ -1,6 +1,7 @@
 import DateDecorator from "./date";
 import { Project, ProjectParams } from "@/services/api/models/project";
 import { v4 as uuid } from "uuid";
+import { ja } from "@/lib/transltate";
 import { factory } from ".";
 
 const Status = {
@@ -9,6 +10,18 @@ const Status = {
   completed: "completed",
   archived: "archived",
 };
+
+export const selectableStatus: StatusType[] = [
+  "scheduled",
+  "completed",
+  "archived",
+];
+
+const taskStatuses = ja.derive("task.status")!;
+
+export const statusOptions = selectableStatus.map((it) => {
+  return { label: taskStatuses.t(it), value: it };
+});
 
 export type StatusType = keyof typeof Status;
 
@@ -138,6 +151,14 @@ export class TaskModel {
 
   reopen() {
     return this.updateStatus("scheduled");
+  }
+
+  trancatedDescription(length = 30, delimiter = "...") {
+    if (!this._raw.description) {
+      return ''
+    }
+
+    return this._raw.description.slice(0, length) + " " + delimiter;
   }
 
   private updateStatus(status: StatusType) {
