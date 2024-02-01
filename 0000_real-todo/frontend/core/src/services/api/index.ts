@@ -86,6 +86,15 @@ const api = {
   archiveTask: ({ id }: { id: string }) => {
     return client.instance.put(`/users/tasks/${id}/archive`);
   },
+  bulkCompleteTask: ({ ids }: { ids: string[] }) => {
+    return client.instance.put(`/bulk/tasks/complete`, { ids });
+  },
+  bulkArchiveTask: ({ ids }: { ids: string[] }) => {
+    return client.instance.put(`/bulk/tasks/archive`, { ids });
+  },
+  bulkReopenTask: ({ ids }: { ids: string[] }) => {
+    return client.instance.put(`/bulk/tasks/reopen`, { ids });
+  },
   createTask: ({
     data,
   }: {
@@ -114,7 +123,7 @@ const api = {
     }>,
   ) => {
     const _data = Object.keys(data).reduce((acc, key) => {
-      const v = data[key]
+      const v = data[key];
       if (["deadline", "startingAt", "finishedAt"].includes(key)) {
         return {
           ...acc,

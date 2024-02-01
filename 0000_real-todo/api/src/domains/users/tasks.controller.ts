@@ -60,20 +60,19 @@ export class TasksController {
     return { data: result };
   }
 
-  // @Get(':id')
-  // async show(
-  //   @DUser() user: User,
-  //   @Param('id') taskId: string,
-  //   @Body() body: Record<string, any>,
-  // ): Promise<Record<string, any>> {
-  //   const { status } = body;
-  //   const result = await this.tasksService.findOne({
-  //     status,
-  //   });
-  //
-  //   return { data: result };
-  // }
-  //
+  @Get(':id')
+  async show(
+    @DUser() user: User,
+    @Param('id') id: string,
+  ): Promise<Record<string, any>> {
+    const result = await this.tasksService.find({
+      id,
+      userId: user.id,
+    });
+
+    return { data: result };
+  }
+
   @Patch(':id')
   async update(
     @DUser() user: User,
@@ -109,7 +108,7 @@ export class TasksController {
     @DUser() user: User,
     @Param('taskId') taskId: string,
   ): Promise<Record<string, any>> {
-    const result = await this.tasksService.archive(user.uuid, taskId);
+    const result = await this.tasksService.archive(user.id, [taskId]);
 
     return { data: result };
   }
@@ -119,7 +118,7 @@ export class TasksController {
     @DUser() user: User,
     @Param('taskId') taskId: string,
   ): Promise<Record<string, any>> {
-    const result = await this.tasksService.complete(user.uuid, taskId);
+    const result = await this.tasksService.complete(user.id, [taskId]);
 
     return { data: result };
   }
@@ -129,7 +128,7 @@ export class TasksController {
     @DUser() user: User,
     @Param('taskId') taskId: string,
   ): Promise<Record<string, any>> {
-    const result = await this.tasksService.reopen(user.uuid, taskId);
+    const result = await this.tasksService.reopen(user.id, [taskId]);
 
     return { data: result };
   }

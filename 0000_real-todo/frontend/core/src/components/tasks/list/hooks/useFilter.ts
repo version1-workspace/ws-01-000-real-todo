@@ -76,6 +76,8 @@ export default function useFilter() {
 
     setOriginal(newValue);
     setReplica(newValue);
+
+    return newValue
   };
 
   return {

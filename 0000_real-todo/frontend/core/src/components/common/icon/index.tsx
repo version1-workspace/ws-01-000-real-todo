@@ -1,4 +1,5 @@
 import {
+  IoArrowUndoOutline,
   IoAddOutline,
   IoAnalytics,
   IoArchiveOutline,
@@ -24,6 +25,7 @@ import {
   IoSearch,
   IoSwapVertical,
   IoTrashOutline,
+  IoListOutline,
 } from "react-icons/io5";
 import styles from "./index.module.css";
 import { classHelper } from "@/lib/cls";
@@ -46,6 +48,8 @@ const icons = {
   checkOutline: IoCheckmarkOutline,
   add: IoAddOutline,
   save: IoCheckmark,
+  undo: IoArrowUndoOutline,
+  complete: IoCheckmark,
   edit: IoPencil,
   archive: IoArchiveOutline,
   remove: IoTrashOutline,
@@ -54,6 +58,7 @@ const icons = {
   milestone: IoGitCommit,
   task: IoDocumentText,
   menu: IoEllipsisVerticalOutline,
+  layout: IoListOutline,
 };
 
 type IconType = typeof icons;

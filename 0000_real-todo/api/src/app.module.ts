@@ -10,12 +10,13 @@ import { AppService } from './app.service';
 import { UsersModule } from './domains/users/users.module';
 import { ProjectsModule } from './domains/projects/projects.module';
 import { TasksModule } from './domains/tasks/tasks.module';
+import { BulkTasksModule } from './domains/bulk/tasks.module';
 import { AuthModule } from './domains/auth/auth.module';
 import { AuthGuard } from './domains/auth/auth.guard';
 import appConfig from './config/app.config';
 import { LoggerModule } from './lib/modules/logger/logger.module';
 
-const config = appConfig()
+const config = appConfig();
 
 @Module({
   imports: [
@@ -45,7 +46,8 @@ const config = appConfig()
     UsersModule,
     ProjectsModule,
     TasksModule,
-    LoggerModule
+    BulkTasksModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [
@@ -56,4 +58,4 @@ const config = appConfig()
     AppService,
   ],
 })
-export class AppModule { }
+export class AppModule {}

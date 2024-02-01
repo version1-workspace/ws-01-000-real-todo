@@ -19,6 +19,20 @@
   margin: 8px 0;
 }
 
+.display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 8px;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 8px;
+}
+
 .number {
   font-size: 12px;
   display: flex;

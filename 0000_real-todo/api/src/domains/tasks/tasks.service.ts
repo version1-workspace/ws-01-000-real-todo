@@ -55,6 +55,19 @@ export class TasksService {
     private projectRepository: Repository<Project>,
   ) {}
 
+  async find({ id, userId }: { id: string; userId: number }) {
+    return await this.tasksRepository.findOne({
+      relations: {
+        user: true,
+        project: true,
+      },
+      where: {
+        uuid: id,
+        userId,
+      },
+    });
+  }
+
   async search({
     user,
     projectId,
@@ -231,27 +244,40 @@ export class TasksService {
     return task;
   }
 
-  async archive(userId: string, taskId: string) {
+  async bulkUpdate(
+    userId: number,
+    ids: string[],
+    params: { status: TaskStatuses; archivedAt?: string; finishedAt?: string },
+  ) {
+    await this.tasksRepository
+      .createQueryBuilder()
+      .update(Task)
+      .set(params)
+      .where({ uuid: In(ids), userId })
+      .execute();
+  }
+
+  async archive(userId: number, ids: string[]) {
     const now = dayjs();
-    return this.update(userId, taskId, {
-      status: 'archived',
+    return this.bulkUpdate(userId, ids, {
+      status: 'archived' as const,
       archivedAt: now.format(),
     });
   }
 
-  async complete(userId: string, taskId: string) {
+  async complete(userId: number, ids: string[]) {
     const now = dayjs();
-    return this.update(userId, taskId, {
+    return this.bulkUpdate(userId, ids, {
       status: 'completed',
       finishedAt: now.format(),
     });
   }
 
-  async reopen(userId: string, taskId: string) {
-    const now = dayjs();
-    return this.update(userId, taskId, {
+  async reopen(userId: number, ids: string[]) {
+    return this.bulkUpdate(userId, ids, {
       status: 'scheduled',
-      finishedAt: now.format(),
+      archivedAt: undefined,
+      finishedAt: undefined,
     });
   }
 }

@@ -8,11 +8,12 @@ interface Props {
   actions: Action[];
 }
 
-interface Action {
+export interface Action {
   key: string;
   logo: React.ReactNode;
   text: string;
   danger?: boolean;
+  hidden?: boolean;
   onClick: () => void;
 }
 
@@ -43,28 +44,31 @@ export default function PopupMenu({ trigger, actions }: Props) {
         {trigger}
       </div>
       {show ? (
-        <ul className={styles.popupMenu}>
-          <li className={styles.header}></li>
-          {(actions || []).map((it, index) => {
-            return (
-              <li
-                key={it.text}
-                className={classHelper({
-                  [styles.action]: true,
-                  [styles.danger]: it.danger,
-                  [styles.lastAction]: index == actions.length - 1,
-                })}
-                onClick={() => {
-                  it.onClick();
-                  setShow(false);
-                }}>
-                {it.logo}
-                <p className={styles.text}>{it.text}</p>
-                <p className={styles.border}></p>
-              </li>
-            );
-          })}
-        </ul>
+        <div className={styles.popupMenu}>
+          <p className={styles.title}>アクション</p>
+          <ul className={styles.content}>
+            {(actions || []).map((it, index) => {
+              return (
+                <li
+                  key={it.text}
+                  onClick={() => {
+                    it.onClick();
+                    setShow(false);
+                  }}>
+                  <div
+                    className={classHelper({
+                      [styles.action]: true,
+                      [styles.danger]: it.danger,
+                      [styles.lastAction]: index == actions.length - 1,
+                    })}>
+                    {it.logo}
+                    <p className={styles.text}>{it.text}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       ) : null}
     </div>
   );

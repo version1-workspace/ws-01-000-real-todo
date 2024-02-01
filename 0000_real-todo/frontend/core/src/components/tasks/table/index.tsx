@@ -3,7 +3,6 @@ import styles from "./index.module.css";
 import { classHelper, join } from "@/lib/cls";
 import { Pagination } from "@/services/api/models/pagination";
 import { statusOptions, Task } from "@/services/api/models/task";
-import { AppDate } from "@/lib/date";
 
 interface Props {
   data: Pagination<Task>;
@@ -13,26 +12,11 @@ import Icon from "@/components/common/icon";
 import EditableField from "./editableField";
 import useProjects from "@/hooks/useProjects";
 import api from "@/services/api";
+import useCheck from "@/hooks/useCheck";
 
 const TaskTable = ({ data }: Props) => {
-  const [checked, setChecked] = useState<Record<string, boolean>>({});
-  const [allChecked, setAllChecked] = useState(false);
-
-  const checkAll = () => {
-    if (allChecked) {
-      setChecked({});
-      setAllChecked(false);
-      return;
-    }
-
-    const newChecked: Record<string, boolean> = {};
-    data.list.forEach((it) => {
-      newChecked[it.id] = true;
-    });
-
-    setChecked(newChecked);
-    setAllChecked(true);
-  };
+  const { check, checkAll, checked, allChecked } = useCheck();
+  const ids = data.list.map((it) => it.id);
 
   return (
     <div className={styles.table}>
@@ -47,7 +31,7 @@ const TaskTable = ({ data }: Props) => {
           <Icon
             className={styles.checkIcon}
             name="checkOutline"
-            onClick={checkAll}
+            onClick={() => checkAll(ids)}
           />
         </div>
         <div className={join(styles.tableHeaderCell, styles.title)}>タスク</div>
@@ -69,7 +53,16 @@ const TaskTable = ({ data }: Props) => {
           </div>
         ) : null}
         {data.list.map((it) => {
-          return <Row key={it.id} data={it} checked={checked[it.id]} />;
+          return (
+            <Row
+              key={it.id}
+              data={it}
+              checked={checked[it.id]}
+              onCheck={() => {
+                check(it.id);
+              }}
+            />
+          );
         })}
       </div>
     </div>
@@ -108,9 +101,10 @@ const SelectorProxy = ({
 interface RowProps {
   data: Task;
   checked?: boolean;
+  onCheck?: () => void;
 }
 
-const Row = ({ data, checked }: RowProps) => {
+const Row = ({ data, checked, onCheck }: RowProps) => {
   const { options: projectOptions } = useProjects();
 
   return (
@@ -122,7 +116,11 @@ const Row = ({ data, checked }: RowProps) => {
           [styles.unchecked]: !checked,
           [styles.checked]: checked,
         })}>
-        <Icon className={styles.checkIcon} name="checkOutline" />
+        <Icon
+          className={styles.checkIcon}
+          name="checkOutline"
+          onClick={onCheck}
+        />
       </div>
       <div className={join(styles.tableCell, styles.title)}>
         <EditableField

@@ -12,6 +12,7 @@
   width: 100%;
   animation-duration: 0.2s;
   animation-timing-function: ease-in-out;
+  color: var(--font-color-dark-weak);
 }
 
 @keyframes slideinFromRight {
@@ -148,12 +149,15 @@
 
 .info {
   border-bottom: 8px solid var(--info-color);
+  color: var(--info-color);
 }
 
 .success {
   border-bottom: 8px solid var(--success-color);
+  color: var(--success-color);
 }
 
 .error {
   border-bottom: 8px solid var(--danger-color);
+  color: #b28383;
 }

@@ -9,11 +9,7 @@
   background: var(--popup-bg-color);
   border: 1px solid var(--border-color);
   position: absolute;
-}
-
-.header {
-  font-size: 12px;
-  padding: 8px 16px;
+  padding: 8px 0;
 }
 
 .border {
@@ -23,27 +19,33 @@
   height: 1px;
 }
 
+.title {
+  font-size: 10px;
+  padding: 0px 8px;
+  padding-bottom: 8px;
+}
+
 .action {
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
   margin-bottom: 8px;
-  /* border-bottom: 1px solid var(--border-color); */
   padding: 4px;
   padding-left: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.action:hover {
+  background: #fafafa;
 }
 
 .lastAction {
   margin: 0;
 }
 
-.action:hover {
-}
-
 .logo {
   margin-right: 8px;
 }
-
-.logo
 
 .danger {
   color: var(--danger-color);
