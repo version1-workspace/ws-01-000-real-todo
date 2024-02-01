@@ -12,18 +12,20 @@ import {
   Task,
   TaskParams,
 } from "@/services/api/models/task";
-import useProjects from "@/hooks/useProjects";
-import Select from "@/components/common/select";
+import Select, { OptionItem } from "@/components/common/select";
 import TextArea from "@/components/common/input/textarea";
 import { join } from "@/lib/cls";
 import Button from "@/components/common/button";
 import { useToast } from "@/lib/toast/hook";
 import ErrorMessage from "@/components/common/errorMessage";
-import useTasks from "@/hooks/useTask";
 
 interface Props {
   title: string;
   data?: Task;
+  projectsContext: {
+    projects: Project[];
+    options: OptionItem[];
+  };
   onSubmit: () => void;
   onCancel: () => void;
 }
@@ -38,9 +40,7 @@ interface Form {
   children: TaskParams[];
 }
 
-const Form = ({ title, data, onSubmit, onCancel }: Props) => {
-  const { projects, options } = useProjects();
-  const { fetch: fetchTasks } = useTasks();
+const Form = ({ title, data, projectsContext, onSubmit, onCancel }: Props) => {
   const toast = useToast();
   const { submit, change, errors, form } = useForm<Form>({
     initialValues: {
@@ -73,10 +73,6 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
         await api.createTask({
           data: { ...rest, projectId: project?.id, kind: "task" },
         });
-        await fetchTasks({
-          page: 1,
-          statuses: { scheduled: true },
-        });
 
         onSubmit();
 
@@ -102,14 +98,16 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
             </div>
             <div className={styles.input}>
               <Select
-                data={options}
+                data={projectsContext.options}
                 value={form.project?.id}
                 defaultOption={{
                   label: "プログラムを選択してください",
                   value: "",
                 }}
                 onSelect={(option) => {
-                  const project = projects.find((it) => it.id === option.value);
+                  const project = projectsContext.projects.find(
+                    (it) => it.id === option.value,
+                  );
                   change({ project });
                 }}
               />

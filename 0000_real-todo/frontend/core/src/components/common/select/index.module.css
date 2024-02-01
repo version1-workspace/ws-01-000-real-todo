@@ -1,7 +1,4 @@
 .container {
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 4px 12px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,32 +11,35 @@
 }
 
 .value {
-
+  font-size: 12px;
 }
 
 .valueContainer {
   display: flex;
   align-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px;
   justify-content: space-between;
   width: 100%;
 }
 
 .pullDownContainer {
   position: relative;
-  top: 8px;
-  left: -12px;
+  top: 0px;
   display: none;
   width: 100%;
 }
 
 .pullDown {
-  padding: 8px 0;
   position: absolute;
   z-index: var(--z-index-select);
   border: 1px solid var(--border-color);
   box-shadow: 1px 1px 6px 1px var(--border-color);
   background: white;
   min-width: 120px;
+  width: 100%;
+  padding: 8px 0;
 }
 
 .pullDownShow {

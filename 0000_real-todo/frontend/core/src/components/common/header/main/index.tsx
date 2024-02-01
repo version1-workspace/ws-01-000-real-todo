@@ -3,9 +3,13 @@ import styles from "./index.module.css";
 import { useModal } from "@/lib/modal";
 import TaskForm from "@/components/tasks/form";
 import Icon from "../../icon";
+import useProjects from "@/hooks/useProjects";
+import useTasks from "@/hooks/useTask";
 
 export default function Header() {
   const { open, hide } = useModal();
+  const { projects, options } = useProjects();
+  const { fetch: fetchTasks } = useTasks();
 
   return (
     <header className={styles.header}>
@@ -33,7 +37,15 @@ export default function Header() {
                     content: (
                       <TaskForm
                         title="タスクを追加"
+                        projectsContext={{
+                          options,
+                          projects,
+                        }}
                         onSubmit={() => {
+                          fetchTasks({
+                            page: 1,
+                            statuses: { scheduled: true },
+                          });
                           hide();
                         }}
                         onCancel={hide}
