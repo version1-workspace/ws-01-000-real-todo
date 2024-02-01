@@ -34,9 +34,12 @@ const EditableField = ({
   }[type || "text"];
 
   useEffect(() => {
-    const ele = ref.current as HTMLInputElement | undefined;
-    const unfocus = (ele: HTMLInputElement | undefined) => {
-      ele?.blur();
+    const unfocus = (e: MouseEvent) => {
+      const parent = e.target?.closest("." + styles.container);
+      if (parent) {
+        return;
+      }
+
       setEdit(false);
       const { dirty, value } = refDirty.current;
       if (dirty && onChangeEnd) {
@@ -45,10 +48,10 @@ const EditableField = ({
       }
     };
 
-    ele?.addEventListener("blur", () => unfocus(ele));
+    document.addEventListener("click", (e) => unfocus(e));
 
     return () => {
-      ele?.removeEventListener("blur", () => unfocus(ele));
+      document?.removeEventListener("click", (e) => unfocus(e));
     };
   }, [edit, value, onChangeEnd]);
 

@@ -1,5 +1,4 @@
 "use client";
-import { useToast } from "@/lib/toast/hook";
 import api, { getAccessToken, getUserId } from "@/services/api";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState, createContext } from "react";
@@ -8,7 +7,6 @@ const AuthContext = createContext({ user: undefined, initialized: false });
 
 const AuthContainer = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const toast = useToast();
   const [user, setUser] = useState();
   const [initialized, setInitialized] = useState(false);
 

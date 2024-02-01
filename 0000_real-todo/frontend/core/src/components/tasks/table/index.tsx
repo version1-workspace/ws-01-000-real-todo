@@ -1,18 +1,20 @@
 import { useState } from "react";
+import Link from "next/link";
 import styles from "./index.module.css";
 import { classHelper, join } from "@/lib/cls";
 import { Pagination } from "@/services/api/models/pagination";
 import { statusOptions, Task } from "@/services/api/models/task";
-
-interface Props {
-  data: Pagination<Task>;
-}
+import route from "@/lib/route";
 import Select, { OptionItem } from "@/components/common/select";
 import Icon from "@/components/common/icon";
 import EditableField from "./editableField";
 import useProjects from "@/hooks/useProjects";
 import api from "@/services/api";
 import useCheck from "@/hooks/useCheck";
+
+interface Props {
+  data: Pagination<Task>;
+}
 
 const TaskTable = ({ data }: Props) => {
   const { check, checkAll, checked, allChecked } = useCheck();
@@ -187,7 +189,9 @@ const Row = ({ data, checked, onCheck }: RowProps) => {
         />
       </div>
       <div className={join(styles.tableCell, styles.detail)}>
-        <span className={styles.detailText}>more ...</span>
+        <Link href={route.main.tasks.with(data.id)}>
+          <span className={styles.detailText}>more ...</span>
+        </Link>
       </div>
     </div>
   );

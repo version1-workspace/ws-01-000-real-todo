@@ -23,7 +23,7 @@ export const FormContext = createContext<FormContextValue>({
     milestones: [],
     createdAt: dayjs().format(),
     updatedAt: dayjs().format(),
-    status: "initial"
+    status: "initial",
   }),
   errors: undefined,
   mutations: {

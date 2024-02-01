@@ -68,7 +68,7 @@ export default function Sidebar() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/main/todos">
+                  <Link href="/main/tasks">
                     <div
                       className={classHelper({
                         [styles.menuItem]: true,

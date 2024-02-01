@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from "@/components/tasks/list/index.module.css";
+import styles from "./index.module.css";
 import Popup from "@/components/tasks/popup";
 import api from "@/services/api";
 import useFilter from "@/components/tasks/list/hooks/useFilter";

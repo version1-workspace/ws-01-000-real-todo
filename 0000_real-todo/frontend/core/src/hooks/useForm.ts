@@ -43,10 +43,7 @@ type validateOptions<T> = {
 
 interface Props<T> {
   initialValues: T;
-  validate: (
-    values: T,
-    { errors }: { errors: Errors<T> },
-  ) => Errors<T>;
+  validate: (values: T, { errors }: { errors: Errors<T> }) => Errors<T>;
   onSubmit: (values: T, options: validateOptions<T>) => void;
 }
 
@@ -57,12 +54,12 @@ export const useForm = <T>({ initialValues, validate, onSubmit }: Props<T>) => {
   );
 
   const handleSubmit = useCallback(() => {
-    const errors = new Errors<T>()
+    const errors = new Errors<T>();
     const result = validate(form, {
       errors,
     });
 
-    setErrors(result)
+    setErrors(result);
     const isValid = result.size === 0;
     if (!isValid) {
       return;
@@ -76,8 +73,11 @@ export const useForm = <T>({ initialValues, validate, onSubmit }: Props<T>) => {
     [form, setForm],
   );
 
+  const reset = () => setForm(initialValues);
+
   return {
     form,
+    reset,
     errors,
     change,
     setForm,

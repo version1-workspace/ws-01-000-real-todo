@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import mockApi from "./mock";
-import { TaskParams } from "./models/task";
 
 let accessToken: string;
 
@@ -72,6 +71,9 @@ const api = {
     return client.instance.get("/users/projects");
   },
   fetchStats: mockApi.fetchStats,
+  fetchTask: ({ id }: { id: string }) => {
+    return client.instance.get(`/users/tasks/${id}`);
+  },
   fetchTasks: ({ page, status }: { page: number; status: string[] }) => {
     return client.instance.get("/users/tasks", {
       params: { page, status },
@@ -127,7 +129,7 @@ const api = {
       if (["deadline", "startingAt", "finishedAt"].includes(key)) {
         return {
           ...acc,
-          [key]: v.replaceAll("/", "-"),
+          [key]: v?.replaceAll("/", "-"),
         };
       }
 

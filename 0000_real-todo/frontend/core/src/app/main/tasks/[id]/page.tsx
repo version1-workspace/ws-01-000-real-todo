@@ -1,7 +1,11 @@
-import styles from "./index.module.css";
+"use client";
+import route from "@/lib/route";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import styles from "./page.module.css";
 import { useForm } from "@/hooks/useForm";
 import api from "@/services/api";
-import TextInput from "@/components/common/input/text";
 import DateInput from "@/components/common/input/date";
 import { Project } from "@/services/api/models/project";
 import { AppDate } from "@/lib/date";
@@ -12,22 +16,20 @@ import {
   Task,
   TaskParams,
 } from "@/services/api/models/task";
-import Select, { OptionItem } from "@/components/common/select";
+import Select from "@/components/common/select";
 import TextArea from "@/components/common/input/textarea";
 import { join } from "@/lib/cls";
 import Button from "@/components/common/button";
 import { useToast } from "@/lib/toast/hook";
 import ErrorMessage from "@/components/common/errorMessage";
+import useProjects from "@/hooks/useProjects";
+import { factory } from "@/services/api/models";
+import Icon from "@/components/common/icon";
 
 interface Props {
-  title: string;
-  data?: Task;
-  projectsContext: {
-    projects: Project[];
-    options: OptionItem[];
+  params: {
+    id: string;
   };
-  onSubmit: () => void;
-  onCancel: () => void;
 }
 
 interface Form {
@@ -35,21 +37,29 @@ interface Form {
   title: string;
   description: string;
   startingAt?: string;
+  startedAt?: string;
   deadline: string;
   status?: StatusType;
+  createdAt?: string;
+  updatedAt?: string;
   children: TaskParams[];
 }
 
-const Form = ({ title, data, projectsContext, onSubmit, onCancel }: Props) => {
+const TaskDetail = ({ params }: Props) => {
   const toast = useToast();
+  const [task, setTask] = useState<Task>();
+  const { projects, options } = useProjects();
+  const router = useRouter();
+
   const { submit, change, errors, form } = useForm<Form>({
     initialValues: {
-      project: data?.project,
-      title: data?.title || "",
-      description: data?.description || "",
-      startingAt: data?.startingAt,
-      deadline: data?.deadline?.forHtml || AppDate.in(7).toString(),
-      status: data?.status || "scheduled",
+      project: undefined,
+      title: "",
+      description: "",
+      startingAt: undefined,
+      startedAt: undefined,
+      deadline: AppDate.in(7).toString(),
+      status: "scheduled",
       children: [],
     },
     validate: (values, { errors }) => {
@@ -70,18 +80,44 @@ const Form = ({ title, data, projectsContext, onSubmit, onCancel }: Props) => {
     onSubmit: async (values: Form) => {
       const { project, ...rest } = values;
       try {
-        await api.createTask({
-          data: { ...rest, projectId: project?.id, kind: "task" },
+        await api.updateTask(params.id, {
+          ...rest,
+          projectId: project?.id,
         });
+        router.push(route.main.toString());
 
-        onSubmit();
-
-        toast.success("タスクを追加しました。");
-      } catch {
-        toast.error("タスクの追加に失敗しました。");
+        toast.success("タスクを更新しました。");
+      } catch (e) {
+        console.error(e);
+        toast.error("タスクの更新に失敗しました。");
       }
     },
   });
+
+  const updateFormWith = (task: Task) => {
+    change({
+      project: task.project,
+      title: task.title,
+      description: task.description,
+      startingAt: task.startingAt?.format(),
+      startedAt: task.startedAt?.format(),
+      deadline: task.deadline.format(),
+      createdAt: task.createdAt?.format(),
+      updatedAt: task.updatedAt?.format(),
+      status: task.status,
+    });
+  };
+
+  useEffect(() => {
+    const init = async () => {
+      const res = await api.fetchTask(params);
+      const task = factory.task(res.data.data);
+      setTask(task);
+      updateFormWith(task);
+    };
+
+    init();
+  }, []);
 
   const errorMessages = errors.object;
 
@@ -89,7 +125,15 @@ const Form = ({ title, data, projectsContext, onSubmit, onCancel }: Props) => {
     <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.header}>
-          <h2 className={styles.title}>{title}</h2>
+          <h2 className={styles.title}>{form.title}</h2>
+          <div className={styles.subHeader}>
+            <div className={styles.subHeaderColumn}>
+              <div className={styles.label}>作成日時: {form.createdAt}</div>
+            </div>
+            <div className={styles.subHeaderColumn}>
+              <div className={styles.label}>更新日時: {form.updatedAt}</div>
+            </div>
+          </div>
         </div>
         <div className={styles.form}>
           <div className={styles.field}>
@@ -98,47 +142,18 @@ const Form = ({ title, data, projectsContext, onSubmit, onCancel }: Props) => {
             </div>
             <div className={styles.input}>
               <Select
-                data={projectsContext.options}
+                data={options}
                 value={form.project?.id}
                 defaultOption={{
                   label: "プログラムを選択してください",
                   value: "",
                 }}
                 onSelect={(option) => {
-                  const project = projectsContext.projects.find(
-                    (it) => it.id === option.value,
-                  );
+                  const project = projects.find((it) => it.id === option.value);
                   change({ project });
                 }}
               />
               <ErrorMessage message={errorMessages.project} />
-            </div>
-          </div>
-          <div className={styles.field}>
-            <div className={join(styles.label, styles.required)}>タスク</div>
-            <div className={styles.input}>
-              <TextInput
-                type="text"
-                value={form.title}
-                placeholder="タスクを入力。 例)  英会話レッスンの予約、React公式ドキュメントを1ページ読む"
-                onChange={(e) => {
-                  change({ title: e.target.value });
-                }}
-              />
-              <ErrorMessage message={errorMessages.title} />
-            </div>
-          </div>
-          <div className={styles.field}>
-            <div className={styles.label}>説明・メモ</div>
-            <div className={styles.input}>
-              <TextArea
-                value={form.description}
-                rows={5}
-                placeholder="タスクの説明・メモ"
-                onChange={(e) => {
-                  change({ description: e.target.value });
-                }}
-              />
             </div>
           </div>
           <div className={styles.field}>
@@ -183,6 +198,19 @@ const Form = ({ title, data, projectsContext, onSubmit, onCancel }: Props) => {
               />
             </div>
           </div>
+          <div className={styles.field}>
+            <div className={styles.label}>説明・メモ</div>
+            <div className={styles.input}>
+              <TextArea
+                value={form.description}
+                rows={5}
+                placeholder="タスクの説明・メモ"
+                onChange={(e) => {
+                  change({ description: e.target.value });
+                }}
+              />
+            </div>
+          </div>
         </div>
         <div className={styles.footer}>
           <div className={styles.buttons}>
@@ -191,11 +219,25 @@ const Form = ({ title, data, projectsContext, onSubmit, onCancel }: Props) => {
               onClick={() => {
                 submit();
               }}>
-              {data ? "更新" : "作成"}
+              更新
             </Button>
-            <Button variant="secondary" onClick={onCancel}>
-              キャンセル
+            <Button
+              variant="secondary"
+              onClick={() => {
+                if (!task) {
+                  return;
+                }
+                updateFormWith(task);
+              }}>
+              リセット
             </Button>
+          </div>
+          <div className={styles.back}>
+            <Link href={route.main.toString()} className={styles.backText}>
+              <Icon name="back" />
+              <Icon name="back" />
+              ダッシュボードに戻る
+            </Link>
           </div>
         </div>
       </div>
@@ -203,4 +245,4 @@ const Form = ({ title, data, projectsContext, onSubmit, onCancel }: Props) => {
   );
 };
 
-export default Form;
+export default TaskDetail;

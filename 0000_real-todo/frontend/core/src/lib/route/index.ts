@@ -1,95 +1,47 @@
-interface RouteNode {
+interface Config {
   path: string;
-  children?: { [key: string]: RouteNode };
 }
 
-class Route {
-  _node: RouteNode;
-  _children: { [key: string]: Route } = {};
-  parent?: Route;
+interface Functions {
+  toString: () => string;
+  with: (path: string) => string;
+}
+type RouteNodeValue = Config & RouteNode & Functions;
 
-  constructor(node: RouteNode = { path: "/" }) {
-    this._node = node;
-  }
-
-  set children(values: { [key: string]: Route }) {
-    this._children = values;
-  }
-
-  child(path: string) {
-    return (this.toString() + "/" + path).replaceAll("//", "/");
-  }
-
-  toString(): string {
-    let node = this.parent;
-    let fullPath = [this._node.path];
-    while (node) {
-      const parentPath = node.toString();
-      if (parentPath !== "/") {
-        fullPath.unshift(parentPath);
-      }
-
-      node = node.parent;
-    }
-
-    return ("/" + fullPath.join("/")).replaceAll("//", "/");
-  }
+interface RouteNode {
+  [key: string]: RouteNodeValue;
 }
 
-const factory = (node: RouteNode) =>
-  new Proxy<Route>(new Route(node), {
-    get: function (target: Route, name: string) {
-      if (name in target) {
-        return target[name as keyof Route];
-      }
-
-      return target._children[name as any];
-    },
-  });
-
-type RouteProxy = typeof Proxy<Route>;
-
-const init = (config: RouteNode, root: Route = new Route()): RouteProxy => {
-  return Object.keys(config).reduce((acc: RouteProxy, key: string) => {
-    if (["path"].includes(key)) {
-      return acc;
+const handler = {
+  get: (target: RouteNode, prop: string): RouteNode => {
+    if (prop in target) {
+      return target[prop as keyof { config: Config }] as RouteNode;
     }
 
-    const node = config[key as keyof RouteNode] as RouteNode;
-    const route = factory(config);
-    if (node && key === "children") {
-      const _node = node as RouteNode;
-      let children = {} as { [key: string]: Route };
-      Object.keys(_node).forEach((childKey: string) => {
-        const value = _node[childKey as keyof RouteNode] as RouteNode;
-        const child = init(value, factory(value));
-        child.parent = route;
+    const config = target.config as Config;
 
-        children[childKey] = child;
-      });
-
-      route.children = children;
-    }
-
-    return route;
-  }, root);
-};
-
-const route: RouteNode = {
-  path: "/",
-  children: {
-    main: {
-      path: "main",
-      children: {
-        projects: {
-          path: "projects",
-        },
-        tasks: {
-          path: "tasks",
-        },
+    const route: any = {
+      config: {
+        path: config.path,
       },
-    },
+    };
+    route.with = (path: string) => {
+      if (route.config.path.slice(-1) === "/") {
+        return route.config.path + path;
+      }
+      return route.config.path + "/" + path;
+    };
+    route.config.path = route.with(prop);
+    route.toString = () => {
+      return route.config.path;
+    };
+
+    return new Proxy(route, handler);
   },
 };
 
-export default init(route);
+const root = { config: { path: "" } } as any;
+
+const route = new Proxy(root, handler);
+
+export default route as RouteNode;

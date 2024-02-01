@@ -62,7 +62,7 @@ const useProjects = () => {
   return {
     fetch,
     projects: data,
-    options
+    options,
   };
 };
 

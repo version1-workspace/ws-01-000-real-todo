@@ -1,9 +1,8 @@
 "use client";
 import { useEffect } from "react";
-import styles from "@/components/tasks/list/index.module.css";
+import styles from "./index.module.css";
 import useFilter from "@/components/tasks/list/hooks/useFilter";
 import { classHelper } from "@/lib/cls";
-import { ja } from "@/lib/transltate";
 import useTasks from "@/hooks/useTask";
 import TaskTable from "../table";
 import Icon from "@/components/common/icon";

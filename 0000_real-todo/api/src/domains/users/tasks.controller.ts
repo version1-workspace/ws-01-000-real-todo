@@ -79,7 +79,6 @@ export class TasksController {
     @Param('id') id: string,
     @Body() body: Record<string, any>,
   ): Promise<Record<string, any>> {
-    console.log('body ==========', id, body);
     const _body = Object.keys(body).reduce((acc: any, key: string) => {
       if (
         [
@@ -97,7 +96,10 @@ export class TasksController {
           [key]: body[key],
         };
       }
+
+      return acc;
     }, {});
+
     const result = await this.tasksService.update(user.uuid, id, _body);
 
     return { data: result };

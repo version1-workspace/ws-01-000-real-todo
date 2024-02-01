@@ -21,7 +21,7 @@ export default function Main() {
               return (
                 <Link
                   key={item.slug}
-                  href={route.main.projects.child(item.slug)}>
+                  href={route.main.projects.with(item.slug)}>
                   <Card data={item} />
                 </Link>
               );
