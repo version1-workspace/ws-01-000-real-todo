@@ -25,6 +25,7 @@ import ErrorMessage from "@/components/common/errorMessage";
 import useProjects from "@/hooks/useProjects";
 import { factory } from "@/services/api/models";
 import Icon from "@/components/common/icon";
+import EditableField from "@/components/tasks/table/editableField";
 
 interface Props {
   params: {
@@ -120,12 +121,23 @@ const TaskDetail = ({ params }: Props) => {
   }, []);
 
   const errorMessages = errors.object;
+  if (!task) {
+    return null;
+  }
 
   return (
     <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.header}>
-          <h2 className={styles.title}>{form.title}</h2>
+          <h2 className={styles.title}>
+            <EditableField
+              defaultValue={form.title}
+              inputStyleClass={styles.titleField}
+              onChangeEnd={(value) => {
+                change({ title: value });
+              }}
+            />
+          </h2>
           <div className={styles.subHeader}>
             <div className={styles.subHeaderColumn}>
               <div className={styles.label}>作成日時: {form.createdAt}</div>

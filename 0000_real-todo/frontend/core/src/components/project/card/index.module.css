@@ -1,11 +1,11 @@
 .card {
-  font-weight: 100;
   padding: 16px;
   border: 1px solid #e9e9e9;
   border-radius: 8px;
   margin-bottom: 16px;
   box-shadow: 1px 3px 1px 1px #e9e9e940;
   background: #fefefe;
+  color: var(--font-color-dark-weak);
 }
 
 .header {
@@ -40,12 +40,12 @@
 
 .goal {
   display: flex;
-  font-weight: 300;
   align-items: center;
   margin-right: 16px;
   margin-bottom: 8px;
   font-size: 16px;
   color: var(--font-color-dark-weak);
+  font-weight: 400;
 }
 
 .goal > span {
@@ -76,7 +76,7 @@
 .footer {
   display: flex;
   justify-content: flex-end;
-  color: var(--font-color-weak);
+  color: var(--font-color-dark-weak);
 }
 
 .stats {
@@ -91,8 +91,8 @@
 }
 
 .statsText {
-  color: var(--font-color-weak);
   font-size: 12px;
+  color: var(--font-color-dark-weak);
 }
 
 .slash {

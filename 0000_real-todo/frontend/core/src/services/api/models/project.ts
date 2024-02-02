@@ -32,7 +32,7 @@ export interface ProjectParams {
   stats?: {
     milestone: number;
     task: number;
-    totalTask: number;
+    total: number;
   };
   milestones: TaskParams[];
 }

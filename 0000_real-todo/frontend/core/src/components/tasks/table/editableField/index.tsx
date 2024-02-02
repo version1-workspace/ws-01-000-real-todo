@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./index.module.css";
-import { classHelper } from "@/lib/cls";
+import { classHelper, join } from "@/lib/cls";
 import TextInput from "@/components/common/input/text";
 import DateInput from "@/components/common/input/date";
 
@@ -12,6 +12,7 @@ interface Props {
 
   max?: string;
   min?: string;
+  inputStyleClass?: string;
 }
 
 const EditableField = ({
@@ -19,6 +20,7 @@ const EditableField = ({
   type,
   placeholder,
   onChangeEnd,
+  inputStyleClass,
   ...rest
 }: Props) => {
   const [edit, setEdit] = useState(false);
@@ -73,7 +75,7 @@ const EditableField = ({
           [styles.hidden]: !edit,
           [styles.show]: edit,
         })}
-        inputClassName={styles.inputContainer}
+        inputClassName={join(styles.inputContainer, inputStyleClass)}
         onChange={(e) => {
           let value = e.target.value;
           if (type === "date") {

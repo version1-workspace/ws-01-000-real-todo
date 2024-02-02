@@ -8,6 +8,7 @@ import {
   IoChevronBack as HiddenIcon,
 } from "react-icons/io5";
 import { classHelper } from "@/lib/cls";
+import route from "@/lib/route";
 
 const projects = [
   {
@@ -57,33 +58,24 @@ export default function Sidebar() {
             <>
               <ul className={styles.menu}>
                 <li>
-                  <Link href="/main">
+                  <Link href={route.main.toString()}>
                     <div
                       className={classHelper({
                         [styles.menuItem]: true,
-                        [styles.menuItemActive]: pathname === "/main",
+                        [styles.menuItemActive]:
+                          pathname === route.main.toString(),
                       })}>
                       <p className={styles.menuTitle}>ダッシュボード</p>
                     </div>
                   </Link>
                 </li>
                 <li>
-                  <Link href="/main/tasks">
+                  <Link href={route.main.projects.toString()}>
                     <div
                       className={classHelper({
                         [styles.menuItem]: true,
-                        [styles.menuItemActive]: pathname === "/todos",
-                      })}>
-                      <p className={styles.menuTitle}>タスク</p>
-                    </div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/main/projects">
-                    <div
-                      className={classHelper({
-                        [styles.menuItem]: true,
-                        [styles.menuItemActive]: pathname === "/main/projects",
+                        [styles.menuItemActive]:
+                          pathname === route.main.projects.toString(),
                       })}>
                       <p className={styles.menuTitle}>プロジェクト</p>
                     </div>
