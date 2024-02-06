@@ -34,7 +34,8 @@ export const ProjectsContainer = ({ children }: Props) => {
       const projects = list.map((it: ProjectParams) => factory.project(it));
 
       setData(projects);
-    } catch {
+    } catch(e) {
+      console.error(e)
       toast.error("プロジェクトの取得に失敗しました");
     }
   };

@@ -103,7 +103,6 @@ export const seed = async ({ app, dataSource, logger }) => {
         projects.push(project);
       }),
     );
-
     console.log('tasks ========');
     const args = [
       {
@@ -149,8 +148,33 @@ export const seed = async ({ app, dataSource, logger }) => {
 
             const task = manager.create(Task, it);
             await manager.save(task);
+            tasks[index].id = task.id;
           }),
         );
+
+        let head = 0;
+        for (let i = 0; i < 5; i++) {
+          const milestone = {
+            userId: user.id,
+            projectId: project.id,
+            title: `milestone ${i}`,
+            kind: 'milestone' as const,
+            status: 'scheduled' as const,
+          };
+
+          const m = manager.create(Task, milestone);
+          const tail = head + Math.ceil((tasks.length - 1 - head) / 2);
+          m.children = tasks.slice(head, tail);
+
+          if (m.children.length > 0) {
+            m.deadline = m.children.slice(-1)[0].deadline;
+          } else {
+            m.deadline = project.deadline;
+          }
+
+          await manager.save(m);
+          head = tail;
+        }
       }),
     );
   });

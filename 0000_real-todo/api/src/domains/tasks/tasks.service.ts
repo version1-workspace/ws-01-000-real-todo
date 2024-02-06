@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOperator, In, Repository } from 'typeorm';
+import { FindOperator, In, IsNull, Repository } from 'typeorm';
 import { Task, TaskKinds } from './task.entity';
 import { Pagination } from '../../entities/pagination.entity';
-import { Stat } from '../../entities/stat.entity';
+import { init as initialStat, Stat } from '../../entities/stat.entity';
 import { User } from '../users/user.entity';
 import { TaskStatuses } from './task.entity';
 import { Project } from '../projects/project.entity';
+import { IsIn } from 'class-validator';
 
 type SortType = 'deadline' | 'started' | 'updated' | 'created';
 type OrderType = 'asc' | 'desc';
@@ -23,11 +24,12 @@ interface SearchParams {
   page?: number;
 }
 
-interface WhereParms {
+interface WhereParams {
   project?: {
     uuid?: string;
     slug?: string;
   };
+  kind: TaskKinds;
   userId: number;
   status: FindOperator<any>;
 }
@@ -68,6 +70,59 @@ export class TasksService {
     });
   }
 
+  async orphans({
+    userId,
+    slug,
+  }: {
+    userId: number;
+    slug: string;
+  }): Promise<Task[]> {
+    return await this.tasksRepository.find({
+      relations: {
+        user: true,
+        project: true,
+        children: true,
+      },
+      where: {
+        kind: 'task',
+        parentId: IsNull(),
+        userId,
+        project: {
+          slug,
+        },
+      },
+      order: {
+        deadline: 'desc',
+      },
+    });
+  }
+
+  async milestones({
+    userId,
+    projectSlugs,
+  }: {
+    userId: number;
+    projectSlugs: string[];
+  }): Promise<Task[]> {
+    return await this.tasksRepository.find({
+      relations: {
+        user: true,
+        project: true,
+        children: true,
+      },
+      where: {
+        kind: 'milestone',
+        userId,
+        project: {
+          slug: In(projectSlugs),
+        },
+      },
+      order: {
+        deadline: 'asc',
+      },
+    });
+  }
+
   async search({
     user,
     projectId,
@@ -93,9 +148,10 @@ export class TasksService {
     };
     const { take, skip } = options;
 
-    let where: WhereParms = {
+    let where: WhereParams = {
       userId: user.id,
       status: In(options.status),
+      kind: 'task' as const,
     };
 
     if (projectId) {
@@ -133,22 +189,8 @@ export class TasksService {
     });
   }
 
-  async milestones(ids: number[]): Promise<Record<number, Task[]>> {
-    const milestones = await this.tasksRepository.find({
-      where: {
-        projectId: In(ids),
-        kind: 'milestone' as const,
-      },
-    });
-
-    return milestones.reduce((acc: Record<number, Task[]>, it: Task) => {
-      const list = acc[it.projectId] || [];
-      return { ...acc, [it.projectId]: [...list, it] };
-    }, {});
-  }
-
   async statics(ids: number[]): Promise<Record<number, Stat>> {
-    const stats = await this.tasksRepository
+    const kindStats = await this.tasksRepository
       .createQueryBuilder('tasks')
       .select('projectId, kind, count(*) as count')
       .where('tasks.projectId IN(:id)', { id: ids })
@@ -156,16 +198,34 @@ export class TasksService {
       .addGroupBy('kind')
       .getRawMany();
 
-    return stats.reduce((acc, it) => {
-      const summary = acc[it.projectId] || { total: 0 };
-      summary[it.kind] = Number(it.count);
-      summary.total = (summary.total || 0) + Number(it.count);
+    const r1 = kindStats.reduce((acc, it) => {
+      const summary = acc[it.projectId] || initialStat();
+      summary.kinds[it.kind] = Number(it.count);
 
       return {
         ...acc,
         [it.projectId]: summary,
       };
     }, {});
+
+    const stateStats = await this.tasksRepository
+      .createQueryBuilder('tasks')
+      .select('projectId, status, count(*) as count')
+      .where('tasks.projectId IN(:id)', { id: ids })
+      .groupBy('projectId')
+      .addGroupBy('status')
+      .getRawMany();
+
+    return stateStats.reduce((acc, it) => {
+      const summary = acc[it.projectId] || initialStat();
+      summary.states[it.status] = Number(it.count);
+      summary.total = summary.total + Number(it.count);
+
+      return {
+        ...acc,
+        [it.projectId]: summary,
+      };
+    }, r1);
   }
 
   build = this.tasksRepository.create;

@@ -67,6 +67,9 @@ const api = {
   fetchUser: () => {
     return client.instance.get("/users/me");
   },
+  fetchProject: ({ slug }: { slug: string }) => {
+    return client.instance.get(`/users/projects/${slug}`);
+  },
   fetchProjects: () => {
     return client.instance.get("/users/projects");
   },
@@ -78,6 +81,9 @@ const api = {
     return client.instance.get("/users/tasks", {
       params: { page, status },
     });
+  },
+  fetchMilestones: ({ slug }: { slug: string; }) => {
+    return client.instance.get(`/projects/${slug}/milestones`);
   },
   completeTask: ({ id }: { id: string }) => {
     return client.instance.put(`/users/tasks/${id}/complete`);

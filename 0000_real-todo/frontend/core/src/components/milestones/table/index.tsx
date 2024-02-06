@@ -15,7 +15,7 @@ interface Props {
   data: Task[];
 }
 
-const TaskTable = ({ data }: Props) => {
+const MilestoneTable = ({ data }: Props) => {
   const { check, checkAll, checked, allChecked } = useCheck();
   const ids = data.map((it) => it.id);
 
@@ -36,9 +36,6 @@ const TaskTable = ({ data }: Props) => {
           />
         </div>
         <div className={join(styles.tableHeaderCell, styles.title)}>タスク</div>
-        <div className={join(styles.tableHeaderCell, styles.project)}>
-          プロジェクト
-        </div>
         <div className={join(styles.tableHeaderCell, styles.statusHeader)}>
           ステータス
         </div>
@@ -131,19 +128,6 @@ const Row = ({ data, checked, onCheck }: RowProps) => {
           }}
         />
       </div>
-      <div className={join(styles.tableCell, styles.project)}>
-        <SelectorProxy
-          options={projectOptions}
-          defaultValue={data.project.id}
-          defaultOption={{
-            label: "プロジェクトを選択してください",
-            value: "",
-          }}
-          onSelect={async (option) => {
-            await api.updateTask(data.id, { projectId: option.value });
-          }}
-        />
-      </div>
       <div className={join(styles.tableCell, styles.status)}>
         <SelectorProxy
           options={statusOptions}
@@ -196,4 +180,4 @@ const Row = ({ data, checked, onCheck }: RowProps) => {
   );
 };
 
-export default TaskTable;
+export default MilestoneTable;

@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 export default class DateDecorator {
   readonly _raw?: string;
   readonly _date?: dayjs.Dayjs;
+  _calcFromCache: Record<string, number> = {};
 
   constructor(params: string) {
     if (params) {
@@ -41,6 +42,24 @@ export default class DateDecorator {
 
   day() {
     return this.date?.day();
+  }
+
+  from(time = dayjs()) {
+    if (!this.date) {
+      return;
+    }
+
+    let base = time;
+    let i = 0;
+    while (!this.date.isSame(base, "day") && !this.date.isBefore(base, "day")) {
+      base = base.add(1, "day");
+      i++;
+      if (i >= 500) {
+        break;
+      }
+    }
+
+    return i;
   }
 
   greaterThanEqual(d: DateDecorator) {

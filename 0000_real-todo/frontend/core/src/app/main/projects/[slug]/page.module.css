@@ -1,0 +1,127 @@
+.container {
+  padding: 32px;
+  background: var(--background-color);
+}
+
+.title {
+  font-size: 14px;
+  position: relative;
+  background: #fefefe;
+  z-index: 1;
+  top: 16px;
+  left: 8px;
+  padding: 8px;
+  padding-right: 16px;
+  font-weight: normal;
+}
+
+.project {
+  padding: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--weak-border-color);
+}
+
+.taskList {
+  padding: 16px;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  padding: 16px;
+  margin: 16px 0;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.label {
+  display: flex;
+  margin-right: 16px;
+  font-size: 12px;
+  letter-spacing: 0.1rem;
+  min-width: 15%;
+}
+
+.labelText {
+  position: relative;
+  top: 2px;
+  margin-right: 32px;
+}
+
+.labelIcon {
+  margin-right: 4px;
+  position: relative;
+  top: 4px;
+}
+
+.goal {
+  font-size: 24px;
+  letter-spacing: 0.2rem;
+}
+
+.deadline {
+  display: flex;
+  letter-spacing: 0.1rem;
+}
+
+.goalContainer {
+}
+
+.slug {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.fromText {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.fromDate {
+  font-size: 12px;
+  position: relative;
+  top: 2px;
+}
+
+.slugBasePath {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.border {
+  width: 70%;
+  height: 1px;
+  background: var(--weak-border-color);
+}
+
+.stats {
+  display: flex;
+  background: #fefefe;
+  position: relative;
+  top: 20px;
+  right: 8px;
+  padding: 8px;
+  padding-left: 16px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-right: 1px solid var(--border-color);
+}
+
+.lastStat {
+  border-right: 0;
+}
+
+.statIcon {
+  display: inline-block;
+  margin-right: 8px;
+}

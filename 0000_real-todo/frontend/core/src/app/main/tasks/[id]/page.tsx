@@ -25,7 +25,7 @@ import ErrorMessage from "@/components/common/errorMessage";
 import useProjects from "@/hooks/useProjects";
 import { factory } from "@/services/api/models";
 import Icon from "@/components/common/icon";
-import EditableField from "@/components/tasks/table/editableField";
+import EditableField from "@/components/common/editableField";
 
 interface Props {
   params: {

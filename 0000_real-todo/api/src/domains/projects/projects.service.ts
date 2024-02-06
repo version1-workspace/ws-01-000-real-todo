@@ -4,8 +4,10 @@ import { DeepPartial, Repository } from 'typeorm';
 import { Pagination } from '../../entities/pagination.entity';
 import { User } from '../users/user.entity';
 import { Task } from '../tasks/task.entity';
+import { init as initialStat } from '../../entities/stat.entity';
 import { Project, StatusType } from './project.entity';
 import { TasksService } from '../tasks/tasks.service';
+import { toMap } from '../../lib/utils';
 
 interface SearchParams {
   user: User;
@@ -70,15 +72,21 @@ export class ProjectsService {
       take,
     });
 
-    const projectIds = projects.map((it) => it.id);
-    const milestones = await this.tasksService.milestones(projectIds);
+    const projectSlugs = projects.map((it) => it.slug);
+    const milestones = toMap(
+      await this.tasksService.milestones({
+        userId: user.id,
+        projectSlugs,
+      }),
+    );
     projects.forEach((project) => {
-      project.milestones = milestones[project.id] || [];
+      project.milestones = milestones[project.id] || ([] as Task[]);
     });
 
+    const projectIds = projects.map((it) => it.id);
     const stats = await this.tasksService.statics(projectIds);
     projects.forEach((p: Project) => {
-      p.stats = stats[p.id] || { total: 0 };
+      p.stats = stats[p.id] || initialStat();
     });
 
     const result = new Pagination({
@@ -92,10 +100,7 @@ export class ProjectsService {
     return result;
   }
 
-  async findOne({
-    user,
-    slug
-  }: ProjectParams): Promise<Project> {
+  async findOne({ user, slug }: ProjectParams): Promise<Project> {
     const project = await this.projectsRepository.findOne({
       where: {
         userId: user.id,
@@ -106,26 +111,31 @@ export class ProjectsService {
       },
     });
 
-    const milestones = await this.tasksService.milestones([project.id]);
-    project.milestones = milestones[project.id] || [];
+    const milestones = toMap(
+      await this.tasksService.milestones({
+        userId: user.id,
+        projectSlugs: [project.slug],
+      }),
+    );
+    project.milestones = milestones[project.id] || ([] as Task[]);
 
     const stats = await this.tasksService.statics([project.id]);
-    project.stats = stats[project.id] || { total: 0 };
+    project.stats = stats[project.id] || initialStat();
 
     return project;
   }
 
   async create(params: DeepPartial<Project>): Promise<Project> {
-    const { milestones, ...rest } = params
+    const { milestones, ...rest } = params;
     const project = this.projectsRepository.create(rest);
 
     project.tasks = milestones.map((it: DeepPartial<Task>) => {
       return this.tasksService.build({
         ...it,
         userId: params.userId,
-        kind: 'milestone'
-      })[0]
-    })
+        kind: 'milestone',
+      })[0];
+    });
 
     await this.projectsRepository.save(project);
 

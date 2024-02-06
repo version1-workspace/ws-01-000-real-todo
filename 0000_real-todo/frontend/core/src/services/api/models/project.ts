@@ -30,9 +30,17 @@ export interface ProjectParams {
   goal: string;
   shouldbe: string;
   stats?: {
-    milestone: number;
-    task: number;
     total: number;
+    kinds: {
+      milestone: number;
+      task: number;
+      total: number;
+    };
+    states: {
+      scheduled: number;
+      completed: number;
+      archived: number;
+    };
   };
   milestones: TaskParams[];
 }

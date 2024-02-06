@@ -41,14 +41,14 @@ export default function Projet({ data }: Props) {
               <Milestone size="12px" />
             </span>
             <span className={styles.statsText}>
-              {data.stats?.milestone || 0}
+              {data.stats?.kinds.milestone || 0}
             </span>
           </p>
           <p className={styles.task}>
             <span className={styles.icon}>
               <Task size="12px" />
             </span>
-            <span className={styles.statsText}>{data.stats?.task}</span>
+            <span className={styles.statsText}>{data.stats?.kinds.task}</span>
           </p>
         </div>
       </div>

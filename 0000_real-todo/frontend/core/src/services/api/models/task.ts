@@ -66,7 +66,13 @@ export class TaskModel {
     this.id = params.uuid || uuid();
     this._raw = params;
 
-    this._children = params.children?.map((it) => factory.task(it)) || [];
+    this._children = params.children?.map((it) => {
+      if (!it.project && params.project) {
+        it.project = params.project;
+      }
+
+      return factory.task(it) || [];
+    });
     this._project = factory.project(params.project);
 
     if (params.parent) {
@@ -155,7 +161,7 @@ export class TaskModel {
 
   trancatedDescription(length = 30, delimiter = "...") {
     if (!this._raw.description) {
-      return ''
+      return "";
     }
 
     return this._raw.description.slice(0, length) + " " + delimiter;

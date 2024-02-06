@@ -26,15 +26,23 @@ import {
   IoSwapVertical,
   IoTrashOutline,
   IoListOutline,
+  IoCompassOutline,
+  IoScanOutline,
+  IoCodeOutline,
+  IoChevronDown,
 } from "react-icons/io5";
 import styles from "./index.module.css";
 import { classHelper } from "@/lib/cls";
 
 const icons = {
+  unknown: IoCodeOutline,
+  shouldbe: IoCompassOutline,
+  goal: IoScanOutline,
   close: IoCloseOutline,
   closeCircle: IoCloseCircle,
   forward: IoChevronForward,
   back: IoChevronBack,
+  chevronDown: IoChevronDown,
   up: IoArrowUpOutline,
   down: IoArrowDown,
   caretDown: IoCaretDown,

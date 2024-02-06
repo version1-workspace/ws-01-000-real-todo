@@ -83,7 +83,7 @@ export class Task extends Base {
   @ManyToOne(() => Project)
   project: Project;
 
-  @OneToMany(() => Task, (parent) => parent.children)
+  @ManyToOne(() => Task, (parent) => parent.children)
   parent: Task;
 
   @OneToMany(() => Task, (task) => task.parent)

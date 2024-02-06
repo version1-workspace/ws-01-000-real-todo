@@ -9,32 +9,23 @@ import {
 } from "react-icons/io5";
 import { classHelper } from "@/lib/cls";
 import route from "@/lib/route";
+import useProjects from "@/hooks/useProjects";
 
-const projects = [
-  {
-    name: "プログラミング",
-    slug: "programmming",
-    color: "#a00",
-    href: "/main/projects/programming",
-    deadline: "2023/12/31",
-  },
-  {
-    name: "英語",
-    slug: "english",
-    color: "#0a0",
-    href: "/main/projects/english",
-    deadline: "2023/12/31",
-  },
-  {
-    name: "プライベート",
-    slug: "private",
-    color: "#00a",
-    href: "/main/projects/private",
-    deadline: "2023/12/31",
-  },
-];
+const colors = (function () {
+  const list = [];
+  for (let i = 0; i < 10; i++) {
+    const code = ((i + 1) * 140) % 760;
+    const r = Math.max(code - 510, 0);
+    const g = Math.min(Math.max(code - 255, 0), 255);
+    const b = Math.min(255, code);
+    list.push(`rgba(${r}, ${g}, ${b}, 0.6)`);
+  }
+
+  return list;
+})();
 
 export default function Sidebar() {
+  const { projects } = useProjects();
   const [show, setShow] = useState(true);
   const pathname = usePathname();
 
@@ -82,24 +73,25 @@ export default function Sidebar() {
                   </Link>
                 </li>
                 <ul className={styles.projects}>
-                  {projects.map((item) => {
+                  {projects.map((item, index) => {
                     return (
                       <li
                         key={item.slug}
                         className={classHelper({
                           [styles.menuItem]: true,
-                          [styles.menuItemActive]: pathname === item.href,
+                          [styles.menuItemActive]:
+                            pathname === route.main.projects.with(item.slug),
                         })}>
-                        <Link href={item.href}>
+                        <Link href={route.main.projects.with(item.slug)}>
                           <div className={styles.project}>
                             <div>
                               <span
                                 className={styles.dot}
-                                style={{ background: item.color }}></span>
+                                style={{ background: colors[index] }}></span>
                               {item.name}
                             </div>
                             <span className={styles.deadline}>
-                              {item.deadline}
+                              {item.deadline?.format()}
                             </span>
                           </div>
                         </Link>

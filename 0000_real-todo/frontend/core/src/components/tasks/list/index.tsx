@@ -25,7 +25,7 @@ export default function TaskList() {
     <CheckContainer>
       <div className={styles.container}>
         <TaskListHeader />
-        <TaskTable data={data} />
+        <TaskTable data={data.list} />
         <div className={styles.footer}>
           <ul className={styles.pagination}>
             <li
