@@ -7,6 +7,7 @@ import { Stats, StatsParams, StatsModel } from "@/services/api/models/stats";
 import { Task, TaskParams, TaskModel } from "@/services/api/models/task";
 
 import DateDecorater from "@/services/api/models/date";
+import { User, UserModel, UserParams } from "./user";
 
 interface Params<T> {
   _raw: T;
@@ -54,4 +55,11 @@ export const factory = {
         ],
       }),
     ) as Task,
+  user: (params: UserParams) =>
+    new Proxy(
+      new UserModel(params),
+      handler<UserParams>({
+        dateFields: ["createdAt", "updatedAt"],
+      }),
+    ) as User,
 };

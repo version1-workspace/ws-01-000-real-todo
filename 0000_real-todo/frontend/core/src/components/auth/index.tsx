@@ -1,13 +1,26 @@
 "use client";
 import api, { getAccessToken, getUserId } from "@/services/api";
+import { factory } from "@/services/api/models";
+import { User } from "@/services/api/models/user";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState, createContext } from "react";
+import route from "@/lib/route";
 
-const AuthContext = createContext({ user: undefined, initialized: false });
+interface IAuthContext {
+  user?: User;
+  logout: () => void;
+  initialized: boolean;
+}
+
+const AuthContext = createContext<IAuthContext>({
+  user: undefined,
+  logout: () => {},
+  initialized: false,
+});
 
 const AuthContainer = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<User>();
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
@@ -20,31 +33,38 @@ const AuthContainer = ({ children }: { children: React.ReactNode }) => {
         }
 
         const r2 = await api.fetchUser();
-        setUser(r2.data);
+        const user = factory.user(r2.data.data);
+        setUser(user);
         setInitialized(true);
       } catch (e) {
-        router.push("/login?error=loginRequired");
+        router.push(route.login.with("?error=loginRequired"));
       }
     };
 
     init();
   }, []);
 
+  const logout = () => {
+    router.push(route.login.toString());
+    setUser(undefined);
+    api.client.setAccessToken("");
+  };
+
   if (!initialized) {
     return null;
   }
 
   return (
-    <AuthContext.Provider value={{ user, initialized }}>
+    <AuthContext.Provider value={{ user, logout, initialized }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => {
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
-  return { user };
+  return { user, logout };
 };
 
 export default AuthContainer;

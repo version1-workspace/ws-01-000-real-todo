@@ -13,14 +13,14 @@
 
 .chart {
   width: 50%;
-  background: #fefefe;
+  background: var(--background-color);
 }
 
 .dashboard {
   padding: 32px;
   display: flex;
   justify-content: space-between;
-  background: #fefefe;
+  background: var(--background-color);
 }
 
 .sectionTitle {
@@ -30,9 +30,10 @@
 
 .todos {
   padding: 32px;
-  background: #fefefe;
+  background: var(--background-color);
 }
 
 .todos .content {
   min-width: 100%;
 }
+
