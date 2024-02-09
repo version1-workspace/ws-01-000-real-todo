@@ -64,6 +64,9 @@ const api = {
       uuid,
     });
   },
+  logout: () => {
+    return client.instance.delete("/auth/refresh");
+  },
   fetchUser: () => {
     return client.instance.get("/users/me");
   },

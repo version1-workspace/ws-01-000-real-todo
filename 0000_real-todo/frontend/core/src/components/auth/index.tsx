@@ -44,10 +44,12 @@ const AuthContainer = ({ children }: { children: React.ReactNode }) => {
     init();
   }, []);
 
-  const logout = () => {
-    router.push(route.login.toString());
+  const logout = async () => {
+    await api.logout()
     setUser(undefined);
     api.client.setAccessToken("");
+
+    router.push(route.login.toString());
   };
 
   if (!initialized) {

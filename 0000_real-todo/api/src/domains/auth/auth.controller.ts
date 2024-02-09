@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   HttpCode,
   HttpStatus,
   Post,
@@ -66,12 +67,28 @@ export class AuthController {
     }
   }
 
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @Delete('refresh')
+  async clearRefreshToken(@Res({ passthrough: true }) response: Response) {
+    this.removeRefreshToken(response);
+    response.status(200);
+  }
+
   private extractTokenFromCookie(request: Request): string | undefined {
     return request.cookies.refreshToken;
   }
 
   private setRefreshToken(res: Response, token: string) {
     res.cookie('refreshToken', token, {
+      secure: true,
+      httpOnly: true,
+      sameSite: 'none',
+    });
+  }
+
+  private removeRefreshToken(res: Response) {
+    res.cookie('refreshToken', {
       secure: true,
       httpOnly: true,
       sameSite: 'none',
