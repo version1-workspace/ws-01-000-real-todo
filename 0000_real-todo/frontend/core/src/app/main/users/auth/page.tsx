@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import styles from "./page.module.css";
 import { User } from "@/services/api/models/user";
 import TextInput from "@/components/common/input/text";
@@ -12,7 +12,7 @@ interface PageProps {
 }
 
 function MailForm({ user }: PageProps) {
-  const { form, change } = useForm({
+  const { form, change, reset } = useForm({
     initialValues: {
       value: user.email,
       confirmation: "",
@@ -50,8 +50,10 @@ function MailForm({ user }: PageProps) {
       </div>
       <div className={styles.footer}>
         <div className={styles.actions}>
-          <Button variant="primary">更新</Button>
-          <Button>リセット</Button>
+          <Button variant="primary" onClick={() => {}}>
+            更新
+          </Button>
+          <Button onClick={reset}>リセット</Button>
         </div>
       </div>
     </div>
@@ -59,7 +61,7 @@ function MailForm({ user }: PageProps) {
 }
 
 function PasswordForm({ user }: PageProps) {
-  const { form, change } = useForm({
+  const { form, change, reset } = useForm({
     initialValues: {
       value: "",
       confirmation: "",
@@ -99,8 +101,10 @@ function PasswordForm({ user }: PageProps) {
       </div>
       <div className={styles.footer}>
         <div className={styles.actions}>
-          <Button variant="primary">更新</Button>
-          <Button>リセット</Button>
+          <Button variant="primary" onClick={() => {}}>
+            更新
+          </Button>
+          <Button onClick={reset}>リセット</Button>
         </div>
       </div>
     </form>

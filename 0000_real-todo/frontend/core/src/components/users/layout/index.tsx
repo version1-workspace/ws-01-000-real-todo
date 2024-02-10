@@ -20,20 +20,20 @@ const menuSettings: MenuSetting[] = [
     key: "auth",
   },
   {
+    title: "支払い情報",
+    key: "payment",
+  },
+  {
     title: "設定",
-    key: "setting",
+    key: "settings",
     children: [
       {
         title: "デザイン",
-        key: "design",
+        key: "settings/design",
       },
       {
         title: "通知",
-        key: "notification",
-      },
-      {
-        title: "支払い情報",
-        key: "payment",
+        key: "settings/notification",
       },
     ],
   },

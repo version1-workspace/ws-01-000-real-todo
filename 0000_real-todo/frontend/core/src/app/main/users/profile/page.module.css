@@ -16,7 +16,6 @@
 }
 
 .form {
-  max-width: 800px;
   margin-left: 32px;
   border: 1px solid var(--weak-border-color);
   padding: 16px 64px;
@@ -25,7 +24,6 @@
 }
 
 .footer {
-  max-width: 800px;
   margin-left: 32px;
   padding: 32px 0;
 

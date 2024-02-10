@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 import styles from "./index.module.css";
 import { useModal } from "@/lib/modal";
@@ -34,8 +35,10 @@ function Dropdown({ trigger }: DropdownProps) {
               setShow(false);
             }}>
             <div className={styles.userInfo}>
-              <p className={styles.username}>{user.username}</p>
-              <p className={styles.email}>{user.email}</p>
+              <Link href={route.main.users.profile.toString()}>
+                <p className={styles.username}>{user.username}</p>
+                <p className={styles.email}>{user.email}</p>
+              </Link>
             </div>
           </li>
           <li>

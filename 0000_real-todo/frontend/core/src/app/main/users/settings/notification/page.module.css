@@ -1,0 +1,110 @@
+.container {
+
+}
+
+.content {
+  margin-left: 32px;
+}
+
+.title {
+  font-size: 12px;
+  font-weight: 300;
+  margin-bottom: 64px;
+}
+
+.color {
+  cursor: pointer;
+  height: 48px;
+  width: 48px;
+  border: 1px solid var(--border-color);
+}
+
+.pallete {
+  margin: 32px 0;
+}
+
+.paletteList {
+  display: flex;
+  width: 60%;
+  justify-content: space-evenly;
+}
+
+.paletteItemActive {
+  border: 3px solid var(--border-color);
+}
+
+.palleteActive {
+  border: 3px solid var(--background-color);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin: 32px 0;
+  margin-top: 128px;
+}
+
+.action {
+  display: flex;
+  width: 300px;
+}
+
+.action button {
+  margin-right: 16px;
+}
+
+.section {
+  margin-bottom: 32px;
+  border: 1px solid var(--weak-border-color);
+  padding: 32px;
+  border-radius: 8px;
+}
+
+.field {
+  display: flex;
+  margin-bottom: 32px;
+}
+
+.label {
+  flex: 6;
+}
+
+.value {
+  flex: 1;
+}
+
+.alert {
+  display: flex;
+  margin-bottom: 32px;
+}
+
+.subSection {
+  margin: 32px 0;
+  margin-top: 64px;
+}
+
+.subSectionHeader {
+  display: flex;
+  align-items: center;
+}
+
+.subSectionTitle {
+  flex: 1;
+  margin-bottom: 64px;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.border {
+  flex: 2;
+  margin-left: auto;
+  margin-bottom: 64px;
+  height: 1px;
+  width: 80%;
+  border: 1px solid var(--weak-border-color);
+}
+
+.alerts {
+  margin-left: 32px;
+}
+

@@ -7,7 +7,7 @@ interface Props {
   data: OptionItem[];
   value?: string;
   defaultOption: OptionItem;
-  onSelect: (item: OptionItem) => void;
+  onSelect?: (item: OptionItem) => void;
   containerStyleClass?: string;
 }
 
@@ -72,7 +72,9 @@ export default function Select({
                 onClick={(e) => {
                   e.stopPropagation();
                   setOpen(false);
-                  onSelect(item);
+                  if (onSelect) {
+                    onSelect(item);
+                  }
                 }}>
                 {item.label}
               </li>
