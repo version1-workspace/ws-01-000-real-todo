@@ -1,15 +1,19 @@
 "use client";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import styles from "./index.module.css";
 import useFilter from "@/components/tasks/list/hooks/useFilter";
-import { classHelper } from "@/lib/cls";
 import useTasks from "@/hooks/useTask";
 import TaskTable from "../table";
-import Icon from "@/components/common/icon";
+import Pagination from "../pagination";
 import { CheckContainer } from "@/hooks/useCheck";
 import TaskListHeader from "./header";
 
-export default function TaskList() {
+interface Props {
+  header?: ReactNode;
+  footer?: ReactNode;
+}
+
+export default function TaskList({ header, footer }: Props) {
   const { replica } = useFilter();
   const { data, fetch } = useTasks();
 
@@ -24,51 +28,21 @@ export default function TaskList() {
   return (
     <CheckContainer>
       <div className={styles.container}>
-        <TaskListHeader />
+        {header || <TaskListHeader />}
         <TaskTable data={data.list} />
-        <div className={styles.footer}>
-          <ul className={styles.pagination}>
-            <li
-              className={styles.page}
-              onClick={() => {
-                if (!data.hasPrevious) {
-                  return;
-                }
-                fetch({ page: data.page - 1, ...replica });
-              }}>
-              <Icon name="back" />
-            </li>
-            {new Array(data.pageCount).fill("").map((_, index) => {
-              return (
-                <li
-                  className={classHelper({
-                    [styles.page]: true,
-                    [styles.active]: data.page === index + 1,
-                  })}
-                  key={`pagination-${index}`}
-                  onClick={() => {
-                    if (index + 1 === data.page) {
-                      return;
-                    }
-                    fetch({ page: index + 1, ...replica });
-                  }}>
-                  {index + 1}
-                </li>
-              );
-            })}
-            <li
-              className={styles.page}
-              onClick={() => {
-                if (!data.hasNext) {
-                  return;
-                }
-
-                fetch({ page: data.page + 1, ...replica });
-              }}>
-              <Icon name="forward" />
-            </li>
-          </ul>
-        </div>
+        {footer || (
+          <div className={styles.footer}>
+            <Pagination
+              page={data.page}
+              pageCount={data.pageCount}
+              hasNext={data.hasNext}
+              hasPrevious={data.hasPrevious}
+              onFetch={(page) => {
+                fetch({ page, ...replica });
+              }}
+            />
+          </div>
+        )}
       </div>
     </CheckContainer>
   );

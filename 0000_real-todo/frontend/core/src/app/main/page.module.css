@@ -28,6 +28,21 @@
   font-weight: 100;
 }
 
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sectionFooter {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.link {
+  color: var(--primary-color);
+  letter-spacing: 0.1rem;
+}
+
 .todos {
   padding: 32px;
   background: var(--background-color);

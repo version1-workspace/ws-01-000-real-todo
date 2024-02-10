@@ -53,7 +53,7 @@ export default function Popup({
     const close = (e: MouseEvent) => {
       const submitButton = e.target.classList.contains(styles.submit);
       const parent = e.target?.closest("." + styles.container);
-      if (submitButton || parent) {
+      if (submitButton || parent || !show) {
         return;
       }
 

@@ -61,7 +61,19 @@ export default function Sidebar() {
                   </Link>
                 </li>
                 <li>
-                  <Link href={route.main.projects.toString()}>
+                  <Link href={route.main.tasks.toString()}>
+                    <div
+                      className={classHelper({
+                        [styles.menuItem]: true,
+                        [styles.menuItemActive]:
+                          pathname === route.main.tasks.toString(),
+                      })}>
+                      <p className={styles.menuTitle}>タスク</p>
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#!">
                     <div
                       className={classHelper({
                         [styles.menuItem]: true,
