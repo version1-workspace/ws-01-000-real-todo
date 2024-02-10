@@ -6,6 +6,7 @@ import Button from "@/components/common/button";
 import { useForm } from "@/hooks/useForm";
 import UsersLayout from "@/components/users/layout";
 import { useAuth } from "@/components/auth";
+import { useNotice, useUnimplementedPage } from "@/hooks/useNotice";
 
 interface PageProps {
   user: User;
@@ -22,6 +23,8 @@ function MailForm({ user }: PageProps) {
     },
     onSubmit: () => {},
   });
+
+  const { unimplementedFunc } = useNotice();
 
   return (
     <div className={styles.form}>
@@ -50,7 +53,11 @@ function MailForm({ user }: PageProps) {
       </div>
       <div className={styles.footer}>
         <div className={styles.actions}>
-          <Button variant="primary" onClick={() => {}}>
+          <Button
+            variant="primary"
+            onClick={() => {
+              unimplementedFunc();
+            }}>
             更新
           </Button>
           <Button onClick={reset}>リセット</Button>
@@ -71,6 +78,7 @@ function PasswordForm({ user }: PageProps) {
     },
     onSubmit: () => {},
   });
+  const { unimplementedFunc } = useNotice();
 
   return (
     <form className={styles.form} autoComplete="off">
@@ -101,7 +109,11 @@ function PasswordForm({ user }: PageProps) {
       </div>
       <div className={styles.footer}>
         <div className={styles.actions}>
-          <Button variant="primary" onClick={() => {}}>
+          <Button
+            variant="primary"
+            onClick={() => {
+              unimplementedFunc();
+            }}>
             更新
           </Button>
           <Button onClick={reset}>リセット</Button>
@@ -113,6 +125,7 @@ function PasswordForm({ user }: PageProps) {
 
 export default function Auth() {
   const { user } = useAuth();
+  useUnimplementedPage();
 
   if (!user) {
     return null;

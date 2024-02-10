@@ -149,7 +149,7 @@
 
 .info {
   border-bottom: 8px solid var(--info-color);
-  color: var(--info-color);
+  color: #669b9e;
 }
 
 .success {

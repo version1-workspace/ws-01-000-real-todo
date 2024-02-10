@@ -23,6 +23,7 @@ export default function Button({
   return (
     <button
       className={[styles.button, variantClass, className].join(" ")}
+      type="button"
       {...rest}>
       {children}
     </button>

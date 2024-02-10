@@ -4,9 +4,12 @@ import UsersLayout from "@/components/users/layout";
 import styles from "./page.module.css";
 import Select from "@/components/common/select";
 import useProjects from "@/hooks/useProjects";
+import { useNotice, useUnimplementedPage } from "@/hooks/useNotice";
 
 export default function Notification() {
   const { projects } = useProjects();
+  const { unimplementedFunc } = useNotice();
+  useUnimplementedPage();
 
   return (
     <UsersLayout>
@@ -50,7 +53,9 @@ export default function Notification() {
             </div>
             <div className={styles.footer}>
               <div className={styles.action}>
-                <Button variant="primary">更新</Button>
+                <Button variant="primary" onClick={unimplementedFunc}>
+                  更新
+                </Button>
                 <Button>キャンセル</Button>
               </div>
             </div>

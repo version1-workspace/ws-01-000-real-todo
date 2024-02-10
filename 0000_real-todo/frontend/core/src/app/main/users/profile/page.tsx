@@ -6,9 +6,12 @@ import Button from "@/components/common/button";
 import Icon from "@/components/common/icon";
 import { useAuth } from "@/components/auth";
 import UsersLayout from "@/components/users/layout";
+import { useNotice, useUnimplementedPage } from "@/hooks/useNotice";
 
 export default function Profile() {
   const { user } = useAuth();
+  const { unimplementedFunc } = useNotice();
+  useUnimplementedPage();
 
   if (!user) {
     return null;
@@ -41,7 +44,7 @@ export default function Profile() {
           </div>
           <div className={styles.footer}>
             <div className={styles.actionButtons}>
-              <Button variant="primary">更新</Button>
+              <Button variant="primary" onClick={unimplementedFunc} >更新</Button>
               <Button>リセット</Button>
             </div>
           </div>

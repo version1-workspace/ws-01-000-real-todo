@@ -5,6 +5,7 @@ import UsersLayout from "@/components/users/layout";
 import styles from "./page.module.css";
 import { classHelper } from "@/lib/cls";
 import Select from "@/components/common/select";
+import {useNotice, useUnimplementedPage} from "@/hooks/useNotice";
 
 const colors = [
   "var(--primary-color)",
@@ -16,6 +17,9 @@ const colors = [
 
 export default function Design() {
   const [colorIndex, setColorIndex] = useState(0);
+  const { unimplementedFunc } = useNotice();
+  useUnimplementedPage()
+
   return (
     <UsersLayout>
       <div className={styles.container}>
@@ -44,7 +48,7 @@ export default function Design() {
             </div>
             <div className={styles.footer}>
               <div className={styles.action}>
-                <Button variant="primary">更新</Button>
+                <Button variant="primary" onClick={unimplementedFunc}>更新</Button>
                 <Button>キャンセル</Button>
               </div>
             </div>
@@ -68,7 +72,7 @@ export default function Design() {
             </div>
             <div className={styles.footer}>
               <div className={styles.action}>
-                <Button variant="primary">更新</Button>
+                <Button variant="primary" onClick={unimplementedFunc}>更新</Button>
                 <Button>キャンセル</Button>
               </div>
             </div>

@@ -4,9 +4,12 @@ import Button from "@/components/common/button";
 import Icon from "@/components/common/icon";
 import { useAuth } from "@/components/auth";
 import UsersLayout from "@/components/users/layout";
+import { useNotice, useUnimplementedPage } from "@/hooks/useNotice";
 
 export default function Profile() {
   const { user } = useAuth();
+  const { unimplementedFunc } = useNotice();
+  useUnimplementedPage();
 
   if (!user) {
     return null;
@@ -22,7 +25,7 @@ export default function Profile() {
           <div className={styles.body}>
             <div className={styles.row}>
               <div className={styles.radio}>
-                <input type="radio"  checked/>
+                <input type="radio" checked />
               </div>
               <div className={styles.card}>
                 <div className={styles.cardName}>カード １</div>
@@ -33,14 +36,16 @@ export default function Profile() {
               </div>
             </div>
             <div className={styles.cardBorder}></div>
-            <div className={styles.addCard}>
-              <Icon name="add" className={styles.addCardIcon}/>
+            <div className={styles.addCard} onClick={unimplementedFunc}>
+              <Icon name="add" className={styles.addCardIcon} />
               <p>新しいカードを追加する</p>
             </div>
           </div>
           <div className={styles.footer}>
             <div className={styles.actionButtons}>
-              <Button variant="primary">更新</Button>
+              <Button variant="primary" onClick={unimplementedFunc}>
+                更新
+              </Button>
               <Button>リセット</Button>
             </div>
           </div>
@@ -51,20 +56,12 @@ export default function Profile() {
           </div>
           <div className={styles.body}>
             <div className={styles.field}>
-              <div className={styles.label}>
-                氏名:
-              </div>
-              <div className={styles.value}>
-                YOUR NAME
-              </div>
+              <div className={styles.label}>氏名:</div>
+              <div className={styles.value}>YOUR NAME</div>
             </div>
             <div className={styles.field}>
-              <div className={styles.label}>
-                住所:
-              </div>
-              <div className={styles.value}>
-                東京都千代田区左 １２３ー４５
-              </div>
+              <div className={styles.label}>住所:</div>
+              <div className={styles.value}>東京都千代田区左 １２３ー４５</div>
             </div>
           </div>
           <div className={styles.footer}>

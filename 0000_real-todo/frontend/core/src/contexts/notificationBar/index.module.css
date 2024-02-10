@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  position: sticky;
+  top: 0;
+  height: 0px;
+  overflow: hidden;
+  background: var(--danger-color);
+  color: var(--font-color-light);
+  transition: height 0.3s linear;
+}
+
+.show {
+  height: 48px;
+  overflow: auto;
+  transition: height all linear;
+  animation: 0.8s linear 0.3s 1 normal pulse;
+}
+
+.message {
+  margin: auto;
+  text-align: center;
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.8;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
