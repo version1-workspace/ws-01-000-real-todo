@@ -1,27 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOperator, In, IsNull, Repository } from 'typeorm';
+import { Between, FindOperator, In, IsNull, Like, Repository } from 'typeorm';
 import { Task, TaskKinds } from './task.entity';
 import { Pagination } from '../../entities/pagination.entity';
 import { init as initialStat, Stat } from '../../entities/stat.entity';
 import { User } from '../users/user.entity';
 import { TaskStatuses } from './task.entity';
 import { Project } from '../projects/project.entity';
-import { IsIn } from 'class-validator';
 
-type SortType = 'deadline' | 'started' | 'updated' | 'created';
-type OrderType = 'asc' | 'desc';
+export type SortType = 'deadline' | 'startedAt' | 'updatedAt' | 'createdAt';
+export type OrderType = 'asc' | 'desc';
 
 interface SearchParams {
   user: User;
   projectId?: string;
   slug?: string;
-  limit?: number;
+  search?: string;
   sortType?: SortType;
   sortOrder?: OrderType;
+  dateFrom?: string;
+  dateTo?: string;
+  dateType?: string;
   status?: TaskStatuses[];
   page?: number;
+  limit?: number;
 }
 
 interface WhereParams {
@@ -29,6 +32,7 @@ interface WhereParams {
     uuid?: string;
     slug?: string;
   };
+  title?: FindOperator<string>;
   kind: TaskKinds;
   userId: number;
   status: FindOperator<any>;
@@ -39,11 +43,14 @@ const sortOptions = (t: SortType, o: OrderType) => {
     deadline: {
       deadline: o,
     },
-    created: {
+    createdAt: {
       createdAt: o,
     },
-    updated: {
+    updatedAt: {
       updatedAt: o,
+    },
+    startedAt: {
+      startedAt: o,
     },
   }[t];
 };
@@ -125,10 +132,14 @@ export class TasksService {
 
   async search({
     user,
+    search,
     projectId,
     slug,
     sortType,
     sortOrder,
+    dateType,
+    dateFrom,
+    dateTo,
     limit,
     page,
     status,
@@ -164,6 +175,20 @@ export class TasksService {
       where = {
         ...where,
         project: { slug },
+      };
+    }
+
+    if (search) {
+      where = {
+        ...where,
+        title: Like(`%${search}%`),
+      };
+    }
+
+    if (dateType && (dateFrom || dateTo)) {
+      where = {
+        ...where,
+        [dateType]: Between(dateFrom, dateTo),
       };
     }
 

@@ -5,7 +5,7 @@ import { factory } from "@/services/api/models";
 import { Pagination } from "@/services/api/models/pagination";
 import { Params as FilterParams } from "@/components/tasks/list/hooks/useFilter";
 
-type Params = { page: number } & Partial<FilterParams>;
+type Params = { page: number, limit: number } & Partial<FilterParams>;
 
 interface ITaskContext {
   data?: Pagination<Task>;
@@ -25,11 +25,24 @@ export const TaskListContainer = ({
   const [data, setData] = useState<Pagination<Task>>();
   const fetch = async ({
     page,
+    limit,
     statuses,
-  }: { page?: number } & Partial<FilterParams>) => {
+    text,
+    project,
+    order,
+    date
+  }: Params) => {
     const res = await api.fetchTasks({
       page: page || 1,
+      limit: limit || 20,
       status: Object.keys(statuses || {}),
+      search: text,
+      projectId: project?.id,
+      sortType: order?.type,
+      sortOrder: order?.value,
+      dateFrom: date?.start,
+      dateTo: date?.end,
+      dateType: date?.type
     });
     const { data: tasks, pageInfo } = res.data;
     const list = tasks.map((it: TaskParams) => factory.task(it));

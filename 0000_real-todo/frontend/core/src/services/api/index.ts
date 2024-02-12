@@ -80,12 +80,45 @@ const api = {
   fetchTask: ({ id }: { id: string }) => {
     return client.instance.get(`/users/tasks/${id}`);
   },
-  fetchTasks: ({ page, status }: { page: number; status: string[] }) => {
+  fetchTasks: ({
+    page,
+    status,
+    limit,
+    search,
+    sortType,
+    sortOrder,
+    dateFrom,
+    dateTo,
+    dateType,
+    projectId,
+  }: Partial<{
+    page: number;
+    status: string[];
+    limit: number;
+    search: string;
+    sortType: string;
+    sortOrder: string;
+    dateFrom: string;
+    dateTo: string;
+    dateType: string;
+    projectId: string;
+  }>) => {
     return client.instance.get("/users/tasks", {
-      params: { page, status },
+      params: {
+        page,
+        status,
+        limit,
+        search,
+        sortType,
+        sortOrder,
+        dateFrom,
+        dateTo,
+        dateType,
+        projectId,
+      },
     });
   },
-  fetchMilestones: ({ slug }: { slug: string; }) => {
+  fetchMilestones: ({ slug }: { slug: string }) => {
     return client.instance.get(`/projects/${slug}/milestones`);
   },
   completeTask: ({ id }: { id: string }) => {

@@ -1,16 +1,16 @@
-import { useState } from "react";
 import styles from "./index.module.css";
-import Popup from "@/components/tasks/popup";
+import FilterForm from "@/components/tasks/filterForm";
 import api from "@/services/api";
-import useFilter from "@/components/tasks/list/hooks/useFilter";
+import { Filter } from "@/components/tasks/list/hooks/useFilter";
 import { IoCloseCircle as Close } from "react-icons/io5";
 import { ja } from "@/lib/transltate";
-import useTasks from "@/hooks/useTask";
+import useTasks from "@/hooks/useTasks";
 import Icon from "@/components/common/icon";
 import useCheck from "@/hooks/useCheck";
 import PopupMenu, { Action } from "../../popupMenu";
 import { useToast } from "@/lib/toast/hook";
 
+const taskTranslations = ja.derive("task")!;
 const taskStatuses = ja.derive("task.status")!;
 
 interface Actions {
@@ -44,16 +44,18 @@ const getActions = ({ onComplete, onArchive, onReopen }: Actions) =>
     ] as Action[]
   ).filter((it) => !it.hidden);
 
-interface TaskListHeaderProps {}
+interface TaskListHeaderProps {
+  filter: Filter;
+}
 
-const TaskListHeader = ({}: TaskListHeaderProps) => {
+const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
   const { checked, ids: checkedIds } = useCheck();
   const toast = useToast();
-  const [displayCount, setDisplayCount] = useState<number>(10);
   const {
     date,
     order,
     text,
+    project,
     statuses,
     isDateSet,
     replica,
@@ -61,7 +63,7 @@ const TaskListHeader = ({}: TaskListHeaderProps) => {
     reset,
     resetState,
     save,
-  } = useFilter();
+  } = filter;
   const { data, fetch } = useTasks();
 
   if (!data) {
@@ -70,9 +72,9 @@ const TaskListHeader = ({}: TaskListHeaderProps) => {
 
   const showActionMenu = () => {};
   const resetField = (key: string) => {
-    const params = resetState(key as any)
-    fetch(params)
-  }
+    const params = resetState(key as any);
+    fetch({ ...params, page: 1 });
+  };
 
   return (
     <div className={styles.header}>
@@ -86,9 +88,15 @@ const TaskListHeader = ({}: TaskListHeaderProps) => {
           <div className={styles.displayPageCount}>
             <label>表示件数 : </label>
             <select
-              onChange={(e) => setDisplayCount(Number(e.target.value))}
-              value={displayCount}>
-              <option value="10">10 件</option>
+              onChange={(e) => {
+                const limit = Number(e.target.value)
+                const newValues = { ...replica, limit }
+                update({ ...newValues });
+                save(newValues)
+                fetch({ ...newValues, page: 1 });
+              }}
+              value={replica.limit}>
+              <option value="20">20 件</option>
               <option value="50">50 件</option>
               <option value="100">100 件</option>
             </select>
@@ -99,6 +107,15 @@ const TaskListHeader = ({}: TaskListHeaderProps) => {
         </div>
         <div className={styles.layout}>
           <div className={styles.filterStates}>
+            <span className={styles.filterState}>
+              <label>プロジェクト: </label>
+              {project?.name || "指定なし"}
+              <div
+                className={styles.close}
+                onClick={() => resetField("project")}>
+                <Icon name="close" size="12px" />
+              </div>
+            </span>
             <span className={styles.filterState}>
               <label>ステータス: </label>
               {Object.keys(statuses || {})
@@ -111,7 +128,7 @@ const TaskListHeader = ({}: TaskListHeaderProps) => {
               </div>
             </span>
             <span className={styles.filterState}>
-              <label>フィルタ: </label>
+              <label>タスク名: </label>
               {text || "なし"}
               <div className={styles.close} onClick={() => resetField("text")}>
                 <Icon name="close" size="12px" />
@@ -119,7 +136,7 @@ const TaskListHeader = ({}: TaskListHeaderProps) => {
             </span>
             {isDateSet ? (
               <span className={styles.filterState}>
-                <label>{date.typeLabel} : </label>
+                <label>{taskTranslations.t(date.type)} : </label>
                 {date.start} ~ {date.end}
                 <div
                   className={styles.close}
@@ -130,19 +147,19 @@ const TaskListHeader = ({}: TaskListHeaderProps) => {
             ) : null}
             <span className={styles.filterState}>
               <label>並び替え: </label>
-              {order.label}
-              {order.type === "asc" ? <Icon name="up" /> : <Icon name="down" />}
+              {taskTranslations.t(order.type)}
+              {order.value === "asc" ? <Icon name="down" /> : <Icon name="up" />}
               <div className={styles.close} onClick={() => resetField("order")}>
                 <Icon name="close" size="12px" />
               </div>
             </span>
           </div>
           <div className={styles.controller}>
-            <Popup
+            <FilterForm
               trigger={
                 <div className={styles.display}>
-                  <Icon name="layout" />
-                  <p>表示</p>
+                  <Icon name="filter" />
+                  <p>絞り込み</p>
                 </div>
               }
               value={replica}
@@ -151,12 +168,14 @@ const TaskListHeader = ({}: TaskListHeaderProps) => {
               }}
               onSubmit={async () => {
                 save();
-                await fetch(replica);
+                await fetch({
+                  ...replica,
+                  page: 1,
+                });
               }}
               onChange={update}
               onCancel={() => {
                 reset();
-                fetch(replica);
               }}
             />
             {Object.keys(checked).length ? (

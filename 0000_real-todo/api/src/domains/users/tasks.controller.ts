@@ -8,7 +8,7 @@ import {
   Query,
   Param,
 } from '@nestjs/common';
-import { TasksService } from '../tasks/tasks.service';
+import { OrderType, SortType, TasksService } from '../tasks/tasks.service';
 import { User as DUser } from './user.decorator';
 import { User } from './user.entity';
 import { TaskKinds, TaskStatuses } from '../tasks/task.entity';
@@ -31,11 +31,25 @@ export class TasksController {
     @DUser() user: User,
     @Query('limit') limit: number,
     @Query('page') page: number,
+    @Query('search') search: string,
+    @Query('dateFrom') dateFrom: string,
+    @Query('dateTo') dateTo: string,
+    @Query('dateType') dateType: string,
+    @Query('sortType') sortType: SortType,
+    @Query('sortOrder') sortOrder: OrderType,
+    @Query('projectId') projectId: string,
     @Query('status') status: TaskStatuses[],
   ): Promise<Record<string, any>> {
     const result = await this.tasksService.search({
       user,
       status,
+      projectId,
+      search,
+      sortType,
+      sortOrder,
+      dateFrom,
+      dateTo,
+      dateType,
       limit,
       page,
     });

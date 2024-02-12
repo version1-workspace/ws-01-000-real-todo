@@ -7,7 +7,7 @@ import route from "@/lib/route";
 import TaskForm from "@/components/tasks/form";
 import Icon from "../../icon";
 import useProjects from "@/hooks/useProjects";
-import useTasks from "@/hooks/useTask";
+import useTasks from "@/hooks/useTasks";
 import { useAuth } from "@/components/auth";
 
 interface DropdownProps {

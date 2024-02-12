@@ -41,11 +41,11 @@
   margin-right: 8px;
 }
 
-.date {
+.dateFields {
   margin-bottom: 8px;
 }
 
-.date input {
+.dateFieldsInput {
   margin: 4px 0;
   width: 100%;
   padding: 4px;
@@ -58,10 +58,11 @@
   border: 1px solid var(--border-color);
 }
 
-.order {
+.selector {
   width: 100%;
   border: 1px solid var(--border-color);
   padding: 4px;
+  margin: 4px 0;
 }
 
 .direction {
@@ -122,4 +123,12 @@
 .status input {
   display: inline-block;
   margin-right: 4px;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
 }

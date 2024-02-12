@@ -1,20 +1,10 @@
+import { Project } from "@/services/api/models/project";
 import { useState } from "react";
 
 export const Fields = {
   deadline: "deadline",
   createdAt: "createdAt",
   updatedAt: "updatedAt",
-};
-
-const FieldLabels = {
-  deadline: "締切日時",
-  createdAt: "作成日時",
-  updatedAt: "更新日時",
-};
-
-const OrderLabels = {
-  asc: "昇順",
-  desc: "降順",
 };
 
 interface DateParams {
@@ -24,15 +14,17 @@ interface DateParams {
 }
 
 interface OrderParams {
-  value: FieldTypes;
-  type: OrderType;
+  type: FieldTypes;
+  value: OrderType;
 }
 
 export interface Params {
   text: string;
+  project?: Project;
   date: DateParams;
   order: OrderParams;
   statuses: { [key: string]: boolean };
+  limit: number;
 }
 
 export type FieldTypes = keyof typeof Fields;
@@ -40,6 +32,8 @@ export type OrderType = "asc" | "desc";
 
 const initialValue = {
   text: "",
+  limit: 20,
+  project: undefined,
   statuses: { scheduled: true },
   date: {
     start: undefined,
@@ -47,17 +41,32 @@ const initialValue = {
     type: Fields.deadline as FieldTypes,
   },
   order: {
-    value: Fields.deadline as FieldTypes,
-    type: "desc" as OrderType,
+    type: Fields.deadline as FieldTypes,
+    value: "asc" as const,
   },
 };
 
-export default function useFilter() {
+export interface Filter {
+  text: string;
+  project: Project;
+  date: DateParams;
+  isDateSet?: boolean;
+  order: OrderParams;
+  statuses: Record<string, boolean>;
+  limit: number;
+  replica: Params;
+  update: (_params: Params) => void;
+  save: (_value?: Params) => void;
+  reset: () => void;
+  resetState: (type: keyof Params) => Params;
+}
+
+export default function useFilter(): Filter {
   const [original, setOriginal] = useState<Params>(initialValue);
   const [replica, setReplica] = useState<Params>(initialValue);
 
-  const save = () => {
-    setOriginal(replica);
+  const save = (value?: Params) => {
+    setOriginal(value || replica);
   };
 
   const reset = () => {
@@ -77,22 +86,17 @@ export default function useFilter() {
     setOriginal(newValue);
     setReplica(newValue);
 
-    return newValue
+    return newValue;
   };
 
   return {
     text: original.text,
-    date: {
-      ...original.date,
-      typeLabel: FieldLabels[original.date.type],
-    },
-    isDateSet: original.date.start || original.date.end,
-    order: {
-      ...original.order,
-      label: FieldLabels[original.order.value],
-      typeLabel: OrderLabels[original.order.type],
-    },
+    project: original.project as Project,
+    date: original.date,
+    order: original.order,
     statuses: original.statuses,
+    limit: original.limit,
+    isDateSet: !!(original.date.start || original.date.end),
     replica: replica,
     update: setReplica,
     save,

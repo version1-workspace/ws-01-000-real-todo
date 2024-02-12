@@ -6,6 +6,13 @@ const translations = {
         completed: "完了",
         archived: "アーカイブ済み",
       },
+      order: {
+        asc: "昇順",
+        desc: "降順",
+      },
+      deadline: "締切日時",
+      createdAt: "作成日時",
+      updatedAt: "更新日時",
     },
   },
 };

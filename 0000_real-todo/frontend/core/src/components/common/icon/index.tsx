@@ -30,12 +30,16 @@ import {
   IoScanOutline,
   IoCodeOutline,
   IoChevronDown,
+  IoFilter,
+  IoGridOutline
 } from "react-icons/io5";
 import styles from "./index.module.css";
 import { classHelper } from "@/lib/cls";
 
 const icons = {
   unknown: IoCodeOutline,
+  filter: IoFilter,
+  folder: IoGridOutline,
   shouldbe: IoCompassOutline,
   goal: IoScanOutline,
   close: IoCloseOutline,
