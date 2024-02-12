@@ -9,6 +9,7 @@ import Icon from "../../icon";
 import useProjects from "@/hooks/useProjects";
 import useTasks from "@/hooks/useTasks";
 import { useAuth } from "@/components/auth";
+import Search from "@/components/tasks/search";
 
 interface DropdownProps {
   trigger: React.ReactNode;
@@ -71,10 +72,7 @@ export default function Header() {
             <h2>Turbo</h2>
           </div>
           <div className={styles.searchForm}>
-            <div className={styles.search}>
-              <Icon name="search" size="24px" color="#2e2e2e" />
-              <input type="text" placeholder="タスクタイトルで検索" />
-            </div>
+            <Search />
           </div>
         </div>
         <div className={styles.right}>

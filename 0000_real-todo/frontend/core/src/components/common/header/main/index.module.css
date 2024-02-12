@@ -53,21 +53,6 @@
   align-items: center;
 }
 
-.search {
-  display: flex;
-  background: var(--bg-color-light);
-  border-radius: 8px;
-  padding: 8px;
-  width: 360px;
-}
-
-.search > input {
-  border: 0;
-  margin-left: 16px;
-  letter-spacing: 0.8px;
-  width: 100%;
-}
-
 .dropdownContainer {
   position: relative;
 }
@@ -89,7 +74,7 @@
 }
 
 .dropdownItem:hover {
-  background: #f0f0f0;
+  background: var(--hover-color);
 }
 
 .border {

@@ -32,7 +32,7 @@
 }
 
 .menuItem:hover {
-  background: #f0f0f0;
+  background: var(--hover-color);
 }
 
 .menuItem > a {
@@ -41,7 +41,7 @@
 
 
 .menuItemActive {
-  background: #f0f0f0;
+  background: var(--hover-color);
 }
 
 .projects {

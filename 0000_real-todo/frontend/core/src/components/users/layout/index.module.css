@@ -37,7 +37,7 @@
 }
 
 .menuItem:hover {
-  background: #f0f0f0;
+  background: var(--hover-color);
 }
 
 .subMenu {
@@ -45,6 +45,6 @@
 }
 
 .activeMenu {
-  background: #f0f0f0;
+  background: var(--hover-color);
 }
 
