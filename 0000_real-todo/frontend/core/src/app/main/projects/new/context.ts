@@ -1,8 +1,9 @@
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 import dayjs from "dayjs";
 import { Project } from "@/services/api/models/project";
 import { Errors } from "@/models/validator";
 import { factory } from "@/services/api/models";
+import { AppDate as Date } from "@/lib/date";
 
 interface FormContextValue {
   project: Project;
@@ -16,7 +17,8 @@ interface FormContextValue {
 export const FormContext = createContext<FormContextValue>({
   project: factory.project({
     name: "",
-    deadline: dayjs().format("YYYY-MM-DD"),
+    uuid: "",
+    deadline: Date.now().toString(),
     slug: "",
     goal: "",
     shouldbe: "",
@@ -31,3 +33,13 @@ export const FormContext = createContext<FormContextValue>({
     setErrors: (_: Errors) => {},
   },
 });
+
+export default function useForm() {
+  const {
+    project,
+    errors,
+    mutations: { setProject },
+  } = useContext(FormContext);
+
+  return { project, errors, setProject };
+}

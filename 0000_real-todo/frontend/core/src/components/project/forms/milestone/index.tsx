@@ -1,12 +1,12 @@
 "use client";
 import styles from "@/components/project/forms/milestone/index.module.css";
 import dayjs from "dayjs";
-import { useContext, useState } from "react";
-import { FormContext } from "@/app/main/projects/new/context";
+import { useState } from "react";
+import useForm from "@/app/main/projects/new/context";
 import { Task } from "@/services/api/models/task";
 import Goal from "@/components/project/goal";
 import Item from "@/components/project/forms/milestone/item";
-import { join } from "@/lib/cls";
+import { classHelper, join } from "@/lib/cls";
 import { IoAddOutline as Add } from "react-icons/io5";
 import { factory } from "@/services/api/models";
 
@@ -16,10 +16,7 @@ interface Props {
 }
 
 export default function Milestone({ className, readOnly }: Props) {
-  const {
-    project,
-    mutations: { setProject },
-  } = useContext(FormContext);
+  const { project, setProject } = useForm();
   const [milestone, setMilestone] = useState<Task | undefined>(undefined);
 
   const milestones = [...project.milestones, ...(milestone ? [milestone] : [])];
@@ -36,6 +33,7 @@ export default function Milestone({ className, readOnly }: Props) {
             return (
               <Item
                 key={item.id}
+                project={project}
                 item={item}
                 readOnly={readOnly}
                 className={
@@ -71,7 +69,8 @@ export default function Milestone({ className, readOnly }: Props) {
                       const milestone = factory.task({
                         title: "",
                         status: "initial",
-
+                        uuid: "",
+                        description: "",
                         createdAt: dayjs().format(),
                         updatedAt: dayjs().format(),
                         deadline: dayjs().format("YYYY-MM-DD"),
@@ -87,7 +86,11 @@ export default function Milestone({ className, readOnly }: Props) {
               </div>
             </div>
           ) : null}
-          <div className={styles.current}>
+          <div
+            className={classHelper({
+              [styles.current]: true,
+              [styles.withoutMilestone]: !milestones.length,
+            })}>
             <div className={styles.circle}></div>
             <p className={styles.date}>今日 ({dayjs().format("YYYY-MM-DD")})</p>
           </div>

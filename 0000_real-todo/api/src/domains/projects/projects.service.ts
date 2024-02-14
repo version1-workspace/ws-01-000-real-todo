@@ -126,20 +126,29 @@ export class ProjectsService {
   }
 
   async create(params: DeepPartial<Project>): Promise<Project> {
-    const { milestones, ...rest } = params;
-    const project = this.projectsRepository.create(rest);
+    return this.projectsRepository.manager.transaction(async (manager) => {
+      const { milestones, ...rest } = params;
+      const project = this.projectsRepository.create(rest);
 
-    project.tasks = milestones.map((it: DeepPartial<Task>) => {
-      return this.tasksService.build({
-        ...it,
-        userId: params.userId,
-        kind: 'milestone',
-      })[0];
+      await manager.save(project);
+
+      project.tasks = await Promise.all(
+        milestones.map((it: DeepPartial<Task>) => {
+          const milestone = this.tasksService.build({
+            ...it,
+            projectId: project.id,
+            userId: params.userId,
+            kind: 'milestone',
+            status: 'scheduled',
+          });
+          return manager.save(Task, milestone);
+        }),
+      );
+
+      await manager.save(project);
+
+      return project;
     });
-
-    await this.projectsRepository.save(project);
-
-    return project;
   }
 
   async update(params: UpdateParams): Promise<Project> {
@@ -150,7 +159,7 @@ export class ProjectsService {
       },
     });
 
-    const { milestones, ...rest } = params.project;
+    const { milestones: _, ...rest } = params.project;
 
     Object.assign(project, rest);
 

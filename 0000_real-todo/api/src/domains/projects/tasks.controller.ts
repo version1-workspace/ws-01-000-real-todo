@@ -14,8 +14,8 @@ import {
 
 class TaskIndexDto extends Dto<TaskIndexDto> {
   @IsOptional()
-  @IsIn(['deadline', 'created', 'updated'])
-  sortType?: 'deadline' | 'created' | 'updated';
+  @IsIn(['deadline', 'createdAt', 'updatedAt'])
+  sortType?: 'deadline' | 'createdAt' | 'updatedAt';
   @IsOptional()
   @IsIn(['asc', 'desc'])
   sortOrder?: 'asc' | 'desc';

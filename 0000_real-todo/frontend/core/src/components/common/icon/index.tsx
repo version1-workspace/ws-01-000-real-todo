@@ -31,7 +31,9 @@ import {
   IoCodeOutline,
   IoChevronDown,
   IoFilter,
-  IoGridOutline
+  IoGridOutline,
+  IoAddCircle,
+  IoAddCircleSharp
 } from "react-icons/io5";
 import styles from "./index.module.css";
 import { classHelper } from "@/lib/cls";
@@ -59,6 +61,7 @@ const icons = {
   check: IoCheckmarkCircle,
   checkOutline: IoCheckmarkOutline,
   add: IoAddOutline,
+  addCircle: IoAddCircle,
   save: IoCheckmark,
   undo: IoArrowUndoOutline,
   complete: IoCheckmark,
@@ -79,7 +82,7 @@ interface Props {
   name: keyof IconType;
   className?: string;
   interactive?: "pulse" | "hover" | "hoverDark";
-  size?: string;
+  size?: number;
   color?: string;
   onClick?: () => void;
 }

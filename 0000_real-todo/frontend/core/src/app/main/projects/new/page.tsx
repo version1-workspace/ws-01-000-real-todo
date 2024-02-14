@@ -1,5 +1,4 @@
 "use client";
-import dayjs from "dayjs";
 import { useState } from "react";
 import styles from "@/app/main/projects/new/page.module.css";
 import Button from "@/components/common/button";
@@ -11,13 +10,26 @@ import ConfirmForm from "@/components/project/forms/confirm";
 import CompleteForm from "@/components/project/forms/complete";
 import Validator, { Errors } from "@/models/validator";
 import { FormContext } from "./context";
+import { AppDate } from "@/lib/date";
+import api from "@/services/api";
+import route from "@/lib/route";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/lib/toast/hook";
 
 interface StepParams {
   label: string;
   skippable?: boolean;
 }
 
-const steps = [
+interface Router {
+  push: (path: string) => void;
+}
+
+interface Toast {
+  error: (msg: string) => void;
+}
+
+const buildSteps = (router: Router, toast: Toast) => [
   {
     label: "ゴール設定",
     validation: (project: Project): Validator<Project> => {
@@ -54,12 +66,37 @@ const steps = [
   {
     label: "確認",
     submitLabel: "作成",
-    onNext: (_project: Project) => {},
+    onNext: async (project: Project) => {
+      try {
+        await api.createProject({
+          name: project.name,
+          slug: project.slug,
+          goal: project.goal,
+          shouldbe: project.shouldbe,
+          status: "active",
+          deadline: project.deadline?.forHtml || "",
+          milestones: project.milestones.map((it) => {
+            return {
+              title: it.title,
+              deadline: it.deadline?.forHtml || "",
+            };
+          }),
+        });
+        return true;
+      } catch (e) {
+        console.error(e);
+        toast.error("プロジェクトの追加に失敗しました。");
+        return false;
+      }
+    },
   },
   {
     label: "完了",
+    preventBack: true,
     submitLabel: "プロジェクト詳細へ",
-    onNext: (_project: Project) => {},
+    onNext: async (project: Project) => {
+      router.push(route.main.projects.with(project.slug));
+    },
   },
 ];
 
@@ -95,53 +132,63 @@ function Steps({ index, steps }: StepsProps) {
   );
 }
 
+const now = AppDate.now();
+
 export default function ProjectsNew() {
+  const router = useRouter();
+  const toast = useToast();
   const [index, setIndex] = useState(0);
   const [errors, setErrors] = useState<undefined | Errors>();
   const [project, setProject] = useState<Project>(
     factory.project({
       name: "",
-      deadline: dayjs().format("YYYY-MM-DD"),
+      uuid: "",
+      deadline: AppDate.in(90).toString(),
       slug: "",
       goal: "",
       shouldbe: "",
       milestones: [],
       status: "initial",
-      createdAt: dayjs().format(),
-      updatedAt: dayjs().format(),
+      createdAt: now.toString(),
+      updatedAt: now.toString(),
     }),
   );
 
+  const steps = buildSteps(router, toast);
   const step = steps[index];
 
   return (
     <FormContext.Provider
       value={{ project, errors, mutations: { setProject, setErrors } }}>
       <div className={styles.container}>
-        <h2>プロジェクト作成</h2>
         <div className={styles.content}>
+          <div className={styles.header}>
+            <h2 className={styles.title}>プロジェクト作成</h2>
+          </div>
           <Steps steps={steps} index={index} />
           <div className={styles.body}>
             <div className={styles.form}>
               {
                 [
-                  <GoalForm />,
-                  <MilestoneForm />,
-                  <ConfirmForm />,
-                  <CompleteForm />,
+                  <GoalForm key="goal" />,
+                  <MilestoneForm key="milestone" />,
+                  <ConfirmForm key="confirm" />,
+                  <CompleteForm key="complete" />,
                 ][index]
               }
             </div>
           </div>
           <div className={styles.footer}>
             <div className={styles.left}>
-              <div>
-                {index !== 0 ? (
-                  <Button onClick={() => setIndex((index) => index - 1)}>
-                    戻る
-                  </Button>
-                ) : null}
-              </div>
+              {step.preventBack ? null : (
+                <div>
+                  {index !== 0 ? (
+                    <Button onClick={() => setIndex((index) => index - 1)}>
+                      戻る
+                    </Button>
+                  ) : null}
+                </div>
+              )}
             </div>
             <div className={styles.right}>
               <div className={styles.skip}>
@@ -154,7 +201,7 @@ export default function ProjectsNew() {
               <div className={styles.next}>
                 <Button
                   variant="primary"
-                  onClick={() => {
+                  onClick={async () => {
                     if (step.validation) {
                       const validator = step.validation(project);
 
@@ -165,8 +212,8 @@ export default function ProjectsNew() {
                     }
 
                     setErrors(undefined);
-                    step.onNext?.(project);
-                    if (index < steps.length - 1) {
+                    const success = await step.onNext?.(project);
+                    if ((!step.onNext || success) && index < steps.length - 1) {
                       setIndex((index) => index + 1);
                     }
                   }}>

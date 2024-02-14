@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, FindOperator, In, IsNull, Like, Repository } from 'typeorm';
+import { Between, DeepPartial, FindOperator, In, IsNull, Like, Repository } from 'typeorm';
 import { Task, TaskKinds } from './task.entity';
 import { Pagination } from '../../entities/pagination.entity';
 import { init as initialStat, Stat } from '../../entities/stat.entity';
@@ -253,7 +253,9 @@ export class TasksService {
     }, r1);
   }
 
-  build = this.tasksRepository.create;
+  build(params: DeepPartial<Task>) {
+    return this.tasksRepository.create(params);
+  }
 
   async create(
     userId: number,

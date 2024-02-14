@@ -69,6 +69,11 @@
 .current {
   display: flex;
   align-items: center;
+  margin-top: 32px;
+}
+
+.withoutMilestone {
+  margin-top: 64px
 }
 
 .current .date {

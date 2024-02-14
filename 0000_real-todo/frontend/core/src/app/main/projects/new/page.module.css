@@ -78,9 +78,12 @@
   letter-spacing: 0.6px;
 }
 
+.header {
+  font-weight: 300;
+}
+
 .content {
   background: #fefefe;
-  margin-top: 80px;
   min-height: 80vh;
 }
 
@@ -140,8 +143,7 @@
 .title {
   padding: 16px 32px;
   font-size: 16px;
-  font-weight: normal;
-  border-bottom: 1px solid var(--border-color);
+  font-weight: 300;
   margin-bottom: 64px;
 }
 

@@ -70,6 +70,20 @@ const api = {
   fetchUser: () => {
     return client.instance.get("/users/me");
   },
+  createProject: (project: {
+    name: string;
+    slug: string;
+    deadline: string;
+    goal: string;
+    shouldbe?: string;
+    status: 'active';
+    milestones: {
+      title: string;
+      deadline: string;
+    }[];
+  }) => {
+    return client.instance.post(`/users/projects`, project);
+  },
   fetchProject: ({ slug }: { slug: string }) => {
     return client.instance.get(`/users/projects/${slug}`);
   },

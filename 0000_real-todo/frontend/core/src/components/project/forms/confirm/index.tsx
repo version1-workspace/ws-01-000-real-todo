@@ -22,13 +22,7 @@ export default function Confirm() {
             <span className={styles.required}>*</span>
           </div>
           <div className={styles.col}>
-            <input
-              className={styles.input}
-              type="text"
-              placeholder="プロジェクト名"
-              value={project.name}
-              readOnly
-            />
+            <p>{project.name}</p>
           </div>
         </div>
         <div className={styles.row}>
@@ -36,13 +30,7 @@ export default function Confirm() {
             スラッグ<span className={styles.required}>*</span>
           </div>
           <div className={styles.col}>
-            <input
-              className={styles.input}
-              type="text"
-              placeholder="スラッグ"
-              value={project.slug}
-              readOnly
-            />
+            <p>{project.slug}</p>
           </div>
         </div>
       </div>

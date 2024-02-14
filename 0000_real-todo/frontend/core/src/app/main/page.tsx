@@ -8,6 +8,7 @@ import TaskList from "@/components/tasks/list";
 import route from "@/lib/route";
 import useProjects from "@/contexts/projects";
 import useTasks from "@/contexts/tasks";
+import Icon from "@/components/common/icon";
 
 export default function Main() {
   const { projects } = useProjects();
@@ -17,7 +18,18 @@ export default function Main() {
     <div className={styles.projects}>
       <div className={styles.dashboard}>
         <div className={styles.list}>
-          <h2 className={styles.sectionTitle}>プロジェクト</h2>
+          <h2 className={styles.sectionTitle}>
+            プロジェクト
+            <p className={styles.add}>
+              <Link href={route.main.projects.new.toString()}>
+                <Icon
+                  size={20}
+                  className={styles.projectAddIcon}
+                  name="add"
+                />
+              </Link>
+            </p>
+          </h2>
           <div className={styles.content}>
             {projects.map((item) => {
               return (

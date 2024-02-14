@@ -1,7 +1,6 @@
 "use client";
-import { useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import styles from "@/components/common/sidebar/index.module.css";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   IoChevronForward as ShowIcon,
@@ -10,6 +9,9 @@ import {
 import { classHelper } from "@/lib/cls";
 import route from "@/lib/route";
 import useProjects from "@/contexts/projects";
+import Icon from "@/components/common/icon";
+import { Project } from "@/services/api/models/project";
+import Link from "@/components/common/link";
 
 const colors = (function () {
   const list = [];
@@ -24,10 +26,50 @@ const colors = (function () {
   return list;
 })();
 
+interface MenuItem {
+  title: string | ReactNode;
+  path: string;
+  children?: MenuItem[];
+  options?: Record<string, any>;
+}
+
+const sidebarMenulist = (projects: Project[]) => [
+  {
+    title: "ダッシュボード",
+    path: route.main.toString(),
+  },
+  {
+    title: "タスク",
+    path: route.main.tasks.toString(),
+  },
+  {
+    title: (
+      <>
+        プロジェクト
+        <Link href={route.main.projects.new.toString()}>
+          <Icon name="add" />
+        </Link>
+      </>
+    ),
+    path: route.main.projects.toString(),
+    children: projects.map((it) => {
+      return {
+        title: it.name,
+        path: route.main.projects.with(it.slug),
+        options: {
+          deadline: it.deadline?.format(),
+        },
+      };
+    }),
+  },
+];
+
 export default function Sidebar() {
   const { projects } = useProjects();
   const [show, setShow] = useState(true);
   const pathname = usePathname();
+
+  const list = useMemo(() => sidebarMenulist(projects), [projects]);
 
   return (
     <div
@@ -48,69 +90,54 @@ export default function Sidebar() {
           {show ? (
             <>
               <ul className={styles.menu}>
-                <li>
-                  <Link href={route.main.toString()}>
-                    <div
-                      className={classHelper({
-                        [styles.menuItem]: true,
-                        [styles.menuItemActive]:
-                          pathname === route.main.toString(),
-                      })}>
-                      <p className={styles.menuTitle}>ダッシュボード</p>
-                    </div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href={route.main.tasks.toString()}>
-                    <div
-                      className={classHelper({
-                        [styles.menuItem]: true,
-                        [styles.menuItemActive]:
-                          pathname === route.main.tasks.toString(),
-                      })}>
-                      <p className={styles.menuTitle}>タスク</p>
-                    </div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#!">
-                    <div
-                      className={classHelper({
-                        [styles.menuItem]: true,
-                        [styles.menuItemActive]:
-                          pathname === route.main.projects.toString(),
-                      })}>
-                      <p className={styles.menuTitle}>プロジェクト</p>
-                    </div>
-                  </Link>
-                </li>
-                <ul className={styles.projects}>
-                  {projects.map((item, index) => {
-                    return (
-                      <li
-                        key={item.slug}
-                        className={classHelper({
-                          [styles.menuItem]: true,
-                          [styles.menuItemActive]:
-                            pathname === route.main.projects.with(item.slug),
-                        })}>
-                        <Link href={route.main.projects.with(item.slug)}>
-                          <div className={styles.project}>
-                            <div>
-                              <span
-                                className={styles.dot}
-                                style={{ background: colors[index] }}></span>
-                              {item.name}
-                            </div>
-                            <span className={styles.deadline}>
-                              {item.deadline?.format()}
-                            </span>
+                {list.map((menuItem: MenuItem) => {
+                  return (
+                    <>
+                      <li key={menuItem.path}>
+                        <Link
+                          href={menuItem.path}
+                          disabled={!!menuItem.children}>
+                          <div
+                            className={classHelper({
+                              [styles.menuItem]: true,
+                              [styles.menuItemActive]:
+                                pathname === menuItem.path,
+                            })}>
+                            <p className={styles.menuTitle}>{menuItem.title}</p>
                           </div>
                         </Link>
                       </li>
-                    );
-                  })}
-                </ul>
+                      <ul className={styles.children}>
+                        {menuItem.children?.map((item, index) => {
+                          return (
+                            <li
+                              key={item.path}
+                              className={classHelper({
+                                [styles.menuItem]: true,
+                                [styles.menuItemActive]: pathname === item.path,
+                              })}>
+                              <Link href={item.path}>
+                                <div className={styles.project}>
+                                  <div>
+                                    <span
+                                      className={styles.dot}
+                                      style={{
+                                        background: colors[index],
+                                      }}></span>
+                                    {item.title}
+                                  </div>
+                                  <span className={styles.deadline}>
+                                    {item.options?.deadline}
+                                  </span>
+                                </div>
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </>
+                  );
+                })}
               </ul>
             </>
           ) : null}

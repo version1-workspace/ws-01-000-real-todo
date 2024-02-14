@@ -2,7 +2,7 @@
 import { useState } from "react";
 import styles from "@/components/project/forms/milestone/item/index.module.css";
 import { Task } from "@/services/api/models/task";
-import { within } from "@/services/api/models/project";
+import { Project, within } from "@/services/api/models/project";
 import { classHelper, join } from "@/lib/cls";
 import Validator, { Errors } from "@/models/validator";
 import {
@@ -58,6 +58,7 @@ function EditForm({ active, component, children, onClick }: EditProps) {
 
 interface Props {
   item: Task;
+  project: Project;
   readOnly?: boolean;
   className?: string;
   onSave?: (task: Task) => void;
@@ -67,6 +68,7 @@ interface Props {
 export default function MilestoneItem({
   className,
   item,
+  project,
   readOnly,
   onRemove,
   onSave,
@@ -94,6 +96,7 @@ export default function MilestoneItem({
                   setForm(form.withDeadline(e.target.value)!);
                 }}
                 readOnly={readOnly}
+                max={project.deadline?.forHtml}
               />
               <p className={styles.error}>{errors?.deadline}</p>
             </div>

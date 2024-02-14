@@ -39,7 +39,6 @@ class ProjectDto extends Dto<Required<ProjectDto>> {
   name: string;
 
   @IsNotEmpty()
-  @IsDate()
   deadline: Date;
 
   @IsIn(Object.keys(Status))
@@ -79,11 +78,11 @@ export class ProjectsController {
   @Post()
   @HttpCode(201)
   async create(@DUser() user: User, @Body() body: ProjectDto): Promise<void> {
-    const { milestones, ...rest } = body.object;
+    const { milestones, ...rest } = body;
     await this.projectsService.create({
       userId: user.id,
       ...rest,
-      milestones: milestones.map((it) => it.object),
+      milestones: milestones?.map((it) => it),
     });
   }
 

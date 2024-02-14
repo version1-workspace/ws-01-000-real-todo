@@ -5,9 +5,9 @@ import { Tag } from './tag.entity';
 import { Pagination } from '../../entities/pagination.entity';
 import { User } from '../users/user.entity';
 
-export type SortType = 'updated' | 'created';
+export type SortType = 'updatedAt' | 'createdAt';
 export type SortOrder = 'asc' | 'desc';
-export type StatusType = 'enabled' | 'disabled'
+export type StatusType = 'enabled' | 'disabled';
 
 interface SearchParams {
   user: User;
@@ -20,10 +20,10 @@ interface SearchParams {
 
 const sortOptions = (t: SortType, o: SortOrder) => {
   return {
-    created: {
+    createdAt: {
       createdAt: o,
     },
-    updated: {
+    updatedAt: {
       updatedAt: o,
     },
   }[t];
@@ -45,12 +45,12 @@ export class TagsService {
     status,
   }: SearchParams): Promise<Pagination<Tag, SortType>> {
     const options = {
-      status: status || [] as StatusType[],
+      status: status || ([] as StatusType[]),
       take: limit || 20,
       page: page || 1,
       skip: undefined,
-      sortType: sortType || 'created' as const,
-      sortOrder: sortOrder || 'desc' as const,
+      sortType: sortType || ('createdAt' as const),
+      sortOrder: sortOrder || ('desc' as const),
     };
     options.skip = (options.page - 1) * options.take;
 

@@ -79,6 +79,10 @@
   width: 100%;
 }
 
+.inputReadOnly {
+  background: #eee;
+}
+
 .error {
   padding: 4px 0;
   color: var(--danger-color);
