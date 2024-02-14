@@ -9,7 +9,7 @@ import {
 } from "react-icons/io5";
 import { classHelper } from "@/lib/cls";
 import route from "@/lib/route";
-import useProjects from "@/hooks/useProjects";
+import useProjects from "@/contexts/projects";
 
 const colors = (function () {
   const list = [];

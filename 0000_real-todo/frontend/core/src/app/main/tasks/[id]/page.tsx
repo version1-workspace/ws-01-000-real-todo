@@ -22,7 +22,7 @@ import { join } from "@/lib/cls";
 import Button from "@/components/common/button";
 import { useToast } from "@/lib/toast/hook";
 import ErrorMessage from "@/components/common/errorMessage";
-import useProjects from "@/hooks/useProjects";
+import useProjects from "@/contexts/projects";
 import { factory } from "@/services/api/models";
 import Icon from "@/components/common/icon";
 import EditableField from "@/components/common/editableField";

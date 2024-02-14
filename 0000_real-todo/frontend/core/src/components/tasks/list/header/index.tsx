@@ -4,9 +4,9 @@ import api from "@/services/api";
 import { Filter } from "@/components/tasks/list/hooks/useFilter";
 import { IoCloseCircle as Close } from "react-icons/io5";
 import { ja } from "@/lib/transltate";
-import useTasks from "@/hooks/useTasks";
+import useTasks from "@/contexts/tasks";
 import Icon from "@/components/common/icon";
-import useCheck from "@/hooks/useCheck";
+import useCheck from "@/contexts/check";
 import PopupMenu, { Action } from "../../popupMenu";
 import { useToast } from "@/lib/toast/hook";
 

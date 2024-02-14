@@ -5,10 +5,10 @@ import Header from "@/components/common/header/main";
 import Sidebar from "@/components/common/sidebar";
 import { ModalContainer } from "@/lib/modal";
 import { ToastContainer } from "@/lib/toast";
-import { TaskListContainer } from "@/hooks/useTasks";
+import { TaskListContainer } from "@/contexts/tasks";
 import { position } from "@/lib/toast/config";
 import { Inter } from "next/font/google";
-import { ProjectsContainer } from "@/hooks/useProjects";
+import { ProjectsContainer } from "@/contexts/projects";
 import { NotificaitonBarContainer } from "@/contexts/notificationBar";
 
 const inter = Inter({ subsets: ["latin"] });

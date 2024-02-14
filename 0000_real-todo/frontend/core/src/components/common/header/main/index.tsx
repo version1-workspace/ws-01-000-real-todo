@@ -6,8 +6,8 @@ import { useModal } from "@/lib/modal";
 import route from "@/lib/route";
 import TaskForm from "@/components/tasks/form";
 import Icon from "../../icon";
-import useProjects from "@/hooks/useProjects";
-import useTasks from "@/hooks/useTasks";
+import useProjects from "@/contexts/projects";
+import useTasks from "@/contexts/tasks";
 import { useAuth } from "@/components/auth";
 import Search from "@/components/tasks/search";
 
@@ -68,9 +68,11 @@ export default function Header() {
     <header className={styles.header}>
       <div className={styles.content}>
         <div className={styles.left}>
-          <div className={styles.logo}>
-            <h2>Turbo</h2>
-          </div>
+          <Link href={route.main.toString()}>
+            <div className={styles.logo}>
+              <h2>Turbo</h2>
+            </div>
+          </Link>
           <div className={styles.searchForm}>
             <Search />
           </div>

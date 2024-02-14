@@ -2,10 +2,10 @@
 import { ReactNode, useEffect } from "react";
 import styles from "./index.module.css";
 import useFilter from "@/components/tasks/list/hooks/useFilter";
-import useTasks from "@/hooks/useTasks";
+import useTasks from "@/contexts/tasks";
 import TaskTable from "../table";
 import Pagination from "../pagination";
-import { CheckContainer } from "@/hooks/useCheck";
+import { CheckContainer } from "@/contexts/check";
 import TaskListHeader from "./header";
 
 interface Props {

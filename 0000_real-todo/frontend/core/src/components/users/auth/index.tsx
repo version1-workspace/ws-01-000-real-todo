@@ -1,10 +1,7 @@
-import { useState } from "react";
 import styles from "./index.module.css";
 import { User } from "@/services/api/models/user";
-import { join } from "@/lib/cls";
 import TextInput from "@/components/common/input/text";
 import Button from "@/components/common/button";
-import Icon from "@/components/common/icon";
 import { useForm } from "@/hooks/useForm";
 
 interface PageProps {

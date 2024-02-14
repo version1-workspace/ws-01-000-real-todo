@@ -3,7 +3,7 @@ import Button from "@/components/common/button";
 import UsersLayout from "@/components/users/layout";
 import styles from "./page.module.css";
 import Select from "@/components/common/select";
-import useProjects from "@/hooks/useProjects";
+import useProjects from "@/contexts/projects";
 import { useNotice, useUnimplementedPage } from "@/hooks/useNotice";
 
 export default function Notification() {

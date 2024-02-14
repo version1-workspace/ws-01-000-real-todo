@@ -2,12 +2,11 @@
 import { useState } from "react";
 import styles from "./index.module.css";
 import {
-  Fields,
   FieldTypes,
   OrderType,
 } from "@/components/tasks/list/hooks/useFilter";
 import Icon from "@/components/common/icon";
-import useProjects from "@/hooks/useProjects";
+import useProjects from "@/contexts/projects";
 import { Project } from "@/services/api/models/project";
 
 interface DateParams {

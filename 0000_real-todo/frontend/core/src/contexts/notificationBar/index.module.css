@@ -1,6 +1,8 @@
 .container {
   display: flex;
-  position: sticky;
+  z-index: 1;
+  position: absolute;
+  width: 100%;
   top: 0;
   height: 0px;
   overflow: hidden;
@@ -13,7 +15,6 @@
   height: 48px;
   overflow: auto;
   transition: height all linear;
-  animation: 0.8s linear 0.3s 1 normal pulse;
 }
 
 .message {
@@ -21,16 +22,3 @@
   text-align: center;
 }
 
-@keyframes pulse {
-  from {
-    opacity: 0.8;
-  }
-
-  50% {
-    opacity: 0.4;
-  }
-
-  to {
-    opacity: 1;
-  }
-}

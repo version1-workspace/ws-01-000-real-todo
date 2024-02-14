@@ -7,9 +7,9 @@ import route from "@/lib/route";
 import Select, { OptionItem } from "@/components/common/select";
 import Icon from "@/components/common/icon";
 import EditableField from "../../common/editableField";
-import useProjects from "@/hooks/useProjects";
+import useProjects from "@/contexts/projects";
 import api from "@/services/api";
-import useCheck from "@/hooks/useCheck";
+import useCheck from "@/contexts/check";
 
 interface Props {
   data: Task[];
