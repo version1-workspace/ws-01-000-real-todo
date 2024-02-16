@@ -1,7 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, DeepPartial, FindOperator, In, IsNull, Like, Repository } from 'typeorm';
+import {
+  Between,
+  DeepPartial,
+  EntityManager,
+  FindOperator,
+  In,
+  IsNull,
+  Like,
+  Repository,
+} from 'typeorm';
 import { Task, TaskKinds } from './task.entity';
 import { Pagination } from '../../entities/pagination.entity';
 import { init as initialStat, Stat } from '../../entities/stat.entity';
@@ -69,6 +78,8 @@ export class TasksService {
       relations: {
         user: true,
         project: true,
+        parent: true,
+        children: true,
       },
       where: {
         uuid: id,
@@ -107,9 +118,11 @@ export class TasksService {
   async milestones({
     userId,
     projectSlugs,
+    statuses,
   }: {
     userId: number;
     projectSlugs: string[];
+    statuses?: string[];
   }): Promise<Task[]> {
     return await this.tasksRepository.find({
       relations: {
@@ -120,6 +133,7 @@ export class TasksService {
       where: {
         kind: 'milestone',
         userId,
+        status: In(statuses || ['scheduled']),
         project: {
           slug: In(projectSlugs),
         },
@@ -286,7 +300,7 @@ export class TasksService {
   }
 
   async update(
-    userId: string,
+    user: User,
     taskId: string,
     values: Partial<{
       status: TaskStatuses;
@@ -303,11 +317,12 @@ export class TasksService {
     const task = await this.tasksRepository.findOne({
       relations: {
         user: true,
+        children: true,
       },
       where: {
         uuid: taskId,
         user: {
-          uuid: userId,
+          uuid: user.uuid,
         },
       },
     });
@@ -325,18 +340,38 @@ export class TasksService {
       task[key] = values[key];
     });
 
-    const manager = this.tasksRepository.manager;
-    await manager.save(task);
+    return this.tasksRepository.manager.transaction(async (manager) => {
+      if (task.children.length) {
+        const ids = [task.uuid, ...task.children.map((it) => it.uuid)];
+        await this.bulkUpdate(
+          user.id,
+          ids,
+          { projectId: project.id },
+          { manager },
+        );
+      }
 
-    return task;
+      await manager.save(task);
+
+      return task;
+    });
   }
 
   async bulkUpdate(
     userId: number,
     ids: string[],
-    params: { status: TaskStatuses; archivedAt?: string; finishedAt?: string },
+    params: {
+      projectId?: number;
+      status?: TaskStatuses;
+      archivedAt?: string;
+      finishedAt?: string;
+    },
+    options?: {
+      manager?: EntityManager;
+    },
   ) {
-    await this.tasksRepository
+    const m = options?.manager || this.tasksRepository.manager;
+    await m
       .createQueryBuilder()
       .update(Task)
       .set(params)

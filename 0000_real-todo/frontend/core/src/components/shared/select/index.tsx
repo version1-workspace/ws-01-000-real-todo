@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import styles from "@/components/common/select/index.module.css";
+import styles from "@/components/shared/select/index.module.css";
 import { classHelper, join } from "@/lib/cls";
 import Icon from "../icon";
 

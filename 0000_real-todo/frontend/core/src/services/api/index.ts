@@ -76,7 +76,7 @@ const api = {
     deadline: string;
     goal: string;
     shouldbe?: string;
-    status: 'active';
+    status: "active";
     milestones: {
       title: string;
       deadline: string;
@@ -135,6 +135,9 @@ const api = {
   fetchMilestones: ({ slug }: { slug: string }) => {
     return client.instance.get(`/projects/${slug}/milestones`);
   },
+  archiveMilestone: ({ slug, id }: { id: string; slug: string }) => {
+    return client.instance.put(`/projects/${slug}/milestones/${id}/archive`);
+  },
   completeTask: ({ id }: { id: string }) => {
     return client.instance.put(`/users/tasks/${id}/complete`);
   },
@@ -173,6 +176,7 @@ const api = {
     data: Partial<{
       title: string;
       projectId: string;
+      parentId: string;
       deadline: string;
       startingAt: string;
       finishedAt: string;

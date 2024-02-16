@@ -25,9 +25,12 @@ export const statusOptions = selectableStatus.map((it) => {
 
 export type StatusType = keyof typeof Status;
 
+type Kind = 'task' | 'milestone'
+
 export interface TaskParams {
   uuid: string;
   title: string;
+  kind: Kind;
   description: string;
   status: StatusType;
 
@@ -106,6 +109,10 @@ export class TaskModel {
 
   get isCompleted() {
     return this._raw.status === "completed";
+  }
+
+  get isMilestone() {
+    return this._raw.kind === "milestone";
   }
 
   params(): TaskParams | undefined {

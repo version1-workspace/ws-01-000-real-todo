@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import api from "@/services/api";
 import { Task, TaskParams } from "@/services/api/models/task";
 import { factory } from "@/services/api/models";
@@ -14,9 +14,16 @@ const useMilestones = () => {
     setOrphans(orphans.map((it: TaskParams) => factory.task(it)));
   };
 
+  const options = useMemo(() => {
+    return milestones.map(it => {
+      return { label: it.title, value: it.id }
+    })
+  },[milestones])
+
   return {
     milestones,
     orphans,
+    options,
     fetch,
   };
 };

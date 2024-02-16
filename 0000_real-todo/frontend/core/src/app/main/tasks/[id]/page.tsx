@@ -2,11 +2,10 @@
 import route from "@/lib/route";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import styles from "./page.module.css";
 import { useForm } from "@/hooks/useForm";
 import api from "@/services/api";
-import DateInput from "@/components/common/input/date";
+import DateInput from "@/components/shared/input/date";
 import { Project } from "@/services/api/models/project";
 import { AppDate } from "@/lib/date";
 import {
@@ -16,16 +15,17 @@ import {
   Task,
   TaskParams,
 } from "@/services/api/models/task";
-import Select from "@/components/common/select";
-import TextArea from "@/components/common/input/textarea";
+import Select from "@/components/shared/select";
+import TextArea from "@/components/shared/input/textarea";
 import { join } from "@/lib/cls";
-import Button from "@/components/common/button";
+import Button from "@/components/shared/button";
 import { useToast } from "@/lib/toast/hook";
-import ErrorMessage from "@/components/common/errorMessage";
+import ErrorMessage from "@/components/shared/errorMessage";
 import useProjects from "@/contexts/projects";
 import { factory } from "@/services/api/models";
-import Icon from "@/components/common/icon";
-import EditableField from "@/components/common/editableField";
+import Icon from "@/components/shared/icon";
+import EditableField from "@/components/shared/editableField";
+import useMilestones from "@/hooks/useMilestones";
 
 interface Props {
   params: {
@@ -35,6 +35,7 @@ interface Props {
 
 interface Form {
   project?: Project;
+  parent?: Task;
   title: string;
   description: string;
   startingAt?: string;
@@ -50,6 +51,11 @@ const TaskDetail = ({ params }: Props) => {
   const toast = useToast();
   const [task, setTask] = useState<Task>();
   const { projects, options } = useProjects();
+  const {
+    fetch: fetchMilestones,
+    milestones,
+    options: milestoneOptions,
+  } = useMilestones();
   const router = useRouter();
 
   const { submit, change, errors, form } = useForm<Form>({
@@ -98,6 +104,7 @@ const TaskDetail = ({ params }: Props) => {
   const updateFormWith = (task: Task) => {
     change({
       project: task.project,
+      parent: task.parent,
       title: task.title,
       description: task.description,
       startingAt: task.startingAt?.format(),
@@ -115,6 +122,8 @@ const TaskDetail = ({ params }: Props) => {
       const task = factory.task(res.data.data);
       setTask(task);
       updateFormWith(task);
+
+      fetchMilestones({ slug: task.project?.slug });
     };
 
     init();
@@ -168,6 +177,30 @@ const TaskDetail = ({ params }: Props) => {
               <ErrorMessage message={errorMessages.project} />
             </div>
           </div>
+          {task.isMilestone ? null : (
+            <div className={styles.field}>
+              <div className={join(styles.label, styles.required)}>
+                マイルストーン
+              </div>
+              <div className={styles.input}>
+                <Select
+                  data={milestoneOptions}
+                  value={form.parent?.id}
+                  defaultOption={{
+                    label: "マイルストーンを選択してください",
+                    value: "",
+                  }}
+                  onSelect={(option) => {
+                    const parent = milestones.find(
+                      (it) => it.id === option.value,
+                    );
+                    change({ parent });
+                  }}
+                />
+                <ErrorMessage message={errorMessages.project} />
+              </div>
+            </div>
+          )}
           <div className={styles.field}>
             <div className={join(styles.label, styles.required)}>締切日</div>
             <div className={styles.input}>
@@ -245,11 +278,11 @@ const TaskDetail = ({ params }: Props) => {
             </Button>
           </div>
           <div className={styles.back}>
-            <Link href={route.main.toString()} className={styles.backText}>
+            <p onClick={() => router.back()} className={styles.backText}>
               <Icon name="back" />
               <Icon name="back" />
-              ダッシュボードに戻る
-            </Link>
+              戻る
+            </p>
           </div>
         </div>
       </div>

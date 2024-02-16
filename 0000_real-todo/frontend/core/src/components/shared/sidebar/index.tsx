@@ -1,6 +1,6 @@
 "use client";
 import { ReactNode, useMemo, useState } from "react";
-import styles from "@/components/common/sidebar/index.module.css";
+import styles from "@/components/shared/sidebar/index.module.css";
 import { usePathname } from "next/navigation";
 import {
   IoChevronForward as ShowIcon,
@@ -9,9 +9,9 @@ import {
 import { classHelper } from "@/lib/cls";
 import route from "@/lib/route";
 import useProjects from "@/contexts/projects";
-import Icon from "@/components/common/icon";
+import Icon from "@/components/shared/icon";
 import { Project } from "@/services/api/models/project";
-import Link from "@/components/common/link";
+import Link from "@/components/shared/link";
 
 const colors = (function () {
   const list = [];
@@ -107,34 +107,37 @@ export default function Sidebar() {
                           </div>
                         </Link>
                       </li>
-                      <ul className={styles.children}>
-                        {menuItem.children?.map((item, index) => {
-                          return (
-                            <li
-                              key={item.path}
-                              className={classHelper({
-                                [styles.menuItem]: true,
-                                [styles.menuItemActive]: pathname === item.path,
-                              })}>
-                              <Link href={item.path}>
-                                <div className={styles.project}>
-                                  <div>
-                                    <span
-                                      className={styles.dot}
-                                      style={{
-                                        background: colors[index],
-                                      }}></span>
-                                    {item.title}
+                      {menuItem.children?.length ? (
+                        <ul className={styles.children}>
+                          {menuItem.children.map((item, index) => {
+                            return (
+                              <li
+                                key={item.path}
+                                className={classHelper({
+                                  [styles.menuItem]: true,
+                                  [styles.menuItemActive]:
+                                    pathname === item.path,
+                                })}>
+                                <Link href={item.path}>
+                                  <div className={styles.project}>
+                                    <div>
+                                      <span
+                                        className={styles.dot}
+                                        style={{
+                                          background: colors[index],
+                                        }}></span>
+                                      {item.title}
+                                    </div>
+                                    <span className={styles.deadline}>
+                                      {item.options?.deadline}
+                                    </span>
                                   </div>
-                                  <span className={styles.deadline}>
-                                    {item.options?.deadline}
-                                  </span>
-                                </div>
-                              </Link>
-                            </li>
-                          );
-                        })}
-                      </ul>
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      ) : null}
                     </>
                   );
                 })}

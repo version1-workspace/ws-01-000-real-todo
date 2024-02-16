@@ -1,8 +1,8 @@
 import styles from "./index.module.css";
 import { useForm } from "@/hooks/useForm";
 import api from "@/services/api";
-import TextInput from "@/components/common/input/text";
-import DateInput from "@/components/common/input/date";
+import TextInput from "@/components/shared/input/text";
+import DateInput from "@/components/shared/input/date";
 import { Project } from "@/services/api/models/project";
 import { AppDate } from "@/lib/date";
 import {
@@ -12,26 +12,26 @@ import {
   Task,
   TaskParams,
 } from "@/services/api/models/task";
-import Select, { OptionItem } from "@/components/common/select";
-import TextArea from "@/components/common/input/textarea";
+import Select, { OptionItem } from "@/components/shared/select";
+import TextArea from "@/components/shared/input/textarea";
 import { join } from "@/lib/cls";
-import Button from "@/components/common/button";
+import Button from "@/components/shared/button";
 import { useToast } from "@/lib/toast/hook";
-import ErrorMessage from "@/components/common/errorMessage";
+import ErrorMessage from "@/components/shared/errorMessage";
+import useMilestones from "@/hooks/useMilestones";
+import { useEffect } from "react";
+import useProjects from "@/contexts/projects";
 
 interface Props {
   title: string;
   data?: Task;
-  projectsContext: {
-    projects: Project[];
-    options: OptionItem[];
-  };
   onSubmit: () => void;
   onCancel: () => void;
 }
 
 interface Form {
   project?: Project;
+  parent: Task;
   title: string;
   description: string;
   startingAt?: string;
@@ -40,11 +40,18 @@ interface Form {
   children: TaskParams[];
 }
 
-const Form = ({ title, data, projectsContext, onSubmit, onCancel }: Props) => {
+const Form = ({ title, data, onSubmit, onCancel }: Props) => {
   const toast = useToast();
+  const { projects, options: projectOptions } = useProjects();
+  const {
+    fetch: fetchMilestones,
+    milestones,
+    options: milestoneOptions,
+  } = useMilestones();
   const { submit, change, errors, form } = useForm<Form>({
     initialValues: {
       project: data?.project,
+      parent: data?.parent as Task,
       title: data?.title || "",
       description: data?.description || "",
       startingAt: data?.startingAt,
@@ -85,6 +92,13 @@ const Form = ({ title, data, projectsContext, onSubmit, onCancel }: Props) => {
 
   const errorMessages = errors.object;
 
+  useEffect(() => {
+    if (data?.project) {
+      fetchMilestones({ slug: data.project.slug });
+    }
+  }, [data]);
+  debugger
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -98,22 +112,46 @@ const Form = ({ title, data, projectsContext, onSubmit, onCancel }: Props) => {
             </div>
             <div className={styles.input}>
               <Select
-                data={projectsContext.options}
+                data={projectOptions}
                 value={form.project?.id}
                 defaultOption={{
                   label: "プログラムを選択してください",
                   value: "",
                 }}
                 onSelect={(option) => {
-                  const project = projectsContext.projects.find(
-                    (it) => it.id === option.value,
-                  );
+                  const project = projects.find((it) => it.id === option.value);
                   change({ project });
+                  if (project) {
+                    fetchMilestones({ slug: project.slug });
+                  }
                 }}
               />
               <ErrorMessage message={errorMessages.project} />
             </div>
           </div>
+          {form.project && !data?.isMilestone ? (
+            <div className={styles.field}>
+              <div className={styles.label}>マイルストーン</div>
+              <div className={styles.input}>
+                <Select
+                  data={milestoneOptions}
+                  value={form.parent?.id}
+                  defaultOption={{
+                    label: "マイルストーンを選択してください",
+                    value: "",
+                  }}
+                  onSelect={(option) => {
+                    const parent = milestones.find(
+                      (it) => it.id === option.value,
+                    );
+
+                    change({ parent });
+                  }}
+                />
+                <ErrorMessage message={errorMessages.milestone} />
+              </div>
+            </div>
+          ) : null}
           <div className={styles.field}>
             <div className={join(styles.label, styles.required)}>タスク</div>
             <div className={styles.input}>

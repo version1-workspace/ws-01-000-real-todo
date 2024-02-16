@@ -1,6 +1,6 @@
 import styles from "./index.module.css";
 import Link from "next/link";
-import Button from "@/components/common/button";
+import Button from "@/components/shared/button";
 
 export default function Header() {
   return (

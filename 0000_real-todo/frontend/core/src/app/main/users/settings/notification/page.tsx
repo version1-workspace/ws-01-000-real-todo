@@ -1,8 +1,8 @@
 "use client";
-import Button from "@/components/common/button";
+import Button from "@/components/shared/button";
 import UsersLayout from "@/components/users/layout";
 import styles from "./page.module.css";
-import Select from "@/components/common/select";
+import Select from "@/components/shared/select";
 import useProjects from "@/contexts/projects";
 import { useNotice, useUnimplementedPage } from "@/hooks/useNotice";
 

@@ -1,8 +1,8 @@
 "use client";
 import styles from "./page.module.css";
 import { User } from "@/services/api/models/user";
-import TextInput from "@/components/common/input/text";
-import Button from "@/components/common/button";
+import TextInput from "@/components/shared/input/text";
+import Button from "@/components/shared/button";
 import { useForm } from "@/hooks/useForm";
 import UsersLayout from "@/components/users/layout";
 import { useAuth } from "@/components/auth";

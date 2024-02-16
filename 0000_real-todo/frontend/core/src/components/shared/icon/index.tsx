@@ -33,7 +33,6 @@ import {
   IoFilter,
   IoGridOutline,
   IoAddCircle,
-  IoAddCircleSharp
 } from "react-icons/io5";
 import styles from "./index.module.css";
 import { classHelper } from "@/lib/cls";
@@ -100,6 +99,7 @@ const Icon = ({
     <div
       className={classHelper({
         [styles.container]: true,
+        [styles.interactive]: !!interactive,
         [styles.interactivePulse]: interactive === "pulse",
         [styles.interactiveHover]: interactive === "hover",
         [styles.interactiveHoverDark]: interactive === "hoverDark",

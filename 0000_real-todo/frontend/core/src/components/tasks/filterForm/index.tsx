@@ -5,7 +5,7 @@ import {
   FieldTypes,
   OrderType,
 } from "@/components/tasks/list/hooks/useFilter";
-import Icon from "@/components/common/icon";
+import Icon from "@/components/shared/icon";
 import useProjects from "@/contexts/projects";
 import { Project } from "@/services/api/models/project";
 

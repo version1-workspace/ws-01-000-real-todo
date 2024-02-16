@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./index.module.css";
 import { classHelper, join } from "@/lib/cls";
-import TextInput from "@/components/common/input/text";
-import DateInput from "@/components/common/input/date";
+import TextInput from "@/components/shared/input/text";
+import DateInput from "@/components/shared/input/date";
 
 interface Props {
   defaultValue: string;
@@ -13,6 +13,7 @@ interface Props {
   max?: string;
   min?: string;
   inputStyleClass?: string;
+  containerStyleClass?: string;
 }
 
 const EditableField = ({
@@ -20,6 +21,7 @@ const EditableField = ({
   type,
   placeholder,
   onChangeEnd,
+  containerStyleClass,
   inputStyleClass,
   ...rest
 }: Props) => {

@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put } from '@nestjs/common';
 import { TasksService } from '../tasks/tasks.service';
 import { User as DUser } from '../users/user.decorator';
 import { User } from '../users/user.entity';
@@ -27,6 +27,24 @@ export class MilestonesController {
         milestones: result,
         orphans,
       },
+    };
+  }
+
+  @Put(':id/archive')
+  async archive(
+    @DUser() user: User,
+    @Param('id') id: string,
+  ): Promise<Record<string, any>> {
+    const result = await this.tasksService.find({
+      id,
+      userId: user.id,
+    });
+
+    const ids = [result.uuid, ...result.children.map((it) => it.uuid)];
+    await this.tasksService.archive(user.id, ids);
+
+    return {
+      data: result,
     };
   }
 }

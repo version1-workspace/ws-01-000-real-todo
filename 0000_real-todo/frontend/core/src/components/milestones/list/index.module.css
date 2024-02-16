@@ -20,7 +20,7 @@
 
 .milestone {
   padding: 16px;
-  margin: 16px 0;
+  margin-bottom: 16px;
 }
 
 .milestoneTitle {
@@ -37,6 +37,11 @@
 .milestoneTitleText {
   display: flex;
   align-items: center;
+  cursor: pointer;
+}
+
+.milestoneTitleText:hover {
+  opacity: 0.8;
 }
 
 .milestoneTitleIcon {
@@ -80,14 +85,8 @@
   border-bottom: 1px solid var(--weak-border-color);
 }
 
-.collapseLine {
-  margin: 64px 0;
-  margin-right: 64px;
-  position: relative;
-  height: auto;
-  width: 1px;
-  background: var(--border-color);
-  margin-left: 8px;
+.collapseBodyEmpty {
+  background: #f9f9f9;
 }
 
 .collapseShowMoreContainer {
@@ -100,9 +99,10 @@
 
 .collapseShowMore {
   position: absolute;
-  bottom: 0;
-  left: 30%;
-  height: 70%;
+  width: 100%;
+  bottom: 30px;
+  left: -32px;
+  margin: auto;
   background: #fefefe95;
   padding: 32px;
   z-index: 1;
@@ -115,6 +115,21 @@
 
 .collapseShowMoreText {
   text-align: center;
+}
+
+.collapseLineContainer {
+  min-width: 64px;
+}
+
+.collapseLine {
+  margin: 64px 0;
+  height: 80%;
+  padding: 32px 0;
+  position: relative;
+  height: auto;
+  width: 1px;
+  background: var(--border-color);
+  margin-left: 8px;
 }
 
 .collapseLineHidden {
@@ -131,7 +146,6 @@
   border-bottom: 1px solid var(--border-color);
   transform: rotate(45deg);
 }
-
 
 .collapseBodyShow {
 }
@@ -154,11 +168,13 @@
 }
 
 .collapaseHideContainer {
+  display: flex;
   padding: 16px;
 }
 
 .collapseHide {
   cursor: pointer;
+  width: 100%;
 }
 
 .collapseHide:hover {
@@ -173,6 +189,10 @@
   width: 100%;
 }
 
+.collapseHideSkelton {
+  min-width: 64px;
+  height: 100%;
+}
 
 .collapseHideArrow {
   height: 10px;
@@ -186,13 +206,6 @@
 .collapseHideText {
   cursor: pointer;
   text-align: center;
-}
-
-
-.deadlineDate {
-  display: inline-block;
-  margin-left: 16px;
-  font-size: 10px;
 }
 
 .complete {
@@ -213,3 +226,31 @@
   border-bottom: 1px dotted var(--border-color);
   margin-bottom: 8px;
 }
+
+.emptyChildren {
+  text-align: center;
+}
+
+.addMilestone {
+  display: inline-block;
+  margin-top: 8px;
+  cursor: pointer;
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+}
+
+.deadline {
+  margin-right: 16px;
+}
+
+.deadlineDate {
+  display: inline-block;
+  margin-left: 16px;
+  font-size: 10px;
+}
+

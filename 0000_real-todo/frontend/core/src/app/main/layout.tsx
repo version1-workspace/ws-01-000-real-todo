@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Head from "next/head";
-import Body from "@/components/common/content";
+import Body from "@/components/shared/content";
 
 export const metadata: Metadata = {
   title: "Turbo",

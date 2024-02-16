@@ -5,9 +5,9 @@ import { Filter } from "@/components/tasks/list/hooks/useFilter";
 import { IoCloseCircle as Close } from "react-icons/io5";
 import { ja } from "@/lib/transltate";
 import useTasks from "@/contexts/tasks";
-import Icon from "@/components/common/icon";
+import Icon from "@/components/shared/icon";
 import useCheck from "@/contexts/check";
-import PopupMenu, { Action } from "../../popupMenu";
+import PopupMenu, { Action } from "@/components/shared/popupMenu";
 import { useToast } from "@/lib/toast/hook";
 
 const taskTranslations = ja.derive("task")!;

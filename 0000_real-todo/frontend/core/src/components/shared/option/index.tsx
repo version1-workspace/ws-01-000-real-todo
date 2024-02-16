@@ -1,4 +1,4 @@
-import styles from "@/components/common/option/index.module.css";
+import styles from "@/components/shared/option/index.module.css";
 import { classHelper } from "@/lib/cls";
 
 interface Props {

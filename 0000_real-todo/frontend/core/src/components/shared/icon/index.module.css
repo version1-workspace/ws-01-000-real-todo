@@ -5,6 +5,10 @@
   height: 100%;
 }
 
+.interactive {
+  cursor: pointer;
+}
+
 .interactivePulse {
   border-radius: 50%;
   padding: 8px;

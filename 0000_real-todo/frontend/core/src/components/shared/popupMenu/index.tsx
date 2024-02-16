@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import styles from "@/components/tasks/popupMenu/index.module.css";
+import styles from "./index.module.css";
 import { classHelper } from "@/lib/cls";
 
 interface Props {

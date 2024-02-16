@@ -24,7 +24,7 @@ export default forwardRef(function DateInput(
   }: Props,
   ref: ForwardedRef<HTMLInputElement>,
 ) {
-  const _value = value?.replaceAll("/", "-");
+  const _value = (value?.toString() || "").replaceAll("/", "-");
   return (
     <div className={join(styles.container, containerClassName)}>
       <input

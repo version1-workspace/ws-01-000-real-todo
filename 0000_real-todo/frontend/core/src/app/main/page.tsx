@@ -8,7 +8,7 @@ import TaskList from "@/components/tasks/list";
 import route from "@/lib/route";
 import useProjects from "@/contexts/projects";
 import useTasks from "@/contexts/tasks";
-import Icon from "@/components/common/icon";
+import Icon from "@/components/shared/icon";
 
 export default function Main() {
   const { projects } = useProjects();

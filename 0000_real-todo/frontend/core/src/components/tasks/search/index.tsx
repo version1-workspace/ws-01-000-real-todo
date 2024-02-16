@@ -1,4 +1,4 @@
-import Icon from "@/components/common/icon";
+import Icon from "@/components/shared/icon";
 import route from "@/lib/route";
 import api from "@/services/api";
 import { factory } from "@/services/api/models";
@@ -38,7 +38,7 @@ export default function Search() {
     <div className={styles.container}>
       {show ? <div className={styles.overlay} onClick={close}></div> : null}
       <div className={styles.search}>
-        <Icon name="search" size="24px" color="#2e2e2e" />
+        <Icon name="search" size={24} color="#2e2e2e" />
         <input
           type="text"
           placeholder="タスクタイトルで検索"

@@ -3,18 +3,6 @@
   background: var(--background-color);
 }
 
-.title {
-  font-size: 14px;
-  position: relative;
-  background: #fefefe;
-  z-index: 1;
-  top: 16px;
-  left: 8px;
-  padding: 8px;
-  padding-right: 16px;
-  font-weight: normal;
-}
-
 .project {
   padding: 16px;
   border-radius: 4px;
@@ -37,6 +25,23 @@
 .header {
   display: flex;
   justify-content: space-between;
+}
+
+.title {
+  font-size: 18px;
+  position: relative;
+  background: #fefefe;
+  z-index: 1;
+  top: -36px;
+  left: 8px;
+  padding: 8px;
+  padding-right: 16px;
+  font-weight: 300;
+}
+
+.projectBody {
+  position: relative;
+  top: -36px;
 }
 
 .label {
@@ -125,3 +130,22 @@
   display: inline-block;
   margin-right: 8px;
 }
+
+.menu {
+  cursor: pointer;
+}
+
+.milestoneListHeader {
+  padding: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.addMilestone {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  margin-left: auto;
+  color: var(--primary-color);
+}
+

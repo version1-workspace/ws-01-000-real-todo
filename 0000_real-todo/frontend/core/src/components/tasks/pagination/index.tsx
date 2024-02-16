@@ -1,6 +1,6 @@
 import styles from "./index.module.css";
 import { classHelper } from "@/lib/cls";
-import Icon from "@/components/common/icon";
+import Icon from "@/components/shared/icon";
 
 interface Props {
   page: number;

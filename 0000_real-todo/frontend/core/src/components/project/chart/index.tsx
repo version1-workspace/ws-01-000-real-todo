@@ -13,8 +13,8 @@ import {
   Legend,
 } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
-import Option from "@/components/common/option";
-import Select from "@/components/common/select";
+import Option from "@/components/shared/option";
+import Select from "@/components/shared/select";
 import api from "@/services/api";
 import { dataset } from "@/services/api/models/stats";
 

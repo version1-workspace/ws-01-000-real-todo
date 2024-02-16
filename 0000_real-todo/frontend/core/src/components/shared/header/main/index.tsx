@@ -61,8 +61,7 @@ function Dropdown({ trigger }: DropdownProps) {
 
 export default function Header() {
   const { open, hide } = useModal();
-  const { projects, options } = useProjects();
-  const { fetch: fetchTasks } = useTasks();
+  const { fetchDefault: fetchTasks } = useTasks();
 
   return (
     <header className={styles.header}>
@@ -83,21 +82,14 @@ export default function Header() {
               <Icon
                 interactive="hoverDark"
                 name="add"
-                size="24px"
+                size={24}
                 onClick={() => {
                   open({
                     content: (
                       <TaskForm
                         title="タスクを追加"
-                        projectsContext={{
-                          options,
-                          projects,
-                        }}
                         onSubmit={() => {
-                          fetchTasks({
-                            page: 1,
-                            statuses: { scheduled: true },
-                          });
+                          fetchTasks();
                           hide();
                         }}
                         onCancel={hide}
@@ -108,17 +100,17 @@ export default function Header() {
               />
             </li>
             <li className={styles.menuItem}>
-              <Icon name="info" interactive="hoverDark" size="24px" />
+              <Icon name="info" interactive="hoverDark" size={24} />
             </li>
             <li className={styles.menuItem}>
-              <Icon name="notification" interactive="hoverDark" size="24px" />
+              <Icon name="notification" interactive="hoverDark" size={24} />
             </li>
           </ul>
           <div className={styles.avatarIcon}>
             <Dropdown
               trigger={
                 <div className={styles.avatarCircleContaiener}>
-                  <Icon name="person" interactive="hover" size="20px" />
+                  <Icon name="person" interactive="hover" size={20} />
                 </div>
               }
             />

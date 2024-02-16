@@ -26,6 +26,11 @@
   font-weight: 500;
 }
 
+.titleField {
+  background: var(--background-color);
+  padding: 8px;
+}
+
 .form {
   margin-bottom: 48px;
 }

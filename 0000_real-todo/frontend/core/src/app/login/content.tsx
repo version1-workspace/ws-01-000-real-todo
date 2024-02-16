@@ -2,10 +2,10 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import styles from "./page.module.css";
-import Header from "@/components/common/header/public";
-import Footer from "@/components/common/footer";
-import Input from "@/components/common/input/text";
-import Button from "@/components/common/button";
+import Header from "@/components/shared/header/public";
+import Footer from "@/components/shared/footer";
+import Input from "@/components/shared/input/text";
+import Button from "@/components/shared/button";
 import LoginForm from "@/components/auth/loginForm";
 import { useToast } from "@/lib/toast/hook";
 

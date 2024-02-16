@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import styles from "@/app/main/projects/new/page.module.css";
-import Button from "@/components/common/button";
+import Button from "@/components/shared/button";
 import { Project } from "@/services/api/models/project";
 import { factory } from "@/services/api/models";
 import GoalForm from "@/components/project/forms/goal";

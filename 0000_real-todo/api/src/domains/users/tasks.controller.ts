@@ -114,7 +114,7 @@ export class TasksController {
       return acc;
     }, {});
 
-    const result = await this.tasksService.update(user.uuid, id, _body);
+    const result = await this.tasksService.update(user, id, _body);
 
     return { data: result };
   }

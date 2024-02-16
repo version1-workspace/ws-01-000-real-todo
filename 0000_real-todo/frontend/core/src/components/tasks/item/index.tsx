@@ -7,9 +7,9 @@ import {
   IoCheckmark as Done,
   IoArchiveOutline as Archive,
 } from "react-icons/io5";
-import Icon from "@/components/common/icon";
+import Icon from "@/components/shared/icon";
 import { join } from "@/lib/cls";
-import PopupMenu from "@/components/tasks/popupMenu";
+import PopupMenu from "@/components/shared/popupMenu";
 
 interface Props {
   data: Task;

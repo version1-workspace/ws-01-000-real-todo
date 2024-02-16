@@ -3,13 +3,13 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./index.module.css";
-import Input from "@/components/common/input/text";
-import Button from "@/components/common/button";
-import ShowIf from "@/components/common/showIf";
+import Input from "@/components/shared/input/text";
+import Button from "@/components/shared/button";
+import ShowIf from "@/components/shared/showIf";
 import { useForm } from "@/hooks/useForm";
 import api, {setUserId} from "@/services/api";
 import { useToast } from "@/lib/toast/hook";
-import Checkbox from "@/components/common/checkbox";
+import Checkbox from "@/components/shared/checkbox";
 
 export const metadata: Metadata = {
   title: "Turbo | ログイン",

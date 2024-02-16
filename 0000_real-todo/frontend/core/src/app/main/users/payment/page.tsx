@@ -1,7 +1,7 @@
 "use client";
 import styles from "./page.module.css";
-import Button from "@/components/common/button";
-import Icon from "@/components/common/icon";
+import Button from "@/components/shared/button";
+import Icon from "@/components/shared/icon";
 import { useAuth } from "@/components/auth";
 import UsersLayout from "@/components/users/layout";
 import { useNotice, useUnimplementedPage } from "@/hooks/useNotice";

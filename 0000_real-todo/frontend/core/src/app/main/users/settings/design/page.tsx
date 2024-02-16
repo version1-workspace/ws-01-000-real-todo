@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
-import Button from "@/components/common/button";
+import Button from "@/components/shared/button";
 import UsersLayout from "@/components/users/layout";
 import styles from "./page.module.css";
 import { classHelper } from "@/lib/cls";
-import Select from "@/components/common/select";
+import Select from "@/components/shared/select";
 import {useNotice, useUnimplementedPage} from "@/hooks/useNotice";
 
 const colors = [
