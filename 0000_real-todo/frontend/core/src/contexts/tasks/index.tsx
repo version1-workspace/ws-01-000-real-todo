@@ -28,7 +28,7 @@ export const TaskListContainer = ({
     limit,
     statuses,
     text,
-    project,
+    projectId,
     order,
     date,
   }: Params) => {
@@ -37,7 +37,7 @@ export const TaskListContainer = ({
       limit: limit || 20,
       status: Object.keys(statuses || {}),
       search: text,
-      projectId: project?.id,
+      projectId: projectId,
       sortType: order?.type,
       sortOrder: order?.value,
       dateFrom: date?.start,

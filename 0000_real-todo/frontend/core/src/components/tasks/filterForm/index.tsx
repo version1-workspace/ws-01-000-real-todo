@@ -1,10 +1,7 @@
 "use client";
 import { useState } from "react";
 import styles from "./index.module.css";
-import {
-  FieldTypes,
-  OrderType,
-} from "@/components/tasks/list/hooks/useFilter";
+import { FieldTypes, OrderType } from "@/components/tasks/list/hooks/useFilter";
 import Icon from "@/components/shared/icon";
 import useProjects from "@/contexts/projects";
 import { Project } from "@/services/api/models/project";
@@ -23,7 +20,7 @@ interface OrderParams {
 interface UpdateParams {
   text: string;
   limit: number;
-  project?: Project;
+  projectId?: string;
   date: DateParams;
   order: OrderParams;
   statuses: { [key: string]: boolean };
@@ -168,14 +165,11 @@ export default function Popup({
                 </p>
                 <select
                   className={styles.selector}
-                  value={value.project?.id}
+                  value={value.projectId}
                   onChange={(e) => {
-                    const project = projects.find(
-                      (it) => it.id === e.target.value,
-                    );
-                    onChange({ ...value, project });
+                    onChange({ ...value, projectId: e.target.value });
                   }}>
-                  <option>指定なし</option>
+                  <option value="">指定なし</option>
                   {projects.map((it) => {
                     return (
                       <option key={it.id} value={it.id}>

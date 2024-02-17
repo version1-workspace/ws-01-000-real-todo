@@ -28,6 +28,8 @@
   display:  block;
   padding: 16px;
   padding-left: 32px;
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 .menuItem:hover {
@@ -100,4 +102,11 @@
 
 .sidebarToggle:hover {
   transform: scale(1.3);
+}
+
+.showMoreProjects {
+  color: var(--primary-color);
+  font-size: 12px;
+  display: flex;
+  justify-content: flex-end;
 }

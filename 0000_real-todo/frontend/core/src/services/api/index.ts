@@ -84,11 +84,43 @@ const api = {
   }) => {
     return client.instance.post(`/users/projects`, project);
   },
+  updateProject: (
+    slug: string,
+    project: {
+      name: string;
+      slug: string;
+      deadline: string;
+      goal: string;
+      shouldbe?: string;
+    },
+  ) => {
+    return client.instance.patch(`/users/projects/${slug}`, project);
+  },
   fetchProject: ({ slug }: { slug: string }) => {
     return client.instance.get(`/users/projects/${slug}`);
   },
-  fetchProjects: () => {
-    return client.instance.get("/users/projects");
+  fetchProjects: ({
+    limit,
+    page,
+    status,
+  }: Partial<{
+    limit: number;
+    page: number;
+    status: string[];
+  }>) => {
+    return client.instance.get("/users/projects", {
+      params: {
+        limit,
+        page,
+        status,
+      },
+    });
+  },
+  archiveProject({ slug }: { slug: string }) {
+    return client.instance.patch(`/users/projects/${slug}/archive`);
+  },
+  reopenProject({ slug }: { slug: string }) {
+    return client.instance.patch(`/users/projects/${slug}/reopen`);
   },
   fetchStats: mockApi.fetchStats,
   fetchTask: ({ id }: { id: string }) => {

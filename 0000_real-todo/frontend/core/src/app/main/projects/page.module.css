@@ -1,0 +1,38 @@
+.container {
+  margin: 32px;
+  background: var(--background-color);
+}
+
+.body {
+  max-width: 800px;
+  margin: auto;
+  margin-top: 64px;
+}
+
+.content {
+  padding: 32px;
+}
+
+.title {
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.projectsHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  max-width: 800px;
+  margin: auto;
+}
+
+.toggleArchive input {
+  margin-right: 8px;
+}
+
+

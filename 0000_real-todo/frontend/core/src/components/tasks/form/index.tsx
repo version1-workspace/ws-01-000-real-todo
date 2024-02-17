@@ -97,7 +97,6 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
       fetchMilestones({ slug: data.project.slug });
     }
   }, [data]);
-  debugger
 
   return (
     <div className={styles.container}>

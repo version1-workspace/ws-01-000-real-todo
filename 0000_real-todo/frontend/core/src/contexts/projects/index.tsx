@@ -4,10 +4,18 @@ import api from "@/services/api";
 import { factory } from "@/services/api/models";
 import { Project, ProjectParams } from "@/services/api/models/project";
 import { useEffect, useState } from "react";
+import { Pagination } from "@/services/api/models/pagination";
+
+interface SearchParams {
+  limit?: number;
+  page?: number;
+  status?: string[]
+}
 
 interface IProjectContext {
   data: Project[];
-  fetch: () => Promise<void>;
+  paginated?: Pagination<Project>;
+  fetch: (params: SearchParams) => Promise<void>;
 }
 
 interface OptionItem {
@@ -17,35 +25,54 @@ interface OptionItem {
 
 const ProjectsContext = createContext<IProjectContext>({
   data: [],
-  fetch: async () => {},
+  fetch: async (_: SearchParams) => {},
 });
 
 interface Props {
   children?: React.ReactNode;
 }
 
-export const ProjectsContainer = ({ children }: Props) => {
+export const useProjectsWithoutContext = () => {
   const toast = useToast();
-  const [data, setData] = useState<Project[]>([]);
-  const fetch = async () => {
+  const [data, setData] = useState<Pagination<Project>>(
+    Pagination.create<Project>(),
+  );
+  const fetch = async (params: SearchParams) => {
     try {
-      const res = await api.fetchProjects();
+      const res = await api.fetchProjects(params);
       const list = res.data.data;
       const projects = list.map((it: ProjectParams) => factory.project(it));
 
-      setData(projects);
-    } catch(e) {
-      console.error(e)
+      setData(
+        new Pagination({
+          list: projects,
+          pageInfo: res.data.pageInfo,
+        }),
+      );
+    } catch (e) {
+      console.error(e);
       toast.error("プロジェクトの取得に失敗しました");
     }
   };
 
+  return {
+    data,
+    fetch,
+  };
+};
+
+export const ProjectsContainer = ({ children }: Props) => {
+  const { data, fetch } = useProjectsWithoutContext();
+
   useEffect(() => {
-    fetch();
+    fetch({
+      limit: 100,
+    });
   }, []);
 
   return (
-    <ProjectsContext.Provider value={{ data, fetch }}>
+    <ProjectsContext.Provider
+      value={{ data: data.list, paginated: data, fetch }}>
       {children}
     </ProjectsContext.Provider>
   );
@@ -62,6 +89,7 @@ const useProjects = () => {
 
   return {
     fetch,
+    refetch: () => fetch({ limit: 100 }),
     projects: data,
     options,
   };

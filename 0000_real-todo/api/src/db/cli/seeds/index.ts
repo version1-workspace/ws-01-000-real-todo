@@ -91,8 +91,32 @@ export const seed = async ({ app, dataSource, logger }) => {
           status: 'active' as const,
         },
       ].map(async (it: DeepPartial<Project>, index: number) => {
-        const day = (30 - index).toString().padStart(2, '0');
-        it.deadline = dayjs(`2024/08/${day}`).toDate();
+        it.deadline = dayjs().add(1, 'year').add(index, 'day').toDate();
+        const timestamp = now.add(index, 'second').toDate();
+        it.createdAt = timestamp;
+        it.updatedAt = timestamp;
+
+        const project = manager.create(Project, it);
+        await manager.save(project);
+
+        projects.push(project);
+      }),
+    );
+    Promise.all(
+      new Array(20 - projects.length).fill('').map(async (_, index) => {
+        const it: DeepPartial<Project> = {
+          userId: user.id,
+          name: `ダミープロジェクト ${index + 1}`,
+          slug: `dummy-projec-${index + 1}`,
+          goal: `ダミープロジェクト ${index + 1}`,
+          status: 'active' as const,
+        };
+
+        it.deadline = dayjs()
+          .add(1, 'year')
+          .add(1, 'month')
+          .add(index, 'day')
+          .toDate();
         const timestamp = now.add(index, 'second').toDate();
         it.createdAt = timestamp;
         it.updatedAt = timestamp;

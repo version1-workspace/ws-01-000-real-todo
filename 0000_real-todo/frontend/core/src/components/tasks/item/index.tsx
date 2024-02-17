@@ -36,7 +36,7 @@ const getActions = ({ onEdit, onComplete, onArchive }: Actions) => [
   {
     key: "complete",
     logo: <Done className={styles.logo} />,
-    text: "完了する",
+    text: "完了にする",
     onClick: onComplete,
   },
   {

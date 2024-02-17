@@ -178,6 +178,10 @@ export class ProjectModel {
 
     return project;
   }
+
+  get isArchived() {
+    return this._raw.status === 'archived'
+  }
 }
 
 export type Project = ProjectModel & ProjectParams & ProjectDateProps;

@@ -1,5 +1,7 @@
 import { Project } from "@/services/api/models/project";
-import { useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { QueryString } from "@/lib/queryString";
 
 export const Fields = {
   deadline: "deadline",
@@ -20,7 +22,7 @@ interface OrderParams {
 
 export interface Params {
   text: string;
-  project?: Project;
+  projectId?: string;
   date: DateParams;
   order: OrderParams;
   statuses: { [key: string]: boolean };
@@ -46,27 +48,72 @@ const initialValue = {
   },
 };
 
+const mergeValues = (base: Params, obj: Partial<Params>) => {
+  const result = JSON.parse(JSON.stringify(base));
+  ["text", "limit", "projectId", "statuses"].forEach((key: string) => {
+    if (key in obj) {
+      result[key] = obj[key];
+    }
+  });
+
+  if (obj.date && obj.date.type && (obj.date.start || obj.date.end)) {
+    result.date = obj.date;
+  }
+
+  if (obj.order && obj.order.type && obj.order.value) {
+    result.order = obj.order;
+  }
+
+  return result;
+};
+
 export interface Filter {
+  ready: boolean;
   text: string;
-  project: Project;
+  projectId?: string;
   date: DateParams;
   isDateSet?: boolean;
   order: OrderParams;
   statuses: Record<string, boolean>;
   limit: number;
   replica: Params;
+  searchURI: string;
   update: (_params: Params) => void;
   save: (_value?: Params) => void;
   reset: () => void;
   resetState: (type: keyof Params) => Params;
 }
 
-export default function useFilter(): Filter {
+interface Props {
+  onInit?: (params: Params) => Promise<void>
+}
+
+export default function useFilter({ onInit }: Props): Filter {
+  const [ready, setReady] = useState(false)
   const [original, setOriginal] = useState<Params>(initialValue);
   const [replica, setReplica] = useState<Params>(initialValue);
+  const [qs, setQs] = useState<QueryString>();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const qs = new QueryString(searchParams);
+    setQs(qs);
+
+    const newOriginal = mergeValues(initialValue, qs.object);
+    setOriginal(newOriginal);
+    setReplica(newOriginal);
+    onInit?.(newOriginal);
+
+    setReady(true)
+  }, [searchParams]);
 
   const save = (value?: Params) => {
-    setOriginal(value || replica);
+    const newOriginal = value || replica;
+    setOriginal(newOriginal);
+
+    const qs = new QueryString(newOriginal);
+    setQs(qs);
+    history.replaceState(null, "", "?" + qs.toString());
   };
 
   const reset = () => {
@@ -85,19 +132,24 @@ export default function useFilter(): Filter {
 
     setOriginal(newValue);
     setReplica(newValue);
+    const qs = new QueryString(newValue);
+    setQs(qs);
+    history.replaceState(null, "", "?" + qs.toString());
 
     return newValue;
   };
 
   return {
+    ready,
     text: original.text,
-    project: original.project as Project,
+    projectId: original.projectId,
     date: original.date,
     order: original.order,
     statuses: original.statuses,
     limit: original.limit,
     isDateSet: !!(original.date.start || original.date.end),
     replica: replica,
+    searchURI: qs?.toString() || "",
     update: setReplica,
     save,
     reset,

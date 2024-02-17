@@ -17,11 +17,6 @@ import { User as DUser } from './user.decorator';
 import { User } from './user.entity';
 import { TaskKind, TaskKinds } from '../tasks/task.entity';
 
-class UpdateStatusDto extends Dto<Required<UpdateStatusDto>> {
-  @IsIn(Object.keys(Status))
-  status: StatusType;
-}
-
 class TaskDto extends Dto<TaskDto> {
   @IsNotEmpty()
   title: string;
@@ -56,6 +51,23 @@ class ProjectDto extends Dto<Required<ProjectDto>> {
   milestones: TaskDto[];
 }
 
+class UpdateProjectDto extends Dto<Required<UpdateProjectDto>> {
+  @IsNotEmpty()
+  name: string;
+
+  @IsNotEmpty()
+  deadline: Date;
+
+  @IsNotEmpty()
+  slug: string;
+
+  @IsNotEmpty()
+  goal: string;
+
+  @IsOptional()
+  shouldbe?: string;
+}
+
 @Controller('users/projects')
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
@@ -65,11 +77,13 @@ export class ProjectsController {
     @DUser() user: User,
     @Query('limit') limit: number,
     @Query('page') page: number,
+    @Query('status') statuses: StatusType[],
   ): Promise<Record<string, any>> {
     const result = await this.projectsService.search({
       user,
       limit,
       page,
+      statuses,
     });
 
     return result.serialize;
@@ -98,14 +112,13 @@ export class ProjectsController {
   }
 
   @Patch(':slug')
+  @HttpCode(200)
   async update(
     @DUser() user: User,
     @Param('slug') slug: string,
-  ): Promise<Record<string, any>> {
-    return await this.projectsService.findOne({
-      user,
-      slug,
-    });
+    @Body() body: UpdateProjectDto,
+  ) {
+    await this.projectsService.update(slug, user.id, body);
   }
 
   @Delete(':slug')
@@ -119,17 +132,19 @@ export class ProjectsController {
     });
   }
 
-  @Patch(':slug/status')
-  async updateStatus(
+  @Patch(':slug/archive')
+  async archive(
     @DUser() user: User,
     @Param('slug') slug: string,
-    @Body() body: UpdateStatusDto,
   ): Promise<Record<string, any>> {
-    const { status } = body;
-    return await this.projectsService.updateStatus({
-      user,
-      slug,
-      status,
-    });
+    return await this.projectsService.updateStatus(user, slug, 'archived');
+  }
+
+  @Patch(':slug/reopen')
+  async reopen(
+    @DUser() user: User,
+    @Param('slug') slug: string,
+  ): Promise<Record<string, any>> {
+    return await this.projectsService.updateStatus(user, slug, 'active');
   }
 }

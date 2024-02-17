@@ -9,6 +9,7 @@ import {
   In,
   IsNull,
   Like,
+  Raw,
   Repository,
 } from 'typeorm';
 import { Task, TaskKinds } from './task.entity';
@@ -16,7 +17,7 @@ import { Pagination } from '../../entities/pagination.entity';
 import { init as initialStat, Stat } from '../../entities/stat.entity';
 import { User } from '../users/user.entity';
 import { TaskStatuses } from './task.entity';
-import { Project } from '../projects/project.entity';
+import { Project, StatusType } from '../projects/project.entity';
 
 export type SortType = 'deadline' | 'startedAt' | 'updatedAt' | 'createdAt';
 export type OrderType = 'asc' | 'desc';
@@ -37,9 +38,13 @@ interface SearchParams {
 }
 
 interface WhereParams {
-  project?: {
+  project: {
     uuid?: string;
     slug?: string;
+    status: FindOperator<StatusType>;
+  };
+  parent?: {
+    status: FindOperator<TaskStatuses>;
   };
   title?: FindOperator<string>;
   kind: TaskKinds;
@@ -91,9 +96,11 @@ export class TasksService {
   async orphans({
     userId,
     slug,
+    statuses,
   }: {
     userId: number;
     slug: string;
+    statuses?: string[];
   }): Promise<Task[]> {
     return await this.tasksRepository.find({
       relations: {
@@ -105,6 +112,7 @@ export class TasksService {
         kind: 'task',
         parentId: IsNull(),
         userId,
+        status: In(statuses || ['scheduled']),
         project: {
           slug,
         },
@@ -173,43 +181,45 @@ export class TasksService {
     };
     const { take, skip } = options;
 
-    let where: WhereParams = {
+    const whereBase: WhereParams = {
       userId: user.id,
       status: In(options.status),
       kind: 'task' as const,
+      project: { status: In(['active']) },
     };
 
     if (projectId) {
-      where = {
-        ...where,
-        project: { uuid: projectId },
-      };
+      whereBase.project.uuid = projectId;
     }
+
     if (slug) {
-      where = {
-        ...where,
-        project: { slug },
-      };
+      whereBase.project.slug = slug;
     }
 
     if (search) {
-      where = {
-        ...where,
-        title: Like(`%${search}%`),
-      };
+      whereBase.title = Like(`%${search}%`);
     }
 
     if (dateType && (dateFrom || dateTo)) {
-      where = {
-        ...where,
-        [dateType]: Between(dateFrom, dateTo),
-      };
+      whereBase[dateType] = Between(dateFrom, dateTo);
     }
+
+    const where = [
+      {
+        ...whereBase,
+        parent: { status: In(['scheduled']) },
+      },
+      {
+        ...whereBase,
+        parent: IsNull(),
+      },
+    ];
 
     const [tasks, totalCount] = await this.tasksRepository.findAndCount({
       where,
       relations: {
         project: true,
+        parent: true,
         user: true,
         tags: true,
       },
@@ -379,27 +389,56 @@ export class TasksService {
       .execute();
   }
 
-  async archive(userId: number, ids: string[]) {
+  async archive(
+    userId: number,
+    ids: string[],
+    options?: {
+      manager?: EntityManager;
+    },
+  ) {
     const now = dayjs();
-    return this.bulkUpdate(userId, ids, {
-      status: 'archived' as const,
-      archivedAt: now.format(),
-    });
+    return this.bulkUpdate(
+      userId,
+      ids,
+      {
+        status: 'archived' as const,
+        archivedAt: now.format(),
+      },
+      options,
+    );
   }
 
-  async complete(userId: number, ids: string[]) {
+  async complete(
+    userId: number,
+    ids: string[],
+    options?: { manager?: EntityManager },
+  ) {
     const now = dayjs();
-    return this.bulkUpdate(userId, ids, {
-      status: 'completed',
-      finishedAt: now.format(),
-    });
+    return this.bulkUpdate(
+      userId,
+      ids,
+      {
+        status: 'completed',
+        finishedAt: now.format(),
+      },
+      options,
+    );
   }
 
-  async reopen(userId: number, ids: string[]) {
-    return this.bulkUpdate(userId, ids, {
-      status: 'scheduled',
-      archivedAt: undefined,
-      finishedAt: undefined,
-    });
+  async reopen(
+    userId: number,
+    ids: string[],
+    options?: { manager?: EntityManager },
+  ) {
+    return this.bulkUpdate(
+      userId,
+      ids,
+      {
+        status: 'scheduled',
+        archivedAt: undefined,
+        finishedAt: undefined,
+      },
+      options,
+    );
   }
 }

@@ -4,7 +4,7 @@ import styles from "./index.module.css";
 import useFilter from "@/components/tasks/list/hooks/useFilter";
 import useTasks from "@/contexts/tasks";
 import TaskTable from "../table";
-import Pagination from "../pagination";
+import Pagination from "@/components/shared/pagination";
 import { CheckContainer } from "@/contexts/check";
 import TaskListHeader from "./header";
 
@@ -15,12 +15,12 @@ interface Props {
 }
 
 export default function TaskList({ header, footer }: Props) {
-  const filter = useFilter();
+  const filter = useFilter({
+    onInit: async (params) => {
+      fetch({ page: 1, ...params });
+    }
+  });
   const { data, fetch } = useTasks();
-
-  useEffect(() => {
-    fetch({ page: 1, ...filter.replica });
-  }, []);
 
   if (!data) {
     return null;

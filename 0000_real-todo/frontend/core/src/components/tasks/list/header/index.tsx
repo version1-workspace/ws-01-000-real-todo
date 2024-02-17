@@ -1,10 +1,13 @@
+import { useMemo } from "react";
 import styles from "./index.module.css";
+import { useRouter } from "next/navigation";
 import FilterForm from "@/components/tasks/filterForm";
 import api from "@/services/api";
 import { Filter } from "@/components/tasks/list/hooks/useFilter";
 import { IoCloseCircle as Close } from "react-icons/io5";
 import { ja } from "@/lib/transltate";
 import useTasks from "@/contexts/tasks";
+import useProjects from "@/contexts/projects";
 import Icon from "@/components/shared/icon";
 import useCheck from "@/contexts/check";
 import PopupMenu, { Action } from "@/components/shared/popupMenu";
@@ -31,7 +34,7 @@ const getActions = ({ onComplete, onArchive, onReopen }: Actions) =>
       {
         key: "complete",
         logo: <Icon name="complete" className={styles.logo} />,
-        text: "完了する",
+        text: "完了にする",
         onClick: onComplete,
       },
       {
@@ -50,12 +53,13 @@ interface TaskListHeaderProps {
 
 const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
   const { checked, ids: checkedIds } = useCheck();
+  const { projects } = useProjects();
   const toast = useToast();
   const {
     date,
     order,
     text,
-    project,
+    projectId,
     statuses,
     isDateSet,
     replica,
@@ -65,6 +69,10 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
     save,
   } = filter;
   const { data, fetch } = useTasks();
+  const project = useMemo(
+    () => projects.find((it) => projectId === it.id),
+    [projects, projectId],
+  );
 
   if (!data) {
     return null;
@@ -89,10 +97,10 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
             <label>表示件数 : </label>
             <select
               onChange={(e) => {
-                const limit = Number(e.target.value)
-                const newValues = { ...replica, limit }
+                const limit = Number(e.target.value);
+                const newValues = { ...replica, limit };
                 update({ ...newValues });
-                save(newValues)
+                save(newValues);
                 fetch({ ...newValues, page: 1 });
               }}
               value={replica.limit}>
@@ -112,7 +120,7 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
               {project?.name || "指定なし"}
               <div
                 className={styles.close}
-                onClick={() => resetField("project")}>
+                onClick={() => resetField("projectId")}>
                 <Icon name="close" size="12px" />
               </div>
             </span>
@@ -148,7 +156,11 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
             <span className={styles.filterState}>
               <label>並び替え: </label>
               {taskTranslations.t(order.type)}
-              {order.value === "asc" ? <Icon name="down" /> : <Icon name="up" />}
+              {order.value === "asc" ? (
+                <Icon name="down" />
+              ) : (
+                <Icon name="up" />
+              )}
               <div className={styles.close} onClick={() => resetField("order")}>
                 <Icon name="close" size="12px" />
               </div>
@@ -191,6 +203,7 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
                     try {
                       await api.bulkCompleteTask({ ids: checkedIds });
                       toast.success("選択したタスクを完了しました。");
+                      fetch({ ...replica, page: 1 });
                     } catch {
                       toast.error("タスクの完了に失敗しました。");
                     }
@@ -207,6 +220,7 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
                     try {
                       await api.bulkArchiveTask({ ids: checkedIds });
                       toast.success("選択したタスクをアーカイブしました。");
+                      fetch({ ...replica, page: 1 });
                     } catch {
                       toast.error("タスクのアーカイブに失敗しました。");
                     }
@@ -223,6 +237,7 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
                     try {
                       await api.bulkReopenTask({ ids: checkedIds });
                       toast.success("選択したタスクを未完了にしました。");
+                      fetch({ ...replica, page: 1 });
                     } catch {
                       toast.error("タスクの未完了処理に失敗しました。");
                     }

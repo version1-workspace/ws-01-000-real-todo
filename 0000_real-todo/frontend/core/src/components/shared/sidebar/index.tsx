@@ -6,12 +6,13 @@ import {
   IoChevronForward as ShowIcon,
   IoChevronBack as HiddenIcon,
 } from "react-icons/io5";
-import { classHelper } from "@/lib/cls";
 import route from "@/lib/route";
 import useProjects from "@/contexts/projects";
 import Icon from "@/components/shared/icon";
 import { Project } from "@/services/api/models/project";
 import Link from "@/components/shared/link";
+import { classHelper } from "@/lib/cls";
+import { truncate } from "@/lib/string";
 
 const colors = (function () {
   const list = [];
@@ -30,8 +31,11 @@ interface MenuItem {
   title: string | ReactNode;
   path: string;
   children?: MenuItem[];
+  footer?: ReactNode;
   options?: Record<string, any>;
 }
+
+const projectCountLimit = 5;
 
 const sidebarMenulist = (projects: Project[]) => [
   {
@@ -52,7 +56,7 @@ const sidebarMenulist = (projects: Project[]) => [
       </>
     ),
     path: route.main.projects.toString(),
-    children: projects.map((it) => {
+    children: projects.slice(0, projectCountLimit).map((it) => {
       return {
         title: it.name,
         path: route.main.projects.with(it.slug),
@@ -61,6 +65,19 @@ const sidebarMenulist = (projects: Project[]) => [
         },
       };
     }),
+    footer: (function () {
+      if (projects.length <= projectCountLimit) {
+        return null;
+      }
+
+      return (
+        <Link href={route.main.projects.toString()}>
+          <p className={styles.showMoreProjects}>
+            あと {projects.length - projectCountLimit} プロジェクト
+          </p>
+        </Link>
+      );
+    })(),
   },
 ];
 
@@ -94,9 +111,7 @@ export default function Sidebar() {
                   return (
                     <>
                       <li key={menuItem.path}>
-                        <Link
-                          href={menuItem.path}
-                          disabled={!!menuItem.children}>
+                        <Link href={menuItem.path}>
                           <div
                             className={classHelper({
                               [styles.menuItem]: true,
@@ -126,7 +141,9 @@ export default function Sidebar() {
                                         style={{
                                           background: colors[index],
                                         }}></span>
-                                      {item.title}
+                                      {typeof item.title === "string"
+                                        ? truncate(item.title, 10)
+                                        : item.title}
                                     </div>
                                     <span className={styles.deadline}>
                                       {item.options?.deadline}
@@ -138,6 +155,9 @@ export default function Sidebar() {
                           })}
                         </ul>
                       ) : null}
+                      <div className={styles.menuItemFooter}>
+                        {menuItem.footer}
+                      </div>
                     </>
                   );
                 })}

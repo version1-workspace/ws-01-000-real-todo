@@ -32,7 +32,7 @@ export default function Pagination({
         }}>
         <Icon name="back" />
       </li>
-      {new Array(pageCount).fill("").map((_, index) => {
+      {new Array(pageCount || 0).fill("").map((_, index) => {
         return (
           <li
             className={classHelper({

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeepPartial, Repository } from 'typeorm';
+import { DeepPartial, In, Repository } from 'typeorm';
 import { Pagination } from '../../entities/pagination.entity';
 import { User } from '../users/user.entity';
 import { Task } from '../tasks/task.entity';
@@ -11,6 +11,7 @@ import { toMap } from '../../lib/utils';
 
 interface SearchParams {
   user: User;
+  statuses?: StatusType[];
   limit?: number;
   page?: number;
 }
@@ -20,22 +21,12 @@ interface ProjectParams {
   slug: string;
 }
 
-interface UpdateStatusParams extends ProjectParams {
-  status: StatusType;
-}
-
-interface UpdateParams extends ProjectParams {
-  project: {
-    name?: string;
-    deadline?: string;
-    startingAt?: string;
-    startedAt?: string;
-    finishedAt?: string;
-    slug?: string;
-    goal?: string;
-    shouldbe?: string;
-    milestones?: DeepPartial<Task>[];
-  };
+interface UpdateParams {
+  name?: string;
+  slug?: string;
+  goal?: string;
+  shouldbe?: string;
+  deadline?: Date;
 }
 
 @Injectable()
@@ -49,6 +40,7 @@ export class ProjectsService {
   async search({
     user,
     limit,
+    statuses,
     page,
   }: SearchParams): Promise<Pagination<Project, 'deadline'>> {
     const sortOptions = {
@@ -61,6 +53,7 @@ export class ProjectsService {
     const [projects, totalCount] = await this.projectsRepository.findAndCount({
       where: {
         userId: user.id,
+        status: In(statuses || ['active']),
       },
       relations: {
         user: true,
@@ -92,7 +85,7 @@ export class ProjectsService {
     const result = new Pagination({
       data: projects,
       limit,
-      page,
+      page: page || 1,
       totalCount,
       ...sortOptions,
     });
@@ -151,32 +144,41 @@ export class ProjectsService {
     });
   }
 
-  async update(params: UpdateParams): Promise<Project> {
+  async update(
+    slug: string,
+    userId: number,
+    params: UpdateParams,
+  ): Promise<Project> {
     const project = await this.projectsRepository.findOne({
       where: {
-        slug: params.slug,
-        userId: params.user.id,
+        slug,
+        userId,
       },
     });
 
-    const { milestones: _, ...rest } = params.project;
-
-    Object.assign(project, rest);
+    Object.assign(project, params);
 
     await this.projectsRepository.save(project);
 
     return project;
   }
 
-  async updateStatus(params: UpdateStatusParams): Promise<Project> {
+  async updateStatus(
+    user: User,
+    slug: string,
+    status: StatusType,
+  ): Promise<Project> {
     const project = await this.projectsRepository.findOne({
+      relations: {
+        tasks: true,
+      },
       where: {
-        slug: params.slug,
-        userId: params.user.id,
+        slug,
+        userId: user.id,
       },
     });
 
-    project.status = params.status;
+    project.status = status;
 
     await this.projectsRepository.save(project);
 

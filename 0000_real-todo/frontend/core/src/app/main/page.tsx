@@ -17,21 +17,17 @@ export default function Main() {
   return (
     <div className={styles.projects}>
       <div className={styles.dashboard}>
-        <div className={styles.list}>
+        <div className={styles.projectList}>
           <h2 className={styles.sectionTitle}>
             プロジェクト
-            <p className={styles.add}>
+            <p className={styles.addProject}>
               <Link href={route.main.projects.new.toString()}>
-                <Icon
-                  size={20}
-                  className={styles.projectAddIcon}
-                  name="add"
-                />
+                <Icon size={20} className={styles.projectAddIcon} name="add" />
               </Link>
             </p>
           </h2>
           <div className={styles.content}>
-            {projects.map((item) => {
+            {projects.slice(0, 3).map((item) => {
               return (
                 <Link
                   key={item.slug}
@@ -40,6 +36,13 @@ export default function Main() {
                 </Link>
               );
             })}
+          </div>
+          <div className={styles.projectListFooter}>
+            <Link
+              className={styles.projectListLink}
+              href={route.main.projects.toString()}>
+              プロジェクト一覧
+            </Link>
           </div>
         </div>
         <div className={styles.chart}>
