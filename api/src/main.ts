@@ -8,10 +8,14 @@ import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 
+const origin = [process.env.ALLOW_REQUEST_URL || 'http://localhost:3000'];
+
+console.log('CORS Setting / ORIGIN: ', origin);
+
 async function bootstrap() {
   const api = await NestFactory.create(AppModule, {
     cors: {
-      origin: ['http://localhost:3000'],
+      origin,
       methods: ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'OPTIONS', 'DELETE'],
       allowedHeaders: [
         'Origin',
