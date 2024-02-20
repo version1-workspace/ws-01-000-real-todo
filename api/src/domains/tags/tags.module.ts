@@ -8,5 +8,4 @@ import { Tag } from './tag.entity';
   exports: [TagsService],
   providers: [TagsService],
 })
-
 export class TagsModule {}

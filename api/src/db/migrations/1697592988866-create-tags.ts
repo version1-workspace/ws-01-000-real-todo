@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm"
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 import { withDefaultColumns, indexFactory } from './helper';
 
 const tableName = 'tags';

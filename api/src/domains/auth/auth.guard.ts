@@ -42,13 +42,15 @@ export class AuthGuard implements CanActivate {
         secret: this.configService.get('AUTH_SECRET'),
       });
       request.jwtPayload = payload;
-      request.user = await this.usersService.findByUsername(payload.sub)
+      request.user = await this.usersService.findByUsername(payload.sub);
       if (!request.user) {
-        this.loggerService.logger.error(new Error(`user is not found: ${payload.sub}`))
+        this.loggerService.logger.error(
+          new Error(`user is not found: ${payload.sub}`),
+        );
         throw new UnauthorizedException();
       }
     } catch (e) {
-      this.loggerService.logger.error(e)
+      this.loggerService.logger.error(e);
       throw new UnauthorizedException();
     }
     return true;

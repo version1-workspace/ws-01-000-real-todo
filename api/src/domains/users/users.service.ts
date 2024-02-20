@@ -25,21 +25,21 @@ export class UsersService {
 
   findByUUID(uuid: string): Promise<User | null> {
     if (!uuid) {
-      return null
+      return null;
     }
     return this.usersRepository.findOneBy({ uuid });
   }
 
   findByUsername(username: string): Promise<User | null> {
     if (!username) {
-      return null
+      return null;
     }
     return this.usersRepository.findOneBy({ username });
   }
 
   findByEmail(email: string): Promise<User | null> {
     if (!email) {
-      return null
+      return null;
     }
 
     return this.usersRepository.findOneBy({ email });
@@ -65,28 +65,20 @@ export class UsersService {
   }
 
   async hash(user: User, password: string) {
-    const res = await hash(
-      password,
-      this.sugar,
-      this.stretchCount(user),
-    );
+    const res = await hash(password, this.sugar, this.stretchCount(user));
 
     return res;
   }
 
   async hashRefreshToken() {
     const base = crypto.randomBytes(64).toString('base64');
-    const res = await hash(
-      base,
-      this.sugar,
-      3,
-    );
+    const res = await hash(base, this.sugar, 3);
 
     return res;
   }
 
   async signin(user: User, password: string) {
-    const base = [password, this.sugar].join('_')
+    const base = [password, this.sugar].join('_');
     return bcrypt.compare(base, user.password);
   }
 
@@ -99,6 +91,6 @@ export class UsersService {
   }
 
   get sugar() {
-    return this.configService.get('AUTH_SUGAR')
+    return this.configService.get('AUTH_SUGAR');
   }
 }

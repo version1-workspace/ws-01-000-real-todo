@@ -5,11 +5,6 @@ import { User } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
 import { LoggerService } from '../../lib/modules/logger/logger.service';
 
-interface JwtPayload {
-  sub: string;
-  refreshToken: string;
-}
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -62,8 +57,6 @@ export class AuthService {
       sub: user.username,
       refreshToken: user.refreshToken,
     };
-
-    const accessTokens = await this.jwtService.signAsync(payload);
 
     return {
       uuid: user.uuid,

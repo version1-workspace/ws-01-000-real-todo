@@ -1,4 +1,3 @@
-import * as Joi from 'joi';
 import { Module, Global } from '@nestjs/common';
 import { LoggerService } from './logger.service';
 

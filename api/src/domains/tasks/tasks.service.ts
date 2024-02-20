@@ -9,7 +9,6 @@ import {
   In,
   IsNull,
   Like,
-  Raw,
   Repository,
 } from 'typeorm';
 import { Task, TaskKinds } from './task.entity';
