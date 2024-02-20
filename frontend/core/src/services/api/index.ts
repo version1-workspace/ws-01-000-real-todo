@@ -50,8 +50,10 @@ class Client {
   };
 }
 
+const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000'
+
 const client = new Client({
-  baseURL: "http://localhost:7000/api/v1",
+  baseURL: `${baseURL}/api/v1`,
   timeout: 1000,
   withCredentials: true,
   headers: { Authorization: getAccessToken() },
