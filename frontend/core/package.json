@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "npx serve",
     "lint": "next lint",
-    "tsc": "tsc --project tsconfig.json"
+    "tsc": "tsc --project tsconfig.json",
+    "test": "echo 0"
   },
   "dependencies": {
     "@types/node": "20.5.1",
