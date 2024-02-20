@@ -8,7 +8,7 @@ import migrations from '../db/migrations';
 
 export const dataSourceOptions = {
   type: 'mysql',
-  host: 'localhost',
+  host: process.env['DATABASE_HOST'] || 'localhost',
   port: 3306,
   username: process.env['DATABASE_USERNAME'] || 'root',
   password: process.env['DATABASE_PASSWORD'],
