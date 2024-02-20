@@ -15,15 +15,24 @@ const fetchProjects = () => {
     mockApi({
       data: [
         factory.project({
+          uuid: "",
           name: "プログラミング",
           deadline: "2023/08/12",
           slug: "programming",
           goal: "期限日までにフロントエンドエンジニアとして就職する。",
           shouldbe: "エンジニアとしての学習習慣を身につけて生活する。",
           stats: {
-            milestone: 4,
-            task: 30,
-            totalTask: 132,
+            kinds: {
+              milestone: 4,
+              task: 30,
+              total: 34,
+            },
+            states: {
+              scheduled: 30,
+              archived: 3,
+              completed: 1,
+            },
+            total: 132,
           },
           milestones: [],
           status: "active",
@@ -31,15 +40,24 @@ const fetchProjects = () => {
           updatedAt: dayjs().format(),
         }),
         factory.project({
+          uuid: "",
           name: "プログラミング",
           deadline: "2023/08/12",
           slug: "programming",
           goal: "期限日までにフロントエンドエンジニアとして就職する。",
           shouldbe: "エンジニアとしての学習習慣を身につけて生活する。",
           stats: {
-            milestone: 4,
-            task: 30,
-            totalTask: 132,
+            kinds: {
+              milestone: 4,
+              task: 30,
+              total: 34,
+            },
+            states: {
+              scheduled: 30,
+              archived: 3,
+              completed: 1,
+            },
+            total: 132,
           },
           milestones: [],
           status: "active",
@@ -47,15 +65,24 @@ const fetchProjects = () => {
           updatedAt: dayjs().format(),
         }),
         factory.project({
+          uuid: "",
           name: "プログラミング",
           deadline: "2023/08/12",
           slug: "programming",
           goal: "期限日までにフロントエンドエンジニアとして就職する。",
           shouldbe: "エンジニアとしての学習習慣を身につけて生活する。",
           stats: {
-            milestone: 4,
-            task: 30,
-            totalTask: 132,
+            kinds: {
+              milestone: 4,
+              task: 30,
+              total: 34,
+            },
+            states: {
+              scheduled: 30,
+              archived: 3,
+              completed: 1,
+            },
+            total: 132,
           },
           milestones: [],
           status: "active",
@@ -156,6 +183,9 @@ export const fetchTasks = ({ page }: FetchTasksParams) => {
     .fill("")
     .map((_, index) =>
       factory.task({
+        uuid: "",
+        description: "",
+        kind: "task",
         title: `タスク ${index + 1}`,
         status: "scheduled",
         createdAt: "2023-08-23T00:00:00-07:00",
@@ -163,15 +193,24 @@ export const fetchTasks = ({ page }: FetchTasksParams) => {
         deadline: "2023-08-30T00:00:00-07:00",
         children: [],
         project: {
+          uuid: "",
           name: "プログラミング",
           deadline: "",
           slug: "programming",
           goal: "",
           shouldbe: "",
           stats: {
-            milestone: 0,
-            task: 0,
-            totalTask: 0,
+            kinds: {
+              milestone: 4,
+              task: 30,
+              total: 34,
+            },
+            states: {
+              scheduled: 30,
+              archived: 3,
+              completed: 1,
+            },
+            total: 132,
           },
           milestones: [],
           status: "active",
@@ -185,8 +224,10 @@ export const fetchTasks = ({ page }: FetchTasksParams) => {
     list: _data,
     pageInfo: {
       page: _page,
-      per: per,
-      total,
+      limit: per,
+      totalCount: total,
+      hasNext: false,
+      hasPrevious: false
     },
   });
 

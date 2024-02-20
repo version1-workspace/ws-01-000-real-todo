@@ -129,7 +129,6 @@ export default function MilestoneList({ project }: Props) {
   const toast = useToast();
   const { milestones, orphans, fetch } = useMilestones();
   const { open, hide } = useModal();
-  const { projects, options } = useProjects();
   const router = useRouter();
 
   useEffect(() => {

@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "npx serve",
+    "lint": "next lint",
+    "tsc": "tsc --project tsconfig.json"
   },
   "dependencies": {
     "@types/node": "20.5.1",

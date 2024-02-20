@@ -20,7 +20,7 @@ const Content = () => {
         toast.error("ログインが必要です");
       }
     }
-  }, [searchParams]);
+  }, [searchParams, toast]);
 
   return (
     <>

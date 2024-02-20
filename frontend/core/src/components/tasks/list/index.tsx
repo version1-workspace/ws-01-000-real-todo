@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import styles from "./index.module.css";
 import useFilter from "@/components/tasks/list/hooks/useFilter";
 import useTasks from "@/contexts/tasks";
@@ -9,7 +9,6 @@ import { CheckContainer } from "@/contexts/check";
 import TaskListHeader from "./header";
 
 interface Props {
-  displayCount: number;
   header?: ReactNode;
   footer?: ReactNode;
 }

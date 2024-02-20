@@ -217,7 +217,7 @@ const api = {
     }>,
   ) => {
     const _data = Object.keys(data).reduce((acc, key) => {
-      const v = data[key];
+      const v = data[key as keyof typeof data];
       if (["deadline", "startingAt", "finishedAt"].includes(key)) {
         return {
           ...acc,

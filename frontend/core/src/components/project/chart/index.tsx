@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import styles from "@/components/project/chart/index.module.css";
 import {
@@ -11,6 +11,7 @@ import {
   PointElement,
   Tooltip,
   Legend,
+  ChartData,
 } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
 import Option from "@/components/shared/option";
@@ -36,7 +37,7 @@ ChartJS.register(
 const options = {
   plugins: {
     legend: {
-      position: "bottom",
+      position: "bottom" as const,
     },
   },
   responsive: true,
@@ -69,8 +70,8 @@ const groupOptions = [
 ];
 
 const ChartType = {
-  bar: "bar",
-  line: "line",
+  bar: "bar" as const,
+  line: "line" as const,
 };
 
 const chartOptions = [
@@ -111,7 +112,7 @@ export default function Chart() {
 
   // TODO: implemt loader
   if (data.length === 0) {
-    return null
+    return null;
   }
 
   return (
@@ -122,7 +123,9 @@ export default function Chart() {
             <Option
               data={chartOptions}
               value={chartType}
-              onSelect={(item) => setChartType(item.value)}
+              onSelect={(item) =>
+                setChartType(item.value as SetStateAction<"bar">)
+              }
             />
           </div>
           <div className={styles.group}>
@@ -149,8 +152,12 @@ export default function Chart() {
           </div>
         </div>
         <div className={styles.chart}>
-          {chartType === "bar" ? <Bar options={options} data={data} /> : null}
-          {chartType === "line" ? <Line options={options} data={data} /> : null}
+          {
+            {
+              bar: <Bar options={options} data={data as any} />,
+              line: <Line options={options} data={data as any} />,
+            }[chartType]
+          }
         </div>
         <div className={styles.footer}>
           <label>グループ : </label>

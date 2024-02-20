@@ -1,13 +1,17 @@
-const getPath = (obj: Object | any[], context = "", prefix = "") => {
+const getPath = (
+  obj: Object | any[],
+  context = "",
+  prefix = "",
+): [string, Object] => {
   let path = prefix;
   let result = obj;
-  Object.keys(obj).some((key) => {
-    const value = obj[key];
+  Object.keys(obj).some((key: string) => {
+    const value = obj[key as keyof typeof obj];
     if (Array.isArray(value)) {
       if (value.length === 0) {
         path = prefix + key;
         result = value;
-        delete obj[key];
+        delete obj[key as keyof typeof obj];
         return true;
       }
       [path, result] = getPath(value, "array", prefix + key);
@@ -21,7 +25,7 @@ const getPath = (obj: Object | any[], context = "", prefix = "") => {
         if (Array.isArray(obj)) {
           obj.shift();
         } else {
-          delete obj[key];
+          delete obj[key as keyof typeof obj];
         }
         return true;
       }
@@ -38,7 +42,7 @@ const getPath = (obj: Object | any[], context = "", prefix = "") => {
 
     if (context === "object") {
       path = prefix + `[${key}]`;
-      delete obj[key];
+      delete obj[key as keyof typeof obj];
       return true;
     } else if (context === "array" && Array.isArray(obj)) {
       path = prefix + `[]`;
@@ -46,7 +50,7 @@ const getPath = (obj: Object | any[], context = "", prefix = "") => {
       return true;
     } else {
       path = prefix + key;
-      delete obj[key];
+      delete obj[key as keyof typeof obj];
       return true;
     }
   });

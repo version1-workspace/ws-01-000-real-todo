@@ -27,12 +27,15 @@ export default function Select({
   const ref = useRef(null);
 
   useEffect(() => {
-    const close = (e) => {
+    const close = (e: MouseEvent) => {
       if (!open) {
         return;
       }
 
-      if (ref.current && ref.current.contains(e.target)) {
+      if (
+        ref.current &&
+        (ref.current as HTMLElement).contains(e.target as Node)
+      ) {
         return;
       }
       setOpen(false);

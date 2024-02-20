@@ -69,7 +69,7 @@ export default function Project({ params: { slug } }: Props) {
 
       setProject(item);
     },
-    [slug],
+    [],
   );
 
   const actions = useMemo(

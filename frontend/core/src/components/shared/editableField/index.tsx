@@ -39,7 +39,8 @@ const EditableField = ({
 
   useEffect(() => {
     const unfocus = (e: MouseEvent) => {
-      const parent = e.target?.closest("." + styles.container);
+      const ele = e.target as HTMLElement
+      const parent = ele?.closest("." + styles.container);
       if (parent) {
         return;
       }

@@ -68,6 +68,7 @@ export default function Milestone({ className, readOnly }: Props) {
                     onClick={() => {
                       const milestone = factory.task({
                         title: "",
+                        kind: "milestone",
                         status: "initial",
                         uuid: "",
                         description: "",

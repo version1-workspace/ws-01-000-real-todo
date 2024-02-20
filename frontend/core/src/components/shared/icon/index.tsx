@@ -81,7 +81,7 @@ interface Props {
   name: keyof IconType;
   className?: string;
   interactive?: "pulse" | "hover" | "hoverDark";
-  size?: number;
+  size?: number | string;
   color?: string;
   onClick?: () => void;
 }

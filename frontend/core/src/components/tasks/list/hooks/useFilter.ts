@@ -1,5 +1,4 @@
-import { Project } from "@/services/api/models/project";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { QueryString } from "@/lib/queryString";
 
@@ -35,7 +34,7 @@ export type OrderType = "asc" | "desc";
 const initialValue = {
   text: "",
   limit: 20,
-  project: undefined,
+  projectId: undefined,
   statuses: { scheduled: true },
   date: {
     start: undefined,
@@ -52,7 +51,7 @@ const mergeValues = (base: Params, obj: Partial<Params>) => {
   const result = JSON.parse(JSON.stringify(base));
   ["text", "limit", "projectId", "statuses"].forEach((key: string) => {
     if (key in obj) {
-      result[key] = obj[key];
+      result[key] = obj[key as keyof typeof obj];
     }
   });
 
