@@ -6,19 +6,30 @@ import { Tag } from '../domains/tags/tag.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import migrations from '../db/migrations';
 
+const database =
+  process.env['DATABASE_NAME'] ||
+  `todo_${process.env.NODE_ENV || 'development'}`;
+
 export const dataSourceOptions = {
   type: 'mysql',
   host: process.env['DATABASE_HOST'] || 'localhost',
   port: 3306,
   username: process.env['DATABASE_USERNAME'] || 'root',
   password: process.env['DATABASE_PASSWORD'],
-  database: process.env['DATABASE_NAME'] || 'todo_development',
+  database,
   entities: [User, Project, Task, TagTask, Tag],
   migrations,
   synchronize: false,
-  logging: true,
+  logging: process.env.NODE_ENV !== 'test',
   autoLoadEntities: true,
 };
+
+export const RootDBDataSource = (function () {
+  return new DataSource({
+    ...dataSourceOptions,
+    database: 'mysql',
+  } as DataSourceOptions);
+})();
 
 export const AppDataSource = new DataSource(
   dataSourceOptions as DataSourceOptions,

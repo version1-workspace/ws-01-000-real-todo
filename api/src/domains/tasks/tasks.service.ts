@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import {
   Between,
+  DataSource as TypeORMDataSource,
   DeepPartial,
   EntityManager,
   FindOperator,
   In,
   IsNull,
+  LessThanOrEqual,
   Like,
+  MoreThanOrEqual,
   Repository,
 } from 'typeorm';
 import { Task, TaskKinds } from './task.entity';
@@ -71,11 +74,17 @@ const sortOptions = (t: SortType, o: OrderType) => {
 @Injectable()
 export class TasksService {
   constructor(
+    @InjectDataSource()
+    private dataSource: TypeORMDataSource,
     @InjectRepository(Task)
     private tasksRepository: Repository<Task>,
     @InjectRepository(Project)
     private projectRepository: Repository<Project>,
   ) {}
+
+  get manager() {
+    return this.dataSource.manager;
+  }
 
   async find({ id, userId }: { id: string; userId: number }) {
     return await this.tasksRepository.findOne({
@@ -87,6 +96,21 @@ export class TasksService {
       },
       where: {
         uuid: id,
+        userId,
+      },
+    });
+  }
+
+  async findAll({ ids, userId }: { ids: string[]; userId: number }) {
+    return await this.tasksRepository.find({
+      relations: {
+        user: true,
+        project: true,
+        parent: true,
+        children: true,
+      },
+      where: {
+        uuid: In(ids),
         userId,
       },
     });
@@ -155,7 +179,6 @@ export class TasksService {
     user,
     search,
     projectId,
-    slug,
     sortType,
     sortOrder,
     dateType,
@@ -180,39 +203,15 @@ export class TasksService {
     };
     const { take, skip } = options;
 
-    const whereBase: WhereParams = {
-      userId: user.id,
-      status: In(options.status),
-      kind: 'task' as const,
-      project: { status: In(['active']) },
-    };
-
-    if (projectId) {
-      whereBase.project.uuid = projectId;
-    }
-
-    if (slug) {
-      whereBase.project.slug = slug;
-    }
-
-    if (search) {
-      whereBase.title = Like(`%${search}%`);
-    }
-
-    if (dateType && (dateFrom || dateTo)) {
-      whereBase[dateType] = Between(dateFrom, dateTo);
-    }
-
-    const where = [
-      {
-        ...whereBase,
-        parent: { status: In(['scheduled']) },
-      },
-      {
-        ...whereBase,
-        parent: IsNull(),
-      },
-    ];
+    const where = this.buildWhere({
+      user,
+      status: options.status,
+      projectId,
+      search,
+      dateFrom,
+      dateTo,
+      dateType,
+    });
 
     const [tasks, totalCount] = await this.tasksRepository.findAndCount({
       where,
@@ -242,7 +241,7 @@ export class TasksService {
       .createQueryBuilder('tasks')
       .select('projectId, kind, count(*) as count')
       .where('tasks.projectId IN(:id)', { id: ids })
-      .groupBy('projectId')
+      .groupBy('projectId, kind')
       .addGroupBy('kind')
       .getRawMany();
 
@@ -302,7 +301,7 @@ export class TasksService {
       },
     ]);
 
-    const manager = this.tasksRepository.manager;
+    const manager = this.dataSource.manager;
     await manager.save(task);
 
     return task;
@@ -349,7 +348,7 @@ export class TasksService {
       task[key] = values[key];
     });
 
-    return this.tasksRepository.manager.transaction(async (manager) => {
+    return this.manager.transaction(async (manager) => {
       if (task.children.length) {
         const ids = [task.uuid, ...task.children.map((it) => it.uuid)];
         await this.bulkUpdate(
@@ -379,13 +378,19 @@ export class TasksService {
       manager?: EntityManager;
     },
   ) {
-    const m = options?.manager || this.tasksRepository.manager;
+    const m = options?.manager || this.manager;
     await m
       .createQueryBuilder()
       .update(Task)
       .set(params)
       .where({ uuid: In(ids), userId })
       .execute();
+
+    return await m.find(Task, {
+      where: {
+        uuid: In(ids),
+      },
+    });
   }
 
   async archive(
@@ -396,6 +401,7 @@ export class TasksService {
     },
   ) {
     const now = dayjs();
+
     return this.bulkUpdate(
       userId,
       ids,
@@ -413,6 +419,7 @@ export class TasksService {
     options?: { manager?: EntityManager },
   ) {
     const now = dayjs();
+
     return this.bulkUpdate(
       userId,
       ids,
@@ -429,6 +436,9 @@ export class TasksService {
     ids: string[],
     options?: { manager?: EntityManager },
   ) {
+    const manager = options?.manager || this.manager;
+    const _options = options || {};
+
     return this.bulkUpdate(
       userId,
       ids,
@@ -437,7 +447,64 @@ export class TasksService {
         archivedAt: undefined,
         finishedAt: undefined,
       },
-      options,
+      {
+        ..._options,
+        manager,
+      },
     );
+  }
+
+  private buildWhere({
+    user,
+    status,
+    search,
+    projectId,
+    dateType,
+    dateFrom,
+    dateTo,
+  }: {
+    user: User;
+    status: TaskStatuses[];
+    search: string;
+    projectId: string;
+    dateType: string;
+    dateFrom: string;
+    dateTo: string;
+  }) {
+    const base: WhereParams = {
+      userId: user.id,
+      status: In(status),
+      kind: 'task' as const,
+      project: { status: In(['active']) },
+    };
+
+    if (projectId) {
+      base.project.uuid = projectId;
+    }
+
+    if (search) {
+      base.title = Like(`%${search}%`);
+    }
+
+    if (dateType && dateFrom && dateTo) {
+      base[dateType] = Between(dateFrom, dateTo);
+    } else if (dateType && dateFrom) {
+      base[dateType] = MoreThanOrEqual(dateFrom);
+    } else if (dateType && dateTo) {
+      base[dateType] = LessThanOrEqual(dateTo);
+    }
+
+    const where = [
+      {
+        ...base,
+        parent: { status: In(['scheduled']) },
+      },
+      {
+        ...base,
+        parent: IsNull(),
+      },
+    ];
+
+    return where;
   }
 }

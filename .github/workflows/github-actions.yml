@@ -44,6 +44,13 @@ jobs:
   be-pipeline:
     name: Backend Pipeline
     runs-on: ubuntu-latest
+    env:
+      AUTH_SECRET: testsecret
+      AUTH_SUGAR: testsugar
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+      DATABASE_HOST: localhost
+      NODE_ENV: test
     defaults:
       run:
        working-directory: ./api
@@ -70,6 +77,8 @@ jobs:
         name: List the state of node modules
         continue-on-error: true
         run: npm list
+      - name: MySQL
+        run: which mysql
       - name: Install dependencies
         run: npm install
       - name: Lint
@@ -80,4 +89,10 @@ jobs:
         run: npm run build
       - name: Test
         run: npm run test
-
+      - name: E2E Test - Start Database Service
+        run: sudo systemctl start mysql.service
+      - name: E2E Test - Setup Database & Run
+        run: |
+          npm run db:test:create
+          npm run db:test:setup
+          npm run test:e2e

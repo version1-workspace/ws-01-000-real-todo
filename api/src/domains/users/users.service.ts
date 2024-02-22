@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { hash } from '../../lib/utils';
 import { ConfigService } from '@nestjs/config';
@@ -10,10 +10,16 @@ import * as crypto from 'crypto';
 @Injectable()
 export class UsersService {
   constructor(
+    @InjectDataSource()
+    private dataSource: DataSource,
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private configService: ConfigService,
   ) {}
+
+  get manager() {
+    return this.dataSource.manager;
+  }
 
   findAll(): Promise<User[]> {
     return this.usersRepository.find();
@@ -56,12 +62,12 @@ export class UsersService {
     });
     user.password = await this.hash(user, password);
     user.refreshToken = await this.hashRefreshToken();
-    await this.usersRepository.save(user);
+    await this.manager.save(user);
   }
 
   async updateRefreshToken(user: User) {
     user.refreshToken = await this.hashRefreshToken();
-    await this.usersRepository.save(user);
+    await this.manager.save(user);
   }
 
   async hash(user: User, password: string) {
@@ -87,7 +93,7 @@ export class UsersService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.usersRepository.delete(id);
+    await this.manager.delete(User, id);
   }
 
   get sugar() {

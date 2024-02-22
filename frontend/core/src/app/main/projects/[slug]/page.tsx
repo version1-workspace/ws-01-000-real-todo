@@ -65,7 +65,7 @@ export default function Project({ params: { slug } }: Props) {
   const fetch = useCallback(
     async ({ slug }: { slug: string }) => {
       const res = await api.fetchProject({ slug });
-      const item = factory.project(res.data);
+      const item = factory.project(res.data.data);
 
       setProject(item);
     },

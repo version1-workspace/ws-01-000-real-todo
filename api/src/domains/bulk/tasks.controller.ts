@@ -12,9 +12,9 @@ export class TasksController {
     @DUser() user: User,
     @Body('ids') ids: string[],
   ): Promise<Record<string, any>> {
-    const result = await this.tasksService.archive(user.id, ids);
+    const tasks = await this.tasksService.archive(user.id, ids);
 
-    return { data: result };
+    return { data: tasks };
   }
 
   @Put('complete')
@@ -22,9 +22,9 @@ export class TasksController {
     @DUser() user: User,
     @Body('ids') ids: string[],
   ): Promise<Record<string, any>> {
-    const result = await this.tasksService.complete(user.id, ids);
+    const tasks = await this.tasksService.complete(user.id, ids);
 
-    return { data: result };
+    return { data: tasks };
   }
 
   @Put('reopen')
@@ -32,8 +32,8 @@ export class TasksController {
     @DUser() user: User,
     @Body('ids') ids: string[],
   ): Promise<Record<string, any>> {
-    const result = await this.tasksService.reopen(user.id, ids);
+    const tasks = await this.tasksService.reopen(user.id, ids);
 
-    return { data: result };
+    return { data: tasks };
   }
 }

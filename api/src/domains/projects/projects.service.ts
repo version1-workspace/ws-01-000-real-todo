@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DeepPartial, In, Repository } from 'typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, DeepPartial, In, Repository } from 'typeorm';
 import { Pagination } from '../../entities/pagination.entity';
 import { User } from '../users/user.entity';
 import { Task } from '../tasks/task.entity';
@@ -32,10 +32,16 @@ interface UpdateParams {
 @Injectable()
 export class ProjectsService {
   constructor(
+    @InjectDataSource()
+    private dataSource: DataSource,
     @InjectRepository(Project)
     private projectsRepository: Repository<Project>,
     private tasksService: TasksService,
   ) {}
+
+  get manager() {
+    return this.dataSource.manager;
+  }
 
   async search({
     user,
@@ -77,14 +83,17 @@ export class ProjectsService {
     });
 
     const projectIds = projects.map((it) => it.id);
-    const stats = await this.tasksService.statics(projectIds);
+    let stats = {};
+    if (projectIds.length > 0) {
+      stats = await this.tasksService.statics(projectIds);
+    }
     projects.forEach((p: Project) => {
       p.stats = stats[p.id] || initialStat();
     });
 
     const result = new Pagination({
       data: projects,
-      limit,
+      limit: take,
       page: page || 1,
       totalCount,
       ...sortOptions,
@@ -104,6 +113,10 @@ export class ProjectsService {
       },
     });
 
+    if (!project) {
+      return;
+    }
+
     const milestones = toMap(
       await this.tasksService.milestones({
         userId: user.id,
@@ -119,7 +132,7 @@ export class ProjectsService {
   }
 
   async create(params: DeepPartial<Project>): Promise<Project> {
-    return this.projectsRepository.manager.transaction(async (manager) => {
+    return this.manager.transaction(async (manager) => {
       const { milestones, ...rest } = params;
       const project = this.projectsRepository.create(rest);
 
@@ -155,10 +168,13 @@ export class ProjectsService {
         userId,
       },
     });
+    if (!project) {
+      return;
+    }
 
     Object.assign(project, params);
 
-    await this.projectsRepository.save(project);
+    await this.manager.save(project);
 
     return project;
   }
@@ -177,10 +193,13 @@ export class ProjectsService {
         userId: user.id,
       },
     });
+    if (!project) {
+      return;
+    }
 
     project.status = status;
 
-    await this.projectsRepository.save(project);
+    await this.manager.save(project);
 
     return project;
   }

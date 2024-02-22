@@ -25,13 +25,13 @@ export class Pagination<T, K> {
     return {
       data,
       pageInfo: {
-        page,
-        limit,
+        page: Number(page),
+        limit: Number(limit),
         sortOrder,
         sortType,
         hasNext: totalCount > limit * page,
-        hasPrevious: page > 1,
-        totalCount,
+        hasPrevious: Number(page) > 1,
+        totalCount: Number(totalCount),
       },
     };
   }

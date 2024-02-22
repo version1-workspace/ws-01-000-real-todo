@@ -2,20 +2,20 @@ import { EntityManager, DeepPartial } from 'typeorm';
 import dayjs from 'dayjs';
 import { UsersService } from '../../../domains/users/users.service';
 import { User } from '../../../domains/users/user.entity';
-import { Project } from '../../../domains/projects/project.entity';
+import { Project, StatusType } from '../../../domains/projects/project.entity';
 import { Task } from '../../../domains/tasks/task.entity';
 import { Tag } from '../../../domains/tags/tag.entity';
 
-export const seed = async ({ app, dataSource, logger }) => {
+export const seed = async ({ appFactory, dataSource, logger }) => {
+  const app = await appFactory();
   const usersService = app.get(UsersService);
   const now = dayjs();
-  console.log('connection is establised');
+  logger.info('connection is establised');
 
-  console.log('users ========');
   const users = [];
   await dataSource.transaction(async (manager: EntityManager) => {
+    logger.info('[START] users ========');
     for (let i = 1; i <= 10; i++) {
-      logger.info(`seeding for a user. index: ${i}`);
       const timestamp = new Date();
       const user = manager.create(User, {
         username: `user ${i}`,
@@ -30,8 +30,9 @@ export const seed = async ({ app, dataSource, logger }) => {
       await manager.save(user);
       users.push(user);
     }
+    logger.info('[END]', 'count:', users.length);
 
-    console.log('tags ========');
+    logger.info('[START] tags ========');
     const user = users[0];
     const tags = [];
     await Promise.all(
@@ -62,14 +63,16 @@ export const seed = async ({ app, dataSource, logger }) => {
         tags.push(tag);
       }),
     );
+    logger.info('[END]', 'count:', tags.length);
 
-    console.log('projects ========');
+    logger.info('[START] projects ========');
     const projects = [];
     await Promise.all(
       [
         {
           userId: user.id,
           name: 'プログラミング',
+          uuid: '9a1b53d8-4afc-4630-a26e-3634a10bf619',
           slug: 'programming',
           goal: '期限日までにフロントエンドエンジニアとして就職する。',
           shouldbe: 'エンジニアとしての学習習慣を身につけて生活する。',
@@ -78,6 +81,7 @@ export const seed = async ({ app, dataSource, logger }) => {
         {
           userId: user.id,
           name: '英語',
+          uuid: 'ee9f5f2e-fc8c-4830-985a-a44e96e96ffe',
           slug: 'english',
           goal: 'IELTS Over All 7.0',
           shouldbe: '英語に浸る',
@@ -86,6 +90,7 @@ export const seed = async ({ app, dataSource, logger }) => {
         {
           userId: user.id,
           name: 'プライベート',
+          uuid: '75cda72f-9883-4570-b3b5-66d389d5b1a9',
           slug: 'private',
           goal: '長期休みに海外旅行する',
           status: 'active' as const,
@@ -104,12 +109,17 @@ export const seed = async ({ app, dataSource, logger }) => {
     );
     Promise.all(
       new Array(20 - projects.length).fill('').map(async (_, index) => {
+        let status: StatusType = 'active' as const;
+        if (index >= 14) {
+          status = 'archived' as const;
+        }
+
         const it: DeepPartial<Project> = {
           userId: user.id,
           name: `ダミープロジェクト ${index + 1}`,
           slug: `dummy-projec-${index + 1}`,
           goal: `ダミープロジェクト ${index + 1}`,
-          status: 'active' as const,
+          status,
         };
 
         it.deadline = dayjs()
@@ -127,22 +137,80 @@ export const seed = async ({ app, dataSource, logger }) => {
         projects.push(project);
       }),
     );
-    console.log('tasks ========');
+    logger.info('[END]', 'count:', projects.length);
+
+    logger.info('[START] tasks ========');
     const args = [
       {
         project: projects[0],
+        premadeTasks: [
+          {
+            userId: user.id,
+            projectId: projects[0].id,
+            uuid: '067176b2-baaf-4936-b7d4-6d202ab72639',
+            kind: 'task',
+            status: 'scheduled',
+          },
+        ],
+        premadeMilestones: [
+          {
+            userId: user.id,
+            uuid: '67331996-7671-4cce-87a4-18b46adbd230',
+            projectId: projects[0].id,
+            title: `milestone 0`,
+            kind: 'milestone' as const,
+            status: 'scheduled' as const,
+          },
+        ],
         tasks: [],
         count: 100,
         baseDate: dayjs().add(1, 'year'),
       },
       {
         project: projects[1],
+        premadeTasks: [
+          {
+            userId: user.id,
+            projectId: projects[1].id,
+            uuid: 'c185e0c2-842e-46f0-a1e8-41d598569431',
+            kind: 'task',
+            status: 'scheduled',
+          },
+        ],
+        premadeMilestones: [
+          {
+            userId: user.id,
+            uuid: 'be36a559-ec88-4817-b98e-c084a0d51616',
+            projectId: projects[1].id,
+            title: `milestone 0`,
+            kind: 'milestone' as const,
+            status: 'scheduled' as const,
+          },
+        ],
         tasks: [],
         count: 30,
         baseDate: dayjs().add(1, 'year'),
       },
       {
         project: projects[2],
+        premadeTasks: [
+          {
+            userId: user.id,
+            uuid: '36b6ee02-e4c7-40c3-8df3-f7bf4f443183',
+            projectId: projects[2].id,
+            kind: 'task',
+            status: 'scheduled',
+          },
+        ],
+        premadeMilestones: [
+          {
+            userId: user.id,
+            projectId: projects[2].id,
+            title: `milestone 0`,
+            kind: 'milestone' as const,
+            status: 'scheduled' as const,
+          },
+        ],
         tasks: [],
         count: 10,
         baseDate: dayjs().add(1, 'year'),
@@ -150,15 +218,24 @@ export const seed = async ({ app, dataSource, logger }) => {
     ];
 
     await Promise.all(
-      args.map(async (arg, index) => {
-        console.log('tasks ========', index);
-        const { project, tasks, count, baseDate } = arg;
-        for (let i = 0; i < count; i++) {
+      args.map(async (arg) => {
+        const { project, premadeTasks, tasks, count, baseDate } = arg;
+        premadeTasks.forEach((it) => tasks.push(it));
+
+        const _count = count - premadeTasks.length;
+        for (let i = 0; i < _count; i++) {
+          let status = 'scheduled';
+          if (i >= arg.count - 3) {
+            status = 'archived';
+          } else if (i >= arg.count - 6) {
+            status = 'completed';
+          }
+
           tasks.push({
             userId: user.id,
             projectId: project.id,
             kind: 'task' as const,
-            status: 'scheduled' as const,
+            status,
           });
         }
 
@@ -178,13 +255,16 @@ export const seed = async ({ app, dataSource, logger }) => {
 
         let head = 0;
         for (let i = 0; i < 5; i++) {
-          const milestone = {
-            userId: user.id,
-            projectId: project.id,
-            title: `milestone ${i}`,
-            kind: 'milestone' as const,
-            status: 'scheduled' as const,
-          };
+          const milestone =
+            i === 0
+              ? arg.premadeMilestones[0]
+              : {
+                  userId: user.id,
+                  projectId: project.id,
+                  title: `milestone ${i}`,
+                  kind: 'milestone' as const,
+                  status: 'scheduled' as const,
+                };
 
           const m = manager.create(Task, milestone);
           const tail = head + Math.ceil((tasks.length - 1 - head) / 2);
@@ -201,5 +281,9 @@ export const seed = async ({ app, dataSource, logger }) => {
         }
       }),
     );
+    const allTaskCount = args.reduce((acc, it) => {
+      return acc + it.tasks.length;
+    }, 0);
+    logger.info('[END]', 'count:', allTaskCount);
   });
 };

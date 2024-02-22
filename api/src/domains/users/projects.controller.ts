@@ -3,11 +3,12 @@ import {
   Get,
   Patch,
   Post,
-  Delete,
   Query,
   Param,
   Body,
   HttpCode,
+  Res,
+  HttpStatus,
 } from '@nestjs/common';
 import { IsIn, IsNotEmpty, IsOptional, IsDate } from 'class-validator';
 import { StatusType, Status } from '../projects/project.entity';
@@ -15,14 +16,11 @@ import { ProjectsService } from '../projects/projects.service';
 import { Dto } from '../../entities/dto.entity';
 import { User as DUser } from './user.decorator';
 import { User } from './user.entity';
-import { TaskKind, TaskKinds } from '../tasks/task.entity';
+import { Response } from 'express';
 
 class TaskDto extends Dto<TaskDto> {
   @IsNotEmpty()
   title: string;
-
-  @IsIn(Object.keys(TaskKind))
-  kind: TaskKinds;
 
   @IsDate()
   @IsNotEmpty()
@@ -83,7 +81,7 @@ export class ProjectsController {
       user,
       limit,
       page,
-      statuses,
+      statuses: statuses && !Array.isArray(statuses) ? [statuses] : statuses,
     });
 
     return result.serialize;
@@ -104,11 +102,21 @@ export class ProjectsController {
   async show(
     @DUser() user: User,
     @Param('slug') slug: string,
+    @Res({ passthrough: true }) res: Response,
   ): Promise<Record<string, any>> {
-    return await this.projectsService.findOne({
+    const data = await this.projectsService.findOne({
       user,
       slug,
     });
+
+    if (data) {
+      return {
+        data,
+      };
+    } else {
+      res.status(HttpStatus.NOT_FOUND);
+      return;
+    }
   }
 
   @Patch(':slug')
@@ -117,34 +125,50 @@ export class ProjectsController {
     @DUser() user: User,
     @Param('slug') slug: string,
     @Body() body: UpdateProjectDto,
+    @Res({ passthrough: true }) res: Response,
   ) {
-    await this.projectsService.update(slug, user.id, body);
-  }
-
-  @Delete(':slug')
-  async delete(
-    @DUser() user: User,
-    @Param('slug') slug: string,
-  ): Promise<Record<string, any>> {
-    return await this.projectsService.findOne({
-      user,
-      slug,
-    });
+    const project = await this.projectsService.update(slug, user.id, body);
+    if (!project) {
+      res.status(HttpStatus.BAD_REQUEST);
+      return;
+    }
   }
 
   @Patch(':slug/archive')
   async archive(
     @DUser() user: User,
     @Param('slug') slug: string,
+    @Res({ passthrough: true }) res: Response,
   ): Promise<Record<string, any>> {
-    return await this.projectsService.updateStatus(user, slug, 'archived');
+    const project = await this.projectsService.updateStatus(
+      user,
+      slug,
+      'archived',
+    );
+    if (project) {
+      return { data: project };
+    } else {
+      res.json(HttpStatus.NOT_FOUND);
+      return;
+    }
   }
 
   @Patch(':slug/reopen')
   async reopen(
     @DUser() user: User,
     @Param('slug') slug: string,
+    @Res({ passthrough: true }) res: Response,
   ): Promise<Record<string, any>> {
-    return await this.projectsService.updateStatus(user, slug, 'active');
+    const project = await this.projectsService.updateStatus(
+      user,
+      slug,
+      'active',
+    );
+    if (project) {
+      return { data: project };
+    } else {
+      res.json(HttpStatus.NOT_FOUND);
+      return;
+    }
   }
 }

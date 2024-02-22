@@ -5,7 +5,7 @@ type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 const levelOrder: LogLevel[] = ['debug', 'info', 'warn', 'error'];
 
-class Logger {
+export class Logger {
   private readonly level: LogLevel;
   constructor({ level }) {
     this.level = level;
@@ -41,6 +41,24 @@ class Logger {
     }
 
     console.error('[ERROR]', ...args);
+  }
+
+  async time(
+    cb: () => Promise<void>,
+    {
+      onStart,
+      onEnd,
+    }: { onStart?: () => void; onEnd?: (ms: number) => void } = {},
+  ) {
+    onStart?.();
+    const before = new Date();
+    await cb();
+    const after = new Date();
+    const ms =
+      after.getSeconds() * 1000 +
+      after.getMilliseconds() -
+      (before.getSeconds() * 1000 + before.getMilliseconds());
+    onEnd?.(ms);
   }
 
   private shouldOuptut(level: LogLevel) {

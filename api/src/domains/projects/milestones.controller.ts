@@ -1,4 +1,5 @@
-import { Controller, Get, Param, Put } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, Put, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { TasksService } from '../tasks/tasks.service';
 import { User as DUser } from '../users/user.decorator';
 import { User } from '../users/user.entity';
@@ -34,11 +35,17 @@ export class MilestonesController {
   async archive(
     @DUser() user: User,
     @Param('id') id: string,
+    @Res({ passthrough: true }) res: Response,
   ): Promise<Record<string, any>> {
     const result = await this.tasksService.find({
       id,
       userId: user.id,
     });
+
+    if (!result) {
+      res.json(HttpStatus.NOT_FOUND);
+      return;
+    }
 
     await this.tasksService.archive(user.id, [result.uuid]);
 

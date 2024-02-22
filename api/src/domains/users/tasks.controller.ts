@@ -7,7 +7,11 @@ import {
   Body,
   Query,
   Param,
+  HttpCode,
+  HttpStatus,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { OrderType, SortType, TasksService } from '../tasks/tasks.service';
 import { User as DUser } from './user.decorator';
 import { User } from './user.entity';
@@ -58,6 +62,7 @@ export class TasksController {
   }
 
   @Post('')
+  @HttpCode(HttpStatus.CREATED)
   async create(
     @DUser() user: User,
     @Body() body: CreateParams,
@@ -78,13 +83,18 @@ export class TasksController {
   async show(
     @DUser() user: User,
     @Param('id') id: string,
+    @Res({ passthrough: true }) res: Response,
   ): Promise<Record<string, any>> {
     const result = await this.tasksService.find({
       id,
       userId: user.id,
     });
 
-    return { data: result };
+    if (result) {
+      return { data: result };
+    } else {
+      res.status(HttpStatus.NOT_FOUND);
+    }
   }
 
   @Patch(':id')
@@ -99,7 +109,6 @@ export class TasksController {
           'title',
           'projectId',
           'status',
-          'kind',
           'deadline',
           'finishedAt',
           'startingAt',
@@ -119,33 +128,33 @@ export class TasksController {
     return { data: result };
   }
 
-  @Put(':taskId/archive')
+  @Put(':id/archive')
   async archive(
     @DUser() user: User,
-    @Param('taskId') taskId: string,
+    @Param('id') id: string,
   ): Promise<Record<string, any>> {
-    const result = await this.tasksService.archive(user.id, [taskId]);
+    const [task] = await this.tasksService.archive(user.id, [id]);
 
-    return { data: result };
+    return { data: task };
   }
 
-  @Put(':taskId/complete')
+  @Put(':id/complete')
   async complete(
     @DUser() user: User,
-    @Param('taskId') taskId: string,
+    @Param('id') id: string,
   ): Promise<Record<string, any>> {
-    const result = await this.tasksService.complete(user.id, [taskId]);
+    const [task] = await this.tasksService.complete(user.id, [id]);
 
-    return { data: result };
+    return { data: task };
   }
 
-  @Put(':taskId/reopen')
+  @Put(':id/reopen')
   async reopen(
     @DUser() user: User,
-    @Param('taskId') taskId: string,
+    @Param('id') id: string,
   ): Promise<Record<string, any>> {
-    const result = await this.tasksService.reopen(user.id, [taskId]);
+    const [task] = await this.tasksService.reopen(user.id, [id]);
 
-    return { data: result };
+    return { data: task };
   }
 }

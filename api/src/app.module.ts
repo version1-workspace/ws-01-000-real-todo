@@ -18,11 +18,13 @@ import { LoggerModule } from './lib/modules/logger/logger.module';
 
 const config = appConfig();
 
+const envFilePath = [`.env.${process.env.NODE_ENV || 'development'}`];
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [appConfig],
-      envFilePath: ['.env.development.local', '.env.development'],
+      envFilePath,
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
           .valid('development', 'production', 'test', 'provision')

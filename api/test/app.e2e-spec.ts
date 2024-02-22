@@ -1,3 +1,4 @@
+import request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from './../src/app.module';
@@ -12,5 +13,15 @@ describe('AppController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
+  });
+
+  it(`Get /index`, () => {
+    return request(app.getHttpServer()).get('').expect(200).expect({
+      version: 'v1',
+    });
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 });
