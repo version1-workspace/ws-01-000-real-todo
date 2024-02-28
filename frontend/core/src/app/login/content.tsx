@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import Header from "@/components/shared/header/public";
 import Footer from "@/components/shared/footer";
@@ -12,15 +12,17 @@ import { useToast } from "@/lib/toast/hook";
 const Content = () => {
   const searchParams = useSearchParams();
   const toast = useToast();
+  const [rendered, setRendered] = useState(false);
 
   useEffect(() => {
     const error = searchParams.get("error");
     if (error) {
-      if (error === "loginRequired") {
+      if (!rendered && error === "loginRequired") {
         toast.error("ログインが必要です");
       }
     }
-  }, [searchParams, toast]);
+    setRendered(true);
+  }, [searchParams, toast, rendered]);
 
   return (
     <>
