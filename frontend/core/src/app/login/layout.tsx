@@ -1,9 +1,9 @@
-import "./globals.css";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
 import { Metadata } from "next";
+import AuthContainer from "@/components/auth";
 
 export const metadata: Metadata = {
   title: "Turbo",
@@ -15,9 +15,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <AuthContainer isPublic>
+      <html lang="ja">
+        <body className={inter.className}>{children}</body>
+      </html>
+    </AuthContainer>
   );
 }
 

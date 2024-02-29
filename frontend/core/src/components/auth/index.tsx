@@ -5,6 +5,7 @@ import { User } from "@/services/api/models/user";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState, createContext } from "react";
 import route from "@/lib/route";
+import { AxiosError } from "axios";
 
 interface IAuthContext {
   user?: User;
@@ -18,7 +19,12 @@ const AuthContext = createContext<IAuthContext>({
   initialized: false,
 });
 
-const AuthContainer = ({ children }: { children: React.ReactNode }) => {
+interface Props {
+  children: React.ReactNode;
+  isPublic?: boolean;
+}
+
+const AuthContainer = ({ children, isPublic }: Props) => {
   const router = useRouter();
   const [user, setUser] = useState<User>();
   const [initialized, setInitialized] = useState(false);
@@ -27,6 +33,7 @@ const AuthContainer = ({ children }: { children: React.ReactNode }) => {
     const init = async () => {
       try {
         if (!getAccessToken()) {
+          debugger
           const uuid = getUserId();
           const r1 = await api.refreshToken({ uuid });
           api.client.setAccessToken(r1.data.accessToken);
@@ -35,9 +42,22 @@ const AuthContainer = ({ children }: { children: React.ReactNode }) => {
         const r2 = await api.fetchUser();
         const user = factory.user(r2.data.data);
         setUser(user);
-        setInitialized(true);
+        if (isPublic) {
+          router.push(route.main.toString());
+        }
       } catch (e) {
-        router.push(route.login.with("?error=loginRequired"));
+        const error = e as AxiosError;
+        if (!isPublic && error.response?.status === 401) {
+          router.push(route.login.with("?error=loginRequired"));
+          return;
+        }
+
+        if (error.response?.status === 401) {
+          return;
+        }
+        throw e;
+      } finally {
+        setInitialized(true);
       }
     };
 
@@ -45,12 +65,14 @@ const AuthContainer = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const logout = async () => {
-    await api.logout()
+    await api.logout();
     setUser(undefined);
     api.client.setAccessToken("");
 
     router.push(route.login.toString());
   };
+
+  console.log("initialized ===========", initialized);
 
   if (!initialized) {
     return null;

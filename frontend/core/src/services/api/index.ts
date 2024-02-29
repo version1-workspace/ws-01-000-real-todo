@@ -1,9 +1,7 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import mockApi from "./mock";
 
-let accessToken: string;
-
-export const getAccessToken = () => accessToken;
+export const getAccessToken = () => sessionStorage?.getItem('token') || '';
 
 export const setUserId = (uuid: string) => localStorage.setItem("uuid", uuid);
 export const getUserId = () => localStorage.getItem("uuid") || "";
@@ -26,6 +24,7 @@ class Client {
         ...(config.headers || {}),
       },
     });
+    this._instance.defaults.headers["Authorization"] = `Bearer ${getAccessToken()}`;
   }
 
   get instance() {
@@ -37,7 +36,7 @@ class Client {
   }
 
   setAccessToken = (token: string) => {
-    accessToken = token;
+    sessionStorage?.setItem('token', token)
     if (this._instance) {
       this._instance.defaults.headers["Authorization"] = `Bearer ${token}`;
     }
