@@ -1,7 +1,9 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import mockApi from "./mock";
 
-export const getAccessToken = () => sessionStorage?.getItem('token') || '';
+const _sessionStorage = typeof sessionStorage !== 'undefined' ? sessionStorage : undefined
+
+export const getAccessToken = () => _sessionStorage?.getItem('token') || '';
 
 export const setUserId = (uuid: string) => localStorage.setItem("uuid", uuid);
 export const getUserId = () => localStorage.getItem("uuid") || "";
@@ -36,7 +38,7 @@ class Client {
   }
 
   setAccessToken = (token: string) => {
-    sessionStorage?.setItem('token', token)
+    _sessionStorage?.setItem('token', token)
     if (this._instance) {
       this._instance.defaults.headers["Authorization"] = `Bearer ${token}`;
     }

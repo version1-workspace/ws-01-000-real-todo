@@ -89,12 +89,6 @@
   padding: 16px;
 }
 
-.footer {
-  height: 40px;
-  background: var(--primary-color);
-  background: #f0f0f0;
-}
-
 .sidebarToggle {
   cursor: pointer;
   transition: transform .2s;
