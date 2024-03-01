@@ -28,13 +28,13 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const { email, password, rememberMe } = body;
-    const json = await this.authService.signIn(email, password);
+    const data = await this.authService.signIn(email, password);
 
     if (rememberMe) {
-      this.setRefreshToken(res, json.refreshToken);
+      this.setRefreshToken(res, data.refreshToken);
     }
 
-    return json;
+    return { data };
   }
 
   @Public()
@@ -54,12 +54,12 @@ export class AuthController {
       });
       if (!result) {
         response.status(401);
-        return { message: 'invalid refresh token' };
+        return { message: 'invalid refresh token or uuid' };
       }
 
       this.setRefreshToken(response, result.refreshToken);
 
-      return result;
+      return { data: result };
     } catch (e) {
       response.status(401);
       this.loggerService.logger.info(e);
@@ -72,7 +72,6 @@ export class AuthController {
   @Delete('refresh')
   async clearRefreshToken(@Res({ passthrough: true }) response: Response) {
     this.removeRefreshToken(response);
-    response.status(200);
   }
 
   private extractTokenFromCookie(request: Request): string | undefined {

@@ -48,8 +48,9 @@ export default function Login() {
     onSubmit: async (values: Form) => {
       try {
         const res = await api.authenticate(values);
-        api.client.setAccessToken(res.accessToken);
-        setUserId(res.uuid)
+        const { data } = res
+        api.client.setAccessToken(data.accessToken);
+        setUserId(data.uuid)
 
         router.push("/main")
       } catch (e) {

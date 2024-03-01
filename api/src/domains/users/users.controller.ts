@@ -6,6 +6,6 @@ export class UserController {
   async show(@Req() request: Request): Promise<Record<string, any>> {
     const user = request['user'];
 
-    return { data: user };
+    return { data: user.serialize };
   }
 }

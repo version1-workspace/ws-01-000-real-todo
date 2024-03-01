@@ -33,10 +33,9 @@ const AuthContainer = ({ children, isPublic }: Props) => {
     const init = async () => {
       try {
         if (!getAccessToken()) {
-          debugger
           const uuid = getUserId();
           const r1 = await api.refreshToken({ uuid });
-          api.client.setAccessToken(r1.data.accessToken);
+          api.client.setAccessToken(r1.data.data.accessToken);
         }
 
         const r2 = await api.fetchUser();

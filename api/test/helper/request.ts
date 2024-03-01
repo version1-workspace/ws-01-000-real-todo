@@ -27,7 +27,7 @@ export type Test = ExtendedTest & supertest.Test;
 const testFactory = (test: supertest.Test): Test =>
   new Proxy(new ExtendedTest(test), handler) as Test;
 
-class ExtendedRequest {
+export class ExtendedRequest {
   _request: supertest.SuperTest<supertest.Test>;
 
   constructor(app: any) {
@@ -48,6 +48,10 @@ class ExtendedRequest {
 
   put(path: string) {
     return testFactory(this._request.put(path));
+  }
+
+  delete(path: string) {
+    return testFactory(this._request.delete(path));
   }
 }
 

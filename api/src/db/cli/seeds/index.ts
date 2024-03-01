@@ -13,6 +13,18 @@ export const seed = async ({ appFactory, dataSource, logger }) => {
   logger.info('connection is establised');
 
   const users = [];
+  const userIds = [
+    'fa66f863-1040-48bd-a156-11bb7cce796e',
+    '4e5eb084-0499-47f8-a0d9-79603002e1bd',
+    '95bab443-1fda-4d63-90ca-2e13296650af',
+    '0060f247-3223-4512-9ce1-6bfaa18a2579',
+    '4195c4df-47fd-4b1b-b952-c7c38aa8f27f',
+    'f4d43b04-998d-4fcc-9afc-0dcbd0a5673a',
+    '1fe031c0-bf34-4684-ae29-baa9cf242398',
+    '03129556-4243-4c68-bdc5-b71c0cb129a3',
+    'c45beb14-3b18-4841-b1cc-ba6a84ac3067',
+    '9be550a1-7d6f-4488-af0d-a60989e90d3a',
+  ];
   await dataSource.transaction(async (manager: EntityManager) => {
     logger.info('[START] users ========');
     for (let i = 1; i <= 10; i++) {
@@ -20,6 +32,7 @@ export const seed = async ({ appFactory, dataSource, logger }) => {
       const user = manager.create(User, {
         username: `user ${i}`,
         email: `user.${i}@example.com`,
+        uuid: userIds[i - 1],
         createdAt: timestamp,
         updatedAt: timestamp,
         status: 'active',

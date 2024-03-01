@@ -31,14 +31,11 @@ describe('UsersController (e2e)', () => {
       expect(response.status).toEqual(200);
       expect(response.body).toMatchObject({
         data: {
-          id: 1,
-          uuid: expect.any(String),
+          uuid: 'fa66f863-1040-48bd-a156-11bb7cce796e',
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
           username: 'user 1',
           email: 'user.1@example.com',
-          password: expect.any(String),
-          refreshToken: expect.any(String),
           status: 'active',
         },
       });

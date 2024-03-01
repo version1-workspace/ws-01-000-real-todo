@@ -68,6 +68,8 @@ export class UsersService {
   async updateRefreshToken(user: User) {
     user.refreshToken = await this.hashRefreshToken();
     await this.manager.save(user);
+
+    return user;
   }
 
   async hash(user: User, password: string) {

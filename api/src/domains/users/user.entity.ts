@@ -36,4 +36,15 @@ export class User extends Base {
 
   @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];
+
+  get serialize() {
+    return {
+      uuid: this.uuid,
+      username: this.username,
+      email: this.email,
+      status: this.status,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
 }

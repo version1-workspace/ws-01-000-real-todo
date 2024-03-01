@@ -5,6 +5,7 @@ import { dataSourceOptions } from '../../src/db/config';
 import appConfig from '../../src/config/app.config';
 import { AppModule } from '../../src/app.module';
 import { Test } from './request';
+import cookieParser from 'cookie-parser';
 
 export const checkNoAuthBehavior = (test: () => Test): [string, () => Test] => [
   'no auth token, return 401',
@@ -39,6 +40,7 @@ export const prepareApp = async (providers: OverrideProvier[]) => {
 
   const module = await moduleFixture.compile();
   const app = module.createNestApplication();
+  app.use(cookieParser());
   await app.init();
 
   return app;

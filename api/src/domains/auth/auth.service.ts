@@ -51,17 +51,17 @@ export class AuthService {
   }
 
   async token(user: User) {
-    await this.usersService.updateRefreshToken(user);
+    const _user = await this.usersService.updateRefreshToken(user);
 
     const payload = {
-      sub: user.username,
-      refreshToken: user.refreshToken,
+      sub: _user.username,
+      refreshToken: _user.refreshToken,
     };
 
     return {
-      uuid: user.uuid,
+      uuid: _user.uuid,
       accessToken: await this.jwtService.signAsync(payload),
-      refreshToken: user.refreshToken,
+      refreshToken: _user.refreshToken,
     };
   }
 

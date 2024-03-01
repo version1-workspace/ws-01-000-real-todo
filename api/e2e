@@ -1,0 +1,4 @@
+#!/bin/bash
+
+NODE_ENV=test node_modules/.bin/jest --config ./test/jest-e2e.json --detectOpenHandles $@
+

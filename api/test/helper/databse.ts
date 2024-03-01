@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { getDataSourceToken, getRepositoryToken } from '@nestjs/typeorm';
-import { DataSource, EntityManager } from 'typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 
 class RollbackError extends Error {}
 
@@ -28,6 +28,6 @@ export const withCleanup = async (
   }
 };
 
-export const getRepository = (app: INestApplication<any>, token: any) => {
-  return app.get(getRepositoryToken(token));
+export const getRepository = <T>(app: INestApplication<any>, token: any) => {
+  return app.get(getRepositoryToken(token)) as Repository<T>;
 };
