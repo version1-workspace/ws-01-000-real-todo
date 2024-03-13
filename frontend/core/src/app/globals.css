@@ -8,6 +8,7 @@
   --popup-bg-color: #fefefe;
   --background-color: #fefefe;
   --hover-color: #f0f0f0;
+  --shadow-color: #eee;
 
   --primary-color: #7A72FF;
   --secondary-color: #1C3041;
@@ -19,6 +20,7 @@
   --overlay-color: #22222220;
   --content-bg-color: #fbfbfb;
   --border-color: #b6b6b6;
+  --border-color-light: #f9f9f9;
   --weak-border-color: #e2e2e290;
   --table-border-color: #e2e2e290;
   --font-color-light: white;
@@ -36,6 +38,7 @@
 
   /* z-index */
   --z-index-modal: 10;
+  --z-index-public-header: 1;
   --z-index-popup: 1;
   --z-index-popup-menu: 3;
   --z-index-select: 1;

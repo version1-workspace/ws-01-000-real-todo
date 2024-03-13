@@ -1,0 +1,64 @@
+@use '@/assets/stylesheets/mixin' as m;
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 16px;
+
+  position: absolute;
+  top: 0px;
+  color: white;
+
+  z-index: var(--z-index-public-header);
+}
+
+.logo {
+  display: flex;
+}
+
+.logo a {
+  color: var(--font-color);
+  text-decoration: none;
+}
+
+.logoContent {
+  display: flex;
+  align-items: center;
+}
+
+.menu {
+  display: flex;
+  margin-right: 16px;
+
+  @include m.lg {
+    display: none;
+  }
+}
+
+.menuItem {
+  margin-right: 16px;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 240px;
+
+  @include m.lg {
+    justify-content: flex-end;
+  }
+}
+
+.signup {
+  @include m.lg {
+    display: none;
+  }
+}
+

@@ -1,3 +1,5 @@
+@use '@/assets/stylesheets/mixin' as m;
+
 .footer {
   background: var(--bg-color-light-2);
   width: 100%;
@@ -12,8 +14,12 @@
   width: 100%;
 
   background: #f9f9f9;
-}
 
+  @include m.lg {
+    flex-wrap: wrap;
+    padding: 16px;
+  }
+}
 
 .logo {
   font-size: 24px;
@@ -25,14 +31,25 @@
 .menu {
   display: flex;
   margin-right: 16px;
+
+  @include m.lg {
+    flex-wrap: wrap;
+  }
 }
 
 .menuItem {
   margin-right: 16px;
+  @include m.lg {
+    margin-bottom: 64px;
+  }
 }
 
 .left {
   margin-right: auto;
+
+  @include m.lg {
+    margin-bottom: 64px;
+  }
 }
 
 .right {

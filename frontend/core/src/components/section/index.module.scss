@@ -1,0 +1,107 @@
+@use '@/assets/stylesheets/mixin' as m;
+
+.section {
+  width: 100%;
+}
+
+.content {
+  margin: auto;
+  max-width: 1920px;
+  margin-bottom: 128px;
+  margin-top: 32px;
+  width: 100%;
+  justify-content: space-evenly;
+
+  @include m.lg {
+    margin-bottom: 64px;
+  }
+}
+
+.sectionTitle {
+  font-size: 18px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.description {
+  font-size: 20px;
+  line-height: 2.5;
+  margin: 32px auto;
+  width: 480px;
+  color: var(--font-color-dark);
+
+  @include m.lg {
+    width: 100%;
+  }
+
+  @include m.sm {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+}
+
+.descriptionText {
+  @include m.lg {
+    width: 60%;
+    margin: auto;
+  }
+
+  @include m.sm {
+    width: 100%;
+  }
+}
+
+.body {
+  padding: 128px 32px;
+
+  @include m.lg {
+    margin-bottom: 64px 16px;
+  }
+}
+
+.segment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 128px;
+
+  @include m.lg {
+    flex-wrap: wrap;
+    margin-bottom: 64px;
+  }
+}
+
+.left {
+  flex: 1;
+  color: var(--color-font);
+  padding: 64px;
+
+  @include m.lg {
+    min-width: 100%;
+    padding: 0;
+    margin-bottom: 64px;
+  }
+}
+
+.right {
+  position: relative;
+  flex: 1;
+  width: 900px;
+  height: 566px;
+
+  @include m.lg {
+    min-width: 100%;
+    min-width: 300px;
+  }
+
+  @include m.sm {
+    height: 188px;
+  }
+}
+
+.image {
+  display: block;
+  border-radius: 8px;
+  box-shadow: 1px 1px 4px 8px var(--shadow-color);
+}
+
