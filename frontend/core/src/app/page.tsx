@@ -62,6 +62,66 @@ export default function Home() {
         image={img3}
         imageAlt="ゴール設定"
       />
+      <section className={styles.price}>
+        <div className={styles.priceHeader}>
+          <h2 className={styles.priceTitle}>料金</h2>
+        </div>
+        <div className={styles.priceContent}>
+          <div className={styles.features}>
+              <div className={styles.featureList}>
+                <div className={styles.feature}>目標設定・計画・タスク管理 UI</div>
+                <div className={styles.feature}>タスクのグラフ化</div>
+                <div className={styles.feature}>リマインダー</div>
+                <div className={styles.feature}>カンバン方式のタスク管理</div>
+                <div className={styles.feature}>ファイルのアップロード制限</div>
+              </div>
+          </div>
+          <div className={styles.priceList}>
+            <div className={styles.priceItem}>
+              <div className={styles.planName}>無料プラン</div>
+              <div className={styles.amount}>無料</div>
+              <div className={styles.table}>
+                <div className={styles.tableRow}>◯</div>
+                <div className={styles.tableRow}>◯</div>
+                <div className={styles.tableRow}>◯</div>
+                <div className={styles.tableRow}>-</div>
+                <div className={styles.tableRow}>500MB まで</div>
+              </div>
+              <div className={styles.action}>
+                <button>始める</button>
+              </div>
+            </div>
+            <div className={styles.priceItem}>
+              <div className={styles.planName}>有料プラン</div>
+              <div className={styles.amount}>499円 / 月</div>
+              <div className={styles.table}>
+                <div className={styles.tableRow}>◯</div>
+                <div className={styles.tableRow}>◯</div>
+                <div className={styles.tableRow}>◯</div>
+                <div className={styles.tableRow}>◯</div>
+                <div className={styles.tableRow}>2GBまで</div>
+              </div>
+              <div className={styles.action}>
+                <button>始める</button>
+              </div>
+            </div>
+            <div className={styles.priceItem}>
+              <div className={styles.planName}>プレミアムプラン</div>
+              <div className={styles.amount}>2, 980円 / 月</div>
+              <div className={styles.table}>
+                <div className={styles.tableRow}>◯</div>
+                <div className={styles.tableRow}>◯</div>
+                <div className={styles.tableRow}>◯</div>
+                <div className={styles.tableRow}>◯</div>
+                <div className={styles.tableRow}>無制限</div>
+              </div>
+              <div className={styles.action}>
+                <button>始める</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <Footer />
     </main>
   );

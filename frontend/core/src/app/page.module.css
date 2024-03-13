@@ -57,3 +57,68 @@ button.entry {
   padding: 16px;
   width: 360px;
 }
+
+.price {
+  margin: 64px 0;
+  width: 100%;
+}
+
+.priceContent {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.planName {
+  font-size: 14px;
+}
+
+.amount {
+  font-size: 24px;
+  padding: 32px 0;
+}
+
+.priceHeader {
+  margin: 32px 0px;
+}
+
+.priceTitle {
+  text-align: center;
+  font-weight: normal;
+}
+
+.priceItem {
+  padding: 32px;
+  margin-right: 32px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  min-width: 30%;
+}
+
+.priceList {
+  display: flex;
+  justify-content: center;
+  min-width: 70%;
+}
+
+.table {
+  border-top: 1px solid var(--border-color);
+}
+
+.tableRow {
+  padding: 16px 0;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.features {
+}
+
+.featureList {
+  margin-top: 160px;
+}
+
+.feature {
+  padding: 16px 0;
+  margin-bottom: 1px solid var(--border-color);
+}
