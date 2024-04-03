@@ -4,20 +4,28 @@ import Button from "@/components/shared/button";
 import Image from "next/image";
 import logo from "@/assets/logo.png";
 
-export default function Header() {
+interface Props {
+  light?: boolean;
+}
+
+export default function Header({ light }: Props) {
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
         <Link href="/">
-          <div className={styles.logoContent}>
+          <div
+            className={[
+              styles.logoContent,
+              light ? styles.logoContentLight : "",
+            ].join(" ")}>
             <Image src={logo} alt="ロゴ" />
-            <h2>Turbo</h2>
+            <h2>Turvo</h2>
           </div>
         </Link>
       </div>
       <div className={styles.right}>
         <ul className={styles.menu}>
-          <li className={styles.menuItem}>Turbo について</li>
+          <li className={styles.menuItem}>Turvo について</li>
           <li className={styles.menuItem}>ドキュメント</li>
         </ul>
         <div className={styles.actions}>

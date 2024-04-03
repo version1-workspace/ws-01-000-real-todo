@@ -9,7 +9,11 @@ import Button from "@/components/shared/button";
 import LoginForm from "@/components/auth/loginForm";
 import { useToast } from "@/lib/toast/hook";
 
-const Content = () => {
+interface Props {
+  light?: boolean;
+}
+
+const Content = ({ light }: Props) => {
   const searchParams = useSearchParams();
   const toast = useToast();
   const [rendered, setRendered] = useState(false);
@@ -26,7 +30,7 @@ const Content = () => {
 
   return (
     <>
-      <Header />
+      <Header light={light} />
       <section className={styles.content}>
         <div className={styles.left}>
           <div className={styles.card}>

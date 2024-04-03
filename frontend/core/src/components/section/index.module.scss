@@ -86,8 +86,8 @@
 .right {
   position: relative;
   flex: 1;
-  width: 900px;
-  height: 566px;
+  width: 768px;
+  height: 480px;
 
   @include m.lg {
     min-width: 100%;
@@ -102,6 +102,6 @@
 .image {
   display: block;
   border-radius: 8px;
-  box-shadow: 1px 1px 4px 8px var(--shadow-color);
+  box-shadow: 1px 1px 8px 4px var(--shadow-color);
 }
 

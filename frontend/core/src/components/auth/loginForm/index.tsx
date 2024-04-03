@@ -12,7 +12,7 @@ import { useToast } from "@/lib/toast/hook";
 import Checkbox from "@/components/shared/checkbox";
 
 export const metadata: Metadata = {
-  title: "Turbo | ログイン",
+  title: "Turvo | ログイン",
 };
 
 interface Form {

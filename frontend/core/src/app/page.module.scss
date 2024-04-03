@@ -8,6 +8,13 @@
   min-height: 100vh;
 }
 
+.hideOnlySmartphone {
+  display: block;
+  @include m.sm {
+    display: none;
+  }
+}
+
 .hero {
   position: relative;
   width: 100%;
@@ -52,12 +59,6 @@
   display: flex;
   background-image: url("/assets/hero-space.svg");
   animation: 300s linear 0s infinite running slide-space;
-}
-
-.heroOverlay {
-  min-height: 1320px;
-  position: absolute;
-  background-image: url("/assets/hero-overlay.svg");
 }
 
 @keyframes slide-space {
@@ -123,7 +124,7 @@
 }
 
 .background {
-  margin: 128px 0;
+  padding: 128px 0;
   background-image: url("/assets/background-stars.svg");
   width: 100%;
 }
@@ -161,6 +162,10 @@
 .priceCol {
   margin-right: 32px;
 
+  @include m.sm {
+    margin-bottom: 64px;
+  }
+
   @include m.lg {
     margin: auto;
   }
@@ -181,6 +186,7 @@
   width: 360px;
   @include m.lg {
     min-width: 100%;
+    margin-bottom: 64px;
   }
 }
 

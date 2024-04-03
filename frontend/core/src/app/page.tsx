@@ -24,7 +24,6 @@ export default function Home() {
         <Image className={styles.heroEarth} src={earth} alt="Earth" />
       </div>
       <div className={styles.heroSpace}></div>
-      <div className={styles.heroOverlay} />
       <div className={styles.heroContainer}>
         <div className={styles.copyContainer}>
           <div className={styles.catchCopy}>
@@ -34,7 +33,7 @@ export default function Home() {
           </div>
           <div className={styles.catchBody}>
             <p className={styles.catchBodyText}>
-              Turboは確実に夢を叶えたいあなたへのタスク管理アプリです。
+              Turvoは確実に夢を叶えたいあなたへのタスク管理アプリです。
             </p>
             <p className={styles.catchBodyText}>
               目標を鮮明にイメージしてゴールへの歩みを加速させましょう。
@@ -42,7 +41,7 @@ export default function Home() {
           </div>
           <div className={styles.catchFooter}>
             <Link href="/login">
-              <Button variant="primary">Turboを始める</Button>
+              <Button variant="primary">Turvoを始める</Button>
             </Link>
           </div>
         </div>
@@ -55,7 +54,7 @@ export default function Home() {
               {
                 description: [
                   `さまざまな角度から練られた目標は目標達成のために必要不可欠な要素です。
-Turbo では、具体的な期日や目標達成までに必要な意識を設定して、
+Turvo では、具体的な期日や目標達成までに必要な意識を設定して、
 ユーザ様の目標達成を助けます。`,
                 ],
                 image: featuresNewProject,
@@ -68,7 +67,7 @@ Turbo では、具体的な期日や目標達成までに必要な意識を設�
             elements={[
               {
                 description: [
-                  `Turbo ではマイルストーン（中間目標）を設定することができます。
+                  `Turvo ではマイルストーン（中間目標）を設定することができます。
 長い道のりでも迷わずにゴールに向かえるような計画策定を助けます。
 マイルストーンを設定してより精緻な計画を作り上げましょう。`,
                 ],
@@ -82,7 +81,7 @@ Turbo では、具体的な期日や目標達成までに必要な意識を設�
             elements={[
               {
                 description: [
-                  `Turbo はシンプルなダッシュボードで複数の目標を管理することができます。
+                  `Turvo はシンプルなダッシュボードで複数の目標を管理することができます。
 仕事の目標、キャリアの目標、プライベートの目標など個人に関係する目標をまとめて管理することができます。 `,
                 ],
                 image: featuresDashoboard,
@@ -90,7 +89,7 @@ Turbo では、具体的な期日や目標達成までに必要な意識を設�
               },
               {
                 description: [
-                  ` Turbo はシンプルでタスク管理に集中できるUIを提供します。Turboで日々のタスクをゴールへの一段一段を明確にしていきましょう。`,
+                  ` Turvo はシンプルでタスク管理に集中できるUIを提供します。Turvoで日々のタスクをゴールへの一段一段を明確にしていきましょう。`,
                 ],
                 image: featuresUI,
                 alt: "シンプルなUI",
@@ -108,7 +107,7 @@ Turbo では、具体的な期日や目標達成までに必要な意識を設�
           </div>
           <div className={styles.priceContent}>
             <div className={styles.priceTable}>
-              <div className={styles.priceCol}>
+              <div className={[styles.priceCol, styles.hideOnlySmartphone].join(' ')}>
                 <div className={styles.priceTableHeader}>
                   <div className={styles.priceTableHeaderHeader}></div>
                   <div className={styles.priceTableHeaderBody}>
@@ -244,7 +243,7 @@ Turbo では、具体的な期日や目標達成までに必要な意識を設�
               </div>
               <div className={styles.reviewColContent}>
                 <p className={styles.reviewDescription}>
-                  Turbo は自分の目標を管理するのに最適なツールです。
+                  Turvo は自分の目標を管理するのに最適なツールです。
                   <br />
                   <br />
                   わかりやすい UI で登録したその日からすぐに活躍してくれました。
@@ -267,11 +266,11 @@ Turbo では、具体的な期日や目標達成までに必要な意識を設�
               </div>
               <div className={styles.reviewColContent}>
                 <p className={styles.reviewDescription}>
-                  Turbo
+                  Turvo
                   で自分の仕事とプライベートをうまくバランスできるようになりました。
                   <br />
                   <br />
-                  仕事もプライベートもお互いに干渉するものですが、Turbo
+                  仕事もプライベートもお互いに干渉するものですが、Turvo
                   でそれらをまとめて管理できます。
                 </p>
               </div>
@@ -292,7 +291,7 @@ Turbo では、具体的な期日や目標達成までに必要な意識を設�
               </div>
               <div className={styles.reviewColContent}>
                 <p className={styles.reviewDescription}>
-                  Turboのリマインド機能で常に長期の計画を意識しながら自分のプロジェクトを進めることができます。
+                  Turvoのリマインド機能で常に長期の計画を意識しながら自分のプロジェクトを進めることができます。
                   <br />
                   <br />
                   長期の計画でも迷子にならずに進むのに最適なツールです。
@@ -303,7 +302,7 @@ Turbo では、具体的な期日や目標達成までに必要な意識を設�
           <div className={styles.reviewFooter}>
             <Link href="/login">
               <div className={styles.signUpButton}>
-                <Button variant="primary">Turbo を始める</Button>
+                <Button variant="primary">Turvo を始める</Button>
               </div>
             </Link>
           </div>

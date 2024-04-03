@@ -69,7 +69,7 @@ export default function Header() {
         <div className={styles.left}>
           <Link href={route.main.toString()}>
             <div className={styles.logo}>
-              <h2>Turbo</h2>
+              <h2>Turvo</h2>
             </div>
           </Link>
           <div className={styles.searchForm}>

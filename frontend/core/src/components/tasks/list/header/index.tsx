@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import styles from "./index.module.css";
-import { useRouter } from "next/navigation";
 import FilterForm from "@/components/tasks/filterForm";
 import api from "@/services/api";
 import { Filter } from "@/components/tasks/list/hooks/useFilter";
