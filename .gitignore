@@ -132,3 +132,6 @@ dist
 data
 
 .DS_Store
+
+# Local Netlify folder
+.netlify

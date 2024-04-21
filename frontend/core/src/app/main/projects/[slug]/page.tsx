@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import api from "@/services/api";
 import { factory } from "@/services/api/models";
-import { Project } from "@/services/api/models/project";
+import type { Project } from "@/services/api/models/project";
 import styles from "./page.module.css";
 import { join } from "@/lib/cls";
 import Icon from "@/components/shared/icon";
