@@ -4,6 +4,7 @@ interface Props {
   children: React.ReactNode;
   variant?: "primary" | "secondary";
   className?: string;
+  style?: React.CSSProperties;
   onClick?: () => void;
 }
 

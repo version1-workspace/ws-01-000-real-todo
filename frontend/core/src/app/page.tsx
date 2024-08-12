@@ -5,8 +5,8 @@ import Image from "next/image";
 import Button from "@/components/shared/button";
 import Section from "@/components/section";
 import Link from "next/link";
-import earth from "@/assets/hero-earth.svg";
-import moon from "@/assets/hero-moon.svg";
+import star from "@/assets/star.svg";
+import starLight from "@/assets/star-light.svg";
 import featuresNewProject from "@/assets/features-new-project.png";
 import featuresMilestone from "@/assets/features-milestone.png";
 import featuresDashoboard from "@/assets/features-dashboard.png";
@@ -14,14 +14,65 @@ import featuresUI from "@/assets/features-ui.png";
 import reviewImage1 from "@/assets/review-1.jpg";
 import reviewImage2 from "@/assets/review-2.jpg";
 import reviewImage3 from "@/assets/review-3.jpg";
+import { join } from "@/lib/cls";
+
+function Stars({ count }: { count: number }) {
+  return (
+    <>
+      {new Array(count).fill(0).map((_, i) => (
+        <>
+          <div
+            key={`star-${i}`}
+            className={join(styles.bgStar, styles.bgStarYellow)}
+            style={{
+              position: "absolute",
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+            }}></div>
+          <div
+            key={`star-${i}`}
+            className={join(styles.bgStar, styles.bgStarSkyblue)}
+            style={{
+              position: "absolute",
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+            }}></div>
+          <div
+            key={`star-${i}`}
+            className={join(styles.bgStar, styles.bgStarRed)}
+            style={{
+              position: "absolute",
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+            }}></div>
+          <div
+            key={`star-${i}`}
+            className={join(styles.bgStar, styles.bgStarGray)}
+            style={{
+              position: "absolute",
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+            }}></div>
+        </>
+      ))}
+    </>
+  );
+}
 
 export default function Home() {
   return (
     <main className={styles.main}>
       <Header />
       <div className={styles.hero}>
-        <Image className={styles.heroMoon} src={moon} alt="Moon" />
-        <Image className={styles.heroEarth} src={earth} alt="Earth" />
+        <Stars count={60} />
+        <Image className={styles.star} src={star} alt="star" />
+        <div className={styles.starLight}>
+          <Image
+            className={styles.starLightImage}
+            src={starLight}
+            alt="star light"
+          />
+        </div>
       </div>
       <div className={styles.heroSpace}></div>
       <div className={styles.heroContainer}>
@@ -41,7 +92,14 @@ export default function Home() {
           </div>
           <div className={styles.catchFooter}>
             <Link href="/login">
-              <Button variant="primary">Turvoを始める</Button>
+              <Button
+                variant="primary"
+                style={{
+                  padding: "18px",
+                  fontSize: "18px",
+                }}>
+                Turvoを始める
+              </Button>
             </Link>
           </div>
         </div>
@@ -107,7 +165,10 @@ Turvo では、具体的な期日や目標達成までに必要な意識を設�
           </div>
           <div className={styles.priceContent}>
             <div className={styles.priceTable}>
-              <div className={[styles.priceCol, styles.hideOnlySmartphone].join(' ')}>
+              <div
+                className={[styles.priceCol, styles.hideOnlySmartphone].join(
+                  " ",
+                )}>
                 <div className={styles.priceTableHeader}>
                   <div className={styles.priceTableHeaderHeader}></div>
                   <div className={styles.priceTableHeaderBody}>
