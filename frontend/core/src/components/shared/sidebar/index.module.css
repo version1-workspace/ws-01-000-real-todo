@@ -43,13 +43,14 @@
 
 .menuItemActive {
   background: var(--hover-color);
+  color: var(--font-color-dark);
+  font-weight: bold;
 }
 
 .children {
   margin: 16px 0;
   margin-left: 32px;
-  color: #5e5e5e;
-  background: #f6f6f6;
+  color: var(--font-color-dark);
 }
 
 .dot {
@@ -61,7 +62,7 @@
 }
 
 .menuTitle {
-  color: var(--font-color-dark-weak);
+  color: var(--font-color-dark);
   font-weight: 500;
   letter-spacing: 0.8px;
   display: flex;
@@ -69,11 +70,16 @@
   justify-content: space-between;
 }
 
+.menuTitleActive {
+  color: var(--font-color-dark);
+  font-weight: bold;
+}
+
 .project {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  color: var(--font-color-dark-weak);
+  color: var(--font-color-dark);
 }
 
 .deadline {

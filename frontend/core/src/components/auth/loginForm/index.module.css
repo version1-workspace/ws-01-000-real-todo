@@ -8,7 +8,7 @@
 
 .form {
   position: relative;
-  width: 300px;
+  width: 400px;
   margin: auto;
   padding: 32px 16px;
   border-radius: 4px;
@@ -23,12 +23,15 @@
 .formSubtitle {
   font-weight: normal;
   display: inline-block;
-  margin-left: 16px;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .inputField {
   margin: 0 0;
+}
+
+.input {
+  padding: 16px !important; /* Override the padding from the input component */
 }
 
 .field {

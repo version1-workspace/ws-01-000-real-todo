@@ -74,8 +74,14 @@ const ChartType = {
 };
 
 const chartOptions = [
-  { label: <BarChart size="16px" />, value: ChartType.bar },
-  { label: <LineChart size="16px" />, value: ChartType.line },
+  {
+    label: <BarChart size="16px" />,
+    value: ChartType.bar,
+  },
+  {
+    label: <LineChart size="16px" />,
+    value: ChartType.line,
+  },
 ];
 
 const defaultDate = () => {

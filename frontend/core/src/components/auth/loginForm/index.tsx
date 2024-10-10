@@ -68,13 +68,13 @@ export default function Login() {
       </div>
 
       <h2 className={styles.formTitle}>
-        Sign In
         <div className={styles.formSubtitle}>ログインして Turvo を使う</div>
       </h2>
       <div className={styles.inputField}>
         <Input
           value={form.email}
           placeholder="turbo@example.com"
+          inputClassName={styles.input}
           onChange={(e) => {
             change({ email: e.target.value });
           }}
@@ -88,6 +88,7 @@ export default function Login() {
           type="password"
           value={form.password}
           placeholder="***********"
+          inputClassName={styles.input}
           onChange={(e) => {
             change({ password: e.target.value });
           }}

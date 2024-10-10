@@ -4,14 +4,12 @@
 
 .tableHeader {
   display: flex;
-  border-top: 2px solid var(--table-border-color);
-  border-bottom: 2px solid var(--table-border-color);
 }
 
 .tableHeaderCell {
   padding: 4px;
-  font-size: 14px;
-  border-right: 1px solid var(--table-border-color);
+  font-size: 10px;
+  font-weight: bold;
   width: 10%;
 }
 
@@ -21,14 +19,18 @@
 
 .tableRow {
   display: flex;
-  border-bottom: 1px solid var(--table-border-color);
+  transition: all 0.5s;
+}
+
+.tableRow:hover {
+  transform: scale(1.01);
+  box-shadow: 1px 1px 3px 1px #22222210;
 }
 
 .tableCell {
   display: flex;
   align-items: center;
   width: 10%;
-  border-right: 1px solid var(--table-border-color);
   padding: 8px;
   font-size: 12px;
 }
@@ -100,7 +102,7 @@
   width: 8%;
 }
 
-.detailText {
-  color: var(--info-color);
+.detailIcon {
+  color: var(--font-color-dark);
   cursor:pointer;
 }

@@ -21,7 +21,6 @@
   border-radius: 8px;
 }
 
-
 .border {
   width: 1px;
   background: var(--border-color);
@@ -70,7 +69,7 @@
 
 .form {
   position: relative;
-  width: 300px;
+  width: 400px;
   margin: auto;
   border-radius: 8px;
   padding: 32px 16px;
@@ -85,11 +84,13 @@
 .formSubtitle {
   font-weight: normal;
   display: inline-block;
-  margin-left: 16px;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .field {
   margin: 32px 0;
 }
 
+.input {
+  padding: 16px !important; // !important is used to override the default padding
+}

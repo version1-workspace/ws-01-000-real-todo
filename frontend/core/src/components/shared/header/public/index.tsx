@@ -13,7 +13,7 @@ export default function Header({ light }: Props) {
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
-        <Link href="/">
+        <a href="/">
           <div
             className={[
               styles.logoContent,
@@ -27,7 +27,7 @@ export default function Header({ light }: Props) {
             />
             <h2 className={styles.logoText}>Turvo</h2>
           </div>
-        </Link>
+        </a>
       </div>
       <div className={styles.right}>
         <ul className={styles.menu}>
@@ -36,14 +36,21 @@ export default function Header({ light }: Props) {
               [styles.menuItem]: true,
               [styles.menuItemLight]: light,
             })}>
-            Turvo について
+            <a href="/">Home</a>
           </li>
           <li
             className={classHelper({
               [styles.menuItem]: true,
               [styles.menuItemLight]: light,
             })}>
-            ドキュメント
+            <a href="/">Turvo について</a>
+          </li>
+          <li
+            className={classHelper({
+              [styles.menuItem]: true,
+              [styles.menuItemLight]: light,
+            })}>
+            <a href="/">ドキュメント</a>
           </li>
         </ul>
         <div className={styles.actions}>

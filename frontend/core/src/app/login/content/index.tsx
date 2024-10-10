@@ -34,17 +34,21 @@ const Content = ({ light }: Props) => {
       <section className={styles.content}>
         <div className={styles.card}>
           <div className={styles.left}>
-            <div className={styles.whiteBar} style={{ top: '40px' }}></div>
+            <div className={styles.whiteBar} style={{ top: "40px" }}></div>
             <div className={styles.form}>
               <div className={styles.copy}>
                 Enjoy your life with Turvo 🎉🎉🎉
               </div>
               <h2 className={styles.formTitle}>
-                Sign Up
                 <span className={styles.formSubtitle}>無料で始める</span>
               </h2>
               <div className={styles.field}>
-                <Input type="text" value="" placeholder="turbo@example.com" />
+                <Input
+                  type="text"
+                  value=""
+                  inputClassName={styles.input}
+                  placeholder="turbo@example.com"
+                />
               </div>
               <div className={styles.field}>
                 <Button variant="secondary">新規登録</Button>
@@ -54,7 +58,7 @@ const Content = ({ light }: Props) => {
           </div>
           <div className={styles.border}></div>
           <div className={styles.right}>
-            <div className={styles.greenBar} style={{ top: '40px' }}></div>
+            <div className={styles.greenBar} style={{ top: "40px" }}></div>
             <LoginForm />
             <div className={styles.greenBar}></div>
           </div>

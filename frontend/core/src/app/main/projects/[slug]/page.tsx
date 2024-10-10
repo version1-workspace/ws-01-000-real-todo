@@ -58,19 +58,23 @@ const projectActions = ({
 
 export default function Project({ params: { slug } }: Props) {
   const [project, setProject] = useState<Project>();
-  const { refetch: refetchGlobalProjects } = useProjects();
+  const { projects, refetch: refetchGlobalProjects } = useProjects();
   const { open, hide } = useModal();
   const toast = useToast();
-
-  const fetch = useCallback(
-    async ({ slug }: { slug: string }) => {
-      const res = await api.fetchProject({ slug });
-      const item = factory.project(res.data.data);
-
-      setProject(item);
-    },
-    [],
+  // FIXME: set color code by project in BE.
+  const color = useMemo(
+    () => projects.find((it) => it.slug === slug)?.color,
+    [slug, projects],
   );
+
+  const fetch = useCallback(async ({ slug }: { slug: string }) => {
+    const res = await api.fetchProject({ slug });
+    const item = factory.project({
+      ...res.data.data,
+    });
+
+    setProject(item);
+  }, []);
 
   const actions = useMemo(
     () =>
@@ -146,9 +150,13 @@ export default function Project({ params: { slug } }: Props) {
     <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.body}>
-          <div className={styles.project}>
+          <div
+            className={styles.project}
+            style={{
+              borderLeft: `5px solid ${color}`,
+            }}>
             <div className={styles.header}>
-              <h1 className={styles.title}>
+              <h1 className={styles.title} style={{ color }}>
                 {project.isArchived ? "（アーカイブ）" : null}
                 {project.name}
               </h1>

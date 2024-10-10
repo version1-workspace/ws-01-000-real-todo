@@ -5,11 +5,12 @@
   margin-bottom: 16px;
   background: var(--background-color);
   color: var(--font-color-dark-weak);
+  transition: all 0.5s;
 }
 
 .card:hover {
-  opacity: 0.8;
-  background: var(--hover-color);
+  transform: scale(1.05);
+  box-shadow: 1px 1px 8px 1px #22222220;
 }
 
 .header {

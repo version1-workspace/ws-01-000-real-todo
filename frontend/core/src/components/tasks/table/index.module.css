@@ -21,6 +21,12 @@
 .tableRow {
   display: flex;
   padding: 8px 0px;
+  transition: all 0.5s;
+}
+
+.tableRow:hover {
+  transform: scale(1.01);
+  box-shadow: 1px 1px 3px 1px #22222210;
 }
 
 .tableCell {

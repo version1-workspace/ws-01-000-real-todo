@@ -6,7 +6,6 @@ import { useModal } from "@/lib/modal";
 import route from "@/lib/route";
 import TaskForm from "@/components/tasks/form";
 import Icon from "../../icon";
-import useProjects from "@/contexts/projects";
 import useTasks from "@/contexts/tasks";
 import { useAuth } from "@/components/auth";
 import Search from "@/components/tasks/search";
@@ -25,6 +24,9 @@ function Dropdown({ trigger }: DropdownProps) {
 
   return (
     <div className={styles.dropdownContainer}>
+      {show ? (
+        <div className={styles.overlay} onClick={() => setShow(false)}></div>
+      ) : null}
       <p className={styles.trigger} onClick={() => setShow(true)}>
         {trigger}
       </p>
@@ -35,12 +37,14 @@ function Dropdown({ trigger }: DropdownProps) {
             onClick={() => {
               setShow(false);
             }}>
-            <div className={styles.userInfo}>
-              <Link href={route.main.users.profile.toString()}>
-                <p className={styles.username}>{user.username}</p>
-                <p className={styles.email}>{user.email}</p>
-              </Link>
-            </div>
+            <Link
+              className={styles.dropdownLink}
+              href={route.main.users.profile.toString()}>
+              <div className={styles.dropdownIcon}>
+                <Icon name="person" size={20} />
+              </div>
+              プロフィール
+            </Link>
           </li>
           <li>
             <div className={styles.border}></div>
@@ -51,7 +55,12 @@ function Dropdown({ trigger }: DropdownProps) {
               logout();
               setShow(false);
             }}>
-            <p className={styles.logout}>ログアウト</p>
+            <div className={styles.dropdownLink}>
+              <div className={styles.dropdownIcon}>
+                <Icon name="logout" size={20} color="var(--danger-color)" />
+              </div>
+              <p className={styles.logout}>ログアウト</p>
+            </div>
           </li>
         </ul>
       ) : null}
