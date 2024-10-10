@@ -2,7 +2,6 @@
   padding: 16px;
   border: 0;
   box-shadow: 1px 1px 3px 1px #22222210;
-  border-radius: 8px;
   margin-bottom: 16px;
   background: var(--background-color);
   color: var(--font-color-dark-weak);
@@ -22,13 +21,24 @@
 .deadline {
   display: flex;
   align-items: center;
-  color: var(--font-color-dark-weak);
+  color: var(--font-color-dark);
+}
+
+.deadlineIcon {
+  display: inline-block;
+  margin-right: 8px;
+  position: relative;
+  top: 0px;
+}
+
+.deadlineDate {
+  font-size: 10px;
+  font-weight: bold;
 }
 
 .title {
-  font-size: 12px;
-  font-weight: 100;
-  color: var(--font-color-dark);
+  font-size: 10px;
+  font-weight: bold;
 }
 
 
@@ -37,24 +47,19 @@
   margin-right: 8px;
 }
 
-.deadline > p  {
-  font-size: 16px;
-  letter-spacing: 0.8px;
-  display: inline-block;
-}
-
 .goal {
   display: flex;
   align-items: center;
   margin-right: 16px;
   margin-bottom: 8px;
-  font-size: 16px;
-  color: var(--font-color-dark-weak);
-  font-weight: 400;
+  font-size: 20px;
+  color: var(--font-color-dark);
+  font-weight: bold;
 }
 
 .goal > span {
-  font-size: 12px;
+  font-size: 10px;
+  white-space: nowrap;
   display: inline-block;
   margin-right: 16px;
 }
@@ -75,7 +80,7 @@
 }
 
 .body {
-  padding: 16px;
+  padding: 16px 0;
 }
 
 .footer {

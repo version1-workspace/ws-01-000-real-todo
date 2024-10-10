@@ -33,7 +33,7 @@
 }
 
 .menuItem:hover {
-  background: var(--hover-color);
+  background: #8fe3c740;
 }
 
 .menuItem > a {

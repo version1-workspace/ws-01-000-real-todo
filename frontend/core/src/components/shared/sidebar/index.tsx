@@ -14,19 +14,6 @@ import Link from "@/components/shared/link";
 import { classHelper } from "@/lib/cls";
 import { truncate } from "@/lib/string";
 
-const colors = (function () {
-  const list = [];
-  for (let i = 0; i < 10; i++) {
-    const code = ((i + 1) * 140) % 760;
-    const r = Math.max(code - 510, 0);
-    const g = Math.min(Math.max(code - 255, 0), 255);
-    const b = Math.min(255, code);
-    list.push(`rgba(${r}, ${g}, ${b}, 0.6)`);
-  }
-
-  return list;
-})();
-
 interface MenuItem {
   title: string | ReactNode;
   path: string;
@@ -62,6 +49,7 @@ const sidebarMenulist = (projects: Project[]) => [
         path: route.main.projects.with(it.slug),
         options: {
           deadline: it.deadline?.format(),
+          color: it.color,
         },
       };
     }),
@@ -124,7 +112,7 @@ export default function Sidebar() {
                       </li>
                       {menuItem.children?.length ? (
                         <ul className={styles.children}>
-                          {menuItem.children.map((item, index) => {
+                          {menuItem.children.map((item) => {
                             return (
                               <li
                                 key={item.path}
@@ -139,7 +127,7 @@ export default function Sidebar() {
                                       <span
                                         className={styles.dot}
                                         style={{
-                                          background: colors[index],
+                                          background: item.options?.color,
                                         }}></span>
                                       {typeof item.title === "string"
                                         ? truncate(item.title, 10)

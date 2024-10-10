@@ -56,7 +56,8 @@ export default function Main() {
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>タスク</h2>
           <Link href={route.main.tasks.toString()} className={styles.link}>
-            タスク一覧 &gt;&gt;
+            タスク一覧
+            <Icon size={10} className={styles.linkIcon} name="arrowForward" />
           </Link>
         </div>
         <div className={styles.content}>
@@ -66,8 +67,9 @@ export default function Main() {
           {data ? (
             <Link href={route.main.tasks.toString()} className={styles.link}>
               {(data?.pageCount || 0) > 2
-                ? `あと ${data.pageCount - 1} ページ >>`
-                : "タスク一覧 >>"}
+                ? `あと ${data.pageCount - 1} ページ`
+                : "タスク一覧"}
+              <Icon size={10} className={styles.linkIcon} name="arrowForward" />
             </Link>
           ) : null}
         </div>
