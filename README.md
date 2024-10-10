@@ -35,6 +35,7 @@ npm run dev
 
 ```
 cd api
+cp -p .env.development.example .env.development
 npm install
 npm run db:setup
 npm run start:dev
