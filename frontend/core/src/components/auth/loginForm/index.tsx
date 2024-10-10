@@ -1,6 +1,5 @@
 "use client";
 import { Metadata } from "next";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./index.module.css";
 import Input from "@/components/shared/input/text";

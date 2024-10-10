@@ -8,8 +8,8 @@
   width: 100%;
   font-weight: 300;
   font-size: 12px;
-  border: 0;
   color: var(--font-color-dark);
+  border: 0;
   box-shadow: 2px 2px 4px 1px #22222210;
 }
 

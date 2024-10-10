@@ -95,6 +95,7 @@ const SelectorProxy = ({
         onSelect(option);
       }}
       containerStyleClass={styles.selector}
+      flat
     />
   );
 };
@@ -189,7 +190,9 @@ const Row = ({ data, checked, onCheck }: RowProps) => {
       </div>
       <div className={join(styles.tableCell, styles.detail)}>
         <Link href={route.main.tasks.with(data.id)}>
-          <span className={styles.detailText}>more ...</span>
+          <div className={styles.detailCircle}>
+            <Icon className={styles.detailIcon} name="arrowForward" />
+          </div>
         </Link>
       </div>
     </div>

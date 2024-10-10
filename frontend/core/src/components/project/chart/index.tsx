@@ -166,6 +166,7 @@ export default function Chart() {
             value={project}
             defaultOption={{ label: "全てのプロジェクト", value: "all" }}
             onSelect={(item) => setProject(item.value)}
+            flat
           />
         </div>
       </div>
