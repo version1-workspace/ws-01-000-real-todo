@@ -106,7 +106,14 @@ export default function Sidebar() {
                               [styles.menuItemActive]:
                                 pathname === menuItem.path,
                             })}>
-                            <p className={styles.menuTitle}>{menuItem.title}</p>
+                            <p
+                              className={classHelper({
+                                [styles.menuTitle]: true,
+                                [styles.menuTitleActive]:
+                                  pathname === menuItem.path,
+                              })}>
+                              {menuItem.title}
+                            </p>
                           </div>
                         </Link>
                       </li>

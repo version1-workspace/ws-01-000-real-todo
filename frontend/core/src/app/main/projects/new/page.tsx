@@ -15,6 +15,7 @@ import api from "@/services/api";
 import route from "@/lib/route";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/lib/toast/hook";
+import Icon from "@/components/shared/icon";
 
 interface StepParams {
   label: string;
@@ -143,6 +144,7 @@ export default function ProjectsNew() {
     factory.project({
       name: "",
       uuid: "",
+      color: "",
       deadline: AppDate.in(90).toString(),
       slug: "",
       goal: "",
@@ -184,7 +186,10 @@ export default function ProjectsNew() {
                 <div>
                   {index !== 0 ? (
                     <Button onClick={() => setIndex((index) => index - 1)}>
-                      戻る
+                      <div className={styles.backContent}>
+                        <Icon name="arrowBack" />
+                        戻る
+                      </div>
                     </Button>
                   ) : null}
                 </div>
@@ -194,7 +199,7 @@ export default function ProjectsNew() {
               <div className={styles.skip}>
                 {step.skippable ? (
                   <Button onClick={() => setIndex((index) => index + 1)}>
-                    スキップ
+                    <div className={styles.skipContent}>スキップ</div>
                   </Button>
                 ) : null}
               </div>
@@ -217,7 +222,10 @@ export default function ProjectsNew() {
                       setIndex((index) => index + 1);
                     }
                   }}>
-                  {step.submitLabel ? step.submitLabel : "次へ"}
+                  <div className={styles.nextContent}>
+                    {step.submitLabel ? step.submitLabel : "次へ"}
+                    <Icon name="arrowForward" />
+                  </div>
                 </Button>
               </div>
             </div>

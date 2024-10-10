@@ -264,7 +264,7 @@ const TaskDetail = ({ params }: Props) => {
               onClick={() => {
                 submit();
               }}>
-              更新
+              <span className={styles.buttonText}>更新</span>
             </Button>
             <Button
               variant="secondary"
@@ -274,13 +274,12 @@ const TaskDetail = ({ params }: Props) => {
                 }
                 updateFormWith(task);
               }}>
-              リセット
+              <span className={styles.buttonText}>リセット</span>
             </Button>
           </div>
           <div className={styles.back}>
             <p onClick={() => router.back()} className={styles.backText}>
-              <Icon name="back" />
-              <Icon name="back" />
+              <Icon name="arrowBack" />
               戻る
             </p>
           </div>

@@ -188,3 +188,21 @@
   width: 100%;
 }
 
+
+.nextContent {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 16px;
+}
+
+.skipContent {
+  font-size: 16px;
+}
+
+.backContent {
+  font-size: 16px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
