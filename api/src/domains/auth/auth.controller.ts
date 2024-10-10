@@ -87,7 +87,7 @@ export class AuthController {
   }
 
   private removeRefreshToken(res: Response) {
-    res.cookie('refreshToken', {
+    res.clearCookie('refreshToken', {
       secure: true,
       httpOnly: true,
       sameSite: 'none',
