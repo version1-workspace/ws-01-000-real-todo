@@ -17,9 +17,17 @@
   display: flex;
 }
 
+.logoImage {
+  margin-right: 8px;
+}
+
 .logo a {
   color: var(--font-color);
   text-decoration: none;
+}
+
+.logoText {
+  font-size: 14px;
 }
 
 .logoContent {
@@ -42,6 +50,11 @@
 
 .menuItem {
   margin-right: 16px;
+  font-size: 12px;
+}
+
+.menuItemLight {
+  color: var(--font-color-dark);
 }
 
 .right {
@@ -52,7 +65,7 @@
 .actions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-evenly;
   min-width: 240px;
 
   @include m.lg {
