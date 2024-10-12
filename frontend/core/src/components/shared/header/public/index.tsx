@@ -31,26 +31,14 @@ export default function Header({ light }: Props) {
       </div>
       <div className={styles.right}>
         <ul className={styles.menu}>
-          <li
-            className={classHelper({
-              [styles.menuItem]: true,
-              [styles.menuItemLight]: light,
-            })}>
-            <a href="/">Home</a>
+          <li className={styles.menuItem}>
+            <a className={styles.menuLink} href="/">Home</a>
           </li>
-          <li
-            className={classHelper({
-              [styles.menuItem]: true,
-              [styles.menuItemLight]: light,
-            })}>
-            <a href="/">Turvo について</a>
+          <li className={styles.menuItem}>
+            <a className={styles.menuLink} href="/">Turvo について</a>
           </li>
-          <li
-            className={classHelper({
-              [styles.menuItem]: true,
-              [styles.menuItemLight]: light,
-            })}>
-            <a href="/">ドキュメント</a>
+          <li className={styles.menuItem}>
+            <a className={styles.menuLink} href="/">ドキュメント</a>
           </li>
         </ul>
         <div className={styles.actions}>

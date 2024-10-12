@@ -23,6 +23,11 @@
   background: var(--primary-color);
   color: var(--font-color-light);
   box-shadow: 2px 2px 4px 1px #1e514036;
+  transition: background 0.5s;
+}
+
+.primary:hover {
+  background: var(--primary-color-darker);
 }
 
 .secondary {

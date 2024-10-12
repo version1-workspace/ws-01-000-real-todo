@@ -10,7 +10,8 @@
   --hover-color: #f0f0f0;
   --shadow-color: #eee;
 
-  --primary-color: #4bcaa0;
+  --primary-color: #42b883;
+  --primary-color-darker: #0d864f;
   --secondary-color: #1C3041;
   --info-color: #9ED8DB;
   --danger-color: #d64045;
@@ -27,6 +28,7 @@
   --font-color-dark: #55655c;
   --font-color-dark-weak: rgb(148, 174, 159);
   --font-color-weak: rgb(148, 174, 159);
+  --top-font-weak-color: #677772;
   --bg-color-light: #fefefe;
   --bg-color-light-2: #f9f9f9;
 

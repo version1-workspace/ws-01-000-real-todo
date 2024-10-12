@@ -5,10 +5,10 @@
   justify-content: space-between;
   width: 100%;
   padding: 16px;
+  color: var(--font-color-dark);
 
   position: absolute;
   top: 0px;
-  color: white;
 
   z-index: var(--z-index-public-header);
 }
@@ -22,7 +22,7 @@
 }
 
 .logo a {
-  color: var(--font-color);
+  color: var(--font-color-dark);
   text-decoration: none;
 }
 
@@ -33,10 +33,6 @@
 .logoContent {
   display: flex;
   align-items: center;
-}
-
-.logoContentLight {
-  color: var(--font-color-dark);
 }
 
 .menu {
@@ -53,8 +49,15 @@
   font-size: 12px;
 }
 
-.menuItemLight {
-  color: var(--font-color-dark);
+.menuLink {
+  display: inline-block;
+  vertical-align: middle;
+  vertical-align: -webkit-baseline-middle;
+  transition: color 0.5s;
+}
+
+.menuLink:hover {
+  color: var(--primary-color-darker);
 }
 
 .right {
