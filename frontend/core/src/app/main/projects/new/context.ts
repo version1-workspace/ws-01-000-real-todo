@@ -18,6 +18,7 @@ export const FormContext = createContext<FormContextValue>({
   project: factory.project({
     name: "",
     uuid: "",
+    color: "",
     deadline: Date.now().toString(),
     slug: "",
     goal: "",

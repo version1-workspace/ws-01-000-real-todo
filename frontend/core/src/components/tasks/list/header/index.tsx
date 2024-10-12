@@ -95,6 +95,7 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
           <div className={styles.displayPageCount}>
             <label>表示件数 : </label>
             <select
+              className={styles.select}
               onChange={(e) => {
                 const limit = Number(e.target.value);
                 const newValues = { ...replica, limit };

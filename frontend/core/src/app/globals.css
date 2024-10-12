@@ -10,7 +10,8 @@
   --hover-color: #f0f0f0;
   --shadow-color: #eee;
 
-  --primary-color: #7A72FF;
+  --primary-color: #42b883;
+  --primary-color-darker: #0d864f;
   --secondary-color: #1C3041;
   --info-color: #9ED8DB;
   --danger-color: #d64045;
@@ -24,9 +25,10 @@
   --weak-border-color: #e2e2e290;
   --table-border-color: #e2e2e290;
   --font-color-light: white;
-  --font-color-dark: #2e2e2e;
-  --font-color-dark-weak: #666;
-  --font-color-weak: #B6B6B6;
+  --font-color-dark: #55655c;
+  --font-color-dark-weak: rgb(148, 174, 159);
+  --font-color-weak: rgb(148, 174, 159);
+  --top-font-weak-color: #677772;
   --bg-color-light: #fefefe;
   --bg-color-light-2: #f9f9f9;
 

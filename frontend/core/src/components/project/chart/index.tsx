@@ -11,7 +11,6 @@ import {
   PointElement,
   Tooltip,
   Legend,
-  ChartData,
 } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
 import Option from "@/components/shared/option";
@@ -75,8 +74,14 @@ const ChartType = {
 };
 
 const chartOptions = [
-  { label: <BarChart size="16px" />, value: ChartType.bar },
-  { label: <LineChart size="16px" />, value: ChartType.line },
+  {
+    label: <BarChart size="16px" />,
+    value: ChartType.bar,
+  },
+  {
+    label: <LineChart size="16px" />,
+    value: ChartType.line,
+  },
 ];
 
 const defaultDate = () => {
@@ -166,6 +171,7 @@ export default function Chart() {
             value={project}
             defaultOption={{ label: "全てのプロジェクト", value: "all" }}
             onSelect={(item) => setProject(item.value)}
+            flat
           />
         </div>
       </div>

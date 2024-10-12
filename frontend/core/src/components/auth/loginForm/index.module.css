@@ -7,21 +7,44 @@
 }
 
 .form {
+  position: relative;
+  width: 400px;
+  margin: auto;
   padding: 32px 16px;
+  border-radius: 4px;
 }
 
 .formTitle {
   margin: 32px 0;
   font-weight: normal;
-  font-size: 18px;
+  font-size: 14px;
+}
+
+.formSubtitle {
+  font-weight: normal;
+  display: inline-block;
+  font-size: 14px;
+}
+
+.inputField {
+  margin: 0 0;
+}
+
+.input {
+  padding: 16px !important; /* Override the padding from the input component */
 }
 
 .field {
-  margin: 32px 0;
+  margin: 16px 0;
 }
 
 .details {
   margin: 16px 0;
+}
+
+.copy {
+  font-size: 28px;
+  margin-bottom: 64px;
 }
 
 .link {

@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import styles from "./page.module.css";
+import styles from "./page.module.scss";
 import { ToastContainer } from "@/lib/toast";
 import { position } from "@/lib/toast/config";
 import Content from "./content";

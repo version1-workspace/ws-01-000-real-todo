@@ -28,15 +28,11 @@
 }
 
 .title {
-  font-size: 18px;
+  font-size: 14px;
   position: relative;
   background: #fefefe;
-  z-index: 1;
-  top: -36px;
-  left: 8px;
-  padding: 8px;
-  padding-right: 16px;
-  font-weight: 300;
+  padding: 8px 16px;
+  font-weight: bold;
 }
 
 .projectBody {
@@ -65,7 +61,9 @@
 }
 
 .goal {
-  font-size: 24px;
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--font-color);
   letter-spacing: 0.2rem;
 }
 

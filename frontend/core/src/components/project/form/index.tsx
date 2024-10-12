@@ -153,10 +153,10 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
               onClick={() => {
                 submit();
               }}>
-              更新
+              <span className={styles.buttonText}>更新</span>
             </Button>
             <Button variant="secondary" onClick={onCancel}>
-              キャンセル
+              <span className={styles.buttonText}>キャンセル</span>
             </Button>
           </div>
         </div>

@@ -103,8 +103,6 @@ interface RowProps {
 }
 
 const Row = ({ data, checked, onCheck }: RowProps) => {
-  const { options: projectOptions } = useProjects();
-
   return (
     <div key={data.id} className={styles.tableRow}>
       <div
@@ -173,7 +171,7 @@ const Row = ({ data, checked, onCheck }: RowProps) => {
       </div>
       <div className={join(styles.tableCell, styles.detail)}>
         <Link href={route.main.tasks.with(data.id)}>
-          <span className={styles.detailText}>more ...</span>
+          <Icon className={styles.detailIcon} name="arrowForward" />
         </Link>
       </div>
     </div>

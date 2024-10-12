@@ -1,7 +1,7 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import styles from "./page.module.css";
+import styles from "./index.module.scss";
 import Header from "@/components/shared/header/public";
 import Footer from "@/components/shared/footer";
 import Input from "@/components/shared/input/text";
@@ -32,23 +32,35 @@ const Content = ({ light }: Props) => {
     <>
       <Header light={light} />
       <section className={styles.content}>
-        <div className={styles.left}>
-          <div className={styles.card}>
-            <LoginForm />
-          </div>
-        </div>
-        <div className={styles.border}></div>
-        <div className={styles.right}>
-          <div className={styles.card}>
+        <div className={styles.card}>
+          <div className={styles.left}>
+            <div className={styles.whiteBar} style={{ top: "40px" }}></div>
             <div className={styles.form}>
-              <h2 className={styles.formTitle}>新規登録</h2>
+              <div className={styles.copy}>
+                Enjoy your life with Turvo 🎉🎉🎉
+              </div>
+              <h2 className={styles.formTitle}>
+                <span className={styles.formSubtitle}>無料で始める</span>
+              </h2>
               <div className={styles.field}>
-                <Input type="text" value="" placeholder="turbo@example.com" />
+                <Input
+                  type="text"
+                  value=""
+                  inputClassName={styles.input}
+                  placeholder="turbo@example.com"
+                />
               </div>
               <div className={styles.field}>
-                <Button variant="primary">新規登録</Button>
+                <Button variant="secondary">新規登録</Button>
               </div>
             </div>
+            <div className={styles.whiteBar}></div>
+          </div>
+          <div className={styles.border}></div>
+          <div className={styles.right}>
+            <div className={styles.greenBar} style={{ top: "40px" }}></div>
+            <LoginForm />
+            <div className={styles.greenBar}></div>
           </div>
         </div>
       </section>

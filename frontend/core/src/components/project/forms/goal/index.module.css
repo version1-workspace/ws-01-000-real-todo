@@ -1,6 +1,6 @@
-.body {
-  padding: 64px;
-  margin: auto;
+.container {
+  box-shadow: 0px 0px 4px 1px #22222220;
+  border-radius: 8px;
 }
 
 .row {
@@ -18,44 +18,13 @@
 
 .left {
   min-width: 240px;
+  font-size: 12px;
 }
 
 .title {
-  padding: 16px 32px;
-  font-size: 16px;
-  font-weight: normal;
-  border-bottom: 1px solid var(--border-color);
-  margin-bottom: 64px;
-}
-
-.group {
-  border-radius: 8px;
-  background: #f7f7ff;
-}
-
-.group .title {
-  font-size: 16px;
-  margin-bottom: 64px;
-  padding: 16px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.groupContent {
   padding: 32px;
-}
-
-.group .row {
-  padding: 0;
-}
-
-.group .col {
-  max-width: auto;
-}
-
-.group .input {
-  padding: 16px;
-  min-width: 100%;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .col {
@@ -65,12 +34,19 @@
 .input {
   border-radius: 8px;
   padding: 8px;
-  border: 1px solid var(--border-color);
   width: 100%;
+  border: 0;
+  box-shadow: 0px 0px 4px 1px #22222210;
+  color: var(--font-color-dark);
+}
+
+.input::placeholder {
+  color: var(--font-color-dark-weak);
 }
 
 .error {
   padding: 4px 0;
+  font-size: 12px;
   color: var(--danger-color);
 }
 
@@ -80,4 +56,11 @@
   display: inline-block;
   color: var(--danger-color);
   margin-left: 4px;
+}
+
+.border {
+  height: 1px;
+  background: #22222210;
+  width: 600px;
+  margin: 16px auto;
 }

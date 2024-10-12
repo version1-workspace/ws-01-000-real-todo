@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
 import styles from "./index.module.css";
 import { classHelper } from "@/lib/cls";
 import TaskTable from "../table";
@@ -10,7 +11,6 @@ import TaskForm from "@/components/tasks/form";
 import Link from "next/link";
 import route from "@/lib/route";
 import { useModal } from "@/lib/modal";
-import useProjects from "@/contexts/projects";
 import { factory } from "@/services/api/models";
 import { Project } from "@/services/api/models/project";
 import PopupMenu from "@/components/shared/popupMenu";
@@ -28,7 +28,6 @@ interface CollapseProps {
 }
 
 const Collapse = ({
-  line,
   disable,
   showMoreText,
   maxHeight,
@@ -39,31 +38,8 @@ const Collapse = ({
 
   return (
     <div className={styles.collapseContainer}>
-      <div className={styles.collapseHeader}>
-        {header}
-        <Icon
-          className={classHelper({
-            [styles.collapseTrigger]: true,
-            [styles.collapseTriggerShow]: show,
-          })}
-          name="chevronDown"
-          onClick={() => {
-            setShow((show) => !show);
-          }}
-        />
-      </div>
+      <div className={styles.collapseHeader}>{header}</div>
       <div className={styles.collapseContent}>
-        {!disable ? (
-          <div className={styles.collapseLineContainer}>
-            <div
-              className={classHelper({
-                [styles.collapseLine]: true,
-                [styles.collapseLineHidden]: !line,
-              })}>
-              <div className={styles.collapseLineArrow}></div>
-            </div>
-          </div>
-        ) : null}
         <div
           style={
             show
@@ -85,27 +61,19 @@ const Collapse = ({
                   onClick={() => setShow(true)}>
                   {showMoreText || "子タスクを確認する"}
                 </p>
-                <div
-                  className={styles.collapseShowMoreIcon}
-                  onClick={() => setShow(true)}>
-                  <div className={styles.collapseShowMoreArrow}></div>
-                  <div className={styles.collapseShowMoreArrow}></div>
-                </div>
               </div>
             </div>
           ) : null}
-          {children}
+          {show ? children : null}
         </div>
       </div>
       {show && !disable ? (
         <div className={styles.collapaseHideContainer}>
-          <div className={styles.collapseHideSkelton}></div>
           <div className={styles.collapseHide}>
             <div
               className={styles.collapseHideIcon}
               onClick={() => setShow(false)}>
-              <div className={styles.collapseHideArrow}></div>
-              <div className={styles.collapseHideArrow}></div>
+              <Icon name="up" />
             </div>
             <p
               className={styles.collapseHideText}
@@ -141,13 +109,22 @@ export default function MilestoneList({ project }: Props) {
 
   return (
     <CheckContainer>
+      <div className={styles.header}>
+        <div className={styles.title}>マイルストーン</div>
+        <div className={styles.currentPoint}>
+          <p className={styles.todayDate}>{dayjs().format("YYYY/MM/DD")}</p>
+          <p className={styles.todayText}>
+            <span className={styles.emoticon}>🚶</span>
+            今日・現在地点
+          </p>
+        </div>
+      </div>
       <div className={styles.container}>
         {milestones.map((it) => {
           return (
             <div className={styles.milestone} key={it.uuid}>
               <Collapse
-                line
-                showMoreText={`子タスクを確認する (${it.children.length}件)`}
+                showMoreText={`${it.children.length}件のタスク`}
                 maxHeight={it.children.length * rowHeight}
                 disable={it.children.length <= 0}
                 header={
@@ -230,7 +207,7 @@ export default function MilestoneList({ project }: Props) {
                               data={factory.task({
                                 uuid: "",
                                 title: "",
-                                kind: 'task' as const,
+                                kind: "task" as const,
                                 description: "",
                                 status: "scheduled" as const,
                                 project,
@@ -258,8 +235,10 @@ export default function MilestoneList({ project }: Props) {
           );
         })}
         <div className={styles.complete}>
+          <p className={styles.deadlineText}>{project.deadline.format()}</p>
           <p className={styles.completionText}>
-            目標達成 &#x1F389;&#x1F389;&#x1F389;
+            <span className={styles.emoticon}>🎯</span>
+            目標地点
           </p>
         </div>
         {orphans.length ? (

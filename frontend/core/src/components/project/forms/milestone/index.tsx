@@ -23,7 +23,7 @@ export default function Milestone({ className, readOnly }: Props) {
 
   return (
     <div className={join(styles.container, className)}>
-      <Goal readOnly />
+      <Goal shadow readOnly />
       <div className={styles.timeline}>
         <div className={styles.left}>
           <div className={styles.bar}></div>

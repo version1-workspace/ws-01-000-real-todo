@@ -5,11 +5,12 @@ import { factory } from "@/services/api/models";
 import { Project, ProjectParams } from "@/services/api/models/project";
 import { useEffect, useState } from "react";
 import { Pagination } from "@/services/api/models/pagination";
+import { getColors } from "@/lib/colors";
 
 interface SearchParams {
   limit?: number;
   page?: number;
-  status?: string[]
+  status?: string[];
 }
 
 interface IProjectContext {
@@ -41,7 +42,13 @@ export const useProjectsWithoutContext = () => {
     try {
       const res = await api.fetchProjects(params);
       const list = res.data.data;
-      const projects = list.map((it: ProjectParams) => factory.project(it));
+      const colors = getColors(list.length);
+      const projects = list.map((it: ProjectParams, index: number) =>
+        factory.project({
+          ...it,
+          color: colors[index],
+        }),
+      );
 
       setData(
         new Pagination({

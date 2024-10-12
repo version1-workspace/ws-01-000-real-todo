@@ -5,10 +5,10 @@
   justify-content: space-between;
   width: 100%;
   padding: 16px;
+  color: var(--font-color-dark);
 
   position: absolute;
   top: 0px;
-  color: white;
 
   z-index: var(--z-index-public-header);
 }
@@ -17,18 +17,22 @@
   display: flex;
 }
 
+.logoImage {
+  margin-right: 8px;
+}
+
 .logo a {
-  color: var(--font-color);
+  color: var(--font-color-dark);
   text-decoration: none;
+}
+
+.logoText {
+  font-size: 14px;
 }
 
 .logoContent {
   display: flex;
   align-items: center;
-}
-
-.logoContentLight {
-  color: var(--font-color-dark);
 }
 
 .menu {
@@ -42,6 +46,18 @@
 
 .menuItem {
   margin-right: 16px;
+  font-size: 12px;
+}
+
+.menuLink {
+  display: inline-block;
+  vertical-align: middle;
+  vertical-align: -webkit-baseline-middle;
+  transition: color 0.5s;
+}
+
+.menuLink:hover {
+  color: var(--primary-color-darker);
 }
 
 .right {
@@ -52,7 +68,7 @@
 .actions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-evenly;
   min-width: 240px;
 
   @include m.lg {

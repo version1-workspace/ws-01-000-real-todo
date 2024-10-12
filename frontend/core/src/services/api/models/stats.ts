@@ -50,13 +50,13 @@ export class StatsModel {
 
 const chartOptions = {
   completed: {
-    borderColor: "rgb(255, 99, 132)",
-    backgroundColor: "rgb(255, 99, 132)",
+    borderColor: "#8fe3c7",
+    backgroundColor: "#8fe3c7",
     stack: "stack-0",
   },
   todo: {
-    borderColor: "rgb(75, 192, 192)",
-    backgroundColor: "rgb(75, 192, 192)",
+    borderColor: "#8fe3c7",
+    backgroundColor: "#8fe3c740",
     stack: "stack-0",
   },
 };
