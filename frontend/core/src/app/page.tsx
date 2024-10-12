@@ -19,9 +19,58 @@ function CheckIcon() {
   );
 }
 
+type Position = {
+  top: string;
+  right: string;
+  left: string;
+  bottom: string;
+};
+
+function Donut({
+  color,
+  position,
+}: {
+  color: string;
+  position: Partial<Position>;
+}) {
+  return (
+    <div className={styles.donut} style={{ background: color, ...position }}>
+      <div className={styles.donutInner}></div>
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <main className={styles.main}>
+      <Donut
+        color="#2ED9FF"
+        position={{
+          top: "240px",
+          right: "-240px",
+        }}
+      />
+      <Donut
+        color="#4BCAA0"
+        position={{
+          top: "600px",
+          left: "-240px",
+        }}
+      />
+      <Donut
+        color="#41ADC5"
+        position={{
+          top: "2200px",
+          left: "-240px",
+        }}
+      />
+      <Donut
+        color="#009362"
+        position={{
+          top: "2800px",
+          right: "-240px",
+        }}
+      />
       <Header />
       <div className={styles.hero}>
         <div className={styles.copy}>
