@@ -6,6 +6,31 @@
   justify-content: space-between;
   align-items: center;
   min-height: 100vh;
+  overflow: hidden;
+}
+
+.donut {
+  position: absolute;
+  height: 480px;
+  width: 480px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @include m.lg {
+    display: none;
+  }
+}
+
+.donutInner {
+  height: 240px;
+  width: 240px;
+  border-radius: 50%;
+  background: var(--background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .hideOnlySmartphone {
