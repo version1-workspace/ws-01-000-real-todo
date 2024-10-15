@@ -59,3 +59,36 @@ Turvo は 学習用のサンプルアプリで
 周りの機能は未実装または外観のみの実装となっています。
 これらの機能は将来実装されるかもしれませんが、あくまでも学習用の例として有益であると判断された場合に実装されます。
 
+### 使用技術
+
+#### Frontend
+
+1. React
+1. Next.js
+1. TypeScript
+1. Axios
+1. Dayjs
+1. ESLint
+1. Prettier
+
+### Backend
+
+1. Nest.js(Express)
+1. TypeScript
+1. TypeORM(MySQL)
+1. Joi
+1. ESLint
+1. Prettier
+1. jsonapi-serializer
+1. jest
+
+### Misc
+
+| Kind | Name |
+| --- | --- |
+| CI/CD | Github Action |
+
+
+
+
+
