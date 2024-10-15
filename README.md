@@ -9,6 +9,7 @@ https://version1-real-todo.netlify.app
 新規登録は実装していないのでゲストユーザを使って機能を試すことができます。
 
 ID: user.1@example.com
+
 PASSWORD: AndyBobCharrie
 
 ## How to Run
