@@ -25,9 +25,9 @@ func main() {
 		fmt.Fprintf(w, "Welcome to the home page!")
 	}).Methods(http.MethodGet)
 	projectModule := project.New(r)
-	projectRoot := projectModule.Filter("\\{slug\\}\\/milestones*")
+	projectRoot := projectModule.Filter("root")
 	projectRoot.Register("/api/v1")
-	userProject := projectModule.Filter("^/[^\\{slug\\}/milestones]*$")
+	userProject := projectModule.Filter("users")
 
 	userModule := user.New(r)
 	userModule.AddSub(userProject)

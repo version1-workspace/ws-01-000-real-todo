@@ -16,6 +16,7 @@ type Moduler interface {
 type HandleFunc struct {
 	Methods []string
 	Path    string
+	Group   string
 	Handler func(http.ResponseWriter, *http.Request)
 }
 

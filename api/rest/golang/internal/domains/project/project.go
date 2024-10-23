@@ -2,7 +2,6 @@ package project
 
 import (
 	"net/http"
-	"regexp"
 	"version1-workspace/ws-01-000-real-todo/internal/pkg/toolkit/module"
 
 	"github.com/gorilla/mux"
@@ -15,9 +14,11 @@ func New(r *mux.Router) *Module {
 	return &Module{
 		basePath: "/projects",
 		handlers: []module.HandleFunc{
-			{Methods: []string{http.MethodGet}, Path: "/{slug}/milestones", Handler: c.milestones},
-			{Methods: []string{http.MethodPut}, Path: "/{slug}/milestones/{id}/archive", Handler: c.archiveMilestones},
-			{Methods: []string{http.MethodGet}, Path: "/", Handler: c.projects},
+			{Methods: []string{http.MethodGet}, Path: "/{slug}/milestones", Handler: c.milestones, Group: "root"},
+			{Methods: []string{http.MethodPut}, Path: "/{slug}/milestones/{id}/archive", Handler: c.archiveMilestones, Group: "root"},
+			{Methods: []string{http.MethodGet}, Path: "/", Handler: c.projects, Group: "users"},
+			{Methods: []string{http.MethodPatch}, Path: "/{slug}/archive/", Handler: c.projects, Group: "users"},
+			{Methods: []string{http.MethodPatch}, Path: "/{slug}/reopen/", Handler: c.projects, Group: "users"},
 		},
 		r: r,
 		c: newController(),
@@ -31,11 +32,10 @@ type Module struct {
 	c        *controller
 }
 
-func (m Module) Filter(r string) *Module {
+func (m Module) Filter(g string) *Module {
 	list := []module.HandleFunc{}
-	re := regexp.MustCompile(r)
 	for _, l := range m.handlers {
-		if re.MatchString(l.Path) {
+		if l.Group == g {
 			list = append(list, l)
 		}
 	}
