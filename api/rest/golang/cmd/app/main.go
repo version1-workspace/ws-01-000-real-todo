@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"version1-workspace/ws-01-000-real-todo/internal/domains/auth"
+	"version1-workspace/ws-01-000-real-todo/internal/domains/project"
 	"version1-workspace/ws-01-000-real-todo/internal/domains/user"
 
 	"github.com/gorilla/mux"
@@ -22,8 +24,17 @@ func main() {
 		}
 		fmt.Fprintf(w, "Welcome to the home page!")
 	}).Methods(http.MethodGet)
+	projectModule := project.New(r)
+	projectRoot := projectModule.Filter("\\{slug\\}\\/milestones*")
+	projectRoot.Register("/api/v1")
+	userProject := projectModule.Filter("^/[^\\{slug\\}/milestones]*$")
+
 	userModule := user.New(r)
-	userModule.Register()
+	userModule.AddSub(userProject)
+	userModule.Register("/api/v1")
+
+	authModule := auth.New(r)
+	authModule.Register("/api/v1")
 
 	err := r.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		pathTemplate, err := route.GetPathTemplate()
