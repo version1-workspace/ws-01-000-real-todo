@@ -10,11 +10,13 @@ import (
 
 type controller struct {
 	c *tkcontroller.Controller
+	s *service
 }
 
 func newController() *controller {
 	return &controller{
 		c: &tkcontroller.Controller{},
+		s: &service{},
 	}
 }
 
@@ -30,5 +32,12 @@ func (c controller) archiveMilestones(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c controller) projects(w http.ResponseWriter, r *http.Request) {
-	c.c.Render(w, map[string]string{"message": "ok"})
+	ctx := r.Context()
+	list, err := c.s.fetchProjects(ctx, 10, 1, []string{"active"})
+	if err != nil {
+		c.c.InternalServerError(w, err)
+		return
+	}
+
+	c.c.Render(w, list)
 }
