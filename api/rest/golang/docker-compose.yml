@@ -1,0 +1,11 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.1.0
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=todo_golang_development
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql:cached
