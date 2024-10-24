@@ -4,6 +4,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 )
 
 // Project holds the schema definition for the Project entity.
@@ -34,5 +35,12 @@ func (Project) Edges() []ent.Edge {
 		edge.From("users", User.Type).
 			Ref("projects").
 			Unique(),
+	}
+}
+
+func (Project) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Fields("user_id"),
+		index.Fields("deadline"),
 	}
 }
