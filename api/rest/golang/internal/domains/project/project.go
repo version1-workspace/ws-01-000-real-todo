@@ -2,15 +2,23 @@ package project
 
 import (
 	"net/http"
+	"version1-workspace/ws-01-000-real-todo/internal/ent"
 	"version1-workspace/ws-01-000-real-todo/internal/pkg/toolkit/module"
 
 	"github.com/gorilla/mux"
 )
 
+type client interface {
+	Get() *ent.Client
+}
+
 var _ module.Moduler = (*Module)(nil)
 
-func New(r *mux.Router) *Module {
-	c := newController()
+func New(cli client, r *mux.Router) *Module {
+	repo := newRepository(cli)
+	srv := newService(repo)
+	c := newController(srv)
+
 	return &Module{
 		Module: module.Module{
 			BasePath: "/projects",

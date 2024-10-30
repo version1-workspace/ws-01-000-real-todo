@@ -13,10 +13,10 @@ type controller struct {
 	s *service
 }
 
-func newController() *controller {
+func newController(s *service) *controller {
 	return &controller{
 		c: &tkcontroller.Controller{},
-		s: &service{},
+		s: s,
 	}
 }
 

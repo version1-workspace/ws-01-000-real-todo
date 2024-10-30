@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"version1-workspace/ws-01-000-real-todo/internal/db"
+	appdb "version1-workspace/ws-01-000-real-todo/internal/db"
 	"version1-workspace/ws-01-000-real-todo/internal/domains/auth"
 	"version1-workspace/ws-01-000-real-todo/internal/domains/project"
 	"version1-workspace/ws-01-000-real-todo/internal/domains/user"
@@ -13,6 +15,13 @@ import (
 )
 
 func main() {
+	cfg := db.NewConfig()
+	db := cfg.MustOpen()
+	defer db.Close()
+
+	client := appdb.NewClient(db, true)
+	defer client.Close()
+
 	r := mux.NewRouter()
 	r.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 		fmt.Println("Request received")
@@ -24,7 +33,7 @@ func main() {
 		}
 		fmt.Fprintf(w, "Welcome to the home page!")
 	}).Methods(http.MethodGet)
-	projectModule := project.New(r)
+	projectModule := project.New(client, r)
 	projectRoot := projectModule.Filter("root")
 	projectRoot.Register("/api/v1")
 	userProject := projectModule.Filter("users")
