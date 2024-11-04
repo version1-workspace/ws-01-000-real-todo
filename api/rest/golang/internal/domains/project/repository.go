@@ -10,6 +10,23 @@ type Project struct {
 	*ent.Project
 }
 
+func (p Project) Serialize() map[string]interface{} {
+	return map[string]interface{}{
+		"id":         p.ID,
+		"name":       p.Name,
+		"userId":     p.UserID,
+		"status":     p.Status,
+		"goal":       p.Goal,
+		"shouldbe":   p.Shouldbe,
+		"deadline":   p.Deadline,
+		"startingAt": p.StartedAt,
+		"startedAt":  p.StartedAt,
+		"finishedAt": p.FinishedAt,
+		"createdAt":  p.CreatedAt,
+		"updatedAt":  p.UpdatedAt,
+	}
+}
+
 func newRepository(cli client) *repository {
 	return &repository{
 		client: cli,
@@ -33,5 +50,5 @@ func (r repository) fetchProjects(ctx context.Context, userID int, limit, page i
 		}
 	}
 
-	return []Project{}, nil
+	return projects, nil
 }

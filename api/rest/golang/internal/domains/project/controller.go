@@ -3,6 +3,7 @@ package project
 import (
 	"fmt"
 	"net/http"
+	appcontext "version1-workspace/ws-01-000-real-todo/internal/context"
 	tkcontroller "version1-workspace/ws-01-000-real-todo/internal/pkg/toolkit/controller"
 
 	"github.com/gorilla/mux"
@@ -33,11 +34,22 @@ func (c controller) archiveMilestones(w http.ResponseWriter, r *http.Request) {
 
 func (c controller) projects(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	list, err := c.s.fetchProjects(ctx, 10, 1, []string{"active"})
+	u, err := appcontext.CurrentUser(ctx)
+	if err != nil {
+		c.c.Unauthorized(w, err)
+		return
+	}
+
+	list, err := c.s.fetchProjects(ctx, 10, 1, u.ID, []string{"active"})
 	if err != nil {
 		c.c.InternalServerError(w, err)
 		return
 	}
 
-	c.c.Render(w, list)
+	payload := []map[string]any{}
+	for _, p := range list {
+		payload = append(payload, p.Serialize())
+	}
+
+	c.c.RenderMany(w, payload, &tkcontroller.PageInfo{Limit: 10, Page: 1})
 }

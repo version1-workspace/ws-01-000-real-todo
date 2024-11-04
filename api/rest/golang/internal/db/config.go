@@ -11,11 +11,12 @@ type config mysql.Config
 
 func NewConfig() *config {
 	return &config{
-		User:   "root",
-		Passwd: "password",
-		Net:    "tcp",
-		Addr:   "127.0.0.1:3306",
-		DBName: "todo_golang_development",
+		User:      "root",
+		Passwd:    "password",
+		Net:       "tcp",
+		Addr:      "127.0.0.1:3306",
+		DBName:    "todo_golang_development",
+		ParseTime: true,
 	}
 }
 

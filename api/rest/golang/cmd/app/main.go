@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,6 +11,8 @@ import (
 	"version1-workspace/ws-01-000-real-todo/internal/domains/auth"
 	"version1-workspace/ws-01-000-real-todo/internal/domains/project"
 	"version1-workspace/ws-01-000-real-todo/internal/domains/user"
+	"version1-workspace/ws-01-000-real-todo/internal/ent"
+	"version1-workspace/ws-01-000-real-todo/internal/middleware"
 
 	"github.com/gorilla/mux"
 )
@@ -33,6 +36,13 @@ func main() {
 		}
 		fmt.Fprintf(w, "Welcome to the home page!")
 	}).Methods(http.MethodGet)
+
+	middleware.Use(r,
+		middleware.RequestLogging,
+		middleware.Auth(func(ctx context.Context, id int) *ent.User {
+			return client.Get().User.Query().Limit(1).OnlyX(ctx)
+		}),
+	)
 	projectModule := project.New(client, r)
 	projectRoot := projectModule.Filter("root")
 	projectRoot.Register("/api/v1")
