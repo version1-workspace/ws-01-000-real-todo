@@ -36,13 +36,13 @@ type Project struct {
 	// Deadline holds the value of the "deadline" field.
 	Deadline time.Time `json:"deadline,omitempty"`
 	// StartingAt holds the value of the "starting_at" field.
-	StartingAt time.Time `json:"starting_at,omitempty"`
+	StartingAt *time.Time `json:"starting_at,omitempty"`
 	// StartedAt holds the value of the "started_at" field.
-	StartedAt time.Time `json:"started_at,omitempty"`
+	StartedAt *time.Time `json:"started_at,omitempty"`
 	// FinishedAt holds the value of the "finished_at" field.
-	FinishedAt time.Time `json:"finished_at,omitempty"`
+	FinishedAt *time.Time `json:"finished_at,omitempty"`
 	// ArchivedAt holds the value of the "archived_at" field.
-	ArchivedAt time.Time `json:"archived_at,omitempty"`
+	ArchivedAt *time.Time `json:"archived_at,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -162,25 +162,29 @@ func (pr *Project) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field starting_at", values[i])
 			} else if value.Valid {
-				pr.StartingAt = value.Time
+				pr.StartingAt = new(time.Time)
+				*pr.StartingAt = value.Time
 			}
 		case project.FieldStartedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field started_at", values[i])
 			} else if value.Valid {
-				pr.StartedAt = value.Time
+				pr.StartedAt = new(time.Time)
+				*pr.StartedAt = value.Time
 			}
 		case project.FieldFinishedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field finished_at", values[i])
 			} else if value.Valid {
-				pr.FinishedAt = value.Time
+				pr.FinishedAt = new(time.Time)
+				*pr.FinishedAt = value.Time
 			}
 		case project.FieldArchivedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field archived_at", values[i])
 			} else if value.Valid {
-				pr.ArchivedAt = value.Time
+				pr.ArchivedAt = new(time.Time)
+				*pr.ArchivedAt = value.Time
 			}
 		case project.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -266,17 +270,25 @@ func (pr *Project) String() string {
 	builder.WriteString("deadline=")
 	builder.WriteString(pr.Deadline.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("starting_at=")
-	builder.WriteString(pr.StartingAt.Format(time.ANSIC))
+	if v := pr.StartingAt; v != nil {
+		builder.WriteString("starting_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
 	builder.WriteString(", ")
-	builder.WriteString("started_at=")
-	builder.WriteString(pr.StartedAt.Format(time.ANSIC))
+	if v := pr.StartedAt; v != nil {
+		builder.WriteString("started_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
 	builder.WriteString(", ")
-	builder.WriteString("finished_at=")
-	builder.WriteString(pr.FinishedAt.Format(time.ANSIC))
+	if v := pr.FinishedAt; v != nil {
+		builder.WriteString("finished_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
 	builder.WriteString(", ")
-	builder.WriteString("archived_at=")
-	builder.WriteString(pr.ArchivedAt.Format(time.ANSIC))
+	if v := pr.ArchivedAt; v != nil {
+		builder.WriteString("archived_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(pr.CreatedAt.Format(time.ANSIC))

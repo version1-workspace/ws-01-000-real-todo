@@ -497,7 +497,7 @@ func (m *ProjectMutation) StartingAt() (r time.Time, exists bool) {
 // OldStartingAt returns the old "starting_at" field's value of the Project entity.
 // If the Project object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ProjectMutation) OldStartingAt(ctx context.Context) (v time.Time, err error) {
+func (m *ProjectMutation) OldStartingAt(ctx context.Context) (v *time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldStartingAt is only allowed on UpdateOne operations")
 	}
@@ -546,7 +546,7 @@ func (m *ProjectMutation) StartedAt() (r time.Time, exists bool) {
 // OldStartedAt returns the old "started_at" field's value of the Project entity.
 // If the Project object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ProjectMutation) OldStartedAt(ctx context.Context) (v time.Time, err error) {
+func (m *ProjectMutation) OldStartedAt(ctx context.Context) (v *time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldStartedAt is only allowed on UpdateOne operations")
 	}
@@ -595,7 +595,7 @@ func (m *ProjectMutation) FinishedAt() (r time.Time, exists bool) {
 // OldFinishedAt returns the old "finished_at" field's value of the Project entity.
 // If the Project object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ProjectMutation) OldFinishedAt(ctx context.Context) (v time.Time, err error) {
+func (m *ProjectMutation) OldFinishedAt(ctx context.Context) (v *time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldFinishedAt is only allowed on UpdateOne operations")
 	}
@@ -644,7 +644,7 @@ func (m *ProjectMutation) ArchivedAt() (r time.Time, exists bool) {
 // OldArchivedAt returns the old "archived_at" field's value of the Project entity.
 // If the Project object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ProjectMutation) OldArchivedAt(ctx context.Context) (v time.Time, err error) {
+func (m *ProjectMutation) OldArchivedAt(ctx context.Context) (v *time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldArchivedAt is only allowed on UpdateOne operations")
 	}

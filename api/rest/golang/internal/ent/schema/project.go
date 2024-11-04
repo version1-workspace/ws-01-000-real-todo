@@ -22,10 +22,10 @@ func (Project) Fields() []ent.Field {
 		field.Text("shouldbe").Optional(),
 		field.Enum("status").Values("initial", "active", "archived").Default("initial"),
 		field.Time("deadline"),
-		field.Time("starting_at").Optional(),
-		field.Time("started_at").Optional(),
-		field.Time("finished_at").Optional(),
-		field.Time("archived_at").Optional(),
+		field.Time("starting_at").Nillable().Optional(),
+		field.Time("started_at").Nillable().Optional(),
+		field.Time("finished_at").Nillable().Optional(),
+		field.Time("archived_at").Nillable().Optional(),
 	})
 }
 
