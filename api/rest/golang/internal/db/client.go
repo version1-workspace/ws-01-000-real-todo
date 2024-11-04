@@ -15,9 +15,8 @@ type Client struct {
 
 func NewClient(db *sql.DB, queryLog bool) *Client {
 	drv := entsql.OpenDB("mysql", db)
-	entclient := ent.NewClient(ent.Driver(drv))
 	ql := logger.NewQueryLogger(true)
-	entclient.WithCustomLogger(ql.PrintWithColor)
+	entclient := ent.NewClient(ent.Driver(drv), ent.Log(ql.PrintWithColor))
 
 	return &Client{
 		Client:   entclient,
