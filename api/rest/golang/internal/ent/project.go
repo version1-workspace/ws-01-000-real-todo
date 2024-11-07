@@ -299,5 +299,55 @@ func (pr *Project) String() string {
 	return builder.String()
 }
 
+// Get field values by name.
+func (pr *Project) Values(name string) (any, error) {
+	switch name {
+	case "id":
+		return pr.ID, nil
+	case "uuid":
+		return pr.UUID, nil
+	case "slug":
+		return pr.Slug, nil
+	case "name":
+		return pr.Name, nil
+	case "user_id":
+		return pr.UserID, nil
+	case "goal":
+		return pr.Goal, nil
+	case "shouldbe":
+		return pr.Shouldbe, nil
+	case "status":
+		return pr.Status, nil
+	case "deadline":
+		return pr.Deadline, nil
+	case "starting_at":
+		if pr.StartingAt == nil {
+			return nil, nil
+		}
+		return *pr.StartingAt, nil
+	case "started_at":
+		if pr.StartedAt == nil {
+			return nil, nil
+		}
+		return *pr.StartedAt, nil
+	case "finished_at":
+		if pr.FinishedAt == nil {
+			return nil, nil
+		}
+		return *pr.FinishedAt, nil
+	case "archived_at":
+		if pr.ArchivedAt == nil {
+			return nil, nil
+		}
+		return *pr.ArchivedAt, nil
+	case "created_at":
+		return pr.CreatedAt, nil
+	case "updated_at":
+		return pr.UpdatedAt, nil
+	default:
+		return nil, fmt.Errorf("field %s not found", name)
+	}
+}
+
 // Projects is a parsable slice of Project.
 type Projects []*Project

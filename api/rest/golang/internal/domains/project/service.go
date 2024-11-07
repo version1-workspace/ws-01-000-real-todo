@@ -12,7 +12,7 @@ type service struct {
 	r *repository
 }
 
-func (s service) fetchProjects(ctx context.Context, limit, page, userID int, status []string) ([]Project, error) {
+func (s service) fetchProjects(ctx context.Context, limit, page, userID int, status []string) (Projects, error) {
 	list, err := s.r.fetchProjects(ctx, userID, limit, page, status)
 	if err != nil {
 		return list, err

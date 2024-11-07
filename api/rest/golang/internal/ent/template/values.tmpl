@@ -1,0 +1,26 @@
+{{ define "model/additional/values" }}
+// Get field values by name.
+func ({{ $.Receiver  }} *{{ $.Name }}) Values(name string) (any, error) {
+  switch (name) {
+  {{- if $.HasOneFieldID }}
+    case "id":
+      return {{ $.Receiver }}.ID, nil
+  {{- end }}
+  {{- range $i, $f := $.Fields }}
+    case "{{ $f.Name }}":
+			{{- $sf := printf "%s.%s" $.Receiver $f.StructField }}
+      {{- if $f.Nillable }}
+        if {{ $sf }} == nil {
+          return nil, nil
+        }
+        return *{{ $sf }}, nil
+      {{- else }}
+        return {{ $sf }}, nil
+      {{- end }}
+		{{- end }}
+    default:
+      return nil, fmt.Errorf("field %s not found", name)
+  }
+}
+{{ end }}
+

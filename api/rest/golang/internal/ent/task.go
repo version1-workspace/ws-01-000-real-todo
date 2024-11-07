@@ -125,5 +125,21 @@ func (t *Task) String() string {
 	return builder.String()
 }
 
+// Get field values by name.
+func (t *Task) Values(name string) (any, error) {
+	switch name {
+	case "id":
+		return t.ID, nil
+	case "uuid":
+		return t.UUID, nil
+	case "created_at":
+		return t.CreatedAt, nil
+	case "updated_at":
+		return t.UpdatedAt, nil
+	default:
+		return nil, fmt.Errorf("field %s not found", name)
+	}
+}
+
 // Tasks is a parsable slice of Task.
 type Tasks []*Task

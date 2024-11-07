@@ -4,27 +4,25 @@ import (
 	"context"
 	"version1-workspace/ws-01-000-real-todo/internal/ent"
 	"version1-workspace/ws-01-000-real-todo/internal/ent/project"
+	"version1-workspace/ws-01-000-real-todo/internal/pkg/serializer"
+	"version1-workspace/ws-01-000-real-todo/internal/pkg/toolkit/renderer"
 )
 
 type Project struct {
 	*ent.Project
 }
 
-func (p Project) Serialize() map[string]interface{} {
-	return map[string]interface{}{
-		"id":         p.ID,
-		"name":       p.Name,
-		"userId":     p.UserID,
-		"status":     p.Status,
-		"goal":       p.Goal,
-		"shouldbe":   p.Shouldbe,
-		"deadline":   p.Deadline,
-		"startingAt": p.StartedAt,
-		"startedAt":  p.StartedAt,
-		"finishedAt": p.FinishedAt,
-		"createdAt":  p.CreatedAt,
-		"updatedAt":  p.UpdatedAt,
-	}
+type Projects []Project
+
+var _ renderer.ArraySerializer = (*Projects)(nil)
+var _ renderer.Serializer = (*Project)(nil)
+
+func (p Projects) Serialize() ([]map[string]any, error) {
+	return serializer.SerialzieCollection(p)
+}
+
+func (p Project) Serialize() (map[string]any, error) {
+	return serializer.Serialize(p.Project, project.Columns)
 }
 
 func newRepository(cli client) *repository {
@@ -37,10 +35,10 @@ type repository struct {
 	client client
 }
 
-func (r repository) fetchProjects(ctx context.Context, userID int, limit, page int, status []string) ([]Project, error) {
+func (r repository) fetchProjects(ctx context.Context, userID int, limit, page int, status []string) (Projects, error) {
 	list, err := r.client.Get().Project.Query().Where(project.UserID(userID)).All(ctx)
 	if err != nil {
-		return []Project{}, err
+		return Projects{}, err
 	}
 
 	projects := []Project{}
@@ -50,5 +48,5 @@ func (r repository) fetchProjects(ctx context.Context, userID int, limit, page i
 		}
 	}
 
-	return projects, nil
+	return Projects(projects), nil
 }

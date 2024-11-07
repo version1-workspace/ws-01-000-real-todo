@@ -1,4 +1,4 @@
-package controller
+package renderer
 
 import (
 	"encoding/json"
@@ -21,16 +21,22 @@ type ResponseBody struct {
 	PageInfo *PageInfo `json:"pageInfo,omitempty"`
 }
 
-type Controller struct {
+type Renderer struct {
 }
 
-func NewController() *Controller {
-	return &Controller{}
+func NewRenderer() *Renderer {
+	return &Renderer{}
 }
 
-func (c Controller) Render(w http.ResponseWriter, payload any) {
+func (c Renderer) Render(w http.ResponseWriter, payload any) {
+	data, err := normalize(payload)
+	if err != nil {
+		c.InternalServerError(w, err)
+		return
+	}
+
 	res := ResponseBody{
-		Data: payload,
+		Data: data,
 	}
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(res); err != nil {
@@ -39,12 +45,33 @@ func (c Controller) Render(w http.ResponseWriter, payload any) {
 }
 
 type Serializer interface {
-	Serialize() map[string]interface{}
+	Serialize() (map[string]interface{}, error)
 }
 
-func (c Controller) RenderMany(w http.ResponseWriter, payload any, pi *PageInfo) {
+type ArraySerializer interface {
+	Serialize() ([]map[string]interface{}, error)
+}
+
+func normalize(payload any) (any, error) {
+	switch v := payload.(type) {
+	case Serializer:
+		return v.Serialize()
+	case ArraySerializer:
+		return v.Serialize()
+	default:
+		return payload, nil
+	}
+}
+
+func (c Renderer) RenderMany(w http.ResponseWriter, payload any, pi *PageInfo) {
+	data, err := normalize(payload)
+	if err != nil {
+		c.InternalServerError(w, err)
+		return
+	}
+
 	res := ResponseBody{
-		Data:     payload,
+		Data:     data,
 		PageInfo: pi,
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -53,14 +80,14 @@ func (c Controller) RenderMany(w http.ResponseWriter, payload any, pi *PageInfo)
 	}
 }
 
-func (c Controller) InternalServerError(w http.ResponseWriter, payload any) {
+func (c Renderer) InternalServerError(w http.ResponseWriter, payload any) {
 	w.WriteHeader(http.StatusInternalServerError)
 	if err := json.NewEncoder(w).Encode(payload); err != nil {
 		panic(fmt.Errorf("failed to render error: %w", err))
 	}
 }
 
-func (c Controller) NotFound(w http.ResponseWriter, payload any) {
+func (c Renderer) NotFound(w http.ResponseWriter, payload any) {
 	w.WriteHeader(http.StatusNotFound)
 	if payload == nil {
 		c.Render(w, map[string]string{"message": "Not Found"})
@@ -69,7 +96,7 @@ func (c Controller) NotFound(w http.ResponseWriter, payload any) {
 	}
 }
 
-func (c Controller) BadRequest(w http.ResponseWriter, payload any) {
+func (c Renderer) BadRequest(w http.ResponseWriter, payload any) {
 	w.WriteHeader(http.StatusBadRequest)
 	if payload == nil {
 		c.Render(w, map[string]string{"message": "Bad Request"})
@@ -78,7 +105,7 @@ func (c Controller) BadRequest(w http.ResponseWriter, payload any) {
 	}
 }
 
-func (c Controller) Unauthorized(w http.ResponseWriter, payload any) {
+func (c Renderer) Unauthorized(w http.ResponseWriter, payload any) {
 	w.WriteHeader(http.StatusUnauthorized)
 	if payload == nil {
 		c.Render(w, map[string]string{"message": "Unauthorized"})

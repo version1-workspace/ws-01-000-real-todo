@@ -2,16 +2,16 @@ package auth
 
 import (
 	"net/http"
-	tkcontroller "version1-workspace/ws-01-000-real-todo/internal/pkg/toolkit/controller"
+	"version1-workspace/ws-01-000-real-todo/internal/pkg/toolkit/renderer"
 )
 
 type controller struct {
-	c *tkcontroller.Controller
+	c *renderer.Renderer
 }
 
 func newController() *controller {
 	return &controller{
-		c: &tkcontroller.Controller{},
+		c: &renderer.Renderer{},
 	}
 }
 

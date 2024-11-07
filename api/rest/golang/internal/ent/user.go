@@ -208,5 +208,31 @@ func (u *User) String() string {
 	return builder.String()
 }
 
+// Get field values by name.
+func (u *User) Values(name string) (any, error) {
+	switch name {
+	case "id":
+		return u.ID, nil
+	case "uuid":
+		return u.UUID, nil
+	case "email":
+		return u.Email, nil
+	case "username":
+		return u.Username, nil
+	case "password_digest":
+		return u.PasswordDigest, nil
+	case "refresh_token":
+		return u.RefreshToken, nil
+	case "status":
+		return u.Status, nil
+	case "created_at":
+		return u.CreatedAt, nil
+	case "updated_at":
+		return u.UpdatedAt, nil
+	default:
+		return nil, fmt.Errorf("field %s not found", name)
+	}
+}
+
 // Users is a parsable slice of User.
 type Users []*User
