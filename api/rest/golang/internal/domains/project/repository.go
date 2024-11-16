@@ -50,3 +50,21 @@ func (r repository) fetchProjects(ctx context.Context, userID int, limit, page i
 
 	return Projects(projects), nil
 }
+
+func (r repository) createProject(ctx context.Context, userID int, prj *Project) (*Project, error) {
+	c := r.client.Get().Project
+	res, err := c.Create().
+		SetUserID(userID).
+		SetName(prj.Name).
+		SetDeadline(prj.Deadline).
+		SetStatus(prj.Status).
+		SetSlug(prj.Slug).
+		SetGoal(prj.Goal).
+		SetShouldbe(prj.Shouldbe).
+		Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Project{res}, nil
+}

@@ -9,6 +9,7 @@ import (
 	"math"
 	"version1-workspace/ws-01-000-real-todo/internal/ent/predicate"
 	"version1-workspace/ws-01-000-real-todo/internal/ent/project"
+	"version1-workspace/ws-01-000-real-todo/internal/ent/task"
 	"version1-workspace/ws-01-000-real-todo/internal/ent/user"
 
 	"entgo.io/ent"
@@ -25,6 +26,7 @@ type UserQuery struct {
 	inters       []Interceptor
 	predicates   []predicate.User
 	withProjects *ProjectQuery
+	withTasks    *TaskQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -76,6 +78,28 @@ func (uq *UserQuery) QueryProjects() *ProjectQuery {
 			sqlgraph.From(user.Table, user.FieldID, selector),
 			sqlgraph.To(project.Table, project.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.ProjectsTable, user.ProjectsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryTasks chains the current query on the "tasks" edge.
+func (uq *UserQuery) QueryTasks() *TaskQuery {
+	query := (&TaskClient{config: uq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := uq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := uq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(task.Table, task.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.TasksTable, user.TasksColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
@@ -276,6 +300,7 @@ func (uq *UserQuery) Clone() *UserQuery {
 		inters:       append([]Interceptor{}, uq.inters...),
 		predicates:   append([]predicate.User{}, uq.predicates...),
 		withProjects: uq.withProjects.Clone(),
+		withTasks:    uq.withTasks.Clone(),
 		// clone intermediate query.
 		sql:  uq.sql.Clone(),
 		path: uq.path,
@@ -290,6 +315,17 @@ func (uq *UserQuery) WithProjects(opts ...func(*ProjectQuery)) *UserQuery {
 		opt(query)
 	}
 	uq.withProjects = query
+	return uq
+}
+
+// WithTasks tells the query-builder to eager-load the nodes that are connected to
+// the "tasks" edge. The optional arguments are used to configure the query builder of the edge.
+func (uq *UserQuery) WithTasks(opts ...func(*TaskQuery)) *UserQuery {
+	query := (&TaskClient{config: uq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	uq.withTasks = query
 	return uq
 }
 
@@ -371,8 +407,9 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 	var (
 		nodes       = []*User{}
 		_spec       = uq.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [2]bool{
 			uq.withProjects != nil,
+			uq.withTasks != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -397,6 +434,13 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 		if err := uq.loadProjects(ctx, query, nodes,
 			func(n *User) { n.Edges.Projects = []*Project{} },
 			func(n *User, e *Project) { n.Edges.Projects = append(n.Edges.Projects, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := uq.withTasks; query != nil {
+		if err := uq.loadTasks(ctx, query, nodes,
+			func(n *User) { n.Edges.Tasks = []*Task{} },
+			func(n *User, e *Task) { n.Edges.Tasks = append(n.Edges.Tasks, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -429,6 +473,37 @@ func (uq *UserQuery) loadProjects(ctx context.Context, query *ProjectQuery, node
 		node, ok := nodeids[*fk]
 		if !ok {
 			return fmt.Errorf(`unexpected referenced foreign-key "user_projects" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (uq *UserQuery) loadTasks(ctx context.Context, query *TaskQuery, nodes []*User, init func(*User), assign func(*User, *Task)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.Task(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(user.TasksColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.user_tasks
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "user_tasks" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "user_tasks" returned %v for node %v`, *fk, n.ID)
 		}
 		assign(node, n)
 	}

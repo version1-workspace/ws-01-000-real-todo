@@ -3,9 +3,11 @@
 package task
 
 import (
+	"fmt"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
 )
 
@@ -16,20 +18,69 @@ const (
 	FieldID = "id"
 	// FieldUUID holds the string denoting the uuid field in the database.
 	FieldUUID = "uuid"
+	// FieldTitle holds the string denoting the title field in the database.
+	FieldTitle = "title"
+	// FieldStatus holds the string denoting the status field in the database.
+	FieldStatus = "status"
+	// FieldKind holds the string denoting the kind field in the database.
+	FieldKind = "kind"
+	// FieldDeadline holds the string denoting the deadline field in the database.
+	FieldDeadline = "deadline"
+	// FieldStartingAt holds the string denoting the starting_at field in the database.
+	FieldStartingAt = "starting_at"
+	// FieldStartedAt holds the string denoting the started_at field in the database.
+	FieldStartedAt = "started_at"
+	// FieldFinishedAt holds the string denoting the finished_at field in the database.
+	FieldFinishedAt = "finished_at"
+	// FieldArchivedAt holds the string denoting the archived_at field in the database.
+	FieldArchivedAt = "archived_at"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
+	// EdgeProjects holds the string denoting the projects edge name in mutations.
+	EdgeProjects = "projects"
+	// EdgeUser holds the string denoting the user edge name in mutations.
+	EdgeUser = "user"
 	// Table holds the table name of the task in the database.
 	Table = "tasks"
+	// ProjectsTable is the table that holds the projects relation/edge.
+	ProjectsTable = "tasks"
+	// ProjectsInverseTable is the table name for the Project entity.
+	// It exists in this package in order to avoid circular dependency with the "project" package.
+	ProjectsInverseTable = "projects"
+	// ProjectsColumn is the table column denoting the projects relation/edge.
+	ProjectsColumn = "project_tasks"
+	// UserTable is the table that holds the user relation/edge.
+	UserTable = "tasks"
+	// UserInverseTable is the table name for the User entity.
+	// It exists in this package in order to avoid circular dependency with the "user" package.
+	UserInverseTable = "users"
+	// UserColumn is the table column denoting the user relation/edge.
+	UserColumn = "user_tasks"
 )
 
 // Columns holds all SQL columns for task fields.
 var Columns = []string{
 	FieldID,
 	FieldUUID,
+	FieldTitle,
+	FieldStatus,
+	FieldKind,
+	FieldDeadline,
+	FieldStartingAt,
+	FieldStartedAt,
+	FieldFinishedAt,
+	FieldArchivedAt,
 	FieldCreatedAt,
 	FieldUpdatedAt,
+}
+
+// ForeignKeys holds the SQL foreign-keys that are owned by the "tasks"
+// table and are not defined as standalone fields in the schema.
+var ForeignKeys = []string{
+	"project_tasks",
+	"user_tasks",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -39,17 +90,78 @@ func ValidColumn(column string) bool {
 			return true
 		}
 	}
+	for i := range ForeignKeys {
+		if column == ForeignKeys[i] {
+			return true
+		}
+	}
 	return false
 }
 
 var (
 	// DefaultUUID holds the default value on creation for the "uuid" field.
 	DefaultUUID func() uuid.UUID
+	// TitleValidator is a validator for the "title" field. It is called by the builders before save.
+	TitleValidator func(string) error
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
 	DefaultUpdatedAt func() time.Time
 )
+
+// Status defines the type for the "status" enum field.
+type Status string
+
+// StatusInitial is the default value of the Status enum.
+const DefaultStatus = StatusInitial
+
+// Status values.
+const (
+	StatusInitial   Status = "initial"
+	StatusScheduled Status = "scheduled"
+	StatusCompleted Status = "completed"
+	StatusArchived  Status = "archived"
+)
+
+func (s Status) String() string {
+	return string(s)
+}
+
+// StatusValidator is a validator for the "status" field enum values. It is called by the builders before save.
+func StatusValidator(s Status) error {
+	switch s {
+	case StatusInitial, StatusScheduled, StatusCompleted, StatusArchived:
+		return nil
+	default:
+		return fmt.Errorf("task: invalid enum value for status field: %q", s)
+	}
+}
+
+// Kind defines the type for the "kind" enum field.
+type Kind string
+
+// KindTask is the default value of the Kind enum.
+const DefaultKind = KindTask
+
+// Kind values.
+const (
+	KindTask      Kind = "task"
+	KindMilestone Kind = "milestone"
+)
+
+func (k Kind) String() string {
+	return string(k)
+}
+
+// KindValidator is a validator for the "kind" field enum values. It is called by the builders before save.
+func KindValidator(k Kind) error {
+	switch k {
+	case KindTask, KindMilestone:
+		return nil
+	default:
+		return fmt.Errorf("task: invalid enum value for kind field: %q", k)
+	}
+}
 
 // OrderOption defines the ordering options for the Task queries.
 type OrderOption func(*sql.Selector)
@@ -64,6 +176,46 @@ func ByUUID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUUID, opts...).ToFunc()
 }
 
+// ByTitle orders the results by the title field.
+func ByTitle(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTitle, opts...).ToFunc()
+}
+
+// ByStatus orders the results by the status field.
+func ByStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStatus, opts...).ToFunc()
+}
+
+// ByKind orders the results by the kind field.
+func ByKind(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldKind, opts...).ToFunc()
+}
+
+// ByDeadline orders the results by the deadline field.
+func ByDeadline(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDeadline, opts...).ToFunc()
+}
+
+// ByStartingAt orders the results by the starting_at field.
+func ByStartingAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStartingAt, opts...).ToFunc()
+}
+
+// ByStartedAt orders the results by the started_at field.
+func ByStartedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStartedAt, opts...).ToFunc()
+}
+
+// ByFinishedAt orders the results by the finished_at field.
+func ByFinishedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFinishedAt, opts...).ToFunc()
+}
+
+// ByArchivedAt orders the results by the archived_at field.
+func ByArchivedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldArchivedAt, opts...).ToFunc()
+}
+
 // ByCreatedAt orders the results by the created_at field.
 func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
@@ -72,4 +224,32 @@ func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByUpdatedAt orders the results by the updated_at field.
 func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
+}
+
+// ByProjectsField orders the results by projects field.
+func ByProjectsField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newProjectsStep(), sql.OrderByField(field, opts...))
+	}
+}
+
+// ByUserField orders the results by user field.
+func ByUserField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newUserStep(), sql.OrderByField(field, opts...))
+	}
+}
+func newProjectsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ProjectsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, ProjectsTable, ProjectsColumn),
+	)
+}
+func newUserStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(UserInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
+	)
 }

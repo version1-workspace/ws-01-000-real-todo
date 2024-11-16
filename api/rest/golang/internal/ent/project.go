@@ -56,22 +56,33 @@ type Project struct {
 
 // ProjectEdges holds the relations/edges for other nodes in the graph.
 type ProjectEdges struct {
-	// Users holds the value of the users edge.
-	Users *User `json:"users,omitempty"`
+	// Owner holds the value of the owner edge.
+	Owner *User `json:"owner,omitempty"`
+	// Tasks holds the value of the tasks edge.
+	Tasks []*Task `json:"tasks,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
-// UsersOrErr returns the Users value or an error if the edge
+// OwnerOrErr returns the Owner value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e ProjectEdges) UsersOrErr() (*User, error) {
-	if e.Users != nil {
-		return e.Users, nil
+func (e ProjectEdges) OwnerOrErr() (*User, error) {
+	if e.Owner != nil {
+		return e.Owner, nil
 	} else if e.loadedTypes[0] {
 		return nil, &NotFoundError{label: user.Label}
 	}
-	return nil, &NotLoadedError{edge: "users"}
+	return nil, &NotLoadedError{edge: "owner"}
+}
+
+// TasksOrErr returns the Tasks value or an error if the edge
+// was not loaded in eager-loading.
+func (e ProjectEdges) TasksOrErr() ([]*Task, error) {
+	if e.loadedTypes[1] {
+		return e.Tasks, nil
+	}
+	return nil, &NotLoadedError{edge: "tasks"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -218,9 +229,14 @@ func (pr *Project) Value(name string) (ent.Value, error) {
 	return pr.selectValues.Get(name)
 }
 
-// QueryUsers queries the "users" edge of the Project entity.
-func (pr *Project) QueryUsers() *UserQuery {
-	return NewProjectClient(pr.config).QueryUsers(pr)
+// QueryOwner queries the "owner" edge of the Project entity.
+func (pr *Project) QueryOwner() *UserQuery {
+	return NewProjectClient(pr.config).QueryOwner(pr)
+}
+
+// QueryTasks queries the "tasks" edge of the Project entity.
+func (pr *Project) QueryTasks() *TaskQuery {
+	return NewProjectClient(pr.config).QueryTasks(pr)
 }
 
 // Update returns a builder for updating this Project.

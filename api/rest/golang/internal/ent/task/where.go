@@ -7,6 +7,7 @@ import (
 	"version1-workspace/ws-01-000-real-todo/internal/ent/predicate"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
 )
 
@@ -60,6 +61,36 @@ func UUID(v uuid.UUID) predicate.Task {
 	return predicate.Task(sql.FieldEQ(FieldUUID, v))
 }
 
+// Title applies equality check predicate on the "title" field. It's identical to TitleEQ.
+func Title(v string) predicate.Task {
+	return predicate.Task(sql.FieldEQ(FieldTitle, v))
+}
+
+// Deadline applies equality check predicate on the "deadline" field. It's identical to DeadlineEQ.
+func Deadline(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldEQ(FieldDeadline, v))
+}
+
+// StartingAt applies equality check predicate on the "starting_at" field. It's identical to StartingAtEQ.
+func StartingAt(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldEQ(FieldStartingAt, v))
+}
+
+// StartedAt applies equality check predicate on the "started_at" field. It's identical to StartedAtEQ.
+func StartedAt(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldEQ(FieldStartedAt, v))
+}
+
+// FinishedAt applies equality check predicate on the "finished_at" field. It's identical to FinishedAtEQ.
+func FinishedAt(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldEQ(FieldFinishedAt, v))
+}
+
+// ArchivedAt applies equality check predicate on the "archived_at" field. It's identical to ArchivedAtEQ.
+func ArchivedAt(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldEQ(FieldArchivedAt, v))
+}
+
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v time.Time) predicate.Task {
 	return predicate.Task(sql.FieldEQ(FieldCreatedAt, v))
@@ -108,6 +139,351 @@ func UUIDLT(v uuid.UUID) predicate.Task {
 // UUIDLTE applies the LTE predicate on the "uuid" field.
 func UUIDLTE(v uuid.UUID) predicate.Task {
 	return predicate.Task(sql.FieldLTE(FieldUUID, v))
+}
+
+// TitleEQ applies the EQ predicate on the "title" field.
+func TitleEQ(v string) predicate.Task {
+	return predicate.Task(sql.FieldEQ(FieldTitle, v))
+}
+
+// TitleNEQ applies the NEQ predicate on the "title" field.
+func TitleNEQ(v string) predicate.Task {
+	return predicate.Task(sql.FieldNEQ(FieldTitle, v))
+}
+
+// TitleIn applies the In predicate on the "title" field.
+func TitleIn(vs ...string) predicate.Task {
+	return predicate.Task(sql.FieldIn(FieldTitle, vs...))
+}
+
+// TitleNotIn applies the NotIn predicate on the "title" field.
+func TitleNotIn(vs ...string) predicate.Task {
+	return predicate.Task(sql.FieldNotIn(FieldTitle, vs...))
+}
+
+// TitleGT applies the GT predicate on the "title" field.
+func TitleGT(v string) predicate.Task {
+	return predicate.Task(sql.FieldGT(FieldTitle, v))
+}
+
+// TitleGTE applies the GTE predicate on the "title" field.
+func TitleGTE(v string) predicate.Task {
+	return predicate.Task(sql.FieldGTE(FieldTitle, v))
+}
+
+// TitleLT applies the LT predicate on the "title" field.
+func TitleLT(v string) predicate.Task {
+	return predicate.Task(sql.FieldLT(FieldTitle, v))
+}
+
+// TitleLTE applies the LTE predicate on the "title" field.
+func TitleLTE(v string) predicate.Task {
+	return predicate.Task(sql.FieldLTE(FieldTitle, v))
+}
+
+// TitleContains applies the Contains predicate on the "title" field.
+func TitleContains(v string) predicate.Task {
+	return predicate.Task(sql.FieldContains(FieldTitle, v))
+}
+
+// TitleHasPrefix applies the HasPrefix predicate on the "title" field.
+func TitleHasPrefix(v string) predicate.Task {
+	return predicate.Task(sql.FieldHasPrefix(FieldTitle, v))
+}
+
+// TitleHasSuffix applies the HasSuffix predicate on the "title" field.
+func TitleHasSuffix(v string) predicate.Task {
+	return predicate.Task(sql.FieldHasSuffix(FieldTitle, v))
+}
+
+// TitleEqualFold applies the EqualFold predicate on the "title" field.
+func TitleEqualFold(v string) predicate.Task {
+	return predicate.Task(sql.FieldEqualFold(FieldTitle, v))
+}
+
+// TitleContainsFold applies the ContainsFold predicate on the "title" field.
+func TitleContainsFold(v string) predicate.Task {
+	return predicate.Task(sql.FieldContainsFold(FieldTitle, v))
+}
+
+// StatusEQ applies the EQ predicate on the "status" field.
+func StatusEQ(v Status) predicate.Task {
+	return predicate.Task(sql.FieldEQ(FieldStatus, v))
+}
+
+// StatusNEQ applies the NEQ predicate on the "status" field.
+func StatusNEQ(v Status) predicate.Task {
+	return predicate.Task(sql.FieldNEQ(FieldStatus, v))
+}
+
+// StatusIn applies the In predicate on the "status" field.
+func StatusIn(vs ...Status) predicate.Task {
+	return predicate.Task(sql.FieldIn(FieldStatus, vs...))
+}
+
+// StatusNotIn applies the NotIn predicate on the "status" field.
+func StatusNotIn(vs ...Status) predicate.Task {
+	return predicate.Task(sql.FieldNotIn(FieldStatus, vs...))
+}
+
+// KindEQ applies the EQ predicate on the "kind" field.
+func KindEQ(v Kind) predicate.Task {
+	return predicate.Task(sql.FieldEQ(FieldKind, v))
+}
+
+// KindNEQ applies the NEQ predicate on the "kind" field.
+func KindNEQ(v Kind) predicate.Task {
+	return predicate.Task(sql.FieldNEQ(FieldKind, v))
+}
+
+// KindIn applies the In predicate on the "kind" field.
+func KindIn(vs ...Kind) predicate.Task {
+	return predicate.Task(sql.FieldIn(FieldKind, vs...))
+}
+
+// KindNotIn applies the NotIn predicate on the "kind" field.
+func KindNotIn(vs ...Kind) predicate.Task {
+	return predicate.Task(sql.FieldNotIn(FieldKind, vs...))
+}
+
+// DeadlineEQ applies the EQ predicate on the "deadline" field.
+func DeadlineEQ(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldEQ(FieldDeadline, v))
+}
+
+// DeadlineNEQ applies the NEQ predicate on the "deadline" field.
+func DeadlineNEQ(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldNEQ(FieldDeadline, v))
+}
+
+// DeadlineIn applies the In predicate on the "deadline" field.
+func DeadlineIn(vs ...time.Time) predicate.Task {
+	return predicate.Task(sql.FieldIn(FieldDeadline, vs...))
+}
+
+// DeadlineNotIn applies the NotIn predicate on the "deadline" field.
+func DeadlineNotIn(vs ...time.Time) predicate.Task {
+	return predicate.Task(sql.FieldNotIn(FieldDeadline, vs...))
+}
+
+// DeadlineGT applies the GT predicate on the "deadline" field.
+func DeadlineGT(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldGT(FieldDeadline, v))
+}
+
+// DeadlineGTE applies the GTE predicate on the "deadline" field.
+func DeadlineGTE(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldGTE(FieldDeadline, v))
+}
+
+// DeadlineLT applies the LT predicate on the "deadline" field.
+func DeadlineLT(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldLT(FieldDeadline, v))
+}
+
+// DeadlineLTE applies the LTE predicate on the "deadline" field.
+func DeadlineLTE(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldLTE(FieldDeadline, v))
+}
+
+// StartingAtEQ applies the EQ predicate on the "starting_at" field.
+func StartingAtEQ(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldEQ(FieldStartingAt, v))
+}
+
+// StartingAtNEQ applies the NEQ predicate on the "starting_at" field.
+func StartingAtNEQ(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldNEQ(FieldStartingAt, v))
+}
+
+// StartingAtIn applies the In predicate on the "starting_at" field.
+func StartingAtIn(vs ...time.Time) predicate.Task {
+	return predicate.Task(sql.FieldIn(FieldStartingAt, vs...))
+}
+
+// StartingAtNotIn applies the NotIn predicate on the "starting_at" field.
+func StartingAtNotIn(vs ...time.Time) predicate.Task {
+	return predicate.Task(sql.FieldNotIn(FieldStartingAt, vs...))
+}
+
+// StartingAtGT applies the GT predicate on the "starting_at" field.
+func StartingAtGT(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldGT(FieldStartingAt, v))
+}
+
+// StartingAtGTE applies the GTE predicate on the "starting_at" field.
+func StartingAtGTE(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldGTE(FieldStartingAt, v))
+}
+
+// StartingAtLT applies the LT predicate on the "starting_at" field.
+func StartingAtLT(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldLT(FieldStartingAt, v))
+}
+
+// StartingAtLTE applies the LTE predicate on the "starting_at" field.
+func StartingAtLTE(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldLTE(FieldStartingAt, v))
+}
+
+// StartingAtIsNil applies the IsNil predicate on the "starting_at" field.
+func StartingAtIsNil() predicate.Task {
+	return predicate.Task(sql.FieldIsNull(FieldStartingAt))
+}
+
+// StartingAtNotNil applies the NotNil predicate on the "starting_at" field.
+func StartingAtNotNil() predicate.Task {
+	return predicate.Task(sql.FieldNotNull(FieldStartingAt))
+}
+
+// StartedAtEQ applies the EQ predicate on the "started_at" field.
+func StartedAtEQ(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldEQ(FieldStartedAt, v))
+}
+
+// StartedAtNEQ applies the NEQ predicate on the "started_at" field.
+func StartedAtNEQ(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldNEQ(FieldStartedAt, v))
+}
+
+// StartedAtIn applies the In predicate on the "started_at" field.
+func StartedAtIn(vs ...time.Time) predicate.Task {
+	return predicate.Task(sql.FieldIn(FieldStartedAt, vs...))
+}
+
+// StartedAtNotIn applies the NotIn predicate on the "started_at" field.
+func StartedAtNotIn(vs ...time.Time) predicate.Task {
+	return predicate.Task(sql.FieldNotIn(FieldStartedAt, vs...))
+}
+
+// StartedAtGT applies the GT predicate on the "started_at" field.
+func StartedAtGT(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldGT(FieldStartedAt, v))
+}
+
+// StartedAtGTE applies the GTE predicate on the "started_at" field.
+func StartedAtGTE(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldGTE(FieldStartedAt, v))
+}
+
+// StartedAtLT applies the LT predicate on the "started_at" field.
+func StartedAtLT(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldLT(FieldStartedAt, v))
+}
+
+// StartedAtLTE applies the LTE predicate on the "started_at" field.
+func StartedAtLTE(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldLTE(FieldStartedAt, v))
+}
+
+// StartedAtIsNil applies the IsNil predicate on the "started_at" field.
+func StartedAtIsNil() predicate.Task {
+	return predicate.Task(sql.FieldIsNull(FieldStartedAt))
+}
+
+// StartedAtNotNil applies the NotNil predicate on the "started_at" field.
+func StartedAtNotNil() predicate.Task {
+	return predicate.Task(sql.FieldNotNull(FieldStartedAt))
+}
+
+// FinishedAtEQ applies the EQ predicate on the "finished_at" field.
+func FinishedAtEQ(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldEQ(FieldFinishedAt, v))
+}
+
+// FinishedAtNEQ applies the NEQ predicate on the "finished_at" field.
+func FinishedAtNEQ(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldNEQ(FieldFinishedAt, v))
+}
+
+// FinishedAtIn applies the In predicate on the "finished_at" field.
+func FinishedAtIn(vs ...time.Time) predicate.Task {
+	return predicate.Task(sql.FieldIn(FieldFinishedAt, vs...))
+}
+
+// FinishedAtNotIn applies the NotIn predicate on the "finished_at" field.
+func FinishedAtNotIn(vs ...time.Time) predicate.Task {
+	return predicate.Task(sql.FieldNotIn(FieldFinishedAt, vs...))
+}
+
+// FinishedAtGT applies the GT predicate on the "finished_at" field.
+func FinishedAtGT(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldGT(FieldFinishedAt, v))
+}
+
+// FinishedAtGTE applies the GTE predicate on the "finished_at" field.
+func FinishedAtGTE(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldGTE(FieldFinishedAt, v))
+}
+
+// FinishedAtLT applies the LT predicate on the "finished_at" field.
+func FinishedAtLT(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldLT(FieldFinishedAt, v))
+}
+
+// FinishedAtLTE applies the LTE predicate on the "finished_at" field.
+func FinishedAtLTE(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldLTE(FieldFinishedAt, v))
+}
+
+// FinishedAtIsNil applies the IsNil predicate on the "finished_at" field.
+func FinishedAtIsNil() predicate.Task {
+	return predicate.Task(sql.FieldIsNull(FieldFinishedAt))
+}
+
+// FinishedAtNotNil applies the NotNil predicate on the "finished_at" field.
+func FinishedAtNotNil() predicate.Task {
+	return predicate.Task(sql.FieldNotNull(FieldFinishedAt))
+}
+
+// ArchivedAtEQ applies the EQ predicate on the "archived_at" field.
+func ArchivedAtEQ(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldEQ(FieldArchivedAt, v))
+}
+
+// ArchivedAtNEQ applies the NEQ predicate on the "archived_at" field.
+func ArchivedAtNEQ(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldNEQ(FieldArchivedAt, v))
+}
+
+// ArchivedAtIn applies the In predicate on the "archived_at" field.
+func ArchivedAtIn(vs ...time.Time) predicate.Task {
+	return predicate.Task(sql.FieldIn(FieldArchivedAt, vs...))
+}
+
+// ArchivedAtNotIn applies the NotIn predicate on the "archived_at" field.
+func ArchivedAtNotIn(vs ...time.Time) predicate.Task {
+	return predicate.Task(sql.FieldNotIn(FieldArchivedAt, vs...))
+}
+
+// ArchivedAtGT applies the GT predicate on the "archived_at" field.
+func ArchivedAtGT(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldGT(FieldArchivedAt, v))
+}
+
+// ArchivedAtGTE applies the GTE predicate on the "archived_at" field.
+func ArchivedAtGTE(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldGTE(FieldArchivedAt, v))
+}
+
+// ArchivedAtLT applies the LT predicate on the "archived_at" field.
+func ArchivedAtLT(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldLT(FieldArchivedAt, v))
+}
+
+// ArchivedAtLTE applies the LTE predicate on the "archived_at" field.
+func ArchivedAtLTE(v time.Time) predicate.Task {
+	return predicate.Task(sql.FieldLTE(FieldArchivedAt, v))
+}
+
+// ArchivedAtIsNil applies the IsNil predicate on the "archived_at" field.
+func ArchivedAtIsNil() predicate.Task {
+	return predicate.Task(sql.FieldIsNull(FieldArchivedAt))
+}
+
+// ArchivedAtNotNil applies the NotNil predicate on the "archived_at" field.
+func ArchivedAtNotNil() predicate.Task {
+	return predicate.Task(sql.FieldNotNull(FieldArchivedAt))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
@@ -188,6 +564,52 @@ func UpdatedAtLT(v time.Time) predicate.Task {
 // UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
 func UpdatedAtLTE(v time.Time) predicate.Task {
 	return predicate.Task(sql.FieldLTE(FieldUpdatedAt, v))
+}
+
+// HasProjects applies the HasEdge predicate on the "projects" edge.
+func HasProjects() predicate.Task {
+	return predicate.Task(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, ProjectsTable, ProjectsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasProjectsWith applies the HasEdge predicate on the "projects" edge with a given conditions (other predicates).
+func HasProjectsWith(preds ...predicate.Project) predicate.Task {
+	return predicate.Task(func(s *sql.Selector) {
+		step := newProjectsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasUser applies the HasEdge predicate on the "user" edge.
+func HasUser() predicate.Task {
+	return predicate.Task(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasUserWith applies the HasEdge predicate on the "user" edge with a given conditions (other predicates).
+func HasUserWith(preds ...predicate.User) predicate.Task {
+	return predicate.Task(func(s *sql.Selector) {
+		step := newUserStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

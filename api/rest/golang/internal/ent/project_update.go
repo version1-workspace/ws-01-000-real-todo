@@ -9,6 +9,7 @@ import (
 	"time"
 	"version1-workspace/ws-01-000-real-todo/internal/ent/predicate"
 	"version1-workspace/ws-01-000-real-todo/internal/ent/project"
+	"version1-workspace/ws-01-000-real-todo/internal/ent/task"
 	"version1-workspace/ws-01-000-real-todo/internal/ent/user"
 
 	"entgo.io/ent/dialect/sql"
@@ -249,23 +250,38 @@ func (pu *ProjectUpdate) SetNillableUpdatedAt(t *time.Time) *ProjectUpdate {
 	return pu
 }
 
-// SetUsersID sets the "users" edge to the User entity by ID.
-func (pu *ProjectUpdate) SetUsersID(id int) *ProjectUpdate {
-	pu.mutation.SetUsersID(id)
+// SetOwnerID sets the "owner" edge to the User entity by ID.
+func (pu *ProjectUpdate) SetOwnerID(id int) *ProjectUpdate {
+	pu.mutation.SetOwnerID(id)
 	return pu
 }
 
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (pu *ProjectUpdate) SetNillableUsersID(id *int) *ProjectUpdate {
+// SetNillableOwnerID sets the "owner" edge to the User entity by ID if the given value is not nil.
+func (pu *ProjectUpdate) SetNillableOwnerID(id *int) *ProjectUpdate {
 	if id != nil {
-		pu = pu.SetUsersID(*id)
+		pu = pu.SetOwnerID(*id)
 	}
 	return pu
 }
 
-// SetUsers sets the "users" edge to the User entity.
-func (pu *ProjectUpdate) SetUsers(u *User) *ProjectUpdate {
-	return pu.SetUsersID(u.ID)
+// SetOwner sets the "owner" edge to the User entity.
+func (pu *ProjectUpdate) SetOwner(u *User) *ProjectUpdate {
+	return pu.SetOwnerID(u.ID)
+}
+
+// AddTaskIDs adds the "tasks" edge to the Task entity by IDs.
+func (pu *ProjectUpdate) AddTaskIDs(ids ...int) *ProjectUpdate {
+	pu.mutation.AddTaskIDs(ids...)
+	return pu
+}
+
+// AddTasks adds the "tasks" edges to the Task entity.
+func (pu *ProjectUpdate) AddTasks(t ...*Task) *ProjectUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return pu.AddTaskIDs(ids...)
 }
 
 // Mutation returns the ProjectMutation object of the builder.
@@ -273,10 +289,31 @@ func (pu *ProjectUpdate) Mutation() *ProjectMutation {
 	return pu.mutation
 }
 
-// ClearUsers clears the "users" edge to the User entity.
-func (pu *ProjectUpdate) ClearUsers() *ProjectUpdate {
-	pu.mutation.ClearUsers()
+// ClearOwner clears the "owner" edge to the User entity.
+func (pu *ProjectUpdate) ClearOwner() *ProjectUpdate {
+	pu.mutation.ClearOwner()
 	return pu
+}
+
+// ClearTasks clears all "tasks" edges to the Task entity.
+func (pu *ProjectUpdate) ClearTasks() *ProjectUpdate {
+	pu.mutation.ClearTasks()
+	return pu
+}
+
+// RemoveTaskIDs removes the "tasks" edge to Task entities by IDs.
+func (pu *ProjectUpdate) RemoveTaskIDs(ids ...int) *ProjectUpdate {
+	pu.mutation.RemoveTaskIDs(ids...)
+	return pu
+}
+
+// RemoveTasks removes "tasks" edges to Task entities.
+func (pu *ProjectUpdate) RemoveTasks(t ...*Task) *ProjectUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return pu.RemoveTaskIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -405,12 +442,12 @@ func (pu *ProjectUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := pu.mutation.UpdatedAt(); ok {
 		_spec.SetField(project.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if pu.mutation.UsersCleared() {
+	if pu.mutation.OwnerCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   project.UsersTable,
-			Columns: []string{project.UsersColumn},
+			Table:   project.OwnerTable,
+			Columns: []string{project.OwnerColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
@@ -418,15 +455,60 @@ func (pu *ProjectUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.UsersIDs(); len(nodes) > 0 {
+	if nodes := pu.mutation.OwnerIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   project.UsersTable,
-			Columns: []string{project.UsersColumn},
+			Table:   project.OwnerTable,
+			Columns: []string{project.OwnerColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if pu.mutation.TasksCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   project.TasksTable,
+			Columns: []string{project.TasksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.RemovedTasksIDs(); len(nodes) > 0 && !pu.mutation.TasksCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   project.TasksTable,
+			Columns: []string{project.TasksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.TasksIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   project.TasksTable,
+			Columns: []string{project.TasksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -673,23 +755,38 @@ func (puo *ProjectUpdateOne) SetNillableUpdatedAt(t *time.Time) *ProjectUpdateOn
 	return puo
 }
 
-// SetUsersID sets the "users" edge to the User entity by ID.
-func (puo *ProjectUpdateOne) SetUsersID(id int) *ProjectUpdateOne {
-	puo.mutation.SetUsersID(id)
+// SetOwnerID sets the "owner" edge to the User entity by ID.
+func (puo *ProjectUpdateOne) SetOwnerID(id int) *ProjectUpdateOne {
+	puo.mutation.SetOwnerID(id)
 	return puo
 }
 
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (puo *ProjectUpdateOne) SetNillableUsersID(id *int) *ProjectUpdateOne {
+// SetNillableOwnerID sets the "owner" edge to the User entity by ID if the given value is not nil.
+func (puo *ProjectUpdateOne) SetNillableOwnerID(id *int) *ProjectUpdateOne {
 	if id != nil {
-		puo = puo.SetUsersID(*id)
+		puo = puo.SetOwnerID(*id)
 	}
 	return puo
 }
 
-// SetUsers sets the "users" edge to the User entity.
-func (puo *ProjectUpdateOne) SetUsers(u *User) *ProjectUpdateOne {
-	return puo.SetUsersID(u.ID)
+// SetOwner sets the "owner" edge to the User entity.
+func (puo *ProjectUpdateOne) SetOwner(u *User) *ProjectUpdateOne {
+	return puo.SetOwnerID(u.ID)
+}
+
+// AddTaskIDs adds the "tasks" edge to the Task entity by IDs.
+func (puo *ProjectUpdateOne) AddTaskIDs(ids ...int) *ProjectUpdateOne {
+	puo.mutation.AddTaskIDs(ids...)
+	return puo
+}
+
+// AddTasks adds the "tasks" edges to the Task entity.
+func (puo *ProjectUpdateOne) AddTasks(t ...*Task) *ProjectUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return puo.AddTaskIDs(ids...)
 }
 
 // Mutation returns the ProjectMutation object of the builder.
@@ -697,10 +794,31 @@ func (puo *ProjectUpdateOne) Mutation() *ProjectMutation {
 	return puo.mutation
 }
 
-// ClearUsers clears the "users" edge to the User entity.
-func (puo *ProjectUpdateOne) ClearUsers() *ProjectUpdateOne {
-	puo.mutation.ClearUsers()
+// ClearOwner clears the "owner" edge to the User entity.
+func (puo *ProjectUpdateOne) ClearOwner() *ProjectUpdateOne {
+	puo.mutation.ClearOwner()
 	return puo
+}
+
+// ClearTasks clears all "tasks" edges to the Task entity.
+func (puo *ProjectUpdateOne) ClearTasks() *ProjectUpdateOne {
+	puo.mutation.ClearTasks()
+	return puo
+}
+
+// RemoveTaskIDs removes the "tasks" edge to Task entities by IDs.
+func (puo *ProjectUpdateOne) RemoveTaskIDs(ids ...int) *ProjectUpdateOne {
+	puo.mutation.RemoveTaskIDs(ids...)
+	return puo
+}
+
+// RemoveTasks removes "tasks" edges to Task entities.
+func (puo *ProjectUpdateOne) RemoveTasks(t ...*Task) *ProjectUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return puo.RemoveTaskIDs(ids...)
 }
 
 // Where appends a list predicates to the ProjectUpdate builder.
@@ -859,12 +977,12 @@ func (puo *ProjectUpdateOne) sqlSave(ctx context.Context) (_node *Project, err e
 	if value, ok := puo.mutation.UpdatedAt(); ok {
 		_spec.SetField(project.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if puo.mutation.UsersCleared() {
+	if puo.mutation.OwnerCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   project.UsersTable,
-			Columns: []string{project.UsersColumn},
+			Table:   project.OwnerTable,
+			Columns: []string{project.OwnerColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
@@ -872,15 +990,60 @@ func (puo *ProjectUpdateOne) sqlSave(ctx context.Context) (_node *Project, err e
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.UsersIDs(); len(nodes) > 0 {
+	if nodes := puo.mutation.OwnerIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   project.UsersTable,
-			Columns: []string{project.UsersColumn},
+			Table:   project.OwnerTable,
+			Columns: []string{project.OwnerColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if puo.mutation.TasksCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   project.TasksTable,
+			Columns: []string{project.TasksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.RemovedTasksIDs(); len(nodes) > 0 && !puo.mutation.TasksCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   project.TasksTable,
+			Columns: []string{project.TasksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.TasksIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   project.TasksTable,
+			Columns: []string{project.TasksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

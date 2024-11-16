@@ -7,7 +7,9 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"version1-workspace/ws-01-000-real-todo/internal/ent/project"
 	"version1-workspace/ws-01-000-real-todo/internal/ent/task"
+	"version1-workspace/ws-01-000-real-todo/internal/ent/user"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -31,6 +33,102 @@ func (tc *TaskCreate) SetUUID(u uuid.UUID) *TaskCreate {
 func (tc *TaskCreate) SetNillableUUID(u *uuid.UUID) *TaskCreate {
 	if u != nil {
 		tc.SetUUID(*u)
+	}
+	return tc
+}
+
+// SetTitle sets the "title" field.
+func (tc *TaskCreate) SetTitle(s string) *TaskCreate {
+	tc.mutation.SetTitle(s)
+	return tc
+}
+
+// SetStatus sets the "status" field.
+func (tc *TaskCreate) SetStatus(t task.Status) *TaskCreate {
+	tc.mutation.SetStatus(t)
+	return tc
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (tc *TaskCreate) SetNillableStatus(t *task.Status) *TaskCreate {
+	if t != nil {
+		tc.SetStatus(*t)
+	}
+	return tc
+}
+
+// SetKind sets the "kind" field.
+func (tc *TaskCreate) SetKind(t task.Kind) *TaskCreate {
+	tc.mutation.SetKind(t)
+	return tc
+}
+
+// SetNillableKind sets the "kind" field if the given value is not nil.
+func (tc *TaskCreate) SetNillableKind(t *task.Kind) *TaskCreate {
+	if t != nil {
+		tc.SetKind(*t)
+	}
+	return tc
+}
+
+// SetDeadline sets the "deadline" field.
+func (tc *TaskCreate) SetDeadline(t time.Time) *TaskCreate {
+	tc.mutation.SetDeadline(t)
+	return tc
+}
+
+// SetStartingAt sets the "starting_at" field.
+func (tc *TaskCreate) SetStartingAt(t time.Time) *TaskCreate {
+	tc.mutation.SetStartingAt(t)
+	return tc
+}
+
+// SetNillableStartingAt sets the "starting_at" field if the given value is not nil.
+func (tc *TaskCreate) SetNillableStartingAt(t *time.Time) *TaskCreate {
+	if t != nil {
+		tc.SetStartingAt(*t)
+	}
+	return tc
+}
+
+// SetStartedAt sets the "started_at" field.
+func (tc *TaskCreate) SetStartedAt(t time.Time) *TaskCreate {
+	tc.mutation.SetStartedAt(t)
+	return tc
+}
+
+// SetNillableStartedAt sets the "started_at" field if the given value is not nil.
+func (tc *TaskCreate) SetNillableStartedAt(t *time.Time) *TaskCreate {
+	if t != nil {
+		tc.SetStartedAt(*t)
+	}
+	return tc
+}
+
+// SetFinishedAt sets the "finished_at" field.
+func (tc *TaskCreate) SetFinishedAt(t time.Time) *TaskCreate {
+	tc.mutation.SetFinishedAt(t)
+	return tc
+}
+
+// SetNillableFinishedAt sets the "finished_at" field if the given value is not nil.
+func (tc *TaskCreate) SetNillableFinishedAt(t *time.Time) *TaskCreate {
+	if t != nil {
+		tc.SetFinishedAt(*t)
+	}
+	return tc
+}
+
+// SetArchivedAt sets the "archived_at" field.
+func (tc *TaskCreate) SetArchivedAt(t time.Time) *TaskCreate {
+	tc.mutation.SetArchivedAt(t)
+	return tc
+}
+
+// SetNillableArchivedAt sets the "archived_at" field if the given value is not nil.
+func (tc *TaskCreate) SetNillableArchivedAt(t *time.Time) *TaskCreate {
+	if t != nil {
+		tc.SetArchivedAt(*t)
 	}
 	return tc
 }
@@ -61,6 +159,44 @@ func (tc *TaskCreate) SetNillableUpdatedAt(t *time.Time) *TaskCreate {
 		tc.SetUpdatedAt(*t)
 	}
 	return tc
+}
+
+// SetProjectsID sets the "projects" edge to the Project entity by ID.
+func (tc *TaskCreate) SetProjectsID(id int) *TaskCreate {
+	tc.mutation.SetProjectsID(id)
+	return tc
+}
+
+// SetNillableProjectsID sets the "projects" edge to the Project entity by ID if the given value is not nil.
+func (tc *TaskCreate) SetNillableProjectsID(id *int) *TaskCreate {
+	if id != nil {
+		tc = tc.SetProjectsID(*id)
+	}
+	return tc
+}
+
+// SetProjects sets the "projects" edge to the Project entity.
+func (tc *TaskCreate) SetProjects(p *Project) *TaskCreate {
+	return tc.SetProjectsID(p.ID)
+}
+
+// SetUserID sets the "user" edge to the User entity by ID.
+func (tc *TaskCreate) SetUserID(id int) *TaskCreate {
+	tc.mutation.SetUserID(id)
+	return tc
+}
+
+// SetNillableUserID sets the "user" edge to the User entity by ID if the given value is not nil.
+func (tc *TaskCreate) SetNillableUserID(id *int) *TaskCreate {
+	if id != nil {
+		tc = tc.SetUserID(*id)
+	}
+	return tc
+}
+
+// SetUser sets the "user" edge to the User entity.
+func (tc *TaskCreate) SetUser(u *User) *TaskCreate {
+	return tc.SetUserID(u.ID)
 }
 
 // Mutation returns the TaskMutation object of the builder.
@@ -102,6 +238,14 @@ func (tc *TaskCreate) defaults() {
 		v := task.DefaultUUID()
 		tc.mutation.SetUUID(v)
 	}
+	if _, ok := tc.mutation.Status(); !ok {
+		v := task.DefaultStatus
+		tc.mutation.SetStatus(v)
+	}
+	if _, ok := tc.mutation.Kind(); !ok {
+		v := task.DefaultKind
+		tc.mutation.SetKind(v)
+	}
 	if _, ok := tc.mutation.CreatedAt(); !ok {
 		v := task.DefaultCreatedAt()
 		tc.mutation.SetCreatedAt(v)
@@ -116,6 +260,33 @@ func (tc *TaskCreate) defaults() {
 func (tc *TaskCreate) check() error {
 	if _, ok := tc.mutation.UUID(); !ok {
 		return &ValidationError{Name: "uuid", err: errors.New(`ent: missing required field "Task.uuid"`)}
+	}
+	if _, ok := tc.mutation.Title(); !ok {
+		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Task.title"`)}
+	}
+	if v, ok := tc.mutation.Title(); ok {
+		if err := task.TitleValidator(v); err != nil {
+			return &ValidationError{Name: "title", err: fmt.Errorf(`ent: validator failed for field "Task.title": %w`, err)}
+		}
+	}
+	if _, ok := tc.mutation.Status(); !ok {
+		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Task.status"`)}
+	}
+	if v, ok := tc.mutation.Status(); ok {
+		if err := task.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Task.status": %w`, err)}
+		}
+	}
+	if _, ok := tc.mutation.Kind(); !ok {
+		return &ValidationError{Name: "kind", err: errors.New(`ent: missing required field "Task.kind"`)}
+	}
+	if v, ok := tc.mutation.Kind(); ok {
+		if err := task.KindValidator(v); err != nil {
+			return &ValidationError{Name: "kind", err: fmt.Errorf(`ent: validator failed for field "Task.kind": %w`, err)}
+		}
+	}
+	if _, ok := tc.mutation.Deadline(); !ok {
+		return &ValidationError{Name: "deadline", err: errors.New(`ent: missing required field "Task.deadline"`)}
 	}
 	if _, ok := tc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Task.created_at"`)}
@@ -153,6 +324,38 @@ func (tc *TaskCreate) createSpec() (*Task, *sqlgraph.CreateSpec) {
 		_spec.SetField(task.FieldUUID, field.TypeUUID, value)
 		_node.UUID = value
 	}
+	if value, ok := tc.mutation.Title(); ok {
+		_spec.SetField(task.FieldTitle, field.TypeString, value)
+		_node.Title = value
+	}
+	if value, ok := tc.mutation.Status(); ok {
+		_spec.SetField(task.FieldStatus, field.TypeEnum, value)
+		_node.Status = value
+	}
+	if value, ok := tc.mutation.Kind(); ok {
+		_spec.SetField(task.FieldKind, field.TypeEnum, value)
+		_node.Kind = value
+	}
+	if value, ok := tc.mutation.Deadline(); ok {
+		_spec.SetField(task.FieldDeadline, field.TypeTime, value)
+		_node.Deadline = value
+	}
+	if value, ok := tc.mutation.StartingAt(); ok {
+		_spec.SetField(task.FieldStartingAt, field.TypeTime, value)
+		_node.StartingAt = &value
+	}
+	if value, ok := tc.mutation.StartedAt(); ok {
+		_spec.SetField(task.FieldStartedAt, field.TypeTime, value)
+		_node.StartedAt = &value
+	}
+	if value, ok := tc.mutation.FinishedAt(); ok {
+		_spec.SetField(task.FieldFinishedAt, field.TypeTime, value)
+		_node.FinishedAt = &value
+	}
+	if value, ok := tc.mutation.ArchivedAt(); ok {
+		_spec.SetField(task.FieldArchivedAt, field.TypeTime, value)
+		_node.ArchivedAt = &value
+	}
 	if value, ok := tc.mutation.CreatedAt(); ok {
 		_spec.SetField(task.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
@@ -160,6 +363,40 @@ func (tc *TaskCreate) createSpec() (*Task, *sqlgraph.CreateSpec) {
 	if value, ok := tc.mutation.UpdatedAt(); ok {
 		_spec.SetField(task.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
+	}
+	if nodes := tc.mutation.ProjectsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   task.ProjectsTable,
+			Columns: []string{task.ProjectsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(project.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.project_tasks = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := tc.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   task.UserTable,
+			Columns: []string{task.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.user_tasks = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

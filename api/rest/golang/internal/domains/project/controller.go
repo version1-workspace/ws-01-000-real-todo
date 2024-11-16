@@ -3,8 +3,10 @@ package project
 import (
 	"fmt"
 	"net/http"
+	"time"
 	appcontext "version1-workspace/ws-01-000-real-todo/internal/context"
-	 "version1-workspace/ws-01-000-real-todo/internal/pkg/toolkit/renderer"
+	"version1-workspace/ws-01-000-real-todo/internal/pkg/toolkit/bodyparser"
+	"version1-workspace/ws-01-000-real-todo/internal/pkg/toolkit/renderer"
 
 	"github.com/gorilla/mux"
 )
@@ -47,4 +49,42 @@ func (c controller) projects(w http.ResponseWriter, r *http.Request) {
 	}
 
 	c.r.RenderMany(w, projects, &renderer.PageInfo{Limit: 10, Page: 1})
+}
+
+type taskParams struct {
+	Title    string    `json:"title"`
+	Deadline time.Time `json:"deadline"`
+}
+
+// FIXME: Milestone is not saved for now
+type createProjectParams struct {
+	Name       string       `json:"name"`
+	Deadline   time.Time    `json:"deadline"`
+	Status     string       `json:"status"`
+	Slug       string       `json:"slug"`
+	Goal       string       `json:"goal"`
+	Shouldbe   string       `json:"shouldbe"`
+	Milestones []taskParams `json:"milestone"`
+}
+
+func (c controller) create(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	u, err := appcontext.CurrentUser(ctx)
+	if err != nil {
+		c.r.Unauthorized(w, err)
+		return
+	}
+
+	p := &createProjectParams{}
+	if err := bodyparser.Parse(r, &p); err != nil {
+		c.r.BadRequest(w, err)
+		return
+	}
+
+	if _, err := c.s.createProject(ctx, u.ID, p); err != nil {
+		c.r.InternalServerError(w, err)
+		return
+	}
+
+	c.r.Created(w, nil)
 }

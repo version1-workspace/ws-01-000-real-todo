@@ -26,6 +26,7 @@ func New(cli client, r *mux.Router) *Module {
 				{Methods: []string{http.MethodGet}, Path: "/{slug}/milestones", Handler: c.milestones, Group: "root"},
 				{Methods: []string{http.MethodPut}, Path: "/{slug}/milestones/{id}/archive", Handler: c.archiveMilestones, Group: "root"},
 				{Methods: []string{http.MethodGet}, Path: "/", Handler: c.projects, Group: "users"},
+				{Methods: []string{http.MethodPost}, Path: "/", Handler: c.create, Group: "users"},
 				{Methods: []string{http.MethodPatch}, Path: "/{slug}/archive/", Handler: c.projects, Group: "users"},
 				{Methods: []string{http.MethodPatch}, Path: "/{slug}/reopen/", Handler: c.projects, Group: "users"},
 			},

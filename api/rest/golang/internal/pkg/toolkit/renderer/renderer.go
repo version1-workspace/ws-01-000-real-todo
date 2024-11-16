@@ -28,7 +28,15 @@ func NewRenderer() *Renderer {
 	return &Renderer{}
 }
 
-func (c Renderer) Render(w http.ResponseWriter, payload any) {
+type renderOptions func(w http.ResponseWriter)
+
+func Status(code int) renderOptions {
+	return func(w http.ResponseWriter) {
+		w.WriteHeader(code)
+	}
+}
+
+func (c Renderer) Render(w http.ResponseWriter, payload any, opts ...renderOptions) {
 	data, err := normalize(payload)
 	if err != nil {
 		c.InternalServerError(w, err)
@@ -39,9 +47,17 @@ func (c Renderer) Render(w http.ResponseWriter, payload any) {
 		Data: data,
 	}
 	w.Header().Set("Content-Type", "application/json")
+	for _, opt := range opts {
+		opt(w)
+	}
 	if err := json.NewEncoder(w).Encode(res); err != nil {
 		c.InternalServerError(w, err)
 	}
+}
+
+func (c Renderer) Created(w http.ResponseWriter, payload any, opts ...renderOptions) {
+	_opts := append(opts, Status(http.StatusCreated))
+	c.Render(w, payload, _opts...)
 }
 
 type Serializer interface {

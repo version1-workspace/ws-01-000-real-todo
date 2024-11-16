@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"version1-workspace/ws-01-000-real-todo/internal/ent/project"
 	"version1-workspace/ws-01-000-real-todo/internal/ent/task"
+	"version1-workspace/ws-01-000-real-todo/internal/ent/user"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -20,11 +22,65 @@ type Task struct {
 	ID int `json:"id,omitempty"`
 	// UUID holds the value of the "uuid" field.
 	UUID uuid.UUID `json:"uuid,omitempty"`
+	// Title holds the value of the "title" field.
+	Title string `json:"title,omitempty"`
+	// Status holds the value of the "status" field.
+	Status task.Status `json:"status,omitempty"`
+	// Kind holds the value of the "kind" field.
+	Kind task.Kind `json:"kind,omitempty"`
+	// Deadline holds the value of the "deadline" field.
+	Deadline time.Time `json:"deadline,omitempty"`
+	// StartingAt holds the value of the "starting_at" field.
+	StartingAt *time.Time `json:"starting_at,omitempty"`
+	// StartedAt holds the value of the "started_at" field.
+	StartedAt *time.Time `json:"started_at,omitempty"`
+	// FinishedAt holds the value of the "finished_at" field.
+	FinishedAt *time.Time `json:"finished_at,omitempty"`
+	// ArchivedAt holds the value of the "archived_at" field.
+	ArchivedAt *time.Time `json:"archived_at,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt    time.Time `json:"updated_at,omitempty"`
-	selectValues sql.SelectValues
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the TaskQuery when eager-loading is set.
+	Edges         TaskEdges `json:"edges"`
+	project_tasks *int
+	user_tasks    *int
+	selectValues  sql.SelectValues
+}
+
+// TaskEdges holds the relations/edges for other nodes in the graph.
+type TaskEdges struct {
+	// Projects holds the value of the projects edge.
+	Projects *Project `json:"projects,omitempty"`
+	// User holds the value of the user edge.
+	User *User `json:"user,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [2]bool
+}
+
+// ProjectsOrErr returns the Projects value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e TaskEdges) ProjectsOrErr() (*Project, error) {
+	if e.Projects != nil {
+		return e.Projects, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: project.Label}
+	}
+	return nil, &NotLoadedError{edge: "projects"}
+}
+
+// UserOrErr returns the User value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e TaskEdges) UserOrErr() (*User, error) {
+	if e.User != nil {
+		return e.User, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: user.Label}
+	}
+	return nil, &NotLoadedError{edge: "user"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -34,10 +90,16 @@ func (*Task) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case task.FieldID:
 			values[i] = new(sql.NullInt64)
-		case task.FieldCreatedAt, task.FieldUpdatedAt:
+		case task.FieldTitle, task.FieldStatus, task.FieldKind:
+			values[i] = new(sql.NullString)
+		case task.FieldDeadline, task.FieldStartingAt, task.FieldStartedAt, task.FieldFinishedAt, task.FieldArchivedAt, task.FieldCreatedAt, task.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
 		case task.FieldUUID:
 			values[i] = new(uuid.UUID)
+		case task.ForeignKeys[0]: // project_tasks
+			values[i] = new(sql.NullInt64)
+		case task.ForeignKeys[1]: // user_tasks
+			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -65,6 +127,58 @@ func (t *Task) assignValues(columns []string, values []any) error {
 			} else if value != nil {
 				t.UUID = *value
 			}
+		case task.FieldTitle:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field title", values[i])
+			} else if value.Valid {
+				t.Title = value.String
+			}
+		case task.FieldStatus:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field status", values[i])
+			} else if value.Valid {
+				t.Status = task.Status(value.String)
+			}
+		case task.FieldKind:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field kind", values[i])
+			} else if value.Valid {
+				t.Kind = task.Kind(value.String)
+			}
+		case task.FieldDeadline:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field deadline", values[i])
+			} else if value.Valid {
+				t.Deadline = value.Time
+			}
+		case task.FieldStartingAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field starting_at", values[i])
+			} else if value.Valid {
+				t.StartingAt = new(time.Time)
+				*t.StartingAt = value.Time
+			}
+		case task.FieldStartedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field started_at", values[i])
+			} else if value.Valid {
+				t.StartedAt = new(time.Time)
+				*t.StartedAt = value.Time
+			}
+		case task.FieldFinishedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field finished_at", values[i])
+			} else if value.Valid {
+				t.FinishedAt = new(time.Time)
+				*t.FinishedAt = value.Time
+			}
+		case task.FieldArchivedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field archived_at", values[i])
+			} else if value.Valid {
+				t.ArchivedAt = new(time.Time)
+				*t.ArchivedAt = value.Time
+			}
 		case task.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -77,6 +191,20 @@ func (t *Task) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				t.UpdatedAt = value.Time
 			}
+		case task.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field project_tasks", value)
+			} else if value.Valid {
+				t.project_tasks = new(int)
+				*t.project_tasks = int(value.Int64)
+			}
+		case task.ForeignKeys[1]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field user_tasks", value)
+			} else if value.Valid {
+				t.user_tasks = new(int)
+				*t.user_tasks = int(value.Int64)
+			}
 		default:
 			t.selectValues.Set(columns[i], values[i])
 		}
@@ -88,6 +216,16 @@ func (t *Task) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (t *Task) Value(name string) (ent.Value, error) {
 	return t.selectValues.Get(name)
+}
+
+// QueryProjects queries the "projects" edge of the Task entity.
+func (t *Task) QueryProjects() *ProjectQuery {
+	return NewTaskClient(t.config).QueryProjects(t)
+}
+
+// QueryUser queries the "user" edge of the Task entity.
+func (t *Task) QueryUser() *UserQuery {
+	return NewTaskClient(t.config).QueryUser(t)
 }
 
 // Update returns a builder for updating this Task.
@@ -116,6 +254,38 @@ func (t *Task) String() string {
 	builder.WriteString("uuid=")
 	builder.WriteString(fmt.Sprintf("%v", t.UUID))
 	builder.WriteString(", ")
+	builder.WriteString("title=")
+	builder.WriteString(t.Title)
+	builder.WriteString(", ")
+	builder.WriteString("status=")
+	builder.WriteString(fmt.Sprintf("%v", t.Status))
+	builder.WriteString(", ")
+	builder.WriteString("kind=")
+	builder.WriteString(fmt.Sprintf("%v", t.Kind))
+	builder.WriteString(", ")
+	builder.WriteString("deadline=")
+	builder.WriteString(t.Deadline.Format(time.ANSIC))
+	builder.WriteString(", ")
+	if v := t.StartingAt; v != nil {
+		builder.WriteString("starting_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
+	builder.WriteString(", ")
+	if v := t.StartedAt; v != nil {
+		builder.WriteString("started_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
+	builder.WriteString(", ")
+	if v := t.FinishedAt; v != nil {
+		builder.WriteString("finished_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
+	builder.WriteString(", ")
+	if v := t.ArchivedAt; v != nil {
+		builder.WriteString("archived_at=")
+		builder.WriteString(v.Format(time.ANSIC))
+	}
+	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(t.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
@@ -132,6 +302,34 @@ func (t *Task) Values(name string) (any, error) {
 		return t.ID, nil
 	case "uuid":
 		return t.UUID, nil
+	case "title":
+		return t.Title, nil
+	case "status":
+		return t.Status, nil
+	case "kind":
+		return t.Kind, nil
+	case "deadline":
+		return t.Deadline, nil
+	case "starting_at":
+		if t.StartingAt == nil {
+			return nil, nil
+		}
+		return *t.StartingAt, nil
+	case "started_at":
+		if t.StartedAt == nil {
+			return nil, nil
+		}
+		return *t.StartedAt, nil
+	case "finished_at":
+		if t.FinishedAt == nil {
+			return nil, nil
+		}
+		return *t.FinishedAt, nil
+	case "archived_at":
+		if t.ArchivedAt == nil {
+			return nil, nil
+		}
+		return *t.ArchivedAt, nil
 	case "created_at":
 		return t.CreatedAt, nil
 	case "updated_at":

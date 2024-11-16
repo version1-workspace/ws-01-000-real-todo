@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 	"version1-workspace/ws-01-000-real-todo/internal/ent/project"
+	"version1-workspace/ws-01-000-real-todo/internal/ent/task"
 	"version1-workspace/ws-01-000-real-todo/internal/ent/user"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -178,23 +179,38 @@ func (pc *ProjectCreate) SetNillableUpdatedAt(t *time.Time) *ProjectCreate {
 	return pc
 }
 
-// SetUsersID sets the "users" edge to the User entity by ID.
-func (pc *ProjectCreate) SetUsersID(id int) *ProjectCreate {
-	pc.mutation.SetUsersID(id)
+// SetOwnerID sets the "owner" edge to the User entity by ID.
+func (pc *ProjectCreate) SetOwnerID(id int) *ProjectCreate {
+	pc.mutation.SetOwnerID(id)
 	return pc
 }
 
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (pc *ProjectCreate) SetNillableUsersID(id *int) *ProjectCreate {
+// SetNillableOwnerID sets the "owner" edge to the User entity by ID if the given value is not nil.
+func (pc *ProjectCreate) SetNillableOwnerID(id *int) *ProjectCreate {
 	if id != nil {
-		pc = pc.SetUsersID(*id)
+		pc = pc.SetOwnerID(*id)
 	}
 	return pc
 }
 
-// SetUsers sets the "users" edge to the User entity.
-func (pc *ProjectCreate) SetUsers(u *User) *ProjectCreate {
-	return pc.SetUsersID(u.ID)
+// SetOwner sets the "owner" edge to the User entity.
+func (pc *ProjectCreate) SetOwner(u *User) *ProjectCreate {
+	return pc.SetOwnerID(u.ID)
+}
+
+// AddTaskIDs adds the "tasks" edge to the Task entity by IDs.
+func (pc *ProjectCreate) AddTaskIDs(ids ...int) *ProjectCreate {
+	pc.mutation.AddTaskIDs(ids...)
+	return pc
+}
+
+// AddTasks adds the "tasks" edges to the Task entity.
+func (pc *ProjectCreate) AddTasks(t ...*Task) *ProjectCreate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return pc.AddTaskIDs(ids...)
 }
 
 // Mutation returns the ProjectMutation object of the builder.
@@ -386,12 +402,12 @@ func (pc *ProjectCreate) createSpec() (*Project, *sqlgraph.CreateSpec) {
 		_spec.SetField(project.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
-	if nodes := pc.mutation.UsersIDs(); len(nodes) > 0 {
+	if nodes := pc.mutation.OwnerIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   project.UsersTable,
-			Columns: []string{project.UsersColumn},
+			Table:   project.OwnerTable,
+			Columns: []string{project.OwnerColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
@@ -401,6 +417,22 @@ func (pc *ProjectCreate) createSpec() (*Project, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.user_projects = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := pc.mutation.TasksIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   project.TasksTable,
+			Columns: []string{project.TasksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

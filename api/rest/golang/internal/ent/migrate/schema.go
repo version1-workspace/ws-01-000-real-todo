@@ -57,14 +57,38 @@ var (
 	TasksColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "uuid", Type: field.TypeUUID, Unique: true},
+		{Name: "title", Type: field.TypeString, Unique: true},
+		{Name: "status", Type: field.TypeEnum, Enums: []string{"initial", "scheduled", "completed", "archived"}, Default: "initial"},
+		{Name: "kind", Type: field.TypeEnum, Enums: []string{"task", "milestone"}, Default: "task"},
+		{Name: "deadline", Type: field.TypeTime},
+		{Name: "starting_at", Type: field.TypeTime, Nullable: true},
+		{Name: "started_at", Type: field.TypeTime, Nullable: true},
+		{Name: "finished_at", Type: field.TypeTime, Nullable: true},
+		{Name: "archived_at", Type: field.TypeTime, Nullable: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "project_tasks", Type: field.TypeInt, Nullable: true},
+		{Name: "user_tasks", Type: field.TypeInt, Nullable: true},
 	}
 	// TasksTable holds the schema information for the "tasks" table.
 	TasksTable = &schema.Table{
 		Name:       "tasks",
 		Columns:    TasksColumns,
 		PrimaryKey: []*schema.Column{TasksColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "tasks_projects_tasks",
+				Columns:    []*schema.Column{TasksColumns[12]},
+				RefColumns: []*schema.Column{ProjectsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:     "tasks_users_tasks",
+				Columns:    []*schema.Column{TasksColumns[13]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
@@ -106,4 +130,6 @@ var (
 
 func init() {
 	ProjectsTable.ForeignKeys[0].RefTable = UsersTable
+	TasksTable.ForeignKeys[0].RefTable = ProjectsTable
+	TasksTable.ForeignKeys[1].RefTable = UsersTable
 }

@@ -12,7 +12,7 @@ if [ "$OPERATION" == "new" ]; then
     go run -mod=mod entgo.io/ent/cmd/ent \
       new $SCHEMANAME --target internal/ent/schema
 elif [ "$OPERATION" == "gen" ]; then
-  go generate ./internal/ent
+  go run cmd/codegen/main.go
 else
   echo "Invalid operation. Please use [new|gen]."
   exit 1

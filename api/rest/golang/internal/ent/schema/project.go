@@ -32,9 +32,10 @@ func (Project) Fields() []ent.Field {
 // Edges of the Project.
 func (Project) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("users", User.Type).
+		edge.From("owner", User.Type).
 			Ref("projects").
 			Unique(),
+		edge.To("tasks", Task.Type),
 	}
 }
 

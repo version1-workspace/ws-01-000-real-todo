@@ -44,17 +44,26 @@ const (
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
-	// EdgeUsers holds the string denoting the users edge name in mutations.
-	EdgeUsers = "users"
+	// EdgeOwner holds the string denoting the owner edge name in mutations.
+	EdgeOwner = "owner"
+	// EdgeTasks holds the string denoting the tasks edge name in mutations.
+	EdgeTasks = "tasks"
 	// Table holds the table name of the project in the database.
 	Table = "projects"
-	// UsersTable is the table that holds the users relation/edge.
-	UsersTable = "projects"
-	// UsersInverseTable is the table name for the User entity.
+	// OwnerTable is the table that holds the owner relation/edge.
+	OwnerTable = "projects"
+	// OwnerInverseTable is the table name for the User entity.
 	// It exists in this package in order to avoid circular dependency with the "user" package.
-	UsersInverseTable = "users"
-	// UsersColumn is the table column denoting the users relation/edge.
-	UsersColumn = "user_projects"
+	OwnerInverseTable = "users"
+	// OwnerColumn is the table column denoting the owner relation/edge.
+	OwnerColumn = "user_projects"
+	// TasksTable is the table that holds the tasks relation/edge.
+	TasksTable = "tasks"
+	// TasksInverseTable is the table name for the Task entity.
+	// It exists in this package in order to avoid circular dependency with the "task" package.
+	TasksInverseTable = "tasks"
+	// TasksColumn is the table column denoting the tasks relation/edge.
+	TasksColumn = "project_tasks"
 )
 
 // Columns holds all SQL columns for project fields.
@@ -219,16 +228,37 @@ func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
 }
 
-// ByUsersField orders the results by users field.
-func ByUsersField(field string, opts ...sql.OrderTermOption) OrderOption {
+// ByOwnerField orders the results by owner field.
+func ByOwnerField(field string, opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newUsersStep(), sql.OrderByField(field, opts...))
+		sqlgraph.OrderByNeighborTerms(s, newOwnerStep(), sql.OrderByField(field, opts...))
 	}
 }
-func newUsersStep() *sqlgraph.Step {
+
+// ByTasksCount orders the results by tasks count.
+func ByTasksCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newTasksStep(), opts...)
+	}
+}
+
+// ByTasks orders the results by tasks terms.
+func ByTasks(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newTasksStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+func newOwnerStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(UsersInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, true, UsersTable, UsersColumn),
+		sqlgraph.To(OwnerInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, OwnerTable, OwnerColumn),
+	)
+}
+func newTasksStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(TasksInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, TasksTable, TasksColumn),
 	)
 }

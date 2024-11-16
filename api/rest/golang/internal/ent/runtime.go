@@ -52,12 +52,16 @@ func init() {
 	taskDescUUID := taskFields[0].Descriptor()
 	// task.DefaultUUID holds the default value on creation for the uuid field.
 	task.DefaultUUID = taskDescUUID.Default.(func() uuid.UUID)
+	// taskDescTitle is the schema descriptor for title field.
+	taskDescTitle := taskFields[1].Descriptor()
+	// task.TitleValidator is a validator for the "title" field. It is called by the builders before save.
+	task.TitleValidator = taskDescTitle.Validators[0].(func(string) error)
 	// taskDescCreatedAt is the schema descriptor for created_at field.
-	taskDescCreatedAt := taskFields[1].Descriptor()
+	taskDescCreatedAt := taskFields[9].Descriptor()
 	// task.DefaultCreatedAt holds the default value on creation for the created_at field.
 	task.DefaultCreatedAt = taskDescCreatedAt.Default.(func() time.Time)
 	// taskDescUpdatedAt is the schema descriptor for updated_at field.
-	taskDescUpdatedAt := taskFields[2].Descriptor()
+	taskDescUpdatedAt := taskFields[10].Descriptor()
 	// task.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	task.DefaultUpdatedAt = taskDescUpdatedAt.Default.(func() time.Time)
 	userFields := schema.User{}.Fields()
