@@ -32,20 +32,26 @@ export default function Header({ light }: Props) {
       <div className={styles.right}>
         <ul className={styles.menu}>
           <li className={styles.menuItem}>
-            <a className={styles.menuLink} href="/">Home</a>
+            <a className={styles.menuLink} href="/">
+              Home
+            </a>
           </li>
           <li className={styles.menuItem}>
-            <a className={styles.menuLink} href="/">Turvo について</a>
+            <a className={styles.menuLink} href="/">
+              Turvo について
+            </a>
           </li>
           <li className={styles.menuItem}>
-            <a className={styles.menuLink} href="/">ドキュメント</a>
+            <a className={styles.menuLink} href="/">
+              ドキュメント
+            </a>
           </li>
         </ul>
         <div className={styles.actions}>
-          <Link className={styles.signup} href="/login">
+          <Link className={styles.signup} href="/auth/signup">
             <Button variant="primary">無料で始める</Button>
           </Link>
-          <Link href="/login">
+          <Link href="/auth/login">
             <Button variant="secondary">サインイン</Button>
           </Link>
         </div>

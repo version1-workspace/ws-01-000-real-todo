@@ -30,8 +30,8 @@
   margin: 0 0;
 }
 
-.input {
-  padding: 16px !important; /* Override the padding from the input component */
+input.input {
+  padding: 16px;
 }
 
 .field {
