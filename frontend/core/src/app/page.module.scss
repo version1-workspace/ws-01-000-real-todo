@@ -6,131 +6,228 @@
   justify-content: space-between;
   align-items: center;
   min-height: 100vh;
+  overflow: hidden;
+}
+
+.donut {
+  position: absolute;
+  height: 480px;
+  width: 480px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @include m.lg {
+    display: none;
+  }
+}
+
+.donutInner {
+  height: 240px;
+  width: 240px;
+  border-radius: 50%;
+  background: var(--background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hideOnlySmartphone {
+  display: block;
+  @include m.sm {
+    display: none;
+  }
 }
 
 .hero {
   position: relative;
   width: 100%;
-  height: 100vh;
-  max-height: 1320px;
-  background-image: url("/assets/hero-rectangle.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position-x: center;
-  overflow: hidden;
-
+  height: 960px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   @include m.lg {
     height: 960px;
   }
-}
 
-.heroMoon {
-  position: absolute;
-  top: 10%;
-  left: 10%;
-
-  @include m.lg {
-    display: none;
-  }
-}
-
-.heroEarth {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  @include m.lg {
-    display: none;
-  }
-}
-
-.heroSpace {
-  height: 100vh;
-  max-height: 1320px;
-  position: absolute;
-  left: -100vw;
-  width: 200vw;
-  display: flex;
-  background-image: url("/assets/hero-space.svg");
-  animation: 300s linear 0s infinite running slide-space;
-}
-
-.heroOverlay {
-  min-height: 1320px;
-  position: absolute;
-  background-image: url("/assets/hero-overlay.svg");
-}
-
-@keyframes slide-space {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(100vw);
+  @include m.sm {
+    height: 640px;
   }
 }
 
 .heroContainer {
   position: absolute;
-  top: 20%;
-}
-
-.copyContainer {
-  width: 560px;
-  color: var(--font-color-light);
-  @include m.lg {
-    width: 100%;
-    padding: 32px;
-  }
-}
-
-.catchCopyText {
-  text-align: center;
-}
-
-.catchBody {
-  margin: 64px 0;
-
-  @include m.lg{
-    width: 280px;
-    margin: 64px auto;
-  }
-}
-
-.catchBodyText {
-  text-align: center;
-  @include m.xl {
-    margin-bottom: 16px;
-  }
-}
-
-
-.catchFooter {
-  padding: 0 128px;
-  @include m.lg {
-    padding: 0 16px;
-  }
+  top: 30%;
 }
 
 .copy {
   text-align: center;
-  font-size: 48px;
-  letter-spacing: 0.4rem;
+}
+
+.copyText {
+  font-size: 96px;
+}
+
+.firstLine {
+  text-align: center;
+  width: 16ch;
+  margin: auto;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: typing 3s steps(16), effect .5s step-end 6 alternate;
+
+  @include m.lg {
+    font-size: 48px;
+  }
+
+  @include m.sm {
+    animation: none;
+    width: 100%;
+    font-size: 32px;
+  }
+}
+
+.secondLine {
+  text-align: center;
+  width: 14ch;
+  margin: auto;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: hide 3s steps(1), typing 3s 3s steps(14), effect .5s 3s step-end 10 alternate;
+
+  @include m.lg {
+    font-size: 48px;
+  }
+
+  @include m.sm {
+    animation: none;
+    width: 100%;
+    font-size: 32px;
+  }
+}
+
+.copySubText {
+  width: 60ch;
+  margin: auto;
+  font-size: 24px;
+  color: var(--top-font-weak-color);
+  margin-top: 32px;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: showup 6s steps(1), fadein 1s 6s;
+  @include m.lg {
+    font-size: 16px;
+  }
+
+  @include m.sm {
+    white-space: normal;
+    animation: none;
+    width: 100%;
+    font-size: 16px;
+  }
+}
+
+.gradient {
+  background: linear-gradient(90deg, #4BCAA0 0%, #2ED9FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cta {
+  cursor: pointer;
+  display: flex;
+  background: var(--primary-color);
+  color: white;
+  width: 360px;
+  margin: auto;
+  margin-top: 64px;
+  padding: 16px 32px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  transition: background 0.5s;
+}
+
+.ctaAnimation {
+  animation: showup 6s steps(1), fadein 1s 6s;
+  @include m.sm {
+    animation: none;
+  }
+}
+
+.cta:hover {
+  background: var(--primary-color-darker);
+}
+
+@keyframes showup {
+  0% {
+    opacity: 0;
+  }
+}
+
+
+@keyframes hide {
+  0% {
+    width: 0;
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes typing {
+  from {
+    width: 0
+  }
+}
+
+@keyframes effect {
+  50% {
+    border-right: 3px solid var(--font-color-dark);
+  }
 }
 
 .features {
   margin: 64px 0;
+  margin-bottom: 64px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.background {
-  margin: 128px 0;
-  background-image: url("/assets/background-stars.svg");
-  width: 100%;
+.col {
+  margin-right: 64px;
+  margin-bottom: 128px;
+  width: 300px;
+  @include m.sm {
+    margin: auto;
+    margin-bottom: 128px;
+  }
+}
+
+.featureDescription {
+  text-align: left;
+  color: var(--top-font-weak-color);
+}
+
+.featureTitle {
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 16px;
 }
 
 .price {
   margin: 64px 0;
-  margin-bottom: 400px;
+  margin-bottom: 64px;
 }
 
 .priceTable {
@@ -161,15 +258,19 @@
 .priceCol {
   margin-right: 32px;
 
+  @include m.sm {
+    margin-bottom: 64px;
+  }
+
   @include m.lg {
     margin: auto;
   }
 }
 
 .priceTag {
-  display: inline-block;
+  color: var(--font-color-dark);
+  margin: 16px 0;
   font-size: 12px;
-  margin-left: 16px;
 }
 
 .planContainer {
@@ -181,6 +282,7 @@
   width: 360px;
   @include m.lg {
     min-width: 100%;
+    margin-bottom: 64px;
   }
 }
 
@@ -188,19 +290,17 @@
 }
 
 .planPrice {
-  text-align: center;
-  padding: 64px;
-  font-size: 28px;
+  padding: 16px 0;
+  font-size: 64px;
   font-weight: bold;
   letter-spacing: 0.2rem;
   white-space: nowrap;
 }
 
 .planRow {
+  display: flex;
+  align-items: center;
   text-align: center;
-  background: #f9f9f9;
-  border-bottom: 1px solid var(--background-color);
-  height: 58px;
 
   @include m.lg {
     height: auto;
@@ -220,10 +320,23 @@
 
 .planRowBody {
   padding: 16px;
+  text-align: left;
 }
 
 .planHeader {
   width: 240px;
+}
+
+.planDescription {
+  height: 100px;
+  padding: 16px 0;
+  font-size: 12px;
+  color: var(--top-font-weak-color);
+}
+
+.planName {
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .priceTableHeader {
@@ -247,7 +360,7 @@
 
 .review {
   padding: 0 128px;
-  margin-bottom: 400px;
+  margin-bottom: 64px;
 
   @include m.lg {
     padding: 0 16px;
@@ -273,6 +386,7 @@
 
 .reviewCol {
   width: 280px;
+  margin-right: 32px;
 
   @include m.lg {
     min-width: 280px;
@@ -305,6 +419,14 @@
   justify-content: center;
 }
 
-.signUpButton {
-  width: 360px;
+.reviewDescription {
+  color: var(--top-font-weak-color);
+}
+
+
+.iconCircle {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #D6F5EB;
 }

@@ -1,12 +1,8 @@
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
-
 import { Metadata } from "next";
 import AuthContainer from "@/components/auth";
 
 export const metadata: Metadata = {
-  title: "Turbo",
+  title: "Turvo",
 };
 
 export default function RootLayout({
@@ -17,7 +13,7 @@ export default function RootLayout({
   return (
     <AuthContainer isPublic>
       <html lang="ja">
-        <body className={inter.className}>{children}</body>
+        <body>{children}</body>
       </html>
     </AuthContainer>
   );

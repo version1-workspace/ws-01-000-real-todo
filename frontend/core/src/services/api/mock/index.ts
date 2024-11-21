@@ -17,6 +17,7 @@ const fetchProjects = () => {
         factory.project({
           uuid: "",
           name: "プログラミング",
+          color: "",
           deadline: "2023/08/12",
           slug: "programming",
           goal: "期限日までにフロントエンドエンジニアとして就職する。",
@@ -41,6 +42,7 @@ const fetchProjects = () => {
         }),
         factory.project({
           uuid: "",
+          color: "",
           name: "プログラミング",
           deadline: "2023/08/12",
           slug: "programming",
@@ -66,6 +68,7 @@ const fetchProjects = () => {
         }),
         factory.project({
           uuid: "",
+          color: "",
           name: "プログラミング",
           deadline: "2023/08/12",
           slug: "programming",
@@ -194,6 +197,7 @@ export const fetchTasks = ({ page }: FetchTasksParams) => {
         children: [],
         project: {
           uuid: "",
+          color: "",
           name: "プログラミング",
           deadline: "",
           slug: "programming",

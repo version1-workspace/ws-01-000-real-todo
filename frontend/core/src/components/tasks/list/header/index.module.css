@@ -81,8 +81,8 @@
 }
 
 .filterState {
-  background: var(--secondary-color);
-  padding: 4px 8px;
+  background: var(--primary-color);
+  padding: 4px 16px;
   color: var(--font-color-light);
   border-radius: 16px;
   font-size: 10px;
@@ -109,3 +109,7 @@
   padding: 4px;
 }
 
+.select {
+  padding: 4px 8px;
+  border: 0;
+}

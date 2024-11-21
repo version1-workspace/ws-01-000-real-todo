@@ -1,18 +1,17 @@
 "use client";
 import { Metadata } from "next";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./index.module.css";
 import Input from "@/components/shared/input/text";
 import Button from "@/components/shared/button";
 import ShowIf from "@/components/shared/showIf";
 import { useForm } from "@/hooks/useForm";
-import api, {setUserId} from "@/services/api";
+import api, { setUserId } from "@/services/api";
 import { useToast } from "@/lib/toast/hook";
 import Checkbox from "@/components/shared/checkbox";
 
 export const metadata: Metadata = {
-  title: "Turbo | ログイン",
+  title: "Turvo | ログイン",
 };
 
 interface Form {
@@ -26,7 +25,7 @@ const mailFormat =
   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export default function Login() {
-  const router = useRouter()
+  const router = useRouter();
   const { error } = useToast();
   const { submit, change, errors, form } = useForm<Form>({
     initialValues: { email: "", password: "", rememberMe: false },
@@ -48,11 +47,11 @@ export default function Login() {
     onSubmit: async (values: Form) => {
       try {
         const res = await api.authenticate(values);
-        const { data } = res
+        const { data } = res;
         api.client.setAccessToken(data.accessToken);
-        setUserId(data.uuid)
+        setUserId(data.uuid);
 
-        router.push("/main")
+        router.push("/main");
       } catch (e) {
         error("メールアドレスかパスワードに誤りがあります。");
       }
@@ -63,11 +62,19 @@ export default function Login() {
 
   return (
     <div className={styles.form}>
-      <h2 className={styles.formTitle}>ログイン</h2>
-      <div className={styles.field}>
+      <div className={styles.copy}>
+        <span className={styles.emoticon}>🏠</span>Welcome Back
+        <span className={styles.emoticon}>😃</span>
+      </div>
+
+      <h2 className={styles.formTitle}>
+        <div className={styles.formSubtitle}>ログインして Turvo を使う</div>
+      </h2>
+      <div className={styles.inputField}>
         <Input
           value={form.email}
           placeholder="turbo@example.com"
+          inputClassName={styles.input}
           onChange={(e) => {
             change({ email: e.target.value });
           }}
@@ -76,11 +83,12 @@ export default function Login() {
           <p className={styles.errorMessage}>{errorMessages.email}</p>
         </ShowIf>
       </div>
-      <div className={styles.field}>
+      <div className={styles.inputField}>
         <Input
           type="password"
           value={form.password}
           placeholder="***********"
+          inputClassName={styles.input}
           onChange={(e) => {
             change({ password: e.target.value });
           }}
@@ -89,13 +97,11 @@ export default function Login() {
           <p className={styles.errorMessage}>{errorMessages.password}</p>
         </ShowIf>
       </div>
-      <div className={styles.field}>
-        <Checkbox
-          label="自動的にログインする"
-          defaultValue={form.rememberMe}
-          onClick={(checked) => change({ rememberMe: checked })}
-        />
-      </div>
+      <Checkbox
+        label="自動的にログインする"
+        defaultValue={form.rememberMe}
+        onClick={(checked) => change({ rememberMe: checked })}
+      />
       <div className={styles.field}>
         <Button variant="primary" onClick={submit}>
           ログイン
@@ -103,12 +109,6 @@ export default function Login() {
         <ShowIf value={errorMessages.authentication}>
           <p className={styles.errorMessage}>{errorMessages.authentication}</p>
         </ShowIf>
-        <div className={styles.details}>
-          新規登録は
-          <Link className={styles.link} href="/login">
-            こちら
-          </Link>
-        </div>
       </div>
     </div>
   );

@@ -36,6 +36,10 @@
   margin-right: 16px;
 }
 
+.buttonText {
+  font-size: 14px;
+}
+
 .field {
   margin: 16px 0;
 }

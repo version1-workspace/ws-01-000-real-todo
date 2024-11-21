@@ -1,10 +1,8 @@
-import { useContext } from "react";
 import styles from "@/components/project/forms/confirm/index.module.css";
 import Milestone from "@/components/project/forms/milestone";
-import { FormContext } from "@/app/main/projects/new/context";
+import Project from "@/components/project/forms/project";
 
 export default function Confirm() {
-  const { project } = useContext(FormContext);
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>確認</h2>
@@ -15,24 +13,7 @@ export default function Confirm() {
         </p>
       </div>
       <div className={styles.section}>
-        <h3 className={styles.sectionTitle}>プロジェクト</h3>
-        <div className={styles.row}>
-          <div className={styles.left}>
-            プロジェクト名
-            <span className={styles.required}>*</span>
-          </div>
-          <div className={styles.col}>
-            <p>{project.name}</p>
-          </div>
-        </div>
-        <div className={styles.row}>
-          <div className={styles.left}>
-            スラッグ<span className={styles.required}>*</span>
-          </div>
-          <div className={styles.col}>
-            <p>{project.slug}</p>
-          </div>
-        </div>
+        <Project readOnly />
       </div>
       <div className={styles.section}>
         <Milestone readOnly />

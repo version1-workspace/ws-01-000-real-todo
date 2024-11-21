@@ -38,7 +38,7 @@ export default function Search() {
     <div className={styles.container}>
       {show ? <div className={styles.overlay} onClick={close}></div> : null}
       <div className={styles.search}>
-        <Icon name="search" size={24} color="#2e2e2e" />
+        <Icon name="search" size={24} color="#94ae9f" />
         <input
           type="text"
           placeholder="タスクタイトルで検索"

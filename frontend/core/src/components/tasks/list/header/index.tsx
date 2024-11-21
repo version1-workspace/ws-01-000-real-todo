@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import styles from "./index.module.css";
-import { useRouter } from "next/navigation";
 import FilterForm from "@/components/tasks/filterForm";
 import api from "@/services/api";
 import { Filter } from "@/components/tasks/list/hooks/useFilter";
@@ -96,6 +95,7 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
           <div className={styles.displayPageCount}>
             <label>表示件数 : </label>
             <select
+              className={styles.select}
               onChange={(e) => {
                 const limit = Number(e.target.value);
                 const newValues = { ...replica, limit };

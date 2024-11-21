@@ -4,6 +4,7 @@ services:
     image: mysql:8.1.0
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=todo_develpoment
     ports:
       - "3306:3306"
     volumes:

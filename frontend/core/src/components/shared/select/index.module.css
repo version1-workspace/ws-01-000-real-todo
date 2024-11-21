@@ -18,11 +18,16 @@
   display: flex;
   align-items: center;
   background: var(--background-color);
-  border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 8px;
   justify-content: space-between;
   width: 100%;
+  border: 0;
+  box-shadow: 0px 0px 4px 1px #22222210;
+}
+
+.flatValueContainer {
+  box-shadow: none;
 }
 
 .pullDownContainer {
@@ -35,8 +40,7 @@
 .pullDown {
   position: absolute;
   z-index: var(--z-index-select);
-  border: 1px solid var(--border-color);
-  box-shadow: 1px 1px 6px 1px var(--border-color);
+  box-shadow: 2px 2px 4px 1px #22222210;
   background: white;
   min-width: 120px;
   width: 100%;
@@ -53,5 +57,8 @@
 }
 
 .option:hover {
-  background: var(--table-border-color);
+  background: #18e5af;
+  color: white;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #56deba;
 }

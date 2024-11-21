@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "deploy": "netlify deploy --prod",
     "start": "npx serve",
     "lint": "next lint",
     "tsc": "tsc --project tsconfig.json",
@@ -17,16 +18,16 @@
     "axios": "^1.6.2",
     "chart.js": "^4.3.3",
     "dayjs": "^1.11.9",
-    "eslint": "8.47.0",
+    "eslint": "^8.57.0",
     "eslint-config-next": "13.4.19",
-    "next": "13.4.19",
+    "next": "^14.2.2",
     "query-string": "^8.2.0",
     "react": "18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
     "sass": "^1.72.0",
-    "typescript": "5.1.6",
+    "typescript": "^5.4.5",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

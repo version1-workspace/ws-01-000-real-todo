@@ -29,6 +29,7 @@ export interface ProjectParams {
   slug: string;
   goal: string;
   shouldbe: string;
+  color: string;
   stats?: {
     total: number;
     kinds: {

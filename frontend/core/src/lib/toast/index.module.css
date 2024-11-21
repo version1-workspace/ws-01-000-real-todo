@@ -6,9 +6,10 @@
   background: white;
   min-width: 300px;
   display: flex;
-  border-radius: 8px;
+  border-radius: 4px;
   margin-bottom: 16px;
   box-shadow: 1px 1px 7px 1px #22222230;
+  font-size: 12px;
   width: 100%;
   animation-duration: 0.2s;
   animation-timing-function: ease-in-out;
@@ -78,7 +79,23 @@
   padding-bottom: 0;
 }
 
+.icon {
+  position: relative;
+  top: 2px;
+  font-size: 16px;
+}
+
+.iconContainer {
+  margin-right: 16px;
+}
+
+.message {
+
+}
+
 .body {
+  display: flex;
+  align-items: center;
   padding: 16px;
   padding-left: 24px;
   padding-top: 0px;
@@ -148,16 +165,16 @@
 
 
 .info {
-  border-bottom: 8px solid var(--info-color);
+  border-bottom: 4px solid var(--info-color);
   color: #669b9e;
 }
 
 .success {
-  border-bottom: 8px solid var(--success-color);
+  border-bottom: 4px solid var(--success-color);
   color: var(--success-color);
 }
 
 .error {
-  border-bottom: 8px solid var(--danger-color);
+  border-bottom: 4px solid var(--danger-color);
   color: #b28383;
 }

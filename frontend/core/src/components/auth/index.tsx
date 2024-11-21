@@ -71,8 +71,6 @@ const AuthContainer = ({ children, isPublic }: Props) => {
     router.push(route.login.toString());
   };
 
-  console.log("initialized ===========", initialized);
-
   if (!initialized) {
     return null;
   }

@@ -9,6 +9,7 @@ interface Props {
   defaultOption: OptionItem;
   onSelect?: (item: OptionItem) => void;
   containerStyleClass?: string;
+  flat?: boolean;
 }
 
 export interface OptionItem {
@@ -22,6 +23,7 @@ export default function Select({
   defaultOption,
   onSelect,
   containerStyleClass,
+  flat,
 }: Props) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
@@ -54,7 +56,11 @@ export default function Select({
       ref={ref}
       className={join(styles.container, containerStyleClass)}
       onClick={() => setOpen((open) => !open)}>
-      <div className={styles.valueContainer}>
+      <div
+        className={classHelper({
+          [styles.valueContainer]: true,
+          [styles.flatValueContainer]: flat,
+        })}>
         <p className={styles.value}>
           {valueItem?.label || defaultOption.label}
         </p>

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const footerMenus = [
   {
-    title: "Turbo について",
+    title: "Turvo について",
     list: [
       {
         label: "Home",
@@ -19,7 +19,7 @@ const footerMenus = [
     title: "ドキュメント",
     list: [
       {
-        label: "Turoboの使い方",
+        label: "Turvoの使い方",
         link: "",
       },
       {
@@ -60,9 +60,9 @@ export default function FooterComponent() {
     <footer className={styles.footer}>
       <div className={styles.content}>
         <div className={styles.left}>
-          <div className={styles.logo}>Turbo</div>
+          <div className={styles.logo}>Turvo</div>
           <div className={styles.description}>
-            Turbo で生活のゴールを決めて、
+            Turvo で生活のゴールを決めて、
             <br />
             より良い生活を手に入れよう。
           </div>
