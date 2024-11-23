@@ -22,8 +22,6 @@ const (
 	FieldSlug = "slug"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldUserID holds the string denoting the user_id field in the database.
-	FieldUserID = "user_id"
 	// FieldGoal holds the string denoting the goal field in the database.
 	FieldGoal = "goal"
 	// FieldShouldbe holds the string denoting the shouldbe field in the database.
@@ -44,19 +42,21 @@ const (
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
-	// EdgeOwner holds the string denoting the owner edge name in mutations.
-	EdgeOwner = "owner"
+	// EdgeUser holds the string denoting the user edge name in mutations.
+	EdgeUser = "user"
 	// EdgeTasks holds the string denoting the tasks edge name in mutations.
 	EdgeTasks = "tasks"
+	// EdgeMilestones holds the string denoting the milestones edge name in mutations.
+	EdgeMilestones = "milestones"
 	// Table holds the table name of the project in the database.
 	Table = "projects"
-	// OwnerTable is the table that holds the owner relation/edge.
-	OwnerTable = "projects"
-	// OwnerInverseTable is the table name for the User entity.
+	// UserTable is the table that holds the user relation/edge.
+	UserTable = "projects"
+	// UserInverseTable is the table name for the User entity.
 	// It exists in this package in order to avoid circular dependency with the "user" package.
-	OwnerInverseTable = "users"
-	// OwnerColumn is the table column denoting the owner relation/edge.
-	OwnerColumn = "user_projects"
+	UserInverseTable = "users"
+	// UserColumn is the table column denoting the user relation/edge.
+	UserColumn = "user_projects"
 	// TasksTable is the table that holds the tasks relation/edge.
 	TasksTable = "tasks"
 	// TasksInverseTable is the table name for the Task entity.
@@ -64,6 +64,13 @@ const (
 	TasksInverseTable = "tasks"
 	// TasksColumn is the table column denoting the tasks relation/edge.
 	TasksColumn = "project_tasks"
+	// MilestonesTable is the table that holds the milestones relation/edge.
+	MilestonesTable = "tasks"
+	// MilestonesInverseTable is the table name for the Task entity.
+	// It exists in this package in order to avoid circular dependency with the "task" package.
+	MilestonesInverseTable = "tasks"
+	// MilestonesColumn is the table column denoting the milestones relation/edge.
+	MilestonesColumn = "project_milestones"
 )
 
 // Columns holds all SQL columns for project fields.
@@ -72,7 +79,6 @@ var Columns = []string{
 	FieldUUID,
 	FieldSlug,
 	FieldName,
-	FieldUserID,
 	FieldGoal,
 	FieldShouldbe,
 	FieldStatus,
@@ -113,8 +119,6 @@ var (
 	SlugValidator func(string) error
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
-	// UserIDValidator is a validator for the "user_id" field. It is called by the builders before save.
-	UserIDValidator func(int) error
 	// GoalValidator is a validator for the "goal" field. It is called by the builders before save.
 	GoalValidator func(string) error
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
@@ -173,11 +177,6 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
-// ByUserID orders the results by the user_id field.
-func ByUserID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldUserID, opts...).ToFunc()
-}
-
 // ByGoal orders the results by the goal field.
 func ByGoal(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldGoal, opts...).ToFunc()
@@ -228,10 +227,10 @@ func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
 }
 
-// ByOwnerField orders the results by owner field.
-func ByOwnerField(field string, opts ...sql.OrderTermOption) OrderOption {
+// ByUserField orders the results by user field.
+func ByUserField(field string, opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newOwnerStep(), sql.OrderByField(field, opts...))
+		sqlgraph.OrderByNeighborTerms(s, newUserStep(), sql.OrderByField(field, opts...))
 	}
 }
 
@@ -248,11 +247,25 @@ func ByTasks(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newTasksStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
-func newOwnerStep() *sqlgraph.Step {
+
+// ByMilestonesCount orders the results by milestones count.
+func ByMilestonesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newMilestonesStep(), opts...)
+	}
+}
+
+// ByMilestones orders the results by milestones terms.
+func ByMilestones(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newMilestonesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+func newUserStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(OwnerInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, true, OwnerTable, OwnerColumn),
+		sqlgraph.To(UserInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
 	)
 }
 func newTasksStep() *sqlgraph.Step {
@@ -260,5 +273,12 @@ func newTasksStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(TasksInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, TasksTable, TasksColumn),
+	)
+}
+func newMilestonesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(MilestonesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, MilestonesTable, MilestonesColumn),
 	)
 }

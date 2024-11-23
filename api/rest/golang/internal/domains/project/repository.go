@@ -4,6 +4,7 @@ import (
 	"context"
 	"version1-workspace/ws-01-000-real-todo/internal/ent"
 	"version1-workspace/ws-01-000-real-todo/internal/ent/project"
+	"version1-workspace/ws-01-000-real-todo/internal/ent/user"
 	"version1-workspace/ws-01-000-real-todo/internal/pkg/serializer"
 	"version1-workspace/ws-01-000-real-todo/internal/pkg/toolkit/renderer"
 )
@@ -36,7 +37,8 @@ type repository struct {
 }
 
 func (r repository) fetchProjects(ctx context.Context, userID int, limit, page int, status []string) (Projects, error) {
-	list, err := r.client.Get().Project.Query().Where(project.UserID(userID)).All(ctx)
+	u := r.client.Get().User.Query().Where(user.ID(userID)).OnlyX(ctx)
+	list, err := u.QueryProjects().All(ctx)
 	if err != nil {
 		return Projects{}, err
 	}
@@ -52,19 +54,40 @@ func (r repository) fetchProjects(ctx context.Context, userID int, limit, page i
 }
 
 func (r repository) createProject(ctx context.Context, userID int, prj *Project) (*Project, error) {
-	c := r.client.Get().Project
-	res, err := c.Create().
-		SetUserID(userID).
-		SetName(prj.Name).
-		SetDeadline(prj.Deadline).
-		SetStatus(prj.Status).
-		SetSlug(prj.Slug).
-		SetGoal(prj.Goal).
-		SetShouldbe(prj.Shouldbe).
-		Save(ctx)
-	if err != nil {
-		return nil, err
-	}
+	res := &Project{}
+	err := r.client.WithTx(ctx, func(tx *ent.Tx) error {
+		p, err := tx.Project.Create().
+			SetUserID(userID).
+			SetName(prj.Name).
+			SetDeadline(prj.Deadline).
+			SetStatus(prj.Status).
+			SetSlug(prj.Slug).
+			SetGoal(prj.Goal).
+			SetShouldbe(prj.Shouldbe).Save(ctx)
+		if err != nil {
+			return err
+		}
 
-	return &Project{res}, nil
+		tasks := []*ent.Task{}
+		for _, m := range prj.Edges.Milestones {
+			task, err := tx.Task.Create().
+				SetKind("milestone").
+				SetDeadline(m.Deadline).
+				SetTitle(m.Title).
+				SetStatus(m.Status).
+				SetProject(p).
+				SetUserID(userID).
+				SetMilestoneParent(p).
+				Save(ctx)
+			if err != nil {
+				return err
+			}
+			tasks = append(tasks, task)
+		}
+
+		res.Project = p
+		return nil
+	})
+
+	return res, err
 }

@@ -14,7 +14,7 @@ type Task struct {
 // Fields of the Task.
 func (Task) Fields() []ent.Field {
 	return withDefaultFields([]ent.Field{
-		field.String("title").NotEmpty().Unique(),
+		field.String("title").NotEmpty(),
 		field.Enum("status").Values("initial", "scheduled", "completed", "archived").Default("initial"),
 		field.Enum("kind").Values("task", "milestone").Default("task"),
 		field.Time("deadline"),
@@ -28,8 +28,11 @@ func (Task) Fields() []ent.Field {
 // Edges of the Task.
 func (Task) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("projects", Project.Type).
+		edge.From("project", Project.Type).
 			Ref("tasks").
+			Unique(),
+		edge.From("milestoneParent", Project.Type).
+			Ref("milestones").
 			Unique(),
 		edge.From("user", User.Type).
 			Ref("tasks").

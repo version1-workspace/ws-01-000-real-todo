@@ -71,11 +71,6 @@ func Name(v string) predicate.Project {
 	return predicate.Project(sql.FieldEQ(FieldName, v))
 }
 
-// UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
-func UserID(v int) predicate.Project {
-	return predicate.Project(sql.FieldEQ(FieldUserID, v))
-}
-
 // Goal applies equality check predicate on the "goal" field. It's identical to GoalEQ.
 func Goal(v string) predicate.Project {
 	return predicate.Project(sql.FieldEQ(FieldGoal, v))
@@ -289,46 +284,6 @@ func NameEqualFold(v string) predicate.Project {
 // NameContainsFold applies the ContainsFold predicate on the "name" field.
 func NameContainsFold(v string) predicate.Project {
 	return predicate.Project(sql.FieldContainsFold(FieldName, v))
-}
-
-// UserIDEQ applies the EQ predicate on the "user_id" field.
-func UserIDEQ(v int) predicate.Project {
-	return predicate.Project(sql.FieldEQ(FieldUserID, v))
-}
-
-// UserIDNEQ applies the NEQ predicate on the "user_id" field.
-func UserIDNEQ(v int) predicate.Project {
-	return predicate.Project(sql.FieldNEQ(FieldUserID, v))
-}
-
-// UserIDIn applies the In predicate on the "user_id" field.
-func UserIDIn(vs ...int) predicate.Project {
-	return predicate.Project(sql.FieldIn(FieldUserID, vs...))
-}
-
-// UserIDNotIn applies the NotIn predicate on the "user_id" field.
-func UserIDNotIn(vs ...int) predicate.Project {
-	return predicate.Project(sql.FieldNotIn(FieldUserID, vs...))
-}
-
-// UserIDGT applies the GT predicate on the "user_id" field.
-func UserIDGT(v int) predicate.Project {
-	return predicate.Project(sql.FieldGT(FieldUserID, v))
-}
-
-// UserIDGTE applies the GTE predicate on the "user_id" field.
-func UserIDGTE(v int) predicate.Project {
-	return predicate.Project(sql.FieldGTE(FieldUserID, v))
-}
-
-// UserIDLT applies the LT predicate on the "user_id" field.
-func UserIDLT(v int) predicate.Project {
-	return predicate.Project(sql.FieldLT(FieldUserID, v))
-}
-
-// UserIDLTE applies the LTE predicate on the "user_id" field.
-func UserIDLTE(v int) predicate.Project {
-	return predicate.Project(sql.FieldLTE(FieldUserID, v))
 }
 
 // GoalEQ applies the EQ predicate on the "goal" field.
@@ -811,21 +766,21 @@ func UpdatedAtLTE(v time.Time) predicate.Project {
 	return predicate.Project(sql.FieldLTE(FieldUpdatedAt, v))
 }
 
-// HasOwner applies the HasEdge predicate on the "owner" edge.
-func HasOwner() predicate.Project {
+// HasUser applies the HasEdge predicate on the "user" edge.
+func HasUser() predicate.Project {
 	return predicate.Project(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, OwnerTable, OwnerColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasOwnerWith applies the HasEdge predicate on the "owner" edge with a given conditions (other predicates).
-func HasOwnerWith(preds ...predicate.User) predicate.Project {
+// HasUserWith applies the HasEdge predicate on the "user" edge with a given conditions (other predicates).
+func HasUserWith(preds ...predicate.User) predicate.Project {
 	return predicate.Project(func(s *sql.Selector) {
-		step := newOwnerStep()
+		step := newUserStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -849,6 +804,29 @@ func HasTasks() predicate.Project {
 func HasTasksWith(preds ...predicate.Task) predicate.Project {
 	return predicate.Project(func(s *sql.Selector) {
 		step := newTasksStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasMilestones applies the HasEdge predicate on the "milestones" edge.
+func HasMilestones() predicate.Project {
+	return predicate.Project(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, MilestonesTable, MilestonesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasMilestonesWith applies the HasEdge predicate on the "milestones" edge with a given conditions (other predicates).
+func HasMilestonesWith(preds ...predicate.Task) predicate.Project {
+	return predicate.Project(func(s *sql.Selector) {
+		step := newMilestonesStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

@@ -1,5 +1,4 @@
-h1:VNvu1/R2fIhZQOOxi5rv4xojNFtiaEVEYlhyoMKFb1I=
-20241024164721_init.sql h1:HfojnHxFu+abJaXqBCsnDqHD/xnoLckQRc/GuwmdT0k=
-20241024171049_change_goal_on_projects.sql h1:CcSSFoklmq/ISGKqbMVC92Z+f7Z7erxIXkC2lk4aG6s=
-20241024172215_add_indexes.sql h1:yGBrAQ4fJQ7asYSl3NW4knRWAjQBtFo4dnu18KZj1I8=
-20241024174045_add_task.sql h1:Gckomgi/2IejDDFOvJs18xf8nCI8tJOg+fVdpDzPgBg=
+h1:1nWYdP6vVKiO5Vd6Z00WVlOjZ7k7/InWRSaGf34iqkg=
+20241130030821_init.sql h1:lvLkGTBuReQJagH/McRXaXhBysVsqAAPy+GwgkVtNYo=
+20241130040436_update_for_user_id_column.sql h1:srJMh9xoQmMLnn6eBCUJ/4+LKWO7lt9pCf1AWMuPINw=
+20241130041534_udpate_title_on_tasks.sql h1:446lknlMsWC+44mmRfMJPjr0Io4hLUKKaz2FuJyAkcQ=

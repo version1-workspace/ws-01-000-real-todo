@@ -14,7 +14,6 @@ var (
 		{Name: "uuid", Type: field.TypeUUID, Unique: true},
 		{Name: "slug", Type: field.TypeString, Unique: true},
 		{Name: "name", Type: field.TypeString},
-		{Name: "user_id", Type: field.TypeInt},
 		{Name: "goal", Type: field.TypeString, Size: 2147483647},
 		{Name: "shouldbe", Type: field.TypeString, Nullable: true, Size: 2147483647},
 		{Name: "status", Type: field.TypeEnum, Enums: []string{"initial", "active", "archived"}, Default: "initial"},
@@ -35,21 +34,16 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "projects_users_projects",
-				Columns:    []*schema.Column{ProjectsColumns[15]},
+				Columns:    []*schema.Column{ProjectsColumns[14]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
 		Indexes: []*schema.Index{
 			{
-				Name:    "project_user_id",
-				Unique:  false,
-				Columns: []*schema.Column{ProjectsColumns[4]},
-			},
-			{
 				Name:    "project_deadline",
 				Unique:  false,
-				Columns: []*schema.Column{ProjectsColumns[8]},
+				Columns: []*schema.Column{ProjectsColumns[7]},
 			},
 		},
 	}
@@ -57,7 +51,7 @@ var (
 	TasksColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "uuid", Type: field.TypeUUID, Unique: true},
-		{Name: "title", Type: field.TypeString, Unique: true},
+		{Name: "title", Type: field.TypeString},
 		{Name: "status", Type: field.TypeEnum, Enums: []string{"initial", "scheduled", "completed", "archived"}, Default: "initial"},
 		{Name: "kind", Type: field.TypeEnum, Enums: []string{"task", "milestone"}, Default: "task"},
 		{Name: "deadline", Type: field.TypeTime},
@@ -68,6 +62,7 @@ var (
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "project_tasks", Type: field.TypeInt, Nullable: true},
+		{Name: "project_milestones", Type: field.TypeInt, Nullable: true},
 		{Name: "user_tasks", Type: field.TypeInt, Nullable: true},
 	}
 	// TasksTable holds the schema information for the "tasks" table.
@@ -83,8 +78,14 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:     "tasks_users_tasks",
+				Symbol:     "tasks_projects_milestones",
 				Columns:    []*schema.Column{TasksColumns[13]},
+				RefColumns: []*schema.Column{ProjectsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:     "tasks_users_tasks",
+				Columns:    []*schema.Column{TasksColumns[14]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -131,5 +132,6 @@ var (
 func init() {
 	ProjectsTable.ForeignKeys[0].RefTable = UsersTable
 	TasksTable.ForeignKeys[0].RefTable = ProjectsTable
-	TasksTable.ForeignKeys[1].RefTable = UsersTable
+	TasksTable.ForeignKeys[1].RefTable = ProjectsTable
+	TasksTable.ForeignKeys[2].RefTable = UsersTable
 }

@@ -1,6 +1,7 @@
 package project
 
 import (
+	"context"
 	"net/http"
 	"version1-workspace/ws-01-000-real-todo/internal/ent"
 	"version1-workspace/ws-01-000-real-todo/internal/pkg/toolkit/module"
@@ -10,6 +11,7 @@ import (
 
 type client interface {
 	Get() *ent.Client
+	WithTx(ctx context.Context, fn func(tx *ent.Tx) error) error
 }
 
 var _ module.Moduler = (*Module)(nil)

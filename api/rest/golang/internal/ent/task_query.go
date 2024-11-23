@@ -20,13 +20,14 @@ import (
 // TaskQuery is the builder for querying Task entities.
 type TaskQuery struct {
 	config
-	ctx          *QueryContext
-	order        []task.OrderOption
-	inters       []Interceptor
-	predicates   []predicate.Task
-	withProjects *ProjectQuery
-	withUser     *UserQuery
-	withFKs      bool
+	ctx                 *QueryContext
+	order               []task.OrderOption
+	inters              []Interceptor
+	predicates          []predicate.Task
+	withProject         *ProjectQuery
+	withMilestoneParent *ProjectQuery
+	withUser            *UserQuery
+	withFKs             bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -63,8 +64,8 @@ func (tq *TaskQuery) Order(o ...task.OrderOption) *TaskQuery {
 	return tq
 }
 
-// QueryProjects chains the current query on the "projects" edge.
-func (tq *TaskQuery) QueryProjects() *ProjectQuery {
+// QueryProject chains the current query on the "project" edge.
+func (tq *TaskQuery) QueryProject() *ProjectQuery {
 	query := (&ProjectClient{config: tq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := tq.prepareQuery(ctx); err != nil {
@@ -77,7 +78,29 @@ func (tq *TaskQuery) QueryProjects() *ProjectQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(task.Table, task.FieldID, selector),
 			sqlgraph.To(project.Table, project.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, task.ProjectsTable, task.ProjectsColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, task.ProjectTable, task.ProjectColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryMilestoneParent chains the current query on the "milestoneParent" edge.
+func (tq *TaskQuery) QueryMilestoneParent() *ProjectQuery {
+	query := (&ProjectClient{config: tq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := tq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := tq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(task.Table, task.FieldID, selector),
+			sqlgraph.To(project.Table, project.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, task.MilestoneParentTable, task.MilestoneParentColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(tq.driver.Dialect(), step)
 		return fromU, nil
@@ -294,27 +317,39 @@ func (tq *TaskQuery) Clone() *TaskQuery {
 		return nil
 	}
 	return &TaskQuery{
-		config:       tq.config,
-		ctx:          tq.ctx.Clone(),
-		order:        append([]task.OrderOption{}, tq.order...),
-		inters:       append([]Interceptor{}, tq.inters...),
-		predicates:   append([]predicate.Task{}, tq.predicates...),
-		withProjects: tq.withProjects.Clone(),
-		withUser:     tq.withUser.Clone(),
+		config:              tq.config,
+		ctx:                 tq.ctx.Clone(),
+		order:               append([]task.OrderOption{}, tq.order...),
+		inters:              append([]Interceptor{}, tq.inters...),
+		predicates:          append([]predicate.Task{}, tq.predicates...),
+		withProject:         tq.withProject.Clone(),
+		withMilestoneParent: tq.withMilestoneParent.Clone(),
+		withUser:            tq.withUser.Clone(),
 		// clone intermediate query.
 		sql:  tq.sql.Clone(),
 		path: tq.path,
 	}
 }
 
-// WithProjects tells the query-builder to eager-load the nodes that are connected to
-// the "projects" edge. The optional arguments are used to configure the query builder of the edge.
-func (tq *TaskQuery) WithProjects(opts ...func(*ProjectQuery)) *TaskQuery {
+// WithProject tells the query-builder to eager-load the nodes that are connected to
+// the "project" edge. The optional arguments are used to configure the query builder of the edge.
+func (tq *TaskQuery) WithProject(opts ...func(*ProjectQuery)) *TaskQuery {
 	query := (&ProjectClient{config: tq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	tq.withProjects = query
+	tq.withProject = query
+	return tq
+}
+
+// WithMilestoneParent tells the query-builder to eager-load the nodes that are connected to
+// the "milestoneParent" edge. The optional arguments are used to configure the query builder of the edge.
+func (tq *TaskQuery) WithMilestoneParent(opts ...func(*ProjectQuery)) *TaskQuery {
+	query := (&ProjectClient{config: tq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	tq.withMilestoneParent = query
 	return tq
 }
 
@@ -408,12 +443,13 @@ func (tq *TaskQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Task, e
 		nodes       = []*Task{}
 		withFKs     = tq.withFKs
 		_spec       = tq.querySpec()
-		loadedTypes = [2]bool{
-			tq.withProjects != nil,
+		loadedTypes = [3]bool{
+			tq.withProject != nil,
+			tq.withMilestoneParent != nil,
 			tq.withUser != nil,
 		}
 	)
-	if tq.withProjects != nil || tq.withUser != nil {
+	if tq.withProject != nil || tq.withMilestoneParent != nil || tq.withUser != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -437,9 +473,15 @@ func (tq *TaskQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Task, e
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := tq.withProjects; query != nil {
-		if err := tq.loadProjects(ctx, query, nodes, nil,
-			func(n *Task, e *Project) { n.Edges.Projects = e }); err != nil {
+	if query := tq.withProject; query != nil {
+		if err := tq.loadProject(ctx, query, nodes, nil,
+			func(n *Task, e *Project) { n.Edges.Project = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := tq.withMilestoneParent; query != nil {
+		if err := tq.loadMilestoneParent(ctx, query, nodes, nil,
+			func(n *Task, e *Project) { n.Edges.MilestoneParent = e }); err != nil {
 			return nil, err
 		}
 	}
@@ -452,7 +494,7 @@ func (tq *TaskQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Task, e
 	return nodes, nil
 }
 
-func (tq *TaskQuery) loadProjects(ctx context.Context, query *ProjectQuery, nodes []*Task, init func(*Task), assign func(*Task, *Project)) error {
+func (tq *TaskQuery) loadProject(ctx context.Context, query *ProjectQuery, nodes []*Task, init func(*Task), assign func(*Task, *Project)) error {
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*Task)
 	for i := range nodes {
@@ -477,6 +519,38 @@ func (tq *TaskQuery) loadProjects(ctx context.Context, query *ProjectQuery, node
 		nodes, ok := nodeids[n.ID]
 		if !ok {
 			return fmt.Errorf(`unexpected foreign-key "project_tasks" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
+}
+func (tq *TaskQuery) loadMilestoneParent(ctx context.Context, query *ProjectQuery, nodes []*Task, init func(*Task), assign func(*Task, *Project)) error {
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*Task)
+	for i := range nodes {
+		if nodes[i].project_milestones == nil {
+			continue
+		}
+		fk := *nodes[i].project_milestones
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(project.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "project_milestones" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)

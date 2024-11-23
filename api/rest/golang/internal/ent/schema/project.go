@@ -17,7 +17,6 @@ func (Project) Fields() []ent.Field {
 	return withDefaultFields([]ent.Field{
 		field.String("slug").NotEmpty().Unique(),
 		field.String("name").NotEmpty(),
-		field.Int("user_id").Positive(),
 		field.Text("goal").NotEmpty(),
 		field.Text("shouldbe").Optional(),
 		field.Enum("status").Values("initial", "active", "archived").Default("initial"),
@@ -32,16 +31,16 @@ func (Project) Fields() []ent.Field {
 // Edges of the Project.
 func (Project) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("owner", User.Type).
+		edge.From("user", User.Type).
 			Ref("projects").
 			Unique(),
 		edge.To("tasks", Task.Type),
+		edge.To("milestones", Task.Type),
 	}
 }
 
 func (Project) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("user_id"),
 		index.Fields("deadline"),
 	}
 }

@@ -25,8 +25,6 @@ type Project struct {
 	Slug string `json:"slug,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
-	// UserID holds the value of the "user_id" field.
-	UserID int `json:"user_id,omitempty"`
 	// Goal holds the value of the "goal" field.
 	Goal string `json:"goal,omitempty"`
 	// Shouldbe holds the value of the "shouldbe" field.
@@ -56,24 +54,26 @@ type Project struct {
 
 // ProjectEdges holds the relations/edges for other nodes in the graph.
 type ProjectEdges struct {
-	// Owner holds the value of the owner edge.
-	Owner *User `json:"owner,omitempty"`
+	// User holds the value of the user edge.
+	User *User `json:"user,omitempty"`
 	// Tasks holds the value of the tasks edge.
 	Tasks []*Task `json:"tasks,omitempty"`
+	// Milestones holds the value of the milestones edge.
+	Milestones []*Task `json:"milestones,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
-// OwnerOrErr returns the Owner value or an error if the edge
+// UserOrErr returns the User value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e ProjectEdges) OwnerOrErr() (*User, error) {
-	if e.Owner != nil {
-		return e.Owner, nil
+func (e ProjectEdges) UserOrErr() (*User, error) {
+	if e.User != nil {
+		return e.User, nil
 	} else if e.loadedTypes[0] {
 		return nil, &NotFoundError{label: user.Label}
 	}
-	return nil, &NotLoadedError{edge: "owner"}
+	return nil, &NotLoadedError{edge: "user"}
 }
 
 // TasksOrErr returns the Tasks value or an error if the edge
@@ -85,12 +85,21 @@ func (e ProjectEdges) TasksOrErr() ([]*Task, error) {
 	return nil, &NotLoadedError{edge: "tasks"}
 }
 
+// MilestonesOrErr returns the Milestones value or an error if the edge
+// was not loaded in eager-loading.
+func (e ProjectEdges) MilestonesOrErr() ([]*Task, error) {
+	if e.loadedTypes[2] {
+		return e.Milestones, nil
+	}
+	return nil, &NotLoadedError{edge: "milestones"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Project) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case project.FieldID, project.FieldUserID:
+		case project.FieldID:
 			values[i] = new(sql.NullInt64)
 		case project.FieldSlug, project.FieldName, project.FieldGoal, project.FieldShouldbe, project.FieldStatus:
 			values[i] = new(sql.NullString)
@@ -138,12 +147,6 @@ func (pr *Project) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
 				pr.Name = value.String
-			}
-		case project.FieldUserID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field user_id", values[i])
-			} else if value.Valid {
-				pr.UserID = int(value.Int64)
 			}
 		case project.FieldGoal:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -229,14 +232,19 @@ func (pr *Project) Value(name string) (ent.Value, error) {
 	return pr.selectValues.Get(name)
 }
 
-// QueryOwner queries the "owner" edge of the Project entity.
-func (pr *Project) QueryOwner() *UserQuery {
-	return NewProjectClient(pr.config).QueryOwner(pr)
+// QueryUser queries the "user" edge of the Project entity.
+func (pr *Project) QueryUser() *UserQuery {
+	return NewProjectClient(pr.config).QueryUser(pr)
 }
 
 // QueryTasks queries the "tasks" edge of the Project entity.
 func (pr *Project) QueryTasks() *TaskQuery {
 	return NewProjectClient(pr.config).QueryTasks(pr)
+}
+
+// QueryMilestones queries the "milestones" edge of the Project entity.
+func (pr *Project) QueryMilestones() *TaskQuery {
+	return NewProjectClient(pr.config).QueryMilestones(pr)
 }
 
 // Update returns a builder for updating this Project.
@@ -270,9 +278,6 @@ func (pr *Project) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(pr.Name)
-	builder.WriteString(", ")
-	builder.WriteString("user_id=")
-	builder.WriteString(fmt.Sprintf("%v", pr.UserID))
 	builder.WriteString(", ")
 	builder.WriteString("goal=")
 	builder.WriteString(pr.Goal)
@@ -326,8 +331,6 @@ func (pr *Project) Values(name string) (any, error) {
 		return pr.Slug, nil
 	case "name":
 		return pr.Name, nil
-	case "user_id":
-		return pr.UserID, nil
 	case "goal":
 		return pr.Goal, nil
 	case "shouldbe":

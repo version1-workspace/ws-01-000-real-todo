@@ -36,22 +36,28 @@ func Status(code int) renderOptions {
 	}
 }
 
+// XXX: setting content type should be called before WriteHeader
+// ref: https://github.com/golang/go/issues/17083#issuecomment-246557291
+func (c Renderer) setContentType(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+}
+
 func (c Renderer) Render(w http.ResponseWriter, payload any, opts ...renderOptions) {
 	data, err := normalize(payload)
 	if err != nil {
-		c.InternalServerError(w, err)
+		c.internalServerError(w, err)
 		return
 	}
 
 	res := ResponseBody{
 		Data: data,
 	}
-	w.Header().Set("Content-Type", "application/json")
+	c.setContentType(w)
 	for _, opt := range opts {
 		opt(w)
 	}
 	if err := json.NewEncoder(w).Encode(res); err != nil {
-		c.InternalServerError(w, err)
+		c.internalServerError(w, err)
 	}
 }
 
@@ -74,6 +80,8 @@ func normalize(payload any) (any, error) {
 		return v.Serialize()
 	case ArraySerializer:
 		return v.Serialize()
+	case error:
+		return v.Error(), nil
 	default:
 		return payload, nil
 	}
@@ -82,7 +90,7 @@ func normalize(payload any) (any, error) {
 func (c Renderer) RenderMany(w http.ResponseWriter, payload any, pi *PageInfo) {
 	data, err := normalize(payload)
 	if err != nil {
-		c.InternalServerError(w, err)
+		c.internalServerError(w, err)
 		return
 	}
 
@@ -90,20 +98,28 @@ func (c Renderer) RenderMany(w http.ResponseWriter, payload any, pi *PageInfo) {
 		Data:     data,
 		PageInfo: pi,
 	}
-	w.Header().Set("Content-Type", "application/json")
+	c.setContentType(w)
 	if err := json.NewEncoder(w).Encode(res); err != nil {
-		c.InternalServerError(w, err)
+		c.internalServerError(w, err)
 	}
 }
 
-func (c Renderer) InternalServerError(w http.ResponseWriter, payload any) {
+func (c Renderer) internalServerError(w http.ResponseWriter, payload any) {
+	c.setContentType(w)
 	w.WriteHeader(http.StatusInternalServerError)
 	if err := json.NewEncoder(w).Encode(payload); err != nil {
 		panic(fmt.Errorf("failed to render error: %w", err))
 	}
 }
 
+func (c Renderer) InternalServerError(w http.ResponseWriter, payload any) {
+	c.setContentType(w)
+	w.WriteHeader(http.StatusInternalServerError)
+	c.Render(w, payload)
+}
+
 func (c Renderer) NotFound(w http.ResponseWriter, payload any) {
+	c.setContentType(w)
 	w.WriteHeader(http.StatusNotFound)
 	if payload == nil {
 		c.Render(w, map[string]string{"message": "Not Found"})
@@ -113,6 +129,7 @@ func (c Renderer) NotFound(w http.ResponseWriter, payload any) {
 }
 
 func (c Renderer) BadRequest(w http.ResponseWriter, payload any) {
+	c.setContentType(w)
 	w.WriteHeader(http.StatusBadRequest)
 	if payload == nil {
 		c.Render(w, map[string]string{"message": "Bad Request"})
@@ -122,6 +139,7 @@ func (c Renderer) BadRequest(w http.ResponseWriter, payload any) {
 }
 
 func (c Renderer) Unauthorized(w http.ResponseWriter, payload any) {
+	c.setContentType(w)
 	w.WriteHeader(http.StatusUnauthorized)
 	if payload == nil {
 		c.Render(w, map[string]string{"message": "Unauthorized"})

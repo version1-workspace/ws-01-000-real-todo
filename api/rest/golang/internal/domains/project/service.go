@@ -25,7 +25,6 @@ func (s service) fetchProjects(ctx context.Context, limit, page, userID int, sta
 func (s service) createProject(ctx context.Context, uid int, p *createProjectParams) (*Project, error) {
 	prj := &Project{
 		Project: &ent.Project{
-			UserID:   uid,
 			Name:     p.Name,
 			Deadline: p.Deadline,
 			Status:   "active",
@@ -34,13 +33,17 @@ func (s service) createProject(ctx context.Context, uid int, p *createProjectPar
 			Shouldbe: p.Shouldbe,
 		},
 	}
-	milestones := []ent.Task{}
+	milestones := []*ent.Task{}
 	for _, m := range p.Milestones {
-		milestones = append(milestones, ent.Task{
+		milestones = append(milestones, &ent.Task{
+			Kind:     "milestone",
+			Status:   "scheduled",
 			Title:    m.Title,
 			Deadline: m.Deadline,
 		})
 	}
+	prj.Project.Edges.Milestones = milestones
+
 	list, err := s.r.createProject(ctx, uid, prj)
 	if err != nil {
 		return list, err

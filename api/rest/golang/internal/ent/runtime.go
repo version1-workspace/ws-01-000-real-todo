@@ -30,20 +30,16 @@ func init() {
 	projectDescName := projectFields[2].Descriptor()
 	// project.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	project.NameValidator = projectDescName.Validators[0].(func(string) error)
-	// projectDescUserID is the schema descriptor for user_id field.
-	projectDescUserID := projectFields[3].Descriptor()
-	// project.UserIDValidator is a validator for the "user_id" field. It is called by the builders before save.
-	project.UserIDValidator = projectDescUserID.Validators[0].(func(int) error)
 	// projectDescGoal is the schema descriptor for goal field.
-	projectDescGoal := projectFields[4].Descriptor()
+	projectDescGoal := projectFields[3].Descriptor()
 	// project.GoalValidator is a validator for the "goal" field. It is called by the builders before save.
 	project.GoalValidator = projectDescGoal.Validators[0].(func(string) error)
 	// projectDescCreatedAt is the schema descriptor for created_at field.
-	projectDescCreatedAt := projectFields[12].Descriptor()
+	projectDescCreatedAt := projectFields[11].Descriptor()
 	// project.DefaultCreatedAt holds the default value on creation for the created_at field.
 	project.DefaultCreatedAt = projectDescCreatedAt.Default.(func() time.Time)
 	// projectDescUpdatedAt is the schema descriptor for updated_at field.
-	projectDescUpdatedAt := projectFields[13].Descriptor()
+	projectDescUpdatedAt := projectFields[12].Descriptor()
 	// project.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	project.DefaultUpdatedAt = projectDescUpdatedAt.Default.(func() time.Time)
 	taskFields := schema.Task{}.Fields()

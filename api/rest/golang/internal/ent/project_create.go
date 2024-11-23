@@ -49,12 +49,6 @@ func (pc *ProjectCreate) SetName(s string) *ProjectCreate {
 	return pc
 }
 
-// SetUserID sets the "user_id" field.
-func (pc *ProjectCreate) SetUserID(i int) *ProjectCreate {
-	pc.mutation.SetUserID(i)
-	return pc
-}
-
 // SetGoal sets the "goal" field.
 func (pc *ProjectCreate) SetGoal(s string) *ProjectCreate {
 	pc.mutation.SetGoal(s)
@@ -179,23 +173,23 @@ func (pc *ProjectCreate) SetNillableUpdatedAt(t *time.Time) *ProjectCreate {
 	return pc
 }
 
-// SetOwnerID sets the "owner" edge to the User entity by ID.
-func (pc *ProjectCreate) SetOwnerID(id int) *ProjectCreate {
-	pc.mutation.SetOwnerID(id)
+// SetUserID sets the "user" edge to the User entity by ID.
+func (pc *ProjectCreate) SetUserID(id int) *ProjectCreate {
+	pc.mutation.SetUserID(id)
 	return pc
 }
 
-// SetNillableOwnerID sets the "owner" edge to the User entity by ID if the given value is not nil.
-func (pc *ProjectCreate) SetNillableOwnerID(id *int) *ProjectCreate {
+// SetNillableUserID sets the "user" edge to the User entity by ID if the given value is not nil.
+func (pc *ProjectCreate) SetNillableUserID(id *int) *ProjectCreate {
 	if id != nil {
-		pc = pc.SetOwnerID(*id)
+		pc = pc.SetUserID(*id)
 	}
 	return pc
 }
 
-// SetOwner sets the "owner" edge to the User entity.
-func (pc *ProjectCreate) SetOwner(u *User) *ProjectCreate {
-	return pc.SetOwnerID(u.ID)
+// SetUser sets the "user" edge to the User entity.
+func (pc *ProjectCreate) SetUser(u *User) *ProjectCreate {
+	return pc.SetUserID(u.ID)
 }
 
 // AddTaskIDs adds the "tasks" edge to the Task entity by IDs.
@@ -211,6 +205,21 @@ func (pc *ProjectCreate) AddTasks(t ...*Task) *ProjectCreate {
 		ids[i] = t[i].ID
 	}
 	return pc.AddTaskIDs(ids...)
+}
+
+// AddMilestoneIDs adds the "milestones" edge to the Task entity by IDs.
+func (pc *ProjectCreate) AddMilestoneIDs(ids ...int) *ProjectCreate {
+	pc.mutation.AddMilestoneIDs(ids...)
+	return pc
+}
+
+// AddMilestones adds the "milestones" edges to the Task entity.
+func (pc *ProjectCreate) AddMilestones(t ...*Task) *ProjectCreate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return pc.AddMilestoneIDs(ids...)
 }
 
 // Mutation returns the ProjectMutation object of the builder.
@@ -287,14 +296,6 @@ func (pc *ProjectCreate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Project.name": %w`, err)}
 		}
 	}
-	if _, ok := pc.mutation.UserID(); !ok {
-		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Project.user_id"`)}
-	}
-	if v, ok := pc.mutation.UserID(); ok {
-		if err := project.UserIDValidator(v); err != nil {
-			return &ValidationError{Name: "user_id", err: fmt.Errorf(`ent: validator failed for field "Project.user_id": %w`, err)}
-		}
-	}
 	if _, ok := pc.mutation.Goal(); !ok {
 		return &ValidationError{Name: "goal", err: errors.New(`ent: missing required field "Project.goal"`)}
 	}
@@ -358,10 +359,6 @@ func (pc *ProjectCreate) createSpec() (*Project, *sqlgraph.CreateSpec) {
 		_spec.SetField(project.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := pc.mutation.UserID(); ok {
-		_spec.SetField(project.FieldUserID, field.TypeInt, value)
-		_node.UserID = value
-	}
 	if value, ok := pc.mutation.Goal(); ok {
 		_spec.SetField(project.FieldGoal, field.TypeString, value)
 		_node.Goal = value
@@ -402,12 +399,12 @@ func (pc *ProjectCreate) createSpec() (*Project, *sqlgraph.CreateSpec) {
 		_spec.SetField(project.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
-	if nodes := pc.mutation.OwnerIDs(); len(nodes) > 0 {
+	if nodes := pc.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   project.OwnerTable,
-			Columns: []string{project.OwnerColumn},
+			Table:   project.UserTable,
+			Columns: []string{project.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
@@ -425,6 +422,22 @@ func (pc *ProjectCreate) createSpec() (*Project, *sqlgraph.CreateSpec) {
 			Inverse: false,
 			Table:   project.TasksTable,
 			Columns: []string{project.TasksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := pc.mutation.MilestonesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   project.MilestonesTable,
+			Columns: []string{project.MilestonesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),

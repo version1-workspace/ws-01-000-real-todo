@@ -44,32 +44,46 @@ type Task struct {
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the TaskQuery when eager-loading is set.
-	Edges         TaskEdges `json:"edges"`
-	project_tasks *int
-	user_tasks    *int
-	selectValues  sql.SelectValues
+	Edges              TaskEdges `json:"edges"`
+	project_tasks      *int
+	project_milestones *int
+	user_tasks         *int
+	selectValues       sql.SelectValues
 }
 
 // TaskEdges holds the relations/edges for other nodes in the graph.
 type TaskEdges struct {
-	// Projects holds the value of the projects edge.
-	Projects *Project `json:"projects,omitempty"`
+	// Project holds the value of the project edge.
+	Project *Project `json:"project,omitempty"`
+	// MilestoneParent holds the value of the milestoneParent edge.
+	MilestoneParent *Project `json:"milestoneParent,omitempty"`
 	// User holds the value of the user edge.
 	User *User `json:"user,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
-// ProjectsOrErr returns the Projects value or an error if the edge
+// ProjectOrErr returns the Project value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e TaskEdges) ProjectsOrErr() (*Project, error) {
-	if e.Projects != nil {
-		return e.Projects, nil
+func (e TaskEdges) ProjectOrErr() (*Project, error) {
+	if e.Project != nil {
+		return e.Project, nil
 	} else if e.loadedTypes[0] {
 		return nil, &NotFoundError{label: project.Label}
 	}
-	return nil, &NotLoadedError{edge: "projects"}
+	return nil, &NotLoadedError{edge: "project"}
+}
+
+// MilestoneParentOrErr returns the MilestoneParent value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e TaskEdges) MilestoneParentOrErr() (*Project, error) {
+	if e.MilestoneParent != nil {
+		return e.MilestoneParent, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: project.Label}
+	}
+	return nil, &NotLoadedError{edge: "milestoneParent"}
 }
 
 // UserOrErr returns the User value or an error if the edge
@@ -77,7 +91,7 @@ func (e TaskEdges) ProjectsOrErr() (*Project, error) {
 func (e TaskEdges) UserOrErr() (*User, error) {
 	if e.User != nil {
 		return e.User, nil
-	} else if e.loadedTypes[1] {
+	} else if e.loadedTypes[2] {
 		return nil, &NotFoundError{label: user.Label}
 	}
 	return nil, &NotLoadedError{edge: "user"}
@@ -98,7 +112,9 @@ func (*Task) scanValues(columns []string) ([]any, error) {
 			values[i] = new(uuid.UUID)
 		case task.ForeignKeys[0]: // project_tasks
 			values[i] = new(sql.NullInt64)
-		case task.ForeignKeys[1]: // user_tasks
+		case task.ForeignKeys[1]: // project_milestones
+			values[i] = new(sql.NullInt64)
+		case task.ForeignKeys[2]: // user_tasks
 			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -200,6 +216,13 @@ func (t *Task) assignValues(columns []string, values []any) error {
 			}
 		case task.ForeignKeys[1]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field project_milestones", value)
+			} else if value.Valid {
+				t.project_milestones = new(int)
+				*t.project_milestones = int(value.Int64)
+			}
+		case task.ForeignKeys[2]:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field user_tasks", value)
 			} else if value.Valid {
 				t.user_tasks = new(int)
@@ -218,9 +241,14 @@ func (t *Task) Value(name string) (ent.Value, error) {
 	return t.selectValues.Get(name)
 }
 
-// QueryProjects queries the "projects" edge of the Task entity.
-func (t *Task) QueryProjects() *ProjectQuery {
-	return NewTaskClient(t.config).QueryProjects(t)
+// QueryProject queries the "project" edge of the Task entity.
+func (t *Task) QueryProject() *ProjectQuery {
+	return NewTaskClient(t.config).QueryProject(t)
+}
+
+// QueryMilestoneParent queries the "milestoneParent" edge of the Task entity.
+func (t *Task) QueryMilestoneParent() *ProjectQuery {
+	return NewTaskClient(t.config).QueryMilestoneParent(t)
 }
 
 // QueryUser queries the "user" edge of the Task entity.

@@ -38,19 +38,28 @@ const (
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
-	// EdgeProjects holds the string denoting the projects edge name in mutations.
-	EdgeProjects = "projects"
+	// EdgeProject holds the string denoting the project edge name in mutations.
+	EdgeProject = "project"
+	// EdgeMilestoneParent holds the string denoting the milestoneparent edge name in mutations.
+	EdgeMilestoneParent = "milestoneParent"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
 	// Table holds the table name of the task in the database.
 	Table = "tasks"
-	// ProjectsTable is the table that holds the projects relation/edge.
-	ProjectsTable = "tasks"
-	// ProjectsInverseTable is the table name for the Project entity.
+	// ProjectTable is the table that holds the project relation/edge.
+	ProjectTable = "tasks"
+	// ProjectInverseTable is the table name for the Project entity.
 	// It exists in this package in order to avoid circular dependency with the "project" package.
-	ProjectsInverseTable = "projects"
-	// ProjectsColumn is the table column denoting the projects relation/edge.
-	ProjectsColumn = "project_tasks"
+	ProjectInverseTable = "projects"
+	// ProjectColumn is the table column denoting the project relation/edge.
+	ProjectColumn = "project_tasks"
+	// MilestoneParentTable is the table that holds the milestoneParent relation/edge.
+	MilestoneParentTable = "tasks"
+	// MilestoneParentInverseTable is the table name for the Project entity.
+	// It exists in this package in order to avoid circular dependency with the "project" package.
+	MilestoneParentInverseTable = "projects"
+	// MilestoneParentColumn is the table column denoting the milestoneParent relation/edge.
+	MilestoneParentColumn = "project_milestones"
 	// UserTable is the table that holds the user relation/edge.
 	UserTable = "tasks"
 	// UserInverseTable is the table name for the User entity.
@@ -80,6 +89,7 @@ var Columns = []string{
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
 	"project_tasks",
+	"project_milestones",
 	"user_tasks",
 }
 
@@ -226,10 +236,17 @@ func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
 }
 
-// ByProjectsField orders the results by projects field.
-func ByProjectsField(field string, opts ...sql.OrderTermOption) OrderOption {
+// ByProjectField orders the results by project field.
+func ByProjectField(field string, opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newProjectsStep(), sql.OrderByField(field, opts...))
+		sqlgraph.OrderByNeighborTerms(s, newProjectStep(), sql.OrderByField(field, opts...))
+	}
+}
+
+// ByMilestoneParentField orders the results by milestoneParent field.
+func ByMilestoneParentField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newMilestoneParentStep(), sql.OrderByField(field, opts...))
 	}
 }
 
@@ -239,11 +256,18 @@ func ByUserField(field string, opts ...sql.OrderTermOption) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newUserStep(), sql.OrderByField(field, opts...))
 	}
 }
-func newProjectsStep() *sqlgraph.Step {
+func newProjectStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(ProjectsInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, true, ProjectsTable, ProjectsColumn),
+		sqlgraph.To(ProjectInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, ProjectTable, ProjectColumn),
+	)
+}
+func newMilestoneParentStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(MilestoneParentInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, MilestoneParentTable, MilestoneParentColumn),
 	)
 }
 func newUserStep() *sqlgraph.Step {

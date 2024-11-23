@@ -64,7 +64,7 @@ type createProjectParams struct {
 	Slug       string       `json:"slug"`
 	Goal       string       `json:"goal"`
 	Shouldbe   string       `json:"shouldbe"`
-	Milestones []taskParams `json:"milestone"`
+	Milestones []taskParams `json:"milestones"`
 }
 
 func (c controller) create(w http.ResponseWriter, r *http.Request) {

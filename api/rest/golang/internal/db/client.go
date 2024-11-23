@@ -38,6 +38,10 @@ func (c *Client) Get() *ent.Client {
 	return c.Client
 }
 
+func (c *Client) WithTx(ctx context.Context, fn func(tx *ent.Tx) error) error {
+	return WithTx(ctx, c.Client, fn)
+}
+
 func WithTx(ctx context.Context, client *ent.Client, fn func(tx *ent.Tx) error) error {
 	tx, err := client.Tx(ctx)
 	if err != nil {

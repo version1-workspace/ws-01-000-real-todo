@@ -21,13 +21,14 @@ import (
 // ProjectQuery is the builder for querying Project entities.
 type ProjectQuery struct {
 	config
-	ctx        *QueryContext
-	order      []project.OrderOption
-	inters     []Interceptor
-	predicates []predicate.Project
-	withOwner  *UserQuery
-	withTasks  *TaskQuery
-	withFKs    bool
+	ctx            *QueryContext
+	order          []project.OrderOption
+	inters         []Interceptor
+	predicates     []predicate.Project
+	withUser       *UserQuery
+	withTasks      *TaskQuery
+	withMilestones *TaskQuery
+	withFKs        bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -64,8 +65,8 @@ func (pq *ProjectQuery) Order(o ...project.OrderOption) *ProjectQuery {
 	return pq
 }
 
-// QueryOwner chains the current query on the "owner" edge.
-func (pq *ProjectQuery) QueryOwner() *UserQuery {
+// QueryUser chains the current query on the "user" edge.
+func (pq *ProjectQuery) QueryUser() *UserQuery {
 	query := (&UserClient{config: pq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := pq.prepareQuery(ctx); err != nil {
@@ -78,7 +79,7 @@ func (pq *ProjectQuery) QueryOwner() *UserQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(project.Table, project.FieldID, selector),
 			sqlgraph.To(user.Table, user.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, project.OwnerTable, project.OwnerColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, project.UserTable, project.UserColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
 		return fromU, nil
@@ -101,6 +102,28 @@ func (pq *ProjectQuery) QueryTasks() *TaskQuery {
 			sqlgraph.From(project.Table, project.FieldID, selector),
 			sqlgraph.To(task.Table, task.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, project.TasksTable, project.TasksColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryMilestones chains the current query on the "milestones" edge.
+func (pq *ProjectQuery) QueryMilestones() *TaskQuery {
+	query := (&TaskClient{config: pq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := pq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := pq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(project.Table, project.FieldID, selector),
+			sqlgraph.To(task.Table, task.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, project.MilestonesTable, project.MilestonesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
 		return fromU, nil
@@ -295,27 +318,28 @@ func (pq *ProjectQuery) Clone() *ProjectQuery {
 		return nil
 	}
 	return &ProjectQuery{
-		config:     pq.config,
-		ctx:        pq.ctx.Clone(),
-		order:      append([]project.OrderOption{}, pq.order...),
-		inters:     append([]Interceptor{}, pq.inters...),
-		predicates: append([]predicate.Project{}, pq.predicates...),
-		withOwner:  pq.withOwner.Clone(),
-		withTasks:  pq.withTasks.Clone(),
+		config:         pq.config,
+		ctx:            pq.ctx.Clone(),
+		order:          append([]project.OrderOption{}, pq.order...),
+		inters:         append([]Interceptor{}, pq.inters...),
+		predicates:     append([]predicate.Project{}, pq.predicates...),
+		withUser:       pq.withUser.Clone(),
+		withTasks:      pq.withTasks.Clone(),
+		withMilestones: pq.withMilestones.Clone(),
 		// clone intermediate query.
 		sql:  pq.sql.Clone(),
 		path: pq.path,
 	}
 }
 
-// WithOwner tells the query-builder to eager-load the nodes that are connected to
-// the "owner" edge. The optional arguments are used to configure the query builder of the edge.
-func (pq *ProjectQuery) WithOwner(opts ...func(*UserQuery)) *ProjectQuery {
+// WithUser tells the query-builder to eager-load the nodes that are connected to
+// the "user" edge. The optional arguments are used to configure the query builder of the edge.
+func (pq *ProjectQuery) WithUser(opts ...func(*UserQuery)) *ProjectQuery {
 	query := (&UserClient{config: pq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	pq.withOwner = query
+	pq.withUser = query
 	return pq
 }
 
@@ -327,6 +351,17 @@ func (pq *ProjectQuery) WithTasks(opts ...func(*TaskQuery)) *ProjectQuery {
 		opt(query)
 	}
 	pq.withTasks = query
+	return pq
+}
+
+// WithMilestones tells the query-builder to eager-load the nodes that are connected to
+// the "milestones" edge. The optional arguments are used to configure the query builder of the edge.
+func (pq *ProjectQuery) WithMilestones(opts ...func(*TaskQuery)) *ProjectQuery {
+	query := (&TaskClient{config: pq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	pq.withMilestones = query
 	return pq
 }
 
@@ -409,12 +444,13 @@ func (pq *ProjectQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Proj
 		nodes       = []*Project{}
 		withFKs     = pq.withFKs
 		_spec       = pq.querySpec()
-		loadedTypes = [2]bool{
-			pq.withOwner != nil,
+		loadedTypes = [3]bool{
+			pq.withUser != nil,
 			pq.withTasks != nil,
+			pq.withMilestones != nil,
 		}
 	)
-	if pq.withOwner != nil {
+	if pq.withUser != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -438,9 +474,9 @@ func (pq *ProjectQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Proj
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := pq.withOwner; query != nil {
-		if err := pq.loadOwner(ctx, query, nodes, nil,
-			func(n *Project, e *User) { n.Edges.Owner = e }); err != nil {
+	if query := pq.withUser; query != nil {
+		if err := pq.loadUser(ctx, query, nodes, nil,
+			func(n *Project, e *User) { n.Edges.User = e }); err != nil {
 			return nil, err
 		}
 	}
@@ -451,10 +487,17 @@ func (pq *ProjectQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Proj
 			return nil, err
 		}
 	}
+	if query := pq.withMilestones; query != nil {
+		if err := pq.loadMilestones(ctx, query, nodes,
+			func(n *Project) { n.Edges.Milestones = []*Task{} },
+			func(n *Project, e *Task) { n.Edges.Milestones = append(n.Edges.Milestones, e) }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
-func (pq *ProjectQuery) loadOwner(ctx context.Context, query *UserQuery, nodes []*Project, init func(*Project), assign func(*Project, *User)) error {
+func (pq *ProjectQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*Project, init func(*Project), assign func(*Project, *User)) error {
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*Project)
 	for i := range nodes {
@@ -512,6 +555,37 @@ func (pq *ProjectQuery) loadTasks(ctx context.Context, query *TaskQuery, nodes [
 		node, ok := nodeids[*fk]
 		if !ok {
 			return fmt.Errorf(`unexpected referenced foreign-key "project_tasks" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (pq *ProjectQuery) loadMilestones(ctx context.Context, query *TaskQuery, nodes []*Project, init func(*Project), assign func(*Project, *Task)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*Project)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.Task(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(project.MilestonesColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.project_milestones
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "project_milestones" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "project_milestones" returned %v for node %v`, *fk, n.ID)
 		}
 		assign(node, n)
 	}

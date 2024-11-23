@@ -161,23 +161,42 @@ func (tc *TaskCreate) SetNillableUpdatedAt(t *time.Time) *TaskCreate {
 	return tc
 }
 
-// SetProjectsID sets the "projects" edge to the Project entity by ID.
-func (tc *TaskCreate) SetProjectsID(id int) *TaskCreate {
-	tc.mutation.SetProjectsID(id)
+// SetProjectID sets the "project" edge to the Project entity by ID.
+func (tc *TaskCreate) SetProjectID(id int) *TaskCreate {
+	tc.mutation.SetProjectID(id)
 	return tc
 }
 
-// SetNillableProjectsID sets the "projects" edge to the Project entity by ID if the given value is not nil.
-func (tc *TaskCreate) SetNillableProjectsID(id *int) *TaskCreate {
+// SetNillableProjectID sets the "project" edge to the Project entity by ID if the given value is not nil.
+func (tc *TaskCreate) SetNillableProjectID(id *int) *TaskCreate {
 	if id != nil {
-		tc = tc.SetProjectsID(*id)
+		tc = tc.SetProjectID(*id)
 	}
 	return tc
 }
 
-// SetProjects sets the "projects" edge to the Project entity.
-func (tc *TaskCreate) SetProjects(p *Project) *TaskCreate {
-	return tc.SetProjectsID(p.ID)
+// SetProject sets the "project" edge to the Project entity.
+func (tc *TaskCreate) SetProject(p *Project) *TaskCreate {
+	return tc.SetProjectID(p.ID)
+}
+
+// SetMilestoneParentID sets the "milestoneParent" edge to the Project entity by ID.
+func (tc *TaskCreate) SetMilestoneParentID(id int) *TaskCreate {
+	tc.mutation.SetMilestoneParentID(id)
+	return tc
+}
+
+// SetNillableMilestoneParentID sets the "milestoneParent" edge to the Project entity by ID if the given value is not nil.
+func (tc *TaskCreate) SetNillableMilestoneParentID(id *int) *TaskCreate {
+	if id != nil {
+		tc = tc.SetMilestoneParentID(*id)
+	}
+	return tc
+}
+
+// SetMilestoneParent sets the "milestoneParent" edge to the Project entity.
+func (tc *TaskCreate) SetMilestoneParent(p *Project) *TaskCreate {
+	return tc.SetMilestoneParentID(p.ID)
 }
 
 // SetUserID sets the "user" edge to the User entity by ID.
@@ -364,12 +383,12 @@ func (tc *TaskCreate) createSpec() (*Task, *sqlgraph.CreateSpec) {
 		_spec.SetField(task.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
-	if nodes := tc.mutation.ProjectsIDs(); len(nodes) > 0 {
+	if nodes := tc.mutation.ProjectIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   task.ProjectsTable,
-			Columns: []string{task.ProjectsColumn},
+			Table:   task.ProjectTable,
+			Columns: []string{task.ProjectColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(project.FieldID, field.TypeInt),
@@ -379,6 +398,23 @@ func (tc *TaskCreate) createSpec() (*Task, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.project_tasks = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := tc.mutation.MilestoneParentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   task.MilestoneParentTable,
+			Columns: []string{task.MilestoneParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(project.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.project_milestones = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := tc.mutation.UserIDs(); len(nodes) > 0 {

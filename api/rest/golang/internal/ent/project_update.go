@@ -73,27 +73,6 @@ func (pu *ProjectUpdate) SetNillableName(s *string) *ProjectUpdate {
 	return pu
 }
 
-// SetUserID sets the "user_id" field.
-func (pu *ProjectUpdate) SetUserID(i int) *ProjectUpdate {
-	pu.mutation.ResetUserID()
-	pu.mutation.SetUserID(i)
-	return pu
-}
-
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (pu *ProjectUpdate) SetNillableUserID(i *int) *ProjectUpdate {
-	if i != nil {
-		pu.SetUserID(*i)
-	}
-	return pu
-}
-
-// AddUserID adds i to the "user_id" field.
-func (pu *ProjectUpdate) AddUserID(i int) *ProjectUpdate {
-	pu.mutation.AddUserID(i)
-	return pu
-}
-
 // SetGoal sets the "goal" field.
 func (pu *ProjectUpdate) SetGoal(s string) *ProjectUpdate {
 	pu.mutation.SetGoal(s)
@@ -250,23 +229,23 @@ func (pu *ProjectUpdate) SetNillableUpdatedAt(t *time.Time) *ProjectUpdate {
 	return pu
 }
 
-// SetOwnerID sets the "owner" edge to the User entity by ID.
-func (pu *ProjectUpdate) SetOwnerID(id int) *ProjectUpdate {
-	pu.mutation.SetOwnerID(id)
+// SetUserID sets the "user" edge to the User entity by ID.
+func (pu *ProjectUpdate) SetUserID(id int) *ProjectUpdate {
+	pu.mutation.SetUserID(id)
 	return pu
 }
 
-// SetNillableOwnerID sets the "owner" edge to the User entity by ID if the given value is not nil.
-func (pu *ProjectUpdate) SetNillableOwnerID(id *int) *ProjectUpdate {
+// SetNillableUserID sets the "user" edge to the User entity by ID if the given value is not nil.
+func (pu *ProjectUpdate) SetNillableUserID(id *int) *ProjectUpdate {
 	if id != nil {
-		pu = pu.SetOwnerID(*id)
+		pu = pu.SetUserID(*id)
 	}
 	return pu
 }
 
-// SetOwner sets the "owner" edge to the User entity.
-func (pu *ProjectUpdate) SetOwner(u *User) *ProjectUpdate {
-	return pu.SetOwnerID(u.ID)
+// SetUser sets the "user" edge to the User entity.
+func (pu *ProjectUpdate) SetUser(u *User) *ProjectUpdate {
+	return pu.SetUserID(u.ID)
 }
 
 // AddTaskIDs adds the "tasks" edge to the Task entity by IDs.
@@ -284,14 +263,29 @@ func (pu *ProjectUpdate) AddTasks(t ...*Task) *ProjectUpdate {
 	return pu.AddTaskIDs(ids...)
 }
 
+// AddMilestoneIDs adds the "milestones" edge to the Task entity by IDs.
+func (pu *ProjectUpdate) AddMilestoneIDs(ids ...int) *ProjectUpdate {
+	pu.mutation.AddMilestoneIDs(ids...)
+	return pu
+}
+
+// AddMilestones adds the "milestones" edges to the Task entity.
+func (pu *ProjectUpdate) AddMilestones(t ...*Task) *ProjectUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return pu.AddMilestoneIDs(ids...)
+}
+
 // Mutation returns the ProjectMutation object of the builder.
 func (pu *ProjectUpdate) Mutation() *ProjectMutation {
 	return pu.mutation
 }
 
-// ClearOwner clears the "owner" edge to the User entity.
-func (pu *ProjectUpdate) ClearOwner() *ProjectUpdate {
-	pu.mutation.ClearOwner()
+// ClearUser clears the "user" edge to the User entity.
+func (pu *ProjectUpdate) ClearUser() *ProjectUpdate {
+	pu.mutation.ClearUser()
 	return pu
 }
 
@@ -314,6 +308,27 @@ func (pu *ProjectUpdate) RemoveTasks(t ...*Task) *ProjectUpdate {
 		ids[i] = t[i].ID
 	}
 	return pu.RemoveTaskIDs(ids...)
+}
+
+// ClearMilestones clears all "milestones" edges to the Task entity.
+func (pu *ProjectUpdate) ClearMilestones() *ProjectUpdate {
+	pu.mutation.ClearMilestones()
+	return pu
+}
+
+// RemoveMilestoneIDs removes the "milestones" edge to Task entities by IDs.
+func (pu *ProjectUpdate) RemoveMilestoneIDs(ids ...int) *ProjectUpdate {
+	pu.mutation.RemoveMilestoneIDs(ids...)
+	return pu
+}
+
+// RemoveMilestones removes "milestones" edges to Task entities.
+func (pu *ProjectUpdate) RemoveMilestones(t ...*Task) *ProjectUpdate {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return pu.RemoveMilestoneIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -355,11 +370,6 @@ func (pu *ProjectUpdate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Project.name": %w`, err)}
 		}
 	}
-	if v, ok := pu.mutation.UserID(); ok {
-		if err := project.UserIDValidator(v); err != nil {
-			return &ValidationError{Name: "user_id", err: fmt.Errorf(`ent: validator failed for field "Project.user_id": %w`, err)}
-		}
-	}
 	if v, ok := pu.mutation.Goal(); ok {
 		if err := project.GoalValidator(v); err != nil {
 			return &ValidationError{Name: "goal", err: fmt.Errorf(`ent: validator failed for field "Project.goal": %w`, err)}
@@ -393,12 +403,6 @@ func (pu *ProjectUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := pu.mutation.Name(); ok {
 		_spec.SetField(project.FieldName, field.TypeString, value)
-	}
-	if value, ok := pu.mutation.UserID(); ok {
-		_spec.SetField(project.FieldUserID, field.TypeInt, value)
-	}
-	if value, ok := pu.mutation.AddedUserID(); ok {
-		_spec.AddField(project.FieldUserID, field.TypeInt, value)
 	}
 	if value, ok := pu.mutation.Goal(); ok {
 		_spec.SetField(project.FieldGoal, field.TypeString, value)
@@ -442,12 +446,12 @@ func (pu *ProjectUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := pu.mutation.UpdatedAt(); ok {
 		_spec.SetField(project.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if pu.mutation.OwnerCleared() {
+	if pu.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   project.OwnerTable,
-			Columns: []string{project.OwnerColumn},
+			Table:   project.UserTable,
+			Columns: []string{project.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
@@ -455,12 +459,12 @@ func (pu *ProjectUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.OwnerIDs(); len(nodes) > 0 {
+	if nodes := pu.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   project.OwnerTable,
-			Columns: []string{project.OwnerColumn},
+			Table:   project.UserTable,
+			Columns: []string{project.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
@@ -506,6 +510,51 @@ func (pu *ProjectUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Inverse: false,
 			Table:   project.TasksTable,
 			Columns: []string{project.TasksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if pu.mutation.MilestonesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   project.MilestonesTable,
+			Columns: []string{project.MilestonesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.RemovedMilestonesIDs(); len(nodes) > 0 && !pu.mutation.MilestonesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   project.MilestonesTable,
+			Columns: []string{project.MilestonesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.MilestonesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   project.MilestonesTable,
+			Columns: []string{project.MilestonesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
@@ -575,27 +624,6 @@ func (puo *ProjectUpdateOne) SetNillableName(s *string) *ProjectUpdateOne {
 	if s != nil {
 		puo.SetName(*s)
 	}
-	return puo
-}
-
-// SetUserID sets the "user_id" field.
-func (puo *ProjectUpdateOne) SetUserID(i int) *ProjectUpdateOne {
-	puo.mutation.ResetUserID()
-	puo.mutation.SetUserID(i)
-	return puo
-}
-
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (puo *ProjectUpdateOne) SetNillableUserID(i *int) *ProjectUpdateOne {
-	if i != nil {
-		puo.SetUserID(*i)
-	}
-	return puo
-}
-
-// AddUserID adds i to the "user_id" field.
-func (puo *ProjectUpdateOne) AddUserID(i int) *ProjectUpdateOne {
-	puo.mutation.AddUserID(i)
 	return puo
 }
 
@@ -755,23 +783,23 @@ func (puo *ProjectUpdateOne) SetNillableUpdatedAt(t *time.Time) *ProjectUpdateOn
 	return puo
 }
 
-// SetOwnerID sets the "owner" edge to the User entity by ID.
-func (puo *ProjectUpdateOne) SetOwnerID(id int) *ProjectUpdateOne {
-	puo.mutation.SetOwnerID(id)
+// SetUserID sets the "user" edge to the User entity by ID.
+func (puo *ProjectUpdateOne) SetUserID(id int) *ProjectUpdateOne {
+	puo.mutation.SetUserID(id)
 	return puo
 }
 
-// SetNillableOwnerID sets the "owner" edge to the User entity by ID if the given value is not nil.
-func (puo *ProjectUpdateOne) SetNillableOwnerID(id *int) *ProjectUpdateOne {
+// SetNillableUserID sets the "user" edge to the User entity by ID if the given value is not nil.
+func (puo *ProjectUpdateOne) SetNillableUserID(id *int) *ProjectUpdateOne {
 	if id != nil {
-		puo = puo.SetOwnerID(*id)
+		puo = puo.SetUserID(*id)
 	}
 	return puo
 }
 
-// SetOwner sets the "owner" edge to the User entity.
-func (puo *ProjectUpdateOne) SetOwner(u *User) *ProjectUpdateOne {
-	return puo.SetOwnerID(u.ID)
+// SetUser sets the "user" edge to the User entity.
+func (puo *ProjectUpdateOne) SetUser(u *User) *ProjectUpdateOne {
+	return puo.SetUserID(u.ID)
 }
 
 // AddTaskIDs adds the "tasks" edge to the Task entity by IDs.
@@ -789,14 +817,29 @@ func (puo *ProjectUpdateOne) AddTasks(t ...*Task) *ProjectUpdateOne {
 	return puo.AddTaskIDs(ids...)
 }
 
+// AddMilestoneIDs adds the "milestones" edge to the Task entity by IDs.
+func (puo *ProjectUpdateOne) AddMilestoneIDs(ids ...int) *ProjectUpdateOne {
+	puo.mutation.AddMilestoneIDs(ids...)
+	return puo
+}
+
+// AddMilestones adds the "milestones" edges to the Task entity.
+func (puo *ProjectUpdateOne) AddMilestones(t ...*Task) *ProjectUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return puo.AddMilestoneIDs(ids...)
+}
+
 // Mutation returns the ProjectMutation object of the builder.
 func (puo *ProjectUpdateOne) Mutation() *ProjectMutation {
 	return puo.mutation
 }
 
-// ClearOwner clears the "owner" edge to the User entity.
-func (puo *ProjectUpdateOne) ClearOwner() *ProjectUpdateOne {
-	puo.mutation.ClearOwner()
+// ClearUser clears the "user" edge to the User entity.
+func (puo *ProjectUpdateOne) ClearUser() *ProjectUpdateOne {
+	puo.mutation.ClearUser()
 	return puo
 }
 
@@ -819,6 +862,27 @@ func (puo *ProjectUpdateOne) RemoveTasks(t ...*Task) *ProjectUpdateOne {
 		ids[i] = t[i].ID
 	}
 	return puo.RemoveTaskIDs(ids...)
+}
+
+// ClearMilestones clears all "milestones" edges to the Task entity.
+func (puo *ProjectUpdateOne) ClearMilestones() *ProjectUpdateOne {
+	puo.mutation.ClearMilestones()
+	return puo
+}
+
+// RemoveMilestoneIDs removes the "milestones" edge to Task entities by IDs.
+func (puo *ProjectUpdateOne) RemoveMilestoneIDs(ids ...int) *ProjectUpdateOne {
+	puo.mutation.RemoveMilestoneIDs(ids...)
+	return puo
+}
+
+// RemoveMilestones removes "milestones" edges to Task entities.
+func (puo *ProjectUpdateOne) RemoveMilestones(t ...*Task) *ProjectUpdateOne {
+	ids := make([]int, len(t))
+	for i := range t {
+		ids[i] = t[i].ID
+	}
+	return puo.RemoveMilestoneIDs(ids...)
 }
 
 // Where appends a list predicates to the ProjectUpdate builder.
@@ -873,11 +937,6 @@ func (puo *ProjectUpdateOne) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Project.name": %w`, err)}
 		}
 	}
-	if v, ok := puo.mutation.UserID(); ok {
-		if err := project.UserIDValidator(v); err != nil {
-			return &ValidationError{Name: "user_id", err: fmt.Errorf(`ent: validator failed for field "Project.user_id": %w`, err)}
-		}
-	}
 	if v, ok := puo.mutation.Goal(); ok {
 		if err := project.GoalValidator(v); err != nil {
 			return &ValidationError{Name: "goal", err: fmt.Errorf(`ent: validator failed for field "Project.goal": %w`, err)}
@@ -929,12 +988,6 @@ func (puo *ProjectUpdateOne) sqlSave(ctx context.Context) (_node *Project, err e
 	if value, ok := puo.mutation.Name(); ok {
 		_spec.SetField(project.FieldName, field.TypeString, value)
 	}
-	if value, ok := puo.mutation.UserID(); ok {
-		_spec.SetField(project.FieldUserID, field.TypeInt, value)
-	}
-	if value, ok := puo.mutation.AddedUserID(); ok {
-		_spec.AddField(project.FieldUserID, field.TypeInt, value)
-	}
 	if value, ok := puo.mutation.Goal(); ok {
 		_spec.SetField(project.FieldGoal, field.TypeString, value)
 	}
@@ -977,12 +1030,12 @@ func (puo *ProjectUpdateOne) sqlSave(ctx context.Context) (_node *Project, err e
 	if value, ok := puo.mutation.UpdatedAt(); ok {
 		_spec.SetField(project.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if puo.mutation.OwnerCleared() {
+	if puo.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   project.OwnerTable,
-			Columns: []string{project.OwnerColumn},
+			Table:   project.UserTable,
+			Columns: []string{project.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
@@ -990,12 +1043,12 @@ func (puo *ProjectUpdateOne) sqlSave(ctx context.Context) (_node *Project, err e
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.OwnerIDs(); len(nodes) > 0 {
+	if nodes := puo.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   project.OwnerTable,
-			Columns: []string{project.OwnerColumn},
+			Table:   project.UserTable,
+			Columns: []string{project.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
@@ -1041,6 +1094,51 @@ func (puo *ProjectUpdateOne) sqlSave(ctx context.Context) (_node *Project, err e
 			Inverse: false,
 			Table:   project.TasksTable,
 			Columns: []string{project.TasksColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if puo.mutation.MilestonesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   project.MilestonesTable,
+			Columns: []string{project.MilestonesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.RemovedMilestonesIDs(); len(nodes) > 0 && !puo.mutation.MilestonesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   project.MilestonesTable,
+			Columns: []string{project.MilestonesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.MilestonesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   project.MilestonesTable,
+			Columns: []string{project.MilestonesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(task.FieldID, field.TypeInt),

@@ -566,21 +566,44 @@ func UpdatedAtLTE(v time.Time) predicate.Task {
 	return predicate.Task(sql.FieldLTE(FieldUpdatedAt, v))
 }
 
-// HasProjects applies the HasEdge predicate on the "projects" edge.
-func HasProjects() predicate.Task {
+// HasProject applies the HasEdge predicate on the "project" edge.
+func HasProject() predicate.Task {
 	return predicate.Task(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, ProjectsTable, ProjectsColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, ProjectTable, ProjectColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasProjectsWith applies the HasEdge predicate on the "projects" edge with a given conditions (other predicates).
-func HasProjectsWith(preds ...predicate.Project) predicate.Task {
+// HasProjectWith applies the HasEdge predicate on the "project" edge with a given conditions (other predicates).
+func HasProjectWith(preds ...predicate.Project) predicate.Task {
 	return predicate.Task(func(s *sql.Selector) {
-		step := newProjectsStep()
+		step := newProjectStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasMilestoneParent applies the HasEdge predicate on the "milestoneParent" edge.
+func HasMilestoneParent() predicate.Task {
+	return predicate.Task(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, MilestoneParentTable, MilestoneParentColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasMilestoneParentWith applies the HasEdge predicate on the "milestoneParent" edge with a given conditions (other predicates).
+func HasMilestoneParentWith(preds ...predicate.Project) predicate.Task {
+	return predicate.Task(func(s *sql.Selector) {
+		step := newMilestoneParentStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
