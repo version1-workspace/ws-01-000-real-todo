@@ -1,0 +1,34 @@
+.copy {
+  font-size: 20px;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.description {
+  padding: 16px;
+  margin: 32px 0;
+}
+
+.form {
+  position: relative;
+  width: 400px;
+  margin: auto;
+  border-radius: 8px;
+  padding: 32px 16px;
+  color: var(--secondary-color);
+}
+
+input.input {
+  padding: 16px;
+}
+
+.action {
+  display: flex;
+  justify-content: center;
+}
+
+button.signUpButton {
+  padding: 16px;
+  width: 200px;
+}
+
