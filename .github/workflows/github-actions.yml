@@ -53,7 +53,7 @@ jobs:
       NODE_ENV: test
     defaults:
       run:
-       working-directory: ./api
+       working-directory: ./api/rest/ts
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
@@ -96,3 +96,23 @@ jobs:
           npm run db:test:create
           npm run db:test:setup
           npm run test:e2e
+  be-golang-pipeline:
+    name: Backend(Golang) Pipeline
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+      DATABASE_HOST: localhost
+    defaults:
+      run:
+       working-directory: ./api/rest/golang
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.3'
+      - name: Install dependencies
+        run: go mod tidy
+      - name: Run tests
+        run: go test ./...
