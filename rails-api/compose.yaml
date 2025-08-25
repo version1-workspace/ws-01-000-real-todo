@@ -1,0 +1,10 @@
+services:
+  db:
+    image: mysql:8.1.0
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=todo_develpoment
+    ports:
+      - "3316:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql:cached
