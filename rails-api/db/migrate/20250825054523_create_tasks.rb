@@ -1,7 +1,7 @@
 class CreateTasks < ActiveRecord::Migration[8.0]
   def change
     create_table :tasks do |t|
-      t.string :uuid, null: false, index: true, default: 'uuid()'
+      t.string :uuid, null: false, index: { unique: true }, default: -> { '(uuid())' }
       t.references :project, null: false, index: true
       t.references :user, null: false, index: true
       t.references :parent, index: true
