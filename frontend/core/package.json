@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "deploy": "netlify deploy --prod",
-    "start": "npx serve",
+    "start": "next start -p 9000",
     "lint": "next lint",
     "tsc": "tsc --project tsconfig.json",
     "test": "echo 0"

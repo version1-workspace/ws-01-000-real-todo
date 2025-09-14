@@ -17,9 +17,9 @@ import useProjects from "@/contexts/projects";
 import ProjectForm from "@/components/project/form";
 
 interface Props {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 const projectActions = ({
@@ -56,7 +56,8 @@ const projectActions = ({
       },
 ];
 
-export default function Project({ params: { slug } }: Props) {
+export default async function Project({ params }: Props) {
+  const { slug } = (await params) ?? {};
   const [project, setProject] = useState<Project>();
   const { projects, refetch: refetchGlobalProjects } = useProjects();
   const { open, hide } = useModal();
