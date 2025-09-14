@@ -28,9 +28,9 @@ import EditableField from "@/components/shared/editableField";
 import useMilestones from "@/hooks/useMilestones";
 
 interface Props {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 interface Form {
@@ -86,8 +86,9 @@ const TaskDetail = ({ params }: Props) => {
     },
     onSubmit: async (values: Form) => {
       const { project, ...rest } = values;
+      const { id } = await params ?? {};
       try {
-        await api.updateTask(params.id, {
+        await api.updateTask(id, {
           ...rest,
           projectId: project?.id,
         });
@@ -118,7 +119,7 @@ const TaskDetail = ({ params }: Props) => {
 
   useEffect(() => {
     const init = async () => {
-      const res = await api.fetchTask(params);
+      const res = await api.fetchTask(await params);
       const task = factory.task(res.data.data);
       setTask(task);
       updateFormWith(task);
