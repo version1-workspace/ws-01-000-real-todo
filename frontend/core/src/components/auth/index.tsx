@@ -68,7 +68,7 @@ const AuthContainer = ({ children, isPublic }: Props) => {
     setUser(undefined);
     api.client.setAccessToken("");
 
-    router.push(route.login.toString());
+    router.push(route.auth.login.toString());
   };
 
   if (!initialized) {
