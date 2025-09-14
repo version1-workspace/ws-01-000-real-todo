@@ -12,7 +12,7 @@ class CreateProjects < ActiveRecord::Migration[8.0]
       t.timestamp :started_at
       t.timestamp :finished_at
       t.timestamp :archived_at
-      t.string :status, null: false, default: "initial"
+      t.integer :status, null: false, default: 0
 
       t.timestamps
     end

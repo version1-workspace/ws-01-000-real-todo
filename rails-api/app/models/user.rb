@@ -9,5 +9,6 @@ class User < ApplicationRecord
   validates :password, presence: true
   validates :refresh_token, presence: true
 
+
   enum :status, { active: 0, deactive: 900 }
 end
