@@ -23,7 +23,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_25_055045) do
     t.timestamp "started_at"
     t.timestamp "finished_at"
     t.timestamp "archived_at"
-    t.string "status", default: "initial", null: false
+    t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_projects_on_user_id"
@@ -79,7 +79,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_25_055045) do
     t.string "username", null: false
     t.string "password_digest", null: false
     t.string "refresh_token", null: false
-    t.string "status", null: false
+    t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
