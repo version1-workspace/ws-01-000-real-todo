@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useParams } from "next/navigation";
 import api from "@/services/api";
 import { factory } from "@/services/api/models";
 import type { Project } from "@/services/api/models/project";
@@ -15,12 +16,6 @@ import { useModal } from "@/lib/modal";
 import { useToast } from "@/lib/toast/hook";
 import useProjects from "@/contexts/projects";
 import ProjectForm from "@/components/project/form";
-
-interface Props {
-  params: Promise<{
-    slug: string;
-  }>;
-}
 
 const projectActions = ({
   project,
@@ -56,8 +51,9 @@ const projectActions = ({
       },
 ];
 
-export default async function Project({ params }: Props) {
-  const { slug } = (await params) ?? {};
+export default function Project() {
+  const params = useParams();
+  const slug = params.slug as string;
   const [project, setProject] = useState<Project>();
   const { projects, refetch: refetchGlobalProjects } = useProjects();
   const { open, hide } = useModal();
