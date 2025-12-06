@@ -2,7 +2,14 @@ import styles from "./index.module.scss";
 import Link from "next/link";
 import Button from "@/components/shared/button";
 import Image from "next/image";
-import logo from "@/assets/logo.png";
+
+const images = {
+  logo: {
+    src: "/assets/logo.png",
+    width: 24,
+    height: 24,
+  },
+};
 
 interface Props {
   light?: boolean;
@@ -18,12 +25,7 @@ export default function Header({ light }: Props) {
               styles.logoContent,
               light ? styles.logoContentLight : "",
             ].join(" ")}>
-            <Image
-              width={24}
-              className={styles.logoImage}
-              src={logo}
-              alt="ロゴ"
-            />
+            <Image {...images.logo} className={styles.logoImage} alt="ロゴ" />
             <h2 className={styles.logoText}>Turvo</h2>
           </div>
         </Link>

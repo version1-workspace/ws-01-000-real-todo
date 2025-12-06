@@ -64,14 +64,16 @@ export default function Project() {
     [slug, projects],
   );
 
-  const fetch = useCallback(async ({ slug }: { slug: string }) => {
-    const res = await api.fetchProject({ slug });
-    const item = factory.project({
-      ...res.data.data,
-    });
-
-    setProject(item);
-  }, []);
+  const doFetch = useCallback(
+    async ({ slug }: { slug: string }) => {
+      const res = await api.fetchProject({ slug });
+      const item = factory.project({
+        ...res.data.data,
+      });
+      return item;
+    },
+    [slug],
+  );
 
   const actions = projectActions({
     project,
@@ -81,9 +83,10 @@ export default function Project() {
           <ProjectForm
             title="プロジェクトを編集"
             data={project}
-            onSubmit={(form) => {
+            onSubmit={async (form) => {
               refetchGlobalProjects();
-              fetch({ slug: form.slug });
+              const item = await doFetch({ slug: form.slug });
+              setProject(item);
               if (project?.slug !== form.slug) {
                 history.replaceState(
                   null,
@@ -132,8 +135,14 @@ export default function Project() {
   });
 
   useEffect(() => {
+    const fetch = async ({ slug }: { slug: string }) => {
+      const item = await doFetch({ slug });
+
+      setProject(item);
+    };
+
     fetch({ slug });
-  }, []);
+  }, [slug, doFetch]);
 
   if (!project) {
     return null;
