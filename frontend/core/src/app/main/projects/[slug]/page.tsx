@@ -73,67 +73,63 @@ export default function Project() {
     setProject(item);
   }, []);
 
-  const actions = useMemo(
-    () =>
-      projectActions({
-        project,
-        onEdit: () => {
-          open({
-            content: (
-              <ProjectForm
-                title="プロジェクトを編集"
-                data={project}
-                onSubmit={(form) => {
-                  refetchGlobalProjects();
-                  fetch({ slug: form.slug });
-                  if (project?.slug !== form.slug) {
-                    history.replaceState(
-                      null,
-                      "",
-                      route.main.projects.with(form.slug),
-                    );
-                  }
+  const actions = projectActions({
+    project,
+    onEdit: () => {
+      open({
+        content: (
+          <ProjectForm
+            title="プロジェクトを編集"
+            data={project}
+            onSubmit={(form) => {
+              refetchGlobalProjects();
+              fetch({ slug: form.slug });
+              if (project?.slug !== form.slug) {
+                history.replaceState(
+                  null,
+                  "",
+                  route.main.projects.with(form.slug),
+                );
+              }
 
-                  hide();
-                }}
-                onCancel={hide}
-              />
-            ),
-          });
-        },
-        onReopen: async () => {
-          if (!project) {
-            return;
-          }
+              hide();
+            }}
+            onCancel={hide}
+          />
+        ),
+      });
+    },
+    onReopen: async () => {
+      if (!project) {
+        return;
+      }
 
-          try {
-            await api.reopenProject({ slug: project.slug });
-            toast.success("プロジェクトを元に戻しました");
-            await refetchGlobalProjects();
-          } catch {
-            toast.error("アーカイブに失敗しました");
-          }
-        },
-        onArchive: async () => {
-          if (!project) {
-            return;
-          }
+      try {
+        await api.reopenProject({ slug: project.slug });
+        toast.success("プロジェクトを元に戻しました");
+        await refetchGlobalProjects();
+      } catch {
+        toast.error("アーカイブに失敗しました");
+      }
+    },
+    onArchive: async () => {
+      if (!project) {
+        return;
+      }
 
-          if (!confirm("プロジェクトをアーカイブしますがよろしいですか？")) {
-            return;
-          }
+      if (!confirm("プロジェクトをアーカイブしますがよろしいですか？")) {
+        return;
+      }
 
-          try {
-            await api.archiveProject({ slug: project.slug });
-            toast.success("プロジェクトをアーカイブしました");
-            await refetchGlobalProjects();
-          } catch {
-            toast.error("アーカイブに失敗しました");
-          }
-        },
-      }),
-    [toast, project, fetch, refetchGlobalProjects],
-  );
+      try {
+        await api.archiveProject({ slug: project.slug });
+        toast.success("プロジェクトをアーカイブしました");
+        await refetchGlobalProjects();
+      } catch {
+        toast.error("アーカイブに失敗しました");
+      }
+    },
+  });
 
   useEffect(() => {
     fetch({ slug });

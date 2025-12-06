@@ -3,7 +3,6 @@ import Link from "next/link";
 import Button from "@/components/shared/button";
 import Image from "next/image";
 import logo from "@/assets/logo.png";
-import { classHelper } from "@/lib/cls";
 
 interface Props {
   light?: boolean;
@@ -13,7 +12,7 @@ export default function Header({ light }: Props) {
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
-        <a href="/">
+        <Link href="/">
           <div
             className={[
               styles.logoContent,
@@ -27,24 +26,24 @@ export default function Header({ light }: Props) {
             />
             <h2 className={styles.logoText}>Turvo</h2>
           </div>
-        </a>
+        </Link>
       </div>
       <div className={styles.right}>
         <ul className={styles.menu}>
           <li className={styles.menuItem}>
-            <a className={styles.menuLink} href="/">
+            <Link className={styles.menuLink} href="/">
               Home
-            </a>
+            </Link>
           </li>
           <li className={styles.menuItem}>
-            <a className={styles.menuLink} href="/">
+            <Link className={styles.menuLink} href="/">
               Turvo について
-            </a>
+            </Link>
           </li>
           <li className={styles.menuItem}>
-            <a className={styles.menuLink} href="/">
+            <Link className={styles.menuLink} href="/">
               ドキュメント
-            </a>
+            </Link>
           </li>
         </ul>
         <div className={styles.actions}>
