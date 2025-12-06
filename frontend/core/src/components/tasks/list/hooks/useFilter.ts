@@ -1,5 +1,5 @@
+import { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { QueryString } from "@/lib/queryString";
 
 export const Fields = {
@@ -84,62 +84,69 @@ export interface Filter {
 }
 
 interface Props {
-  onInit?: (params: Params) => Promise<void>
+  onInit?: (params: Params) => Promise<void>;
 }
 
 export default function useFilter({ onInit }: Props): Filter {
-  const [ready, setReady] = useState(false)
-  const [original, setOriginal] = useState<Params>(initialValue);
+  const [filterValues, setFilterValues] = useState<{
+    original: Params;
+    replica: Params;
+  }>({
+    original: initialValue,
+    replica: initialValue,
+  });
   const [replica, setReplica] = useState<Params>(initialValue);
-  const [qs, setQs] = useState<QueryString>();
   const searchParams = useSearchParams();
 
+  const qs = useMemo(() => new QueryString(searchParams), [searchParams]);
+
   useEffect(() => {
-    const qs = new QueryString(searchParams);
-    setQs(qs);
-
     const newOriginal = mergeValues(initialValue, qs.object);
-    setOriginal(newOriginal);
-    setReplica(newOriginal);
+    setFilterValues({
+      original: newOriginal,
+      replica: newOriginal,
+    });
     onInit?.(newOriginal);
-
-    setReady(true)
   }, [searchParams]);
 
   const save = (value?: Params) => {
     const newOriginal = value || replica;
-    setOriginal(newOriginal);
+    setFilterValues({
+      ...filterValues,
+      original: newOriginal,
+    });
 
-    const qs = new QueryString(newOriginal);
-    setQs(qs);
     history.replaceState(null, "", "?" + qs.toString());
   };
 
   const reset = () => {
-    setReplica(original);
+    setFilterValues({
+      ...filterValues,
+      replica: filterValues.original,
+    });
   };
 
   const resetState = (type: keyof Params) => {
     const newValue = {
-      ...original,
+      ...filterValues,
       [type]: { ...initialValue }[type],
     };
 
     if (type === "text") {
-      newValue.statuses = { ...initialValue.statuses };
+      newValue.original.statuses = { ...initialValue.statuses };
+      newValue.replica.statuses = { ...initialValue.statuses };
     }
 
-    setOriginal(newValue);
-    setReplica(newValue);
-    const qs = new QueryString(newValue);
-    setQs(qs);
+    setFilterValues(newValue);
     history.replaceState(null, "", "?" + qs.toString());
 
-    return newValue;
+    return newValue.replica;
   };
 
+  const { original } = filterValues;
+
   return {
-    ready,
+    ready: !!qs,
     text: original.text,
     projectId: original.projectId,
     date: original.date,
