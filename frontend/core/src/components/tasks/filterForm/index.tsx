@@ -18,11 +18,12 @@ interface OrderParams {
 
 interface UpdateParams {
   text: string;
-  limit: number;
   projectId?: string;
   date: DateParams;
   order: OrderParams;
   statuses: { [key: string]: boolean };
+  limit: number;
+  page: number;
 }
 
 interface Props {
@@ -58,16 +59,6 @@ export default function Popup({
     };
 
     onChange(newValue);
-  };
-
-  const onChangeDateType = (type: FieldTypes) => {
-    onChange({
-      ...value,
-      date: {
-        ...value.date,
-        type,
-      },
-    });
   };
 
   const onChangeOrder = (o: OrderType) => {

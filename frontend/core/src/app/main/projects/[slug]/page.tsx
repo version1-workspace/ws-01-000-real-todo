@@ -64,80 +64,85 @@ export default function Project() {
     [slug, projects],
   );
 
-  const fetch = useCallback(async ({ slug }: { slug: string }) => {
-    const res = await api.fetchProject({ slug });
-    const item = factory.project({
-      ...res.data.data,
-    });
-
-    setProject(item);
-  }, []);
-
-  const actions = useMemo(
-    () =>
-      projectActions({
-        project,
-        onEdit: () => {
-          open({
-            content: (
-              <ProjectForm
-                title="プロジェクトを編集"
-                data={project}
-                onSubmit={(form) => {
-                  refetchGlobalProjects();
-                  fetch({ slug: form.slug });
-                  if (project?.slug !== form.slug) {
-                    history.replaceState(
-                      null,
-                      "",
-                      route.main.projects.with(form.slug),
-                    );
-                  }
-
-                  hide();
-                }}
-                onCancel={hide}
-              />
-            ),
-          });
-        },
-        onReopen: async () => {
-          if (!project) {
-            return;
-          }
-
-          try {
-            await api.reopenProject({ slug: project.slug });
-            toast.success("プロジェクトを元に戻しました");
-            await refetchGlobalProjects();
-          } catch {
-            toast.error("アーカイブに失敗しました");
-          }
-        },
-        onArchive: async () => {
-          if (!project) {
-            return;
-          }
-
-          if (!confirm("プロジェクトをアーカイブしますがよろしいですか？")) {
-            return;
-          }
-
-          try {
-            await api.archiveProject({ slug: project.slug });
-            toast.success("プロジェクトをアーカイブしました");
-            await refetchGlobalProjects();
-          } catch {
-            toast.error("アーカイブに失敗しました");
-          }
-        },
-      }),
-    [toast, project, fetch, refetchGlobalProjects],
+  const doFetch = useCallback(
+    async ({ slug }: { slug: string }) => {
+      const res = await api.fetchProject({ slug });
+      const item = factory.project({
+        ...res.data.data,
+      });
+      return item;
+    },
+    [slug],
   );
 
+  const actions = projectActions({
+    project,
+    onEdit: () => {
+      open({
+        content: (
+          <ProjectForm
+            title="プロジェクトを編集"
+            data={project}
+            onSubmit={async (form) => {
+              refetchGlobalProjects();
+              const item = await doFetch({ slug: form.slug });
+              setProject(item);
+              if (project?.slug !== form.slug) {
+                history.replaceState(
+                  null,
+                  "",
+                  route.main.projects.with(form.slug),
+                );
+              }
+
+              hide();
+            }}
+            onCancel={hide}
+          />
+        ),
+      });
+    },
+    onReopen: async () => {
+      if (!project) {
+        return;
+      }
+
+      try {
+        await api.reopenProject({ slug: project.slug });
+        toast.success("プロジェクトを元に戻しました");
+        await refetchGlobalProjects();
+      } catch {
+        toast.error("アーカイブに失敗しました");
+      }
+    },
+    onArchive: async () => {
+      if (!project) {
+        return;
+      }
+
+      if (!confirm("プロジェクトをアーカイブしますがよろしいですか？")) {
+        return;
+      }
+
+      try {
+        await api.archiveProject({ slug: project.slug });
+        toast.success("プロジェクトをアーカイブしました");
+        await refetchGlobalProjects();
+      } catch {
+        toast.error("アーカイブに失敗しました");
+      }
+    },
+  });
+
   useEffect(() => {
+    const fetch = async ({ slug }: { slug: string }) => {
+      const item = await doFetch({ slug });
+
+      setProject(item);
+    };
+
     fetch({ slug });
-  }, []);
+  }, [slug, doFetch]);
 
   if (!project) {
     return null;

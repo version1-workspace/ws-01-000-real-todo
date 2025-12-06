@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import styles from "./index.module.css";
 import useFilter from "@/components/tasks/list/hooks/useFilter";
 import useTasks from "@/contexts/tasks";
@@ -14,12 +14,12 @@ interface Props {
 }
 
 export default function TaskList({ header, footer }: Props) {
-  const filter = useFilter({
-    onInit: async (params) => {
-      fetch({ page: 1, ...params });
-    }
-  });
   const { data, fetch } = useTasks();
+  const filter = useFilter();
+
+  useEffect(() => {
+    fetch(filter.replica);
+  }, [filter.replica]);
 
   if (!data) {
     return null;
@@ -38,7 +38,9 @@ export default function TaskList({ header, footer }: Props) {
               hasNext={data.hasNext}
               hasPrevious={data.hasPrevious}
               onFetch={(page) => {
-                fetch({ page, ...filter.replica });
+                const newReplica = { ...filter.replica, page };
+                filter.save(newReplica);
+                fetch(newReplica);
               }}
             />
           </div>

@@ -1,5 +1,5 @@
+import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { QueryString } from "@/lib/queryString";
 
 export const Fields = {
@@ -26,13 +26,48 @@ export interface Params {
   order: OrderParams;
   statuses: { [key: string]: boolean };
   limit: number;
+  page: number;
 }
+
+interface UrlObject {
+  page: number;
+  projectId?: string;
+  status: string[];
+  limit: number;
+  search: string;
+  sortType: string;
+  sortOrder: string;
+  dateFrom: string;
+  dateTo: string;
+  dateType: string;
+}
+
+const convertFilterParamsToUrlObject = (params: Params): Partial<UrlObject> => {
+  const result: Partial<UrlObject> = {
+    page: params.page || 1,
+    projectId: params.projectId,
+    search: params.text || "",
+    limit: params.limit,
+    status: Object.keys(params.statuses).filter((key) => params.statuses[key]),
+    sortType: params.order.type,
+    sortOrder: params.order.value,
+  };
+
+  if (params.date.start || params.date.end) {
+    result.dateType = params.date.type;
+    result.dateFrom = params.date.start || "";
+    result.dateTo = params.date.end || "";
+  }
+
+  return result;
+};
 
 export type FieldTypes = keyof typeof Fields;
 export type OrderType = "asc" | "desc";
 
 const initialValue = {
   text: "",
+  page: 1,
   limit: 20,
   projectId: undefined,
   statuses: { scheduled: true },
@@ -49,7 +84,7 @@ const initialValue = {
 
 const mergeValues = (base: Params, obj: Partial<Params>) => {
   const result = JSON.parse(JSON.stringify(base));
-  ["text", "limit", "projectId", "statuses"].forEach((key: string) => {
+  ["text", "page", "limit", "projectId", "statuses"].forEach((key: string) => {
     if (key in obj) {
       result[key] = obj[key as keyof typeof obj];
     }
@@ -65,17 +100,11 @@ const mergeValues = (base: Params, obj: Partial<Params>) => {
 
   return result;
 };
-
 export interface Filter {
   ready: boolean;
-  text: string;
-  projectId?: string;
-  date: DateParams;
-  isDateSet?: boolean;
-  order: OrderParams;
-  statuses: Record<string, boolean>;
-  limit: number;
+  original: Params;
   replica: Params;
+  isDateSet: boolean;
   searchURI: string;
   update: (_params: Params) => void;
   save: (_value?: Params) => void;
@@ -83,73 +112,79 @@ export interface Filter {
   resetState: (type: keyof Params) => Params;
 }
 
-interface Props {
-  onInit?: (params: Params) => Promise<void>
-}
-
-export default function useFilter({ onInit }: Props): Filter {
-  const [ready, setReady] = useState(false)
-  const [original, setOriginal] = useState<Params>(initialValue);
-  const [replica, setReplica] = useState<Params>(initialValue);
-  const [qs, setQs] = useState<QueryString>();
+export default function useFilter(): Filter {
+  const [filterValues, setFilterValues] = useState<{
+    original: Params;
+    replica: Params;
+  }>({
+    original: initialValue,
+    replica: initialValue,
+  });
   const searchParams = useSearchParams();
 
-  useEffect(() => {
-    const qs = new QueryString(searchParams);
-    setQs(qs);
+  const qs = useMemo(() => new QueryString(searchParams), [searchParams]);
 
-    const newOriginal = mergeValues(initialValue, qs.object);
-    setOriginal(newOriginal);
-    setReplica(newOriginal);
-    onInit?.(newOriginal);
+  const base = useMemo(() => {
+    const merged = mergeValues(initialValue, qs.object);
+    return {
+      original: merged,
+      replica: JSON.parse(JSON.stringify(merged)),
+    };
+  }, [qs]);
 
-    setReady(true)
-  }, [searchParams]);
+  const update = (params: Params) => {
+    setFilterValues({
+      ...filterValues,
+      replica: params,
+    });
+  };
 
   const save = (value?: Params) => {
-    const newOriginal = value || replica;
-    setOriginal(newOriginal);
+    const newOriginal = value || filterValues.replica;
+    setFilterValues({
+      ...filterValues,
+      original: newOriginal,
+    });
 
-    const qs = new QueryString(newOriginal);
-    setQs(qs);
-    history.replaceState(null, "", "?" + qs.toString());
+    const urlObject = convertFilterParamsToUrlObject(newOriginal);
+    const newQs = new QueryString(urlObject);
+
+    history.replaceState(null, "", "?" + newQs.toString());
   };
 
   const reset = () => {
-    setReplica(original);
+    setFilterValues({
+      ...filterValues,
+      replica: filterValues.original,
+    });
   };
 
   const resetState = (type: keyof Params) => {
     const newValue = {
-      ...original,
+      ...filterValues,
       [type]: { ...initialValue }[type],
     };
 
     if (type === "text") {
-      newValue.statuses = { ...initialValue.statuses };
+      newValue.original.statuses = { ...initialValue.statuses };
+      newValue.replica.statuses = { ...initialValue.statuses };
     }
 
-    setOriginal(newValue);
-    setReplica(newValue);
-    const qs = new QueryString(newValue);
-    setQs(qs);
+    setFilterValues(newValue);
     history.replaceState(null, "", "?" + qs.toString());
 
-    return newValue;
+    return newValue.replica;
   };
 
+  const { original } = filterValues;
+
   return {
-    ready,
-    text: original.text,
-    projectId: original.projectId,
-    date: original.date,
-    order: original.order,
-    statuses: original.statuses,
-    limit: original.limit,
+    ready: !!qs,
+    original: base.original,
+    replica: base.replica,
     isDateSet: !!(original.date.start || original.date.end),
-    replica: replica,
     searchURI: qs?.toString() || "",
-    update: setReplica,
+    update,
     save,
     reset,
     resetState,

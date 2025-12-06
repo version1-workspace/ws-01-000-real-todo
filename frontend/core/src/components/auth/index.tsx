@@ -47,7 +47,7 @@ const AuthContainer = ({ children, isPublic }: Props) => {
       } catch (e) {
         const error = e as AxiosError;
         if (!isPublic && error.response?.status === 401) {
-          router.push(route.login.with("?error=loginRequired"));
+          router.push(route.auth.login.with("?error=loginRequired"));
           return;
         }
 

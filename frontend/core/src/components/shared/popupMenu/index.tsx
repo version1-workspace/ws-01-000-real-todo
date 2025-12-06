@@ -22,7 +22,7 @@ export default function PopupMenu({ trigger, actions }: Props) {
 
   useEffect(() => {
     const listener = (e: MouseEvent) => {
-      const ele = e.target as HTMLElement
+      const ele = e.target as HTMLElement;
       const parent = ele?.closest("." + styles.container);
       if (!parent) {
         setShow(false);

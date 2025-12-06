@@ -3,6 +3,7 @@
 
 .popup {
   position: relative;
+  z-index: var(--z-index-popup);
 }
 
 .overlay {
