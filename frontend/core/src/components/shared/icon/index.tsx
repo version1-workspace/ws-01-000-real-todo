@@ -36,6 +36,7 @@ import {
   IoFilter,
   IoGridOutline,
   IoAddCircle,
+  IoLogoGithub,
 } from "react-icons/io5";
 import styles from "./index.module.css";
 import { classHelper } from "@/lib/cls";
@@ -79,6 +80,7 @@ const icons = {
   task: IoDocumentText,
   menu: IoEllipsisVerticalOutline,
   layout: IoListOutline,
+  github: IoLogoGithub,
 };
 
 type IconType = typeof icons;
