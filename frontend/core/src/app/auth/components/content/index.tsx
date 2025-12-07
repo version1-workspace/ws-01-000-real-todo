@@ -43,7 +43,6 @@ type Scene = "login" | "signup" | "transition";
 const Content = ({ light, initialScene }: Props) => {
   const searchParams = useSearchParams();
   const toast = useToast();
-  const [rendered, setRendered] = useState(false);
   const [scene, setScene] = useState<Scene>(initialScene || "login");
 
   const position = scene === "login" ? "left" : "right";
@@ -51,12 +50,12 @@ const Content = ({ light, initialScene }: Props) => {
   useEffect(() => {
     const error = searchParams.get("error");
     if (error) {
-      if (!rendered && error === "loginRequired") {
+      if (error === "loginRequired") {
+        // 開発環境だとトーストが2回表示されるので対策する
         toast.error("ログインが必要です");
       }
     }
-    setRendered(true);
-  }, [searchParams, toast, rendered]);
+  }, [searchParams]);
 
   return (
     <>

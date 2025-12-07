@@ -1,5 +1,5 @@
+import { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { QueryString } from "@/lib/queryString";
 
 export const Fields = {
@@ -26,6 +26,7 @@ export interface Params {
   order: OrderParams;
   statuses: { [key: string]: boolean };
   limit: number;
+  page: number;
 }
 
 export type FieldTypes = keyof typeof Fields;
@@ -33,6 +34,7 @@ export type OrderType = "asc" | "desc";
 
 const initialValue = {
   text: "",
+  page: 1,
   limit: 20,
   projectId: undefined,
   statuses: { scheduled: true },
@@ -49,7 +51,7 @@ const initialValue = {
 
 const mergeValues = (base: Params, obj: Partial<Params>) => {
   const result = JSON.parse(JSON.stringify(base));
-  ["text", "limit", "projectId", "statuses"].forEach((key: string) => {
+  ["text", "page", "limit", "projectId", "statuses"].forEach((key: string) => {
     if (key in obj) {
       result[key] = obj[key as keyof typeof obj];
     }
@@ -67,52 +69,34 @@ const mergeValues = (base: Params, obj: Partial<Params>) => {
 };
 
 export interface Filter {
-  ready: boolean;
-  text: string;
-  projectId?: string;
-  date: DateParams;
-  isDateSet?: boolean;
-  order: OrderParams;
-  statuses: Record<string, boolean>;
-  limit: number;
+  original: Params;
   replica: Params;
-  searchURI: string;
+  isDateSet: boolean;
   update: (_params: Params) => void;
   save: (_value?: Params) => void;
   reset: () => void;
   resetState: (type: keyof Params) => Params;
 }
 
-interface Props {
-  onInit?: (params: Params) => Promise<void>
-}
-
-export default function useFilter({ onInit }: Props): Filter {
-  const [ready, setReady] = useState(false)
-  const [original, setOriginal] = useState<Params>(initialValue);
-  const [replica, setReplica] = useState<Params>(initialValue);
-  const [qs, setQs] = useState<QueryString>();
+export default function useFilter(): Filter {
   const searchParams = useSearchParams();
 
-  useEffect(() => {
-    const qs = new QueryString(searchParams);
-    setQs(qs);
+  const qs = useMemo(() => new QueryString(searchParams), [searchParams]);
+  const original = useMemo(() => {
+    return mergeValues(initialValue, qs.object);
+  }, [qs]);
 
-    const newOriginal = mergeValues(initialValue, qs.object);
-    setOriginal(newOriginal);
-    setReplica(newOriginal);
-    onInit?.(newOriginal);
-
-    setReady(true)
-  }, [searchParams]);
+  const [replica, setReplica] = useState<Params>(original);
+  const update = (params: Params) => {
+    setReplica(params);
+  };
 
   const save = (value?: Params) => {
     const newOriginal = value || replica;
-    setOriginal(newOriginal);
 
-    const qs = new QueryString(newOriginal);
-    setQs(qs);
-    history.replaceState(null, "", "?" + qs.toString());
+    const newQs = new QueryString(newOriginal);
+
+    history.replaceState(null, "", "?" + newQs.toString());
   };
 
   const reset = () => {
@@ -120,36 +104,19 @@ export default function useFilter({ onInit }: Props): Filter {
   };
 
   const resetState = (type: keyof Params) => {
-    const newValue = {
-      ...original,
+    const newReplica = {
+      ...replica,
       [type]: { ...initialValue }[type],
     };
-
-    if (type === "text") {
-      newValue.statuses = { ...initialValue.statuses };
-    }
-
-    setOriginal(newValue);
-    setReplica(newValue);
-    const qs = new QueryString(newValue);
-    setQs(qs);
-    history.replaceState(null, "", "?" + qs.toString());
-
-    return newValue;
+    save(newReplica);
+    return newReplica;
   };
 
   return {
-    ready,
-    text: original.text,
-    projectId: original.projectId,
-    date: original.date,
-    order: original.order,
-    statuses: original.statuses,
-    limit: original.limit,
+    original, // 保存された状態
+    replica, // 編集中の状態
     isDateSet: !!(original.date.start || original.date.end),
-    replica: replica,
-    searchURI: qs?.toString() || "",
-    update: setReplica,
+    update,
     save,
     reset,
     resetState,

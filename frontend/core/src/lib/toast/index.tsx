@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useState, useRef } from "react";
+import React, { createContext, useState, useRef } from "react";
 import {
   IoCloseOutline as Close,
   IoCheckmarkCircleOutline as Success,
@@ -62,7 +62,6 @@ export const Toast = ({
 };
 
 export const ToastContext = createContext({
-  notices: {} as { [key: string]: Element },
   push: (_config: Config) => -100 as number,
   remove: (_id: number) => {},
 });
@@ -74,7 +73,7 @@ export const ToastContainer = ({
   config: DefaultConfig;
   children: React.ReactNode;
 }) => {
-  const [, rerender] = useState({});
+  const [noticeList, setNoticeList] = useState<Element[]>([]);
   const ref = useRef({
     id: 0,
     notices: {} as { [key: string]: Element },
@@ -104,7 +103,7 @@ export const ToastContainer = ({
       notices: newNotices,
     };
 
-    rerender({});
+    setNoticeList(Object.values(newNotices));
     scrollTo(0, 0);
 
     return id;
@@ -119,29 +118,46 @@ export const ToastContainer = ({
       notices: newNotices,
     };
 
-    rerender({});
+    setNoticeList(Object.values(newNotices));
   };
 
-  const { notices } = ref.current;
   const positionStyle =
     styles[`position${capitalFirstChar(defaultConfig.position)}`];
 
   const list = defaultConfig.position.startsWith("top")
-    ? Object.values(notices).reverse()
-    : Object.values(notices);
+    ? Object.values(noticeList).reverse()
+    : Object.values(noticeList);
 
   return (
-    <ToastContext.Provider value={{ notices, push, remove }}>
+    <ToastContext.Provider value={{ push, remove }}>
       {children}
-      <ul className={[styles.toastContainer, positionStyle].join(" ")}>
-        {list.map((item: Element) => {
-          return (
-            <li key={item.id}>
-              <Toast config={item.config} onClose={() => remove(item.id)} />
-            </li>
-          );
-        })}
-      </ul>
+      <MemoizedToastList
+        list={list}
+        positionStyle={positionStyle}
+        remove={remove}
+      />
     </ToastContext.Provider>
   );
 };
+
+type ToastListProps = {
+  list: Element[];
+  positionStyle: string;
+  remove: (id: number) => void;
+};
+
+const MemoizedToastList = React.memo(ToastList);
+
+function ToastList({ list, positionStyle, remove }: ToastListProps) {
+  return (
+    <ul className={[styles.toastContainer, positionStyle].join(" ")}>
+      {list.map((item: Element) => {
+        return (
+          <li key={item.id}>
+            <Toast config={item.config} onClose={() => remove(item.id)} />
+          </li>
+        );
+      })}
+    </ul>
+  );
+}

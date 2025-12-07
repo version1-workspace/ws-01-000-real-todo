@@ -28,7 +28,7 @@ const handler = <T>({ dateFields }: HandlerParams | undefined = {}) => ({
       return new DateDecorater(value);
     }
 
-    return target._raw[name as keyof T];
+    return target._raw?.[name as keyof T];
   },
 });
 

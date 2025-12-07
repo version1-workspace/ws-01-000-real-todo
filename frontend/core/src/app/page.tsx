@@ -1,13 +1,28 @@
 import styles from "./page.module.scss";
 import Image from "next/image";
 import Link from "next/link";
-import reviewImage1 from "@/assets/review-1.jpg";
-import reviewImage2 from "@/assets/review-2.jpg";
-import reviewImage3 from "@/assets/review-3.jpg";
 import Header from "@/components/shared/header/public";
 import Footer from "@/components/shared/footer";
 import { join } from "@/lib/cls";
 import Icon from "@/components/shared/icon";
+
+const images = {
+  reviewImage1: {
+    src: "/assets/review-1.jpg",
+    width: 64,
+    height: 64,
+  },
+  reviewImage2: {
+    src: "/assets/review-2.jpg",
+    width: 64,
+    height: 64,
+  },
+  reviewImage3: {
+    src: "/assets/review-3.jpg",
+    width: 64,
+    height: 64,
+  },
+};
 
 function CheckIcon() {
   return (
@@ -279,7 +294,7 @@ export default function Home() {
               <div className={styles.reviewAvatar}>
                 <Image
                   className={styles.reviewAvatarImage}
-                  src={reviewImage1}
+                  {...images.reviewImage1}
                   alt="アバター"
                 />
               </div>
@@ -300,7 +315,7 @@ export default function Home() {
               <div className={styles.reviewAvatar}>
                 <Image
                   className={styles.reviewAvatarImage}
-                  src={reviewImage2}
+                  {...images.reviewImage2}
                   alt="アバター"
                 />
               </div>
@@ -323,7 +338,7 @@ export default function Home() {
               <div className={styles.reviewAvatar}>
                 <Image
                   className={styles.reviewAvatarImage}
-                  src={reviewImage3}
+                  {...images.reviewImage3}
                   alt="アバター"
                 />
               </div>
