@@ -2,6 +2,7 @@ import styles from "./index.module.scss";
 import Link from "next/link";
 import Button from "@/components/shared/button";
 import Image from "next/image";
+import Icon from "@/components/shared/icon";
 
 const images = {
   logo: {
@@ -48,6 +49,15 @@ export default function Header({ light }: Props) {
             </Link>
           </li>
         </ul>
+        <div className={styles.icons}>
+          <Link
+            className={styles.githubLink}
+            href="https://github.com/version1-workspace/ws-01-000-real-todo"
+            target="_blank"
+            rel="noopener noreferrer">
+            <Icon name="github" size={24} className={styles.githubIcon} />
+          </Link>
+        </div>
         <div className={styles.actions}>
           <Link className={styles.signup} href="/auth/signup">
             <Button variant="primary">無料で始める</Button>
