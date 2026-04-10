@@ -34,6 +34,15 @@ npm run db:setup
 npm run start:dev
 ```
 
+### Swagger UI
+
+```bash
+make swagger-ui
+```
+
+起動後は `http://localhost:8080` で API 仕様を確認できます。
+詳細は `api-spec/README.md` を参照してください。
+
 ## About
 
 Turvo は 学習用のサンプルアプリで
@@ -87,7 +96,6 @@ Turvo は 学習用のサンプルアプリで
 | Kind | Name |
 | --- | --- |
 | CI/CD | Github Action |
-
 
 
 
