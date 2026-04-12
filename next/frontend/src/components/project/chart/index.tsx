@@ -16,7 +16,7 @@ import { Bar, Line } from "react-chartjs-2"
 import Option from "@/components/shared/option"
 import Select from "@/components/shared/select"
 import api from "@/services/api"
-import { dataset } from "@/services/api/adapters/stats"
+import { dataset } from "@/viewmodels/stats"
 
 import {
   IoBarChart as BarChart,

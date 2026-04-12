@@ -1,7 +1,7 @@
-import { factory } from "@/services/api/adapters"
+import { factory } from "@/viewmodels"
 import dayjs from "dayjs"
-import { Pagination } from "@/services/api/adapters/pagination"
-import { Task } from "@/services/api/adapters/task"
+import { Pagination } from "@/viewmodels/pagination"
+import { Task } from "@/viewmodels/task"
 
 const mockApi = <T>({ data }: { data: T }) => {
   return {

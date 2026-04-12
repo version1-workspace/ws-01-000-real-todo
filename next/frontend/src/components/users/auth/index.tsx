@@ -1,5 +1,5 @@
 import styles from "./index.module.css"
-import { User } from "@/services/api/adapters/user"
+import { User } from "@/viewmodels/user"
 import TextInput from "@/components/shared/input/text"
 import Button from "@/components/shared/button"
 import { useForm } from "@/hooks/useForm"

@@ -6,7 +6,7 @@ import styles from "./page.module.css"
 import { useForm } from "@/hooks/useForm"
 import api from "@/services/api"
 import DateInput from "@/components/shared/input/date"
-import { Project } from "@/services/api/adapters/project"
+import { Project } from "@/viewmodels/project"
 import { AppDate } from "@/lib/date"
 import {
   selectableStatus,
@@ -14,7 +14,7 @@ import {
   StatusType,
   Task,
   TaskParams,
-} from "@/services/api/adapters/task"
+} from "@/viewmodels/task"
 import Select from "@/components/shared/select"
 import TextArea from "@/components/shared/input/textarea"
 import { join } from "@/lib/cls"
@@ -22,7 +22,7 @@ import Button from "@/components/shared/button"
 import { useToast } from "@/lib/toast/hook"
 import ErrorMessage from "@/components/shared/errorMessage"
 import useProjects from "@/contexts/projects"
-import { factory } from "@/services/api/adapters"
+import { factory } from "@/viewmodels"
 import Icon from "@/components/shared/icon"
 import EditableField from "@/components/shared/editableField"
 import useMilestones from "@/hooks/useMilestones"

@@ -1,5 +1,5 @@
 import DateDecorator from "./date"
-import { Project, ProjectParams } from "@/services/api/adapters/project"
+import { Project, ProjectParams } from "@/viewmodels/project"
 import { v4 as uuid } from "uuid"
 import { ja } from "@/lib/transltate"
 import { factory } from "."

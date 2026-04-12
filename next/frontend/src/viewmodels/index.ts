@@ -2,11 +2,11 @@ import {
   Project,
   ProjectParams,
   ProjectModel,
-} from "@/services/api/adapters/project"
-import { Stats, StatsParams, StatsModel } from "@/services/api/adapters/stats"
-import { Task, TaskParams, TaskModel } from "@/services/api/adapters/task"
+} from "@/viewmodels/project"
+import { Stats, StatsParams, StatsModel } from "@/viewmodels/stats"
+import { Task, TaskParams, TaskModel } from "@/viewmodels/task"
 
-import DateDecorater from "@/services/api/adapters/date"
+import DateDecorater from "@/viewmodels/date"
 import { User, UserModel, UserParams } from "./user"
 
 interface Params<T> {

@@ -9,7 +9,7 @@ import {
 import route from "@/lib/route"
 import useProjects from "@/contexts/projects"
 import Icon from "@/components/shared/icon"
-import { Project } from "@/services/api/adapters/project"
+import { Project } from "@/viewmodels/project"
 import Link from "@/components/shared/link"
 import { classHelper } from "@/lib/cls"
 import { truncate } from "@/lib/string"

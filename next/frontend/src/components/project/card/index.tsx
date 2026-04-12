@@ -1,5 +1,5 @@
 import styles from "@/components/project/card/index.module.css"
-import { Project } from "@/services/api/adapters/project"
+import { Project } from "@/viewmodels/project"
 import {
   IoCalendarClear as Calendar,
   IoGitCommit as Milestone,

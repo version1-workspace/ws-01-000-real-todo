@@ -1,10 +1,10 @@
 import { createContext, useContext, useMemo } from "react"
 import { useToast } from "@/lib/toast/hook"
 import api from "@/services/api"
-import { factory } from "@/services/api/adapters"
-import { Project, ProjectParams } from "@/services/api/adapters/project"
+import { factory } from "@/viewmodels"
+import { Project, ProjectParams } from "@/viewmodels/project"
 import { useEffect, useState } from "react"
-import { Pagination } from "@/services/api/adapters/pagination"
+import { Pagination } from "@/viewmodels/pagination"
 import { getColors } from "@/lib/colors"
 
 interface SearchParams {

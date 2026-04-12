@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react"
 import api from "@/services/api"
-import { Task, TaskParams } from "@/services/api/adapters/task"
-import { factory } from "@/services/api/adapters"
+import { Task, TaskParams } from "@/viewmodels/task"
+import { factory } from "@/viewmodels"
 
 const useMilestones = () => {
   const [orphans, setOrphans] = useState<Task[]>([])
