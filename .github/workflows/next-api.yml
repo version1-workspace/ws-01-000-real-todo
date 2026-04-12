@@ -16,7 +16,7 @@ jobs:
       JWT_EXPIRES_IN: 30m
     defaults:
       run:
-        working-directory: ./next-api
+        working-directory: ./next/api/node
     steps:
       - uses: actions/checkout@v4
       - name: Prepare next-api

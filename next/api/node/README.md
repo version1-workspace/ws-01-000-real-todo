@@ -1,11 +1,11 @@
-# next-api
+# next/api/node
 
 Express + Prisma で `api-spec/swagger.yaml` と既存 Nest 実装を移植した API です。
 
 ## セットアップ
 
 ```bash
-cd next-api
+cd next/api/node
 cp .env.example .env
 docker compose up -d
 npm install
