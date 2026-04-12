@@ -4,7 +4,7 @@ import { buildPageInfo } from '../lib/pagination.js';
 import { HttpError } from '../lib/http-error.js';
 import { projectsModel } from '../models/projects.js';
 import { taskInclude, tasksModel } from '../models/tasks.js';
-import { Prisma, prisma } from '../models/prisma.js';
+import { type Prisma, prisma } from '../models/prisma.js';
 
 type TaskStatus = 'initial' | 'scheduled' | 'completed' | 'archived';
 type TaskKind = 'task' | 'milestone';

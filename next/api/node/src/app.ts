@@ -9,6 +9,7 @@ import { router } from './routes/index.js';
 export const createApp = () => {
   const app = express();
 
+  console.log('Allow Request URL:', env.ALLOW_REQUEST_URL);
   app.use(
     cors({
       origin: env.ALLOW_REQUEST_URL,

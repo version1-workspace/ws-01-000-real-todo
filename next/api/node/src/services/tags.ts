@@ -1,5 +1,5 @@
 import { buildPageInfo } from '../lib/pagination.js';
-import { Prisma } from '../models/prisma.js';
+import type { Prisma } from '../models/prisma.js';
 import { tagsModel } from '../models/tags.js';
 
 type TagStatus = 'enabled' | 'disabled';

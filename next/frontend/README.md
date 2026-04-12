@@ -2,6 +2,16 @@
 
 Next.js フロントエンドアプリケーションです。
 
+## API Server について
+
+API サーバーは [../api](../api) にあります。フロントエンドは API サーバーにリクエストを送信してデータを取得します。
+
+```bash
+cd ../api/node
+npm install
+PORT=7000 npm run dev
+```
+
 ## API Client
 
 OpenAPI クライアントは Orval で生成しています。

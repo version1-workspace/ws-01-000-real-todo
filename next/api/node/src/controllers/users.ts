@@ -1,6 +1,6 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import { serializeUser } from '../lib/serializers.js';
-import { AuthenticatedRequest } from '../middlewares/auth.js';
+import type { AuthenticatedRequest } from '../middlewares/auth.js';
 
 export const usersController = {
   me(req: AuthenticatedRequest, res: Response) {

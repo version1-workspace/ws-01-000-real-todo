@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { verifyAccessToken } from '../lib/auth.js';
 import { HttpError } from '../lib/http-error.js';
 import { usersModel } from '../models/users.js';

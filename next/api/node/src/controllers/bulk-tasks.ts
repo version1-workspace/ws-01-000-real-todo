@@ -1,7 +1,7 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import { z } from 'zod';
 import { serializeTask } from '../lib/serializers.js';
-import { AuthenticatedRequest } from '../middlewares/auth.js';
+import type { AuthenticatedRequest } from '../middlewares/auth.js';
 import { tasksService } from '../services/tasks.js';
 
 const schema = z.object({

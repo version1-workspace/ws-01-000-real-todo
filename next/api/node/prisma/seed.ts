@@ -5,6 +5,7 @@ import { PrismaClient } from '../generated/prisma/client.js';
 import { env } from '../src/config/env.js';
 import { generateRefreshToken, hashPassword } from '../src/lib/password.js';
 
+console.log('Database URL:', env.DATABASE_URL);
 const adapter = new PrismaPg({
   connectionString: env.DATABASE_URL,
 });

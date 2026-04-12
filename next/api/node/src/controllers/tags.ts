@@ -1,7 +1,7 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import { z } from 'zod';
 import { serializeTag } from '../lib/serializers.js';
-import { AuthenticatedRequest } from '../middlewares/auth.js';
+import type { AuthenticatedRequest } from '../middlewares/auth.js';
 import { tagsService } from '../services/tags.js';
 
 const statusSchema = z.enum(['enabled', 'disabled']);

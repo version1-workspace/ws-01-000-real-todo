@@ -9,6 +9,7 @@
     "deploy": "netlify deploy --prod",
     "start": "next start -p 9000",
     "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
     "format": "biome format --write .",
     "check": "biome check .",
     "check:write": "biome check --write .",

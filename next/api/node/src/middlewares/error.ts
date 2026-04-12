@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { HttpError } from '../lib/http-error.js';
 
 export const errorMiddleware = (

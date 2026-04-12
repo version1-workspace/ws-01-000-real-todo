@@ -1,4 +1,4 @@
-import { type Project, type Tag, type Task, type User } from '../models/prisma.js';
+import type { Project, Tag, Task, User } from '../models/prisma.js';
 
 type ProjectWithRelations = Project & {
   tasks?: Task[];

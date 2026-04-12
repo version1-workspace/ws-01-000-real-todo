@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { HttpError } from '../lib/http-error.js';
+import type { HttpError } from '../lib/http-error.js';
 
 const usersModel = {
   findByEmail: vi.fn(),

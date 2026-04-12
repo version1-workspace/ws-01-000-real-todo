@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { buildPageInfo } from '../lib/pagination.js';
 import { HttpError } from '../lib/http-error.js';
-import { Prisma } from '../models/prisma.js';
+import type { Prisma } from '../models/prisma.js';
 import { projectsModel } from '../models/projects.js';
 import { tasksService } from './tasks.js';
 import { prisma } from '../models/prisma.js';

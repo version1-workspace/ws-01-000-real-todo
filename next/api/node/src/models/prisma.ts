@@ -10,6 +10,7 @@ export {
   type User,
 } from '../../generated/prisma/client.js';
 
+console.log('Database URL:', env.DATABASE_URL);
 const adapter = new PrismaPg({
   connectionString: env.DATABASE_URL,
 });

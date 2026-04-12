@@ -1,4 +1,4 @@
-import { Prisma, prisma } from './prisma.js';
+import { type Prisma, prisma } from './prisma.js';
 
 export const tagsModel = {
   findMany(args: Prisma.TagFindManyArgs) {
