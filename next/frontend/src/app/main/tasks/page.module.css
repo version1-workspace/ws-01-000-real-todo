@@ -1,0 +1,12 @@
+.container {
+}
+
+.content {
+  background: var(--background-color);
+  padding: 32px;
+}
+
+.title {
+  font-weight: 300;
+  font-size: 14px;
+}

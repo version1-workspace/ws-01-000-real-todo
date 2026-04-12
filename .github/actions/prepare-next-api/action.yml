@@ -1,5 +1,5 @@
 name: Prepare Next API
-description: Install dependencies and generate Prisma client for next-api
+description: Install dependencies and generate Prisma client for next/api/node
 inputs:
   node-version:
     description: Node.js version
@@ -12,9 +12,9 @@ runs:
       uses: ./.github/actions/setup-node-project
       with:
         node-version: ${{ inputs.node-version }}
-        working-directory: ./next-api
-        cache-dependency-path: ./next-api/package-lock.json
+        working-directory: ./next/api/node
+        cache-dependency-path: ./next/api/node/package-lock.json
     - name: Generate Prisma Client
       shell: bash
-      working-directory: ./next-api
+      working-directory: ./next/api/node
       run: npm run prisma:generate

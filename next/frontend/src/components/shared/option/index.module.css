@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.container > li {
+  margin: 0;
+}
+
+.optionItem {
+  cursor: pointer;
+  display: inline-block;
+  padding: 4px 8px;
+  color: rgb(148, 174, 159);
+}
+
+.optionItemFirst {
+}
+
+.optionItemLast {
+  border-right: 0;
+}
+
+.active {
+  border-bottom: 2px solid var(--primary-color);
+  color: #55655c;
+  font-weight: bold;
+}
