@@ -139,4 +139,6 @@ data
 
 .tmp
 generated
+!next/frontend/src/services/api/generated/
+!next/frontend/src/services/api/generated/**
 .vitest
