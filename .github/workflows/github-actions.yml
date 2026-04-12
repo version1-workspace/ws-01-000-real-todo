@@ -96,3 +96,46 @@ jobs:
           npm run db:test:create
           npm run db:test:setup
           npm run test:e2e
+  next-api-pipeline:
+    name: Next API Pipeline
+    runs-on: ubuntu-latest
+    env:
+      PORT: 3001
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/real_todo?schema=public
+      ALLOW_REQUEST_URL: http://localhost:3000
+      AUTH_SECRET: testsecret
+      AUTH_SUGAR: testsugar
+      JWT_EXPIRES_IN: 30m
+    defaults:
+      run:
+        working-directory: ./next-api
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+      - name: Cache node_modules
+        id: cache-npm
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-next-api-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: List the state of node modules
+        continue-on-error: true
+        run: npm list
+      - name: Install dependencies
+        run: npm install
+      - name: Generate Prisma Client
+        run: npm run prisma:generate
+      - name: Test
+        run: npm test
+      - name: Build
+        run: npm run build
