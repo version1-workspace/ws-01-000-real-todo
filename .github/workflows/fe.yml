@@ -9,15 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./frontend/core
+        working-directory: ./next/frontend
     steps:
       - uses: actions/checkout@v4
-      - name: Setup frontend/core
+      - name: Setup next/frontend
         uses: ./.github/actions/setup-node-project
         with:
           node-version: '20.x'
-          working-directory: ./frontend/core
-          cache-dependency-path: ./frontend/core/package-lock.json
+          working-directory: ./next/frontend
+          cache-dependency-path: ./next/frontend/package-lock.json
       - name: Lint
         run: npm run lint
       - name: Compile

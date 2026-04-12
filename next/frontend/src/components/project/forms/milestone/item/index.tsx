@@ -1,8 +1,8 @@
 "use client"
 import { useState } from "react"
 import styles from "@/components/project/forms/milestone/item/index.module.css"
-import { Task } from "@/services/api/models/task"
-import { Project, within } from "@/services/api/models/project"
+import { Task } from "@/services/api/adapters/task"
+import { Project, within } from "@/services/api/adapters/project"
 import { classHelper, join } from "@/lib/cls"
 import Validator, { Errors } from "@/models/validator"
 import {

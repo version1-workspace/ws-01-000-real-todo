@@ -13,7 +13,8 @@
     "check": "biome check .",
     "check:write": "biome check --write .",
     "tsc": "tsc --project tsconfig.json",
-    "test": "echo 0"
+    "test": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest run",
+    "test:watch": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest"
   },
   "dependencies": {
     "chart.js": "^4.5.1",
@@ -28,11 +29,15 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.2.6",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "24.3.3",
     "@types/react": "19.2.1",
     "@types/react-dom": "19.2.1",
-    "@biomejs/biome": "^2.2.6",
+    "jsdom": "^29.0.2",
     "orval": "^8.7.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.4"
   }
 }

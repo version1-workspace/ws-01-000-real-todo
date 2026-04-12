@@ -3,7 +3,7 @@ import { useForm } from "@/hooks/useForm"
 import api from "@/services/api"
 import TextInput from "@/components/shared/input/text"
 import DateInput from "@/components/shared/input/date"
-import { Project } from "@/services/api/models/project"
+import { Project } from "@/services/api/adapters/project"
 import { AppDate } from "@/lib/date"
 import {
   selectableStatus,
@@ -11,7 +11,7 @@ import {
   StatusType,
   Task,
   TaskParams,
-} from "@/services/api/models/task"
+} from "@/services/api/adapters/task"
 import Select, { OptionItem } from "@/components/shared/select"
 import TextArea from "@/components/shared/input/textarea"
 import { join } from "@/lib/cls"

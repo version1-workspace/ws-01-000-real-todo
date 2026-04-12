@@ -74,6 +74,9 @@ export const stringify = (obj: any) => {
   }
 
   return str
+    .split("&")
+    .filter((segment) => segment.length > 0 && !segment.endsWith("="))
+    .join("&")
 }
 
 const presence = (value: any) => {

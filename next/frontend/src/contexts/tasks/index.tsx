@@ -1,8 +1,8 @@
 import { createContext, useContext, useState } from "react"
 import api from "@/services/api"
-import { Task, TaskParams } from "@/services/api/models/task"
-import { factory } from "@/services/api/models"
-import { Pagination } from "@/services/api/models/pagination"
+import { Task, TaskParams } from "@/services/api/adapters/task"
+import { factory } from "@/services/api/adapters"
+import { Pagination } from "@/services/api/adapters/pagination"
 import { Params as FilterParams } from "@/components/tasks/list/hooks/useFilter"
 
 type Params = { page: number; limit: number } & Partial<FilterParams>

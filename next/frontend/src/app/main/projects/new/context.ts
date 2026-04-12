@@ -1,8 +1,8 @@
 import { createContext, useContext } from "react"
 import dayjs from "dayjs"
-import { Project } from "@/services/api/models/project"
+import { Project } from "@/services/api/adapters/project"
 import { Errors } from "@/models/validator"
-import { factory } from "@/services/api/models"
+import { factory } from "@/services/api/adapters"
 import { AppDate as Date } from "@/lib/date"
 
 interface FormContextValue {

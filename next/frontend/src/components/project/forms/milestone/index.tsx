@@ -3,12 +3,12 @@ import styles from "@/components/project/forms/milestone/index.module.css"
 import dayjs from "dayjs"
 import { useState } from "react"
 import useForm from "@/app/main/projects/new/context"
-import { Task } from "@/services/api/models/task"
+import { Task } from "@/services/api/adapters/task"
 import Goal from "@/components/project/goal"
 import Item from "@/components/project/forms/milestone/item"
 import { classHelper, join } from "@/lib/cls"
 import { IoAddOutline as Add } from "react-icons/io5"
-import { factory } from "@/services/api/models"
+import { factory } from "@/services/api/adapters"
 
 interface Props {
   readOnly?: boolean

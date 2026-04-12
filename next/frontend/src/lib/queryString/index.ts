@@ -5,8 +5,8 @@ export class QueryString {
   private readonly _raw: Object
 
   constructor(params: URLSearchParams | Object | string) {
-    if (params instanceof String) {
-      this._raw = parse(params as string)
+    if (typeof params === "string") {
+      this._raw = parse(params)
       return
     }
 

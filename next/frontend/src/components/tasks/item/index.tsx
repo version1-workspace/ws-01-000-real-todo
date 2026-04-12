@@ -1,5 +1,5 @@
 import styles from "./index.module.css"
-import { Task } from "@/services/api/models/task"
+import { Task } from "@/services/api/adapters/task"
 import {
   IoCalendarOutline as Calendar,
   IoCheckmark as Check,

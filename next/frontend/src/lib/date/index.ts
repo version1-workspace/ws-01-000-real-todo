@@ -34,7 +34,7 @@ export class AppDate {
 export class AppDateTime {
   _raw: Date
   static now() {
-    new AppDateTime()
+    return new AppDateTime()
   }
 
   constructor(date?: Date) {
