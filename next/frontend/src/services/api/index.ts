@@ -1,77 +1,69 @@
-import axios, { AxiosError, AxiosInstance } from "axios";
 import mockApi from "./mock";
+import { apiClient, getAccessToken, getUserId, setUserId } from "./client";
+import {
+  deleteAuthRefresh,
+  getProjectsSlugMilestones,
+  getUsersMe,
+  getUsersProjects,
+  getUsersProjectsSlug,
+  getUsersTasks,
+  getUsersTasksId,
+  patchUsersProjectsSlug,
+  patchUsersProjectsSlugArchive,
+  patchUsersProjectsSlugReopen,
+  patchUsersTasksId,
+  postAuthLogin,
+  postAuthRefresh,
+  postUsersProjects,
+  postUsersTasks,
+  putBulkTasksArchive,
+  putBulkTasksComplete,
+  putBulkTasksReopen,
+  putProjectsSlugMilestonesIdArchive,
+  putUsersTasksIdArchive,
+  putUsersTasksIdComplete,
+  putUsersTasksIdReopen,
+} from "./generated";
 
-const _sessionStorage = typeof sessionStorage !== 'undefined' ? sessionStorage : undefined
+const client = apiClient;
 
-export const getAccessToken = () => _sessionStorage?.getItem('token') || '';
+type SuccessStatus = 200 | 201 | 202 | 204;
+type SuccessResponse<T extends { status: number }> =
+  Extract<T, { status: SuccessStatus }> extends never
+    ? T
+    : Extract<T, { status: SuccessStatus }>;
+type CompatibleResponse = {
+  data: any;
+  status: number;
+  headers: Headers;
+};
 
-export const setUserId = (uuid: string) => localStorage.setItem("uuid", uuid);
-export const getUserId = () => localStorage.getItem("uuid") || "";
+const unwrapSuccess = <T extends { status: number }>(request: Promise<T>) => {
+  return request as Promise<SuccessResponse<T>>;
+};
 
-class Client {
-  _instance?: AxiosInstance;
-  _errorHandler?: (error: AxiosError) => void;
+const wrap = async <T extends { data: unknown; status: number; headers: Headers }>(
+  request: Promise<T>,
+): Promise<CompatibleResponse> => {
+  const response = await unwrapSuccess(request);
 
-  constructor(config: {
-    baseURL: string;
-    timeout: number;
-    withCredentials?: boolean;
-    headers: {
-      Authorization?: string;
-    };
-  }) {
-    this._instance = axios.create({
-      ...config,
-      headers: {
-        ...(config.headers || {}),
-      },
-    });
-    this._instance.defaults.headers["Authorization"] = `Bearer ${getAccessToken()}`;
-  }
-
-  get instance() {
-    if (!this._instance) {
-      throw new Error("client is not initialized properly");
-    }
-
-    return this._instance;
-  }
-
-  setAccessToken = (token: string) => {
-    _sessionStorage?.setItem('token', token)
-    if (this._instance) {
-      this._instance.defaults.headers["Authorization"] = `Bearer ${token}`;
-    }
+  return {
+    data: response.data,
+    status: response.status,
+    headers: response.headers,
   };
-
-  setErrorHandler = (handler: (error: AxiosError) => void) => {
-    this.instance.interceptors.response.use(function (response) {
-      return response;
-    }, handler);
-  };
-}
-
-const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:7000'
-
-const client = new Client({
-  baseURL: `${baseURL}/api/v1`,
-  timeout: 1000,
-  withCredentials: true,
-  headers: { Authorization: getAccessToken() },
-});
+};
 
 const api = {
   client,
   refreshToken: ({ uuid }: { uuid: string }) => {
-    return client.instance.post("/auth/refresh", {
-      uuid,
-    });
+    return wrap(postAuthRefresh({ uuid }));
   },
   logout: () => {
-    return client.instance.delete("/auth/refresh");
+    return wrap(deleteAuthRefresh());
   },
   fetchUser: () => {
-    return client.instance.get("/users/me");
+    return wrap(getUsersMe());
   },
   createProject: (project: {
     name: string;
@@ -85,7 +77,7 @@ const api = {
       deadline: string;
     }[];
   }) => {
-    return client.instance.post(`/users/projects`, project);
+    return wrap(postUsersProjects(project));
   },
   updateProject: (
     slug: string,
@@ -97,10 +89,10 @@ const api = {
       shouldbe?: string;
     },
   ) => {
-    return client.instance.patch(`/users/projects/${slug}`, project);
+    return wrap(patchUsersProjectsSlug(slug, project));
   },
   fetchProject: ({ slug }: { slug: string }) => {
-    return client.instance.get(`/users/projects/${slug}`);
+    return wrap(getUsersProjectsSlug(slug));
   },
   fetchProjects: ({
     limit,
@@ -111,23 +103,23 @@ const api = {
     page: number;
     status: string[];
   }>) => {
-    return client.instance.get("/users/projects", {
-      params: {
+    return wrap(
+      getUsersProjects({
         limit,
         page,
-        status,
-      },
-    });
+        status: status as never,
+      }),
+    );
   },
   archiveProject({ slug }: { slug: string }) {
-    return client.instance.patch(`/users/projects/${slug}/archive`);
+    return wrap(patchUsersProjectsSlugArchive(slug));
   },
   reopenProject({ slug }: { slug: string }) {
-    return client.instance.patch(`/users/projects/${slug}/reopen`);
+    return wrap(patchUsersProjectsSlugReopen(slug));
   },
   fetchStats: mockApi.fetchStats,
   fetchTask: ({ id }: { id: string }) => {
-    return client.instance.get(`/users/tasks/${id}`);
+    return wrap(getUsersTasksId(id));
   },
   fetchTasks: ({
     page,
@@ -152,44 +144,44 @@ const api = {
     dateType: string;
     projectId: string;
   }>) => {
-    return client.instance.get("/users/tasks", {
-      params: {
+    return wrap(
+      getUsersTasks({
         page,
-        status,
+        "status[]": status as never,
         limit,
         search,
-        sortType,
-        sortOrder,
+        sortType: sortType as never,
+        sortOrder: sortOrder as never,
         dateFrom,
         dateTo,
-        dateType,
+        dateType: dateType as never,
         projectId,
-      },
-    });
+      }),
+    );
   },
   fetchMilestones: ({ slug }: { slug: string }) => {
-    return client.instance.get(`/projects/${slug}/milestones`);
+    return wrap(getProjectsSlugMilestones(slug));
   },
   archiveMilestone: ({ slug, id }: { id: string; slug: string }) => {
-    return client.instance.put(`/projects/${slug}/milestones/${id}/archive`);
+    return wrap(putProjectsSlugMilestonesIdArchive(slug, id));
   },
   completeTask: ({ id }: { id: string }) => {
-    return client.instance.put(`/users/tasks/${id}/complete`);
+    return wrap(putUsersTasksIdComplete(id));
   },
   reopenTask: ({ id }: { id: string }) => {
-    return client.instance.put(`/users/tasks/${id}/reopen`);
+    return wrap(putUsersTasksIdReopen(id));
   },
   archiveTask: ({ id }: { id: string }) => {
-    return client.instance.put(`/users/tasks/${id}/archive`);
+    return wrap(putUsersTasksIdArchive(id));
   },
   bulkCompleteTask: ({ ids }: { ids: string[] }) => {
-    return client.instance.put(`/bulk/tasks/complete`, { ids });
+    return wrap(putBulkTasksComplete({ ids }));
   },
   bulkArchiveTask: ({ ids }: { ids: string[] }) => {
-    return client.instance.put(`/bulk/tasks/archive`, { ids });
+    return wrap(putBulkTasksArchive({ ids }));
   },
   bulkReopenTask: ({ ids }: { ids: string[] }) => {
-    return client.instance.put(`/bulk/tasks/reopen`, { ids });
+    return wrap(putBulkTasksReopen({ ids }));
   },
   createTask: ({
     data,
@@ -204,7 +196,7 @@ const api = {
       kind: string;
     }>;
   }) => {
-    return client.instance.post(`/users/tasks`, data);
+    return wrap(postUsersTasks(data as never));
   },
   updateTask: (
     id: string,
@@ -233,7 +225,7 @@ const api = {
         [key]: v,
       };
     }, {});
-    return client.instance.patch(`/users/tasks/${id}`, _data);
+    return wrap(patchUsersTasksId(id, _data as never));
   },
   authenticate: async ({
     email,
@@ -244,14 +236,14 @@ const api = {
     password: string;
     rememberMe: boolean;
   }) => {
-    const res = await client.instance.post("/auth/login", {
+    return wrap(postAuthLogin({
       email,
       password,
       rememberMe,
-    });
-
-    return res.data;
+    }));
   },
 };
 
 export default api;
+export { apiClient, getAccessToken, getUserId, setUserId };
+export * as generatedApi from "./generated";

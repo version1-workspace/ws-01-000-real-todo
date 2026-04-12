@@ -5,7 +5,7 @@ import { User } from "@/services/api/models/user";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState, createContext } from "react";
 import route from "@/lib/route";
-import { AxiosError } from "axios";
+import { ApiErrorResponse } from "@/services/api/client";
 
 interface IAuthContext {
   user?: User;
@@ -45,7 +45,7 @@ const AuthContainer = ({ children, isPublic }: Props) => {
           router.push(route.main.toString());
         }
       } catch (e) {
-        const error = e as AxiosError;
+        const error = e as ApiErrorResponse;
         if (!isPublic && error.response?.status === 401) {
           router.push(route.auth.login.with("?error=loginRequired"));
           return;
