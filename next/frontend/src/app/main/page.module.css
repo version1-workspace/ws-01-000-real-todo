@@ -1,0 +1,84 @@
+.projects {
+  width: 100%;
+  height: 100%;
+}
+
+.content {
+  padding: 16px 0;
+}
+
+.projectList {
+  flex: 1;
+  margin-right: 32px;
+}
+
+.projectListFooter {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.projectListLink {
+  font-size: 10px;
+  color: var(--primary-color);
+}
+
+.chart {
+  flex: 1;
+  background: var(--background-color);
+}
+
+.dashboard {
+  padding: 32px;
+  display: flex;
+  justify-content: space-between;
+  background: var(--background-color);
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sectionFooter {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.link {
+  align-items: center;
+  display: flex;
+  color: var(--primary-color);
+  letter-spacing: 0.1rem;
+  font-size: 10px;
+}
+
+.linkIcon {
+  position: relative;
+  top: -1px;
+}
+
+.todos {
+  padding: 32px;
+  background: var(--background-color);
+}
+
+.todos .content {
+  min-width: 100%;
+}
+
+.addProject {
+  padding: 0 16px;
+}
+
+.projectAddIcon {
+  color: var(--font-color-dark-weak);
+}
+

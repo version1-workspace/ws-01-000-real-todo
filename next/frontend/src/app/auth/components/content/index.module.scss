@@ -1,0 +1,35 @@
+.left {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  border-radius: 8px 0px 0px 8px;
+}
+
+.right {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  border-radius: 0px 8px 8px 0px;
+}
+
+.content {
+  margin-top: 80px;
+  min-height: 1000px;
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  justify-content: space-around;
+  margin: auto;
+  margin-top: 10%;
+  border-radius: 8px;
+  min-height: 600px;
+  width: 960px;
+  box-shadow: 1px 1px 8px 8px #24634e12;
+}
+

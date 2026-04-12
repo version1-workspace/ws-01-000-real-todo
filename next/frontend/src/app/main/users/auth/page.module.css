@@ -1,0 +1,51 @@
+.container {
+
+}
+
+.content {
+
+}
+
+.form {
+  padding: 32px;
+  border: 1px solid var(--weak-border-color);
+  margin-bottom: 32px;
+  border-radius: 8px;
+}
+
+.sns {
+
+}
+
+.title {
+  font-size: 12px;
+  font-weight: 300;
+  margin-bottom: 64px;
+}
+
+.field {
+  display: flex;
+  margin-bottom: 32px;
+}
+
+.label {
+  flex: 1;
+}
+
+.input {
+  flex: 1;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.actions {
+  width: 300px;
+  display: flex;
+}
+
+.actions button {
+  margin-right: 16px;
+}

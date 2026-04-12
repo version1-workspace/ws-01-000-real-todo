@@ -1,0 +1,121 @@
+.table {
+  width: 100%;
+}
+
+.tableHeader {
+  display: flex;
+  border-bottom: 1px solid var(--table-border-color);
+}
+
+.tableHeaderCell {
+  padding: 4px;
+  font-size: 10px;
+  font-weight: bold;
+  width: 10%;
+}
+
+.tableHeaderCell:last-child {
+  border-right: 0;
+}
+
+.tableRow {
+  display: flex;
+  padding: 8px 0px;
+  transition: all 0.5s;
+}
+
+.tableRow:hover {
+  transform: scale(1.01);
+  box-shadow: 1px 1px 3px 1px #22222210;
+}
+
+.tableCell {
+  display: flex;
+  align-items: center;
+  width: 10%;
+  padding: 8px 0;
+  font-size: 12px;
+}
+
+.tableCell:last-child {
+  border-right: 0;
+}
+
+.text {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.selector {
+  border: 0;
+  width: 100%;
+  min-height: 100%;
+}
+
+.check {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  width: 5%;
+}
+
+.unchecked {
+  color: transparent;
+}
+
+.unchecked:hover {
+  color: inherit;
+}
+
+.checked {
+  color: var(--primary-color);
+  font-size: 1.2em;
+}
+
+.checkIcon {
+}
+
+.checkIcon:hover {
+}
+
+.checkIconVisible {
+
+}
+
+.title {
+  width: 40%;
+}
+
+.status {
+  padding: 0;
+  width: 12%;
+}
+
+.statusHeader {
+  width: 12%;
+}
+
+.project {
+  width: 14%;
+}
+
+.detail {
+  width: 8%;
+}
+
+.detailCircle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-radius: 50%;
+  height: 24px;
+  width: 24px;
+  box-shadow: 2px 2px 4px 1px #22222210;
+}
+
+.detailIcon {
+  color: var(--font-color);
+  cursor:pointer;
+}

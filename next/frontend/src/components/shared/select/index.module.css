@@ -1,0 +1,64 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.container:focus {
+  outline: 1.5px solid #22222240;
+}
+
+.value {
+  font-size: 12px;
+}
+
+.valueContainer {
+  display: flex;
+  align-items: center;
+  background: var(--background-color);
+  border-radius: 4px;
+  padding: 8px;
+  justify-content: space-between;
+  width: 100%;
+  border: 0;
+  box-shadow: 0px 0px 4px 1px #22222210;
+}
+
+.flatValueContainer {
+  box-shadow: none;
+}
+
+.pullDownContainer {
+  position: relative;
+  top: 0px;
+  display: none;
+  width: 100%;
+}
+
+.pullDown {
+  position: absolute;
+  z-index: var(--z-index-select);
+  box-shadow: 2px 2px 4px 1px #22222210;
+  background: white;
+  min-width: 120px;
+  width: 100%;
+  padding: 8px 0;
+}
+
+.pullDownShow {
+  display: block;
+}
+
+.option {
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.option:hover {
+  background: #18e5af;
+  color: white;
+  font-weight: bold;
+  text-shadow: 1px 1px 1px #56deba;
+}

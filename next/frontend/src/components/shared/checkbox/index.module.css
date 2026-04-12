@@ -1,0 +1,24 @@
+.container {
+  padding: 8px;
+}
+
+.label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+}
+
+.box {
+  border-radius: 2px;
+  height: 12px;
+  width: 12px;
+  border: 1px solid var(--border-color);
+  margin-right: 8px;
+}
+
+.check {
+  position: relative;
+  top: 0px;
+  left: 0px;
+}

@@ -1,0 +1,64 @@
+.container {
+
+}
+
+.content {
+  margin-left: 32px;
+}
+
+.title {
+  font-size: 12px;
+  font-weight: 300;
+  margin-bottom: 64px;
+}
+
+.color {
+  cursor: pointer;
+  height: 48px;
+  width: 48px;
+  border: 1px solid var(--border-color);
+}
+
+.pallete {
+  margin: 32px 0;
+}
+
+.paletteList {
+  display: flex;
+  width: 60%;
+  justify-content: space-evenly;
+}
+
+.paletteItemActive {
+  border: 3px solid var(--border-color);
+}
+
+.palleteActive {
+  border: 3px solid var(--background-color);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin: 32px 0;
+}
+
+.action {
+  display: flex;
+  width: 300px;
+}
+
+.action button {
+  margin-right: 16px;
+}
+
+.section {
+  margin-bottom: 32px;
+  border: 1px solid var(--weak-border-color);
+  padding: 32px;
+  border-radius: 8px;
+}
+
+.sidebarOption {
+  width: 200px;
+}

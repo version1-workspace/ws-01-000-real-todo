@@ -1,0 +1,50 @@
+.container {
+  background: var(--background-color);
+}
+
+.content {
+  padding: 32px;
+}
+
+.body {
+  display: flex;
+}
+
+.sidebar {
+  flex: 1;
+}
+
+.main {
+  flex: 5;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 300;
+}
+
+.menu {
+  padding: 32px;
+}
+
+.menuItem {
+  padding: 16px;
+  cursor: pointer;
+}
+
+.subMenuItem {
+  padding-left: 32px;
+}
+
+.menuItem:hover {
+  background: var(--hover-color);
+}
+
+.subMenu {
+
+}
+
+.activeMenu {
+  background: var(--hover-color);
+}
+

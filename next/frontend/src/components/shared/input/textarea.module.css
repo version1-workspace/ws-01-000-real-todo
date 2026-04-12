@@ -1,0 +1,16 @@
+.container {
+
+}
+
+.textarea {
+  border-radius: 8px;
+  line-height: 1.6em;
+  padding: 16px;
+  width: 100%;
+  border: 0;
+  box-shadow: 0px 0px 4px 1px #22222210;
+}
+
+.textarea:focus {
+  outline: 1.5px solid var(--input-outline-color);
+}

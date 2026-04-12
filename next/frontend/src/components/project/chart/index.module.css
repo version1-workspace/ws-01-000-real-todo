@@ -1,0 +1,44 @@
+.container {
+  height: 100%;
+}
+
+.title {
+
+}
+
+.body {
+  height: 100%;
+}
+
+.chart {
+  width: 100%;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.footer label {
+  font-size: 12px;
+  margin-right: 16px;
+}
+
+.control {
+  margin: 18px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.kind {
+  display: flex;
+}
+
+.input {
+  padding: 8px;
+  border-radius: 4px;
+  border: 0;
+}

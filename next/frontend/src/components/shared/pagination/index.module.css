@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+}
+
+.page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 8px;
+  margin: 8px;
+}
+
+.page:hover {
+  background: var(--primary-color);
+  color: var(--font-color-light);
+}
+
+.active {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
