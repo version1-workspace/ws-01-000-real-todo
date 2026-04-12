@@ -1,0 +1,21 @@
+{
+  "name": "api-spec-tests",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest run"
+  },
+  "dependencies": {
+    "@apidevtools/swagger-parser": "^12.1.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.13.14",
+    "typescript": "^5.8.2",
+    "vitest": "^3.2.4"
+  }
+}

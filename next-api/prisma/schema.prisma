@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  uuid         String    @unique
+  username     String    @unique
+  email        String    @unique
+  password     String
+  refreshToken String
+  status       String    @default("active")
+  createdAt    DateTime
+  updatedAt    DateTime
+  projects     Project[]
+  tasks        Task[]
+  tags         Tag[]
+}
+
+model Project {
+  id         Int      @id @default(autoincrement())
+  uuid       String   @unique
+  name       String
+  status     String   @default("initial")
+  deadline   DateTime
+  startingAt DateTime?
+  startedAt  DateTime?
+  finishedAt DateTime?
+  archivedAt DateTime?
+  slug       String   @unique
+  goal       String
+  shouldbe   String?
+  userId     Int
+  createdAt  DateTime
+  updatedAt  DateTime
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks      Task[]
+
+  @@index([userId])
+}
+
+model Task {
+  id         Int       @id @default(autoincrement())
+  uuid       String    @unique
+  title      String
+  status     String    @default("initial")
+  kind       String    @default("task")
+  deadline   DateTime
+  startingAt DateTime?
+  startedAt  DateTime?
+  finishedAt DateTime?
+  archivedAt DateTime?
+  parentId   Int?
+  userId     Int
+  projectId  Int
+  createdAt  DateTime
+  updatedAt  DateTime
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project    Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  parent     Task?     @relation("TaskChildren", fields: [parentId], references: [id], onDelete: SetNull)
+  children   Task[]    @relation("TaskChildren")
+  tagTasks   TagTask[]
+
+  @@index([userId])
+  @@index([projectId])
+  @@index([parentId])
+}
+
+model Tag {
+  id        Int       @id @default(autoincrement())
+  uuid      String    @unique
+  name      String
+  status    String    @default("enabled")
+  userId    Int
+  createdAt DateTime
+  updatedAt DateTime
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tagTasks  TagTask[]
+
+  @@index([userId])
+}
+
+model TagTask {
+  id        Int      @id @default(autoincrement())
+  tagId     Int
+  taskId    Int
+  createdAt DateTime
+  updatedAt DateTime
+  tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@unique([tagId, taskId])
+  @@index([tagId])
+  @@index([taskId])
+}

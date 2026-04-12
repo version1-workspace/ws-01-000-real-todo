@@ -1,0 +1,36 @@
+name: Wait For HTTP
+description: Wait until an HTTP endpoint returns a success response
+inputs:
+  url:
+    description: Target URL
+    required: true
+  attempts:
+    description: Number of polling attempts
+    required: false
+    default: '30'
+  sleep-seconds:
+    description: Sleep seconds between attempts
+    required: false
+    default: '1'
+  failure-log-path:
+    description: Optional log file path to print on failure
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - name: Wait for endpoint
+      shell: bash
+      run: |
+        for i in $(seq 1 "${{ inputs.attempts }}"); do
+          if curl --fail --silent "${{ inputs.url }}" > /dev/null; then
+            exit 0
+          fi
+          sleep "${{ inputs.sleep-seconds }}"
+        done
+
+        if [ -n "${{ inputs.failure-log-path }}" ] && [ -f "${{ inputs.failure-log-path }}" ]; then
+          cat "${{ inputs.failure-log-path }}"
+        fi
+
+        exit 1

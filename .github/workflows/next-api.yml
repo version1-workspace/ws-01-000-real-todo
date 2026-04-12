@@ -1,0 +1,29 @@
+name: Next API Pipeline
+run-name: Next API Pipeline
+
+on: [push]
+
+jobs:
+  next-api-pipeline:
+    name: Next API Pipeline
+    runs-on: ubuntu-latest
+    env:
+      PORT: 3001
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/real_todo?schema=public
+      ALLOW_REQUEST_URL: http://localhost:3000
+      AUTH_SECRET: testsecret
+      AUTH_SUGAR: testsugar
+      JWT_EXPIRES_IN: 30m
+    defaults:
+      run:
+        working-directory: ./next-api
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare next-api
+        uses: ./.github/actions/prepare-next-api
+        with:
+          node-version: '20.x'
+      - name: Test
+        run: npm test
+      - name: Build
+        run: npm run build

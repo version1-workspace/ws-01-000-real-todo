@@ -1,0 +1,26 @@
+name: Setup Node Project
+description: Setup Node.js with npm cache and install dependencies for a project
+inputs:
+  node-version:
+    description: Node.js version
+    required: false
+    default: '20.x'
+  working-directory:
+    description: Working directory of the Node.js project
+    required: true
+  cache-dependency-path:
+    description: Dependency files used for npm cache key
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: npm
+        cache-dependency-path: ${{ inputs.cache-dependency-path }}
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: npm install

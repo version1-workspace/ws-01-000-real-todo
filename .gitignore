@@ -39,6 +39,7 @@ bower_components
 build/Release
 
 # Dependency directories
+.npm-cache/
 node_modules/
 jspm_packages/
 
@@ -135,3 +136,7 @@ data
 
 # Local Netlify folder
 .netlify
+
+.tmp
+generated
+.vitest
