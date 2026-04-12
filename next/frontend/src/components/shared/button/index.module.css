@@ -6,8 +6,9 @@
   letter-spacing: 1.4px;
   font-size: 10px;
   width: 100%;
-  transition: box-shadow 0.5s, opacity 0.5s;
-
+  transition:
+    box-shadow 0.5s,
+    opacity 0.5s;
 }
 
 .button:hover {
@@ -37,5 +38,5 @@
 }
 
 .secondary:hover {
-  opacity: 0.8
+  opacity: 0.8;
 }

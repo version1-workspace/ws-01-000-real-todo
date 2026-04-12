@@ -1,25 +1,25 @@
-"use client";
-import { useMemo } from "react";
-import styles from "./index.module.css";
-import FilterForm from "@/components/tasks/filterForm";
-import api from "@/services/api";
-import { Filter } from "@/components/tasks/list/hooks/useFilter";
-import { IoCloseCircle as Close } from "react-icons/io5";
-import { ja } from "@/lib/transltate";
-import useTasks from "@/contexts/tasks";
-import useProjects from "@/contexts/projects";
-import Icon from "@/components/shared/icon";
-import useCheck from "@/contexts/check";
-import PopupMenu, { Action } from "@/components/shared/popupMenu";
-import { useToast } from "@/lib/toast/hook";
+"use client"
+import { useMemo } from "react"
+import styles from "./index.module.css"
+import FilterForm from "@/components/tasks/filterForm"
+import api from "@/services/api"
+import { Filter } from "@/components/tasks/list/hooks/useFilter"
+import { IoCloseCircle as Close } from "react-icons/io5"
+import { ja } from "@/lib/transltate"
+import useTasks from "@/contexts/tasks"
+import useProjects from "@/contexts/projects"
+import Icon from "@/components/shared/icon"
+import useCheck from "@/contexts/check"
+import PopupMenu, { Action } from "@/components/shared/popupMenu"
+import { useToast } from "@/lib/toast/hook"
 
-const taskTranslations = ja.derive("task")!;
-const taskStatuses = ja.derive("task.status")!;
+const taskTranslations = ja.derive("task")!
+const taskStatuses = ja.derive("task.status")!
 
 interface Actions {
-  onComplete: () => void;
-  onArchive: () => void;
-  onReopen: () => void;
+  onComplete: () => void
+  onArchive: () => void
+  onReopen: () => void
 }
 
 const getActions = ({ onComplete, onArchive, onReopen }: Actions) =>
@@ -45,34 +45,34 @@ const getActions = ({ onComplete, onArchive, onReopen }: Actions) =>
         onClick: onArchive,
       },
     ] as Action[]
-  ).filter((it) => !it.hidden);
+  ).filter((it) => !it.hidden)
 
 interface TaskListHeaderProps {
-  filter: Filter;
+  filter: Filter
 }
 
 const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
-  const { checked, ids: checkedIds } = useCheck();
-  const { projects } = useProjects();
-  const toast = useToast();
+  const { checked, ids: checkedIds } = useCheck()
+  const { projects } = useProjects()
+  const toast = useToast()
   const { original, isDateSet, replica, update, reset, resetState, save } =
-    filter;
-  const { date, order, text, projectId, statuses } = original;
-  const { data, fetch } = useTasks();
+    filter
+  const { date, order, text, projectId, statuses } = original
+  const { data, fetch } = useTasks()
   const project = useMemo(
     () => projects.find((it) => projectId === it.id),
     [projects, projectId],
-  );
+  )
 
   if (!data) {
-    return null;
+    return null
   }
 
-  const showActionMenu = () => {};
+  const showActionMenu = () => {}
   const resetField = (key: string) => {
-    const params = resetState(key as any);
-    fetch({ ...params, page: 1 });
-  };
+    const params = resetState(key as any)
+    fetch({ ...params, page: 1 })
+  }
 
   return (
     <div className={styles.header}>
@@ -88,13 +88,14 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
             <select
               className={styles.select}
               onChange={(e) => {
-                const limit = Number(e.target.value);
-                const newValues = { ...replica, limit, page: 1 };
-                update({ ...newValues });
-                save(newValues);
-                fetch({ ...newValues });
+                const limit = Number(e.target.value)
+                const newValues = { ...replica, limit, page: 1 }
+                update({ ...newValues })
+                save(newValues)
+                fetch({ ...newValues })
               }}
-              value={replica.limit}>
+              value={replica.limit}
+            >
               <option value="20">20 件</option>
               <option value="50">50 件</option>
               <option value="100">100 件</option>
@@ -111,7 +112,8 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
               {project?.name || "指定なし"}
               <div
                 className={styles.close}
-                onClick={() => resetField("projectId")}>
+                onClick={() => resetField("projectId")}
+              >
                 <Icon name="close" size="12px" />
               </div>
             </span>
@@ -122,7 +124,8 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
                 .join("、") || "なし"}
               <div
                 className={styles.close}
-                onClick={() => resetField("statuses")}>
+                onClick={() => resetField("statuses")}
+              >
                 <Icon name="close" size="12px" />
               </div>
             </span>
@@ -139,7 +142,8 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
                 {date.start} ~ {date.end}
                 <div
                   className={styles.close}
-                  onClick={() => resetField("date")}>
+                  onClick={() => resetField("date")}
+                >
                   <Close size="12px" />
                 </div>
               </span>
@@ -167,16 +171,16 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
               }
               value={replica}
               onShow={() => {
-                reset();
+                reset()
               }}
               onSubmit={async () => {
-                const newValue = { ...replica, page: 1 };
-                save(newValue);
-                await fetch(newValue);
+                const newValue = { ...replica, page: 1 }
+                save(newValue)
+                await fetch(newValue)
               }}
               onChange={update}
               onCancel={() => {
-                reset();
+                reset()
               }}
             />
             {Object.keys(checked).length ? (
@@ -186,17 +190,17 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
                     if (
                       !confirm("選択したタスクを完了しますがよろしいですか？")
                     ) {
-                      return;
+                      return
                     }
 
                     try {
-                      await api.bulkCompleteTask({ ids: checkedIds });
-                      toast.success("選択したタスクを完了しました。");
-                      const newValue = { ...replica, page: 1 };
-                      save(newValue);
-                      fetch(replica);
+                      await api.bulkCompleteTask({ ids: checkedIds })
+                      toast.success("選択したタスクを完了しました。")
+                      const newValue = { ...replica, page: 1 }
+                      save(newValue)
+                      fetch(replica)
                     } catch {
-                      toast.error("タスクの完了に失敗しました。");
+                      toast.error("タスクの完了に失敗しました。")
                     }
                   },
                   onArchive: async () => {
@@ -205,17 +209,17 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
                         "選択したタスクをアーカイブしますがよろしいですか？",
                       )
                     ) {
-                      return;
+                      return
                     }
 
                     try {
-                      await api.bulkArchiveTask({ ids: checkedIds });
-                      toast.success("選択したタスクをアーカイブしました。");
-                      const newValue = { ...replica, page: 1 };
-                      save(newValue);
-                      fetch(newValue);
+                      await api.bulkArchiveTask({ ids: checkedIds })
+                      toast.success("選択したタスクをアーカイブしました。")
+                      const newValue = { ...replica, page: 1 }
+                      save(newValue)
+                      fetch(newValue)
                     } catch {
-                      toast.error("タスクのアーカイブに失敗しました。");
+                      toast.error("タスクのアーカイブに失敗しました。")
                     }
                   },
                   onReopen: async () => {
@@ -224,17 +228,17 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
                         "選択したタスクを未完了にしますがよろしいですか？",
                       )
                     ) {
-                      return;
+                      return
                     }
 
                     try {
-                      await api.bulkReopenTask({ ids: checkedIds });
-                      toast.success("選択したタスクを未完了にしました。");
-                      const newValue = { ...replica, page: 1 };
-                      save(newValue);
-                      fetch(newValue);
+                      await api.bulkReopenTask({ ids: checkedIds })
+                      toast.success("選択したタスクを未完了にしました。")
+                      const newValue = { ...replica, page: 1 }
+                      save(newValue)
+                      fetch(newValue)
                     } catch {
-                      toast.error("タスクの未完了処理に失敗しました。");
+                      toast.error("タスクの未完了処理に失敗しました。")
                     }
                   },
                 })}
@@ -252,7 +256,7 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TaskListHeader;
+export default TaskListHeader

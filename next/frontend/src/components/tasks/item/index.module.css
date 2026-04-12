@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   padding: 16px;
-  border-bottom:  1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
   cursor: pointer;
   transition: opacity 0.3s;
 }
@@ -17,7 +17,6 @@
 }
 
 .title {
-
 }
 
 .date {
@@ -58,7 +57,7 @@
 }
 
 .middle {
- flex: 8;
+  flex: 8;
 }
 
 .middle .body {
@@ -66,7 +65,7 @@
 }
 
 .right {
- flex: 2;
+  flex: 2;
 }
 
 .right .header {

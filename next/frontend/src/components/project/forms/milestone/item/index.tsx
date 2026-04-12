@@ -1,22 +1,22 @@
-"use client";
-import { useState } from "react";
-import styles from "@/components/project/forms/milestone/item/index.module.css";
-import { Task } from "@/services/api/models/task";
-import { Project, within } from "@/services/api/models/project";
-import { classHelper, join } from "@/lib/cls";
-import Validator, { Errors } from "@/models/validator";
+"use client"
+import { useState } from "react"
+import styles from "@/components/project/forms/milestone/item/index.module.css"
+import { Task } from "@/services/api/models/task"
+import { Project, within } from "@/services/api/models/project"
+import { classHelper, join } from "@/lib/cls"
+import Validator, { Errors } from "@/models/validator"
 import {
   IoCloseOutline as Close,
   IoPencil as Edit,
   IoCheckmark as Save,
   IoTrashOutline as Remove,
-} from "react-icons/io5";
+} from "react-icons/io5"
 
 interface EditProps {
-  active: boolean;
-  component: React.ReactNode;
-  children: React.ReactNode;
-  onClick?: () => void;
+  active: boolean
+  component: React.ReactNode
+  children: React.ReactNode
+  onClick?: () => void
 }
 
 const validator = new Validator({
@@ -31,14 +31,14 @@ const validator = new Validator({
       "date",
       (data: Task) => {
         if (within(data.project, data.deadline)) {
-          return;
+          return
         }
 
-        return "プロジェクト期限日外です";
+        return "プロジェクト期限日外です"
       },
     ],
   },
-});
+})
 
 function EditForm({ active, component, children, onClick }: EditProps) {
   if (active) {
@@ -46,23 +46,23 @@ function EditForm({ active, component, children, onClick }: EditProps) {
       <div className={styles.editContainer} onClick={onClick}>
         {component}
       </div>
-    );
+    )
   }
 
   return (
     <div className={styles.editContainer} onClick={onClick}>
       {children}
     </div>
-  );
+  )
 }
 
 interface Props {
-  item: Task;
-  project: Project;
-  readOnly?: boolean;
-  className?: string;
-  onSave?: (task: Task) => void;
-  onRemove?: () => void;
+  item: Task
+  project: Project
+  readOnly?: boolean
+  className?: string
+  onSave?: (task: Task) => void
+  onRemove?: () => void
 }
 
 export default function MilestoneItem({
@@ -73,11 +73,11 @@ export default function MilestoneItem({
   onRemove,
   onSave,
 }: Props) {
-  const [errors, setErrors] = useState<Errors | undefined>(undefined);
-  const [form, setForm] = useState(item);
-  const [editing, setEditing] = useState(false);
+  const [errors, setErrors] = useState<Errors | undefined>(undefined)
+  const [form, setForm] = useState(item)
+  const [editing, setEditing] = useState(false)
 
-  const shouldEdit = editing || !item.isPersist;
+  const shouldEdit = editing || !item.isPersist
 
   return (
     <div className={join(styles.container, className)}>
@@ -93,14 +93,15 @@ export default function MilestoneItem({
                 value={form.deadline}
                 className={join(styles.input, styles.dateInput)}
                 onChange={(e) => {
-                  setForm(form.withDeadline(e.target.value)!);
+                  setForm(form.withDeadline(e.target.value)!)
                 }}
                 readOnly={readOnly}
                 max={project.deadline?.forHtml}
               />
               <p className={styles.error}>{errors?.deadline}</p>
             </div>
-          }>
+          }
+        >
           <p>{form.deadline.format()}</p>
         </EditForm>
       </p>
@@ -117,13 +118,14 @@ export default function MilestoneItem({
                     type="text"
                     value={form.title}
                     onChange={(e) => {
-                      setForm(form.withTitle(e.target.value)!);
+                      setForm(form.withTitle(e.target.value)!)
                     }}
                     readOnly={readOnly}
                   />
                   <p className={styles.error}>{errors?.title}</p>
                 </div>
-              }>
+              }
+            >
               <p>{form.title}</p>
             </EditForm>
           </div>
@@ -132,22 +134,23 @@ export default function MilestoneItem({
               className={classHelper({
                 [styles.action]: true,
                 [styles.show]: editing,
-              })}>
+              })}
+            >
               {shouldEdit ? (
                 <Save
                   color="#2e2e2e"
                   size="12px"
                   onClick={() => {
-                    const result = validator.validate(form);
-                    setErrors(result.errors);
+                    const result = validator.validate(form)
+                    setErrors(result.errors)
                     if (!result.valid) {
-                      return;
+                      return
                     }
 
-                    setErrors(undefined);
-                    setEditing(false);
-                    setForm(form.scheduled());
-                    onSave?.(form);
+                    setErrors(undefined)
+                    setEditing(false)
+                    setForm(form.scheduled())
+                    onSave?.(form)
                   }}
                 />
               ) : (
@@ -161,8 +164,8 @@ export default function MilestoneItem({
                 <Close
                   color="#2e2e2e"
                   onClick={() => {
-                    setEditing(false);
-                    setErrors(undefined);
+                    setEditing(false)
+                    setErrors(undefined)
                   }}
                 />
               ) : null}
@@ -170,10 +173,10 @@ export default function MilestoneItem({
                 <Remove
                   color="#2e2e2e"
                   onClick={() => {
-                    setEditing(false);
-                    setErrors(undefined);
+                    setEditing(false)
+                    setErrors(undefined)
 
-                    onRemove?.();
+                    onRemove?.()
                   }}
                 />
               ) : null}
@@ -182,5 +185,5 @@ export default function MilestoneItem({
         </div>
       </div>
     </div>
-  );
+  )
 }

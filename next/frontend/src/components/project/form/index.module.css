@@ -1,6 +1,5 @@
-
 .container {
-  padding: 64px
+  padding: 64px;
 }
 
 .content {
@@ -49,7 +48,7 @@
 }
 
 .required:after {
-  content: '*';
+  content: "*";
   color: var(--danger-color);
 }
 

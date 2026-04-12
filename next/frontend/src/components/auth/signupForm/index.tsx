@@ -1,10 +1,10 @@
-import styles from "./index.module.css";
-import Button from "@/components/shared/button";
-import Input from "@/components/shared/input/text";
-import { useToast } from "@/lib/toast/hook";
+import styles from "./index.module.css"
+import Button from "@/components/shared/button"
+import Input from "@/components/shared/input/text"
+import { useToast } from "@/lib/toast/hook"
 
 export default function SignUpForm() {
-  const toast = useToast();
+  const toast = useToast()
   return (
     <div className={styles.form}>
       <div className={styles.copy}>
@@ -21,7 +21,7 @@ export default function SignUpForm() {
           onChange={() => {
             toast.info(
               "Turvo は学習用アプリです。新規登録は受け付けていません。",
-            );
+            )
           }}
         />
       </div>
@@ -32,11 +32,12 @@ export default function SignUpForm() {
           onClick={() => {
             toast.info(
               "Turvo は学習用アプリです。新規登録は受け付けていません。",
-            );
-          }}>
+            )
+          }}
+        >
           新規登録
         </Button>
       </div>
     </div>
-  );
+  )
 }

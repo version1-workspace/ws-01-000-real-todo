@@ -1,8 +1,8 @@
-import styles from "./index.module.scss";
-import Link from "next/link";
-import Button from "@/components/shared/button";
-import Image from "next/image";
-import Icon from "@/components/shared/icon";
+import styles from "./index.module.scss"
+import Link from "next/link"
+import Button from "@/components/shared/button"
+import Image from "next/image"
+import Icon from "@/components/shared/icon"
 
 const images = {
   logo: {
@@ -10,10 +10,10 @@ const images = {
     width: 24,
     height: 24,
   },
-};
+}
 
 interface Props {
-  light?: boolean;
+  light?: boolean
 }
 
 export default function Header({ light }: Props) {
@@ -25,7 +25,8 @@ export default function Header({ light }: Props) {
             className={[
               styles.logoContent,
               light ? styles.logoContentLight : "",
-            ].join(" ")}>
+            ].join(" ")}
+          >
             <Image {...images.logo} className={styles.logoImage} alt="ロゴ" />
             <h2 className={styles.logoText}>Turvo</h2>
           </div>
@@ -54,7 +55,8 @@ export default function Header({ light }: Props) {
             className={styles.githubLink}
             href="https://github.com/version1-workspace/ws-01-000-real-todo"
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+          >
             <Icon name="github" size={24} className={styles.githubIcon} />
           </Link>
         </div>
@@ -68,5 +70,5 @@ export default function Header({ light }: Props) {
         </div>
       </div>
     </header>
-  );
+  )
 }

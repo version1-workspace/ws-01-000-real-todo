@@ -1,62 +1,62 @@
-"use client";
-import route from "@/lib/route";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import styles from "./page.module.css";
-import { useForm } from "@/hooks/useForm";
-import api from "@/services/api";
-import DateInput from "@/components/shared/input/date";
-import { Project } from "@/services/api/models/project";
-import { AppDate } from "@/lib/date";
+"use client"
+import route from "@/lib/route"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import styles from "./page.module.css"
+import { useForm } from "@/hooks/useForm"
+import api from "@/services/api"
+import DateInput from "@/components/shared/input/date"
+import { Project } from "@/services/api/models/project"
+import { AppDate } from "@/lib/date"
 import {
   selectableStatus,
   statusOptions,
   StatusType,
   Task,
   TaskParams,
-} from "@/services/api/models/task";
-import Select from "@/components/shared/select";
-import TextArea from "@/components/shared/input/textarea";
-import { join } from "@/lib/cls";
-import Button from "@/components/shared/button";
-import { useToast } from "@/lib/toast/hook";
-import ErrorMessage from "@/components/shared/errorMessage";
-import useProjects from "@/contexts/projects";
-import { factory } from "@/services/api/models";
-import Icon from "@/components/shared/icon";
-import EditableField from "@/components/shared/editableField";
-import useMilestones from "@/hooks/useMilestones";
+} from "@/services/api/models/task"
+import Select from "@/components/shared/select"
+import TextArea from "@/components/shared/input/textarea"
+import { join } from "@/lib/cls"
+import Button from "@/components/shared/button"
+import { useToast } from "@/lib/toast/hook"
+import ErrorMessage from "@/components/shared/errorMessage"
+import useProjects from "@/contexts/projects"
+import { factory } from "@/services/api/models"
+import Icon from "@/components/shared/icon"
+import EditableField from "@/components/shared/editableField"
+import useMilestones from "@/hooks/useMilestones"
 
 interface Props {
   params: Promise<{
-    id: string;
-  }>;
+    id: string
+  }>
 }
 
 interface Form {
-  project?: Project;
-  parent?: Task;
-  title: string;
-  description: string;
-  startingAt?: string;
-  startedAt?: string;
-  deadline: string;
-  status?: StatusType;
-  createdAt?: string;
-  updatedAt?: string;
-  children: TaskParams[];
+  project?: Project
+  parent?: Task
+  title: string
+  description: string
+  startingAt?: string
+  startedAt?: string
+  deadline: string
+  status?: StatusType
+  createdAt?: string
+  updatedAt?: string
+  children: TaskParams[]
 }
 
 const TaskDetail = ({ params }: Props) => {
-  const toast = useToast();
-  const [task, setTask] = useState<Task>();
-  const { projects, options } = useProjects();
+  const toast = useToast()
+  const [task, setTask] = useState<Task>()
+  const { projects, options } = useProjects()
   const {
     fetch: fetchMilestones,
     milestones,
     options: milestoneOptions,
-  } = useMilestones();
-  const router = useRouter();
+  } = useMilestones()
+  const router = useRouter()
 
   const { submit, change, errors, form } = useForm<Form>({
     initialValues: {
@@ -71,36 +71,36 @@ const TaskDetail = ({ params }: Props) => {
     },
     validate: (values, { errors }) => {
       if (!values.project) {
-        errors.set("project", "プロジェクトを設定してください");
+        errors.set("project", "プロジェクトを設定してください")
       }
 
       if (!values.title) {
-        errors.set("title", "タイトルを設定してください");
+        errors.set("title", "タイトルを設定してください")
       }
 
       if (!values.deadline) {
-        errors.set("deadline", "期限を設定してください");
+        errors.set("deadline", "期限を設定してください")
       }
 
-      return errors;
+      return errors
     },
     onSubmit: async (values: Form) => {
-      const { project, ...rest } = values;
-      const { id } = await params ?? {};
+      const { project, ...rest } = values
+      const { id } = (await params) ?? {}
       try {
         await api.updateTask(id, {
           ...rest,
           projectId: project?.id,
-        });
-        router.push(route.main.toString());
+        })
+        router.push(route.main.toString())
 
-        toast.success("タスクを更新しました。");
+        toast.success("タスクを更新しました。")
       } catch (e) {
-        console.error(e);
-        toast.error("タスクの更新に失敗しました。");
+        console.error(e)
+        toast.error("タスクの更新に失敗しました。")
       }
     },
-  });
+  })
 
   const updateFormWith = (task: Task) => {
     change({
@@ -114,25 +114,25 @@ const TaskDetail = ({ params }: Props) => {
       createdAt: task.createdAt?.format(),
       updatedAt: task.updatedAt?.format(),
       status: task.status,
-    });
-  };
+    })
+  }
 
   useEffect(() => {
     const init = async () => {
-      const res = await api.fetchTask(await params);
-      const task = factory.task(res.data.data);
-      setTask(task);
-      updateFormWith(task);
+      const res = await api.fetchTask(await params)
+      const task = factory.task(res.data.data)
+      setTask(task)
+      updateFormWith(task)
 
-      fetchMilestones({ slug: task.project?.slug });
-    };
+      fetchMilestones({ slug: task.project?.slug })
+    }
 
-    init();
-  }, []);
+    init()
+  }, [])
 
-  const errorMessages = errors.object;
+  const errorMessages = errors.object
   if (!task) {
-    return null;
+    return null
   }
 
   return (
@@ -144,7 +144,7 @@ const TaskDetail = ({ params }: Props) => {
               defaultValue={form.title}
               inputStyleClass={styles.titleField}
               onChangeEnd={(value) => {
-                change({ title: value });
+                change({ title: value })
               }}
             />
           </h2>
@@ -171,8 +171,8 @@ const TaskDetail = ({ params }: Props) => {
                   value: "",
                 }}
                 onSelect={(option) => {
-                  const project = projects.find((it) => it.id === option.value);
-                  change({ project });
+                  const project = projects.find((it) => it.id === option.value)
+                  change({ project })
                 }}
               />
               <ErrorMessage message={errorMessages.project} />
@@ -194,8 +194,8 @@ const TaskDetail = ({ params }: Props) => {
                   onSelect={(option) => {
                     const parent = milestones.find(
                       (it) => it.id === option.value,
-                    );
-                    change({ parent });
+                    )
+                    change({ parent })
                   }}
                 />
                 <ErrorMessage message={errorMessages.project} />
@@ -208,7 +208,7 @@ const TaskDetail = ({ params }: Props) => {
               <DateInput
                 value={form.deadline}
                 onChange={(e) => {
-                  change({ deadline: e.target.value });
+                  change({ deadline: e.target.value })
                 }}
               />
               <ErrorMessage message={errorMessages.deadline} />
@@ -220,7 +220,7 @@ const TaskDetail = ({ params }: Props) => {
               <DateInput
                 value={form.startingAt}
                 onChange={(e) => {
-                  change({ startingAt: e.target.value });
+                  change({ startingAt: e.target.value })
                 }}
               />
             </div>
@@ -238,8 +238,8 @@ const TaskDetail = ({ params }: Props) => {
                 onSelect={(option) => {
                   const status = selectableStatus.find(
                     (it) => it === option.value,
-                  );
-                  change({ status });
+                  )
+                  change({ status })
                 }}
               />
             </div>
@@ -252,7 +252,7 @@ const TaskDetail = ({ params }: Props) => {
                 rows={5}
                 placeholder="タスクの説明・メモ"
                 onChange={(e) => {
-                  change({ description: e.target.value });
+                  change({ description: e.target.value })
                 }}
               />
             </div>
@@ -263,18 +263,20 @@ const TaskDetail = ({ params }: Props) => {
             <Button
               variant="primary"
               onClick={() => {
-                submit();
-              }}>
+                submit()
+              }}
+            >
               <span className={styles.buttonText}>更新</span>
             </Button>
             <Button
               variant="secondary"
               onClick={() => {
                 if (!task) {
-                  return;
+                  return
                 }
-                updateFormWith(task);
-              }}>
+                updateFormWith(task)
+              }}
+            >
               <span className={styles.buttonText}>リセット</span>
             </Button>
           </div>
@@ -287,7 +289,7 @@ const TaskDetail = ({ params }: Props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TaskDetail;
+export default TaskDetail

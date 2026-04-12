@@ -1,15 +1,15 @@
-"use client";
-import Button from "@/components/shared/button";
-import UsersLayout from "@/components/users/layout";
-import styles from "./page.module.css";
-import Select from "@/components/shared/select";
-import useProjects from "@/contexts/projects";
-import { useNotice, useUnimplementedPage } from "@/hooks/useNotice";
+"use client"
+import Button from "@/components/shared/button"
+import UsersLayout from "@/components/users/layout"
+import styles from "./page.module.css"
+import Select from "@/components/shared/select"
+import useProjects from "@/contexts/projects"
+import { useNotice, useUnimplementedPage } from "@/hooks/useNotice"
 
 export default function Notification() {
-  const { projects } = useProjects();
-  const { unimplementedFunc } = useNotice();
-  useUnimplementedPage();
+  const { projects } = useProjects()
+  const { unimplementedFunc } = useNotice()
+  useUnimplementedPage()
 
   return (
     <UsersLayout>
@@ -63,5 +63,5 @@ export default function Notification() {
         </div>
       </div>
     </UsersLayout>
-  );
+  )
 }

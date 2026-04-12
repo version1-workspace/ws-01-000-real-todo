@@ -1,28 +1,28 @@
-"use client";
-import { useEffect, useState } from "react";
-import route from "@/lib/route";
-import Card from "@/components/project/card";
-import styles from "./page.module.css";
-import { useProjectsWithoutContext } from "@/contexts/projects";
-import Link from "next/link";
-import Pagination from "@/components/shared/pagination";
-import { useSearchParams } from "next/navigation";
-import {useRouter} from "next/navigation";
+"use client"
+import { useEffect, useState } from "react"
+import route from "@/lib/route"
+import Card from "@/components/project/card"
+import styles from "./page.module.css"
+import { useProjectsWithoutContext } from "@/contexts/projects"
+import Link from "next/link"
+import Pagination from "@/components/shared/pagination"
+import { useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 
 export default function Projects() {
-  const { fetch, data } = useProjectsWithoutContext();
+  const { fetch, data } = useProjectsWithoutContext()
   const router = useRouter()
-  const searchParams = useSearchParams();
-  const page = searchParams.get('page');
-  const [status, setStatus] = useState(["active"]);
+  const searchParams = useSearchParams()
+  const page = searchParams.get("page")
+  const [status, setStatus] = useState(["active"])
 
   useEffect(() => {
     fetch({
       page: Number(page) || 1,
       limit: 10,
       status,
-    });
-  }, [page]);
+    })
+  }, [page])
 
   return (
     <div className={styles.container}>
@@ -42,21 +42,21 @@ export default function Projects() {
                   checked={status.includes("archived")}
                   onChange={() => {
                     if (status.includes("archived")) {
-                      setStatus(["active"]);
+                      setStatus(["active"])
                       fetch({
                         limit: data.pageInfo.limit,
                         page: 1,
                         status: ["active"],
-                      });
-                      return;
+                      })
+                      return
                     }
 
                     fetch({
                       limit: data.pageInfo.limit,
                       page: 1,
                       status: ["active", "archived"],
-                    });
-                    setStatus(["active", "archived"]);
+                    })
+                    setStatus(["active", "archived"])
                   }}
                 />
                 アーカイブを含む
@@ -71,7 +71,7 @@ export default function Projects() {
                     <Card data={it} />
                   </Link>
                 </li>
-              );
+              )
             })}
           </ul>
         </div>
@@ -88,5 +88,5 @@ export default function Projects() {
         </div>
       </div>
     </div>
-  );
+  )
 }

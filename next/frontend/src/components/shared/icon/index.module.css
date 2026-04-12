@@ -17,13 +17,13 @@
 
 .interactivePulse:hover {
   background: #88888810;
-  opacity: 0.9px;
+  opacity: 0.9;
 }
 
 .interactivePulse:active {
   color: #fefefe;
-  background: #8888820;
-  opacity: 0.8px;
+  background: #88888820;
+  opacity: 0.8;
 }
 
 .interactiveHover {

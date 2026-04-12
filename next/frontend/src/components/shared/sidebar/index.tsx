@@ -1,28 +1,28 @@
-"use client";
-import { ReactNode, useMemo, useState } from "react";
-import styles from "@/components/shared/sidebar/index.module.css";
-import { usePathname } from "next/navigation";
+"use client"
+import { ReactNode, useMemo, useState } from "react"
+import styles from "@/components/shared/sidebar/index.module.css"
+import { usePathname } from "next/navigation"
 import {
   IoChevronForward as ShowIcon,
   IoChevronBack as HiddenIcon,
-} from "react-icons/io5";
-import route from "@/lib/route";
-import useProjects from "@/contexts/projects";
-import Icon from "@/components/shared/icon";
-import { Project } from "@/services/api/models/project";
-import Link from "@/components/shared/link";
-import { classHelper } from "@/lib/cls";
-import { truncate } from "@/lib/string";
+} from "react-icons/io5"
+import route from "@/lib/route"
+import useProjects from "@/contexts/projects"
+import Icon from "@/components/shared/icon"
+import { Project } from "@/services/api/models/project"
+import Link from "@/components/shared/link"
+import { classHelper } from "@/lib/cls"
+import { truncate } from "@/lib/string"
 
 interface MenuItem {
-  title: string | ReactNode;
-  path: string;
-  children?: MenuItem[];
-  footer?: ReactNode;
-  options?: Record<string, any>;
+  title: string | ReactNode
+  path: string
+  children?: MenuItem[]
+  footer?: ReactNode
+  options?: Record<string, any>
 }
 
-const projectCountLimit = 5;
+const projectCountLimit = 5
 
 const sidebarMenulist = (projects: Project[]) => [
   {
@@ -51,11 +51,11 @@ const sidebarMenulist = (projects: Project[]) => [
           deadline: it.deadline?.format(),
           color: it.color,
         },
-      };
+      }
     }),
     footer: (function () {
       if (projects.length <= projectCountLimit) {
-        return null;
+        return null
       }
 
       return (
@@ -64,17 +64,17 @@ const sidebarMenulist = (projects: Project[]) => [
             あと {projects.length - projectCountLimit} プロジェクト
           </p>
         </Link>
-      );
+      )
     })(),
   },
-];
+]
 
 export default function Sidebar() {
-  const { projects } = useProjects();
-  const [show, setShow] = useState(true);
-  const pathname = usePathname();
+  const { projects } = useProjects()
+  const [show, setShow] = useState(true)
+  const pathname = usePathname()
 
-  const list = useMemo(() => sidebarMenulist(projects), [projects]);
+  const list = useMemo(() => sidebarMenulist(projects), [projects])
 
   return (
     <div
@@ -82,12 +82,14 @@ export default function Sidebar() {
         [styles.sidebar]: true,
         [styles.sidebarShow]: show,
         [styles.sidebarHidden]: !show,
-      })}>
+      })}
+    >
       <div className={styles.content}>
         <div className={styles.header}>
           <span
             className={styles.sidebarToggle}
-            onClick={() => setShow((show) => !show)}>
+            onClick={() => setShow((show) => !show)}
+          >
             {show ? <HiddenIcon /> : <ShowIcon />}
           </span>
         </div>
@@ -105,13 +107,15 @@ export default function Sidebar() {
                               [styles.menuItem]: true,
                               [styles.menuItemActive]:
                                 pathname === menuItem.path,
-                            })}>
+                            })}
+                          >
                             <p
                               className={classHelper({
                                 [styles.menuTitle]: true,
                                 [styles.menuTitleActive]:
                                   pathname === menuItem.path,
-                              })}>
+                              })}
+                            >
                               {menuItem.title}
                             </p>
                           </div>
@@ -127,7 +131,8 @@ export default function Sidebar() {
                                   [styles.menuItem]: true,
                                   [styles.menuItemActive]:
                                     pathname === item.path,
-                                })}>
+                                })}
+                              >
                                 <Link href={item.path}>
                                   <div className={styles.project}>
                                     <div>
@@ -135,7 +140,8 @@ export default function Sidebar() {
                                         className={styles.dot}
                                         style={{
                                           background: item.options?.color,
-                                        }}></span>
+                                        }}
+                                      ></span>
                                       {typeof item.title === "string"
                                         ? truncate(item.title, 10)
                                         : item.title}
@@ -146,7 +152,7 @@ export default function Sidebar() {
                                   </div>
                                 </Link>
                               </li>
-                            );
+                            )
                           })}
                         </ul>
                       ) : null}
@@ -154,7 +160,7 @@ export default function Sidebar() {
                         {menuItem.footer}
                       </div>
                     </>
-                  );
+                  )
                 })}
               </ul>
             </>
@@ -163,5 +169,5 @@ export default function Sidebar() {
         <div className={styles.footer}></div>
       </div>
     </div>
-  );
+  )
 }

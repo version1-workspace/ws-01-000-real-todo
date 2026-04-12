@@ -1,5 +1,5 @@
-import TaskList from "@/components/tasks/list";
-import styles from "./page.module.css";
+import TaskList from "@/components/tasks/list"
+import styles from "./page.module.css"
 
 export default function Tasks() {
   return (
@@ -11,5 +11,5 @@ export default function Tasks() {
         <TaskList />
       </div>
     </div>
-  );
+  )
 }

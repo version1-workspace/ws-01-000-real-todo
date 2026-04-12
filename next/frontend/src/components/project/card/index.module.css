@@ -42,7 +42,6 @@
   font-weight: bold;
 }
 
-
 .deadline > span {
   display: inline-block;
   margin-right: 8px;
@@ -95,7 +94,8 @@
   align-items: center;
 }
 
-.milestone, .task {
+.milestone,
+.task {
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -115,5 +115,3 @@
   margin-right: 4px;
   margin-left: 8px;
 }
-
-

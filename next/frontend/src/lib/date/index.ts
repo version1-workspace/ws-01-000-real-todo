@@ -1,51 +1,51 @@
-import dayjs from "dayjs";
+import dayjs from "dayjs"
 
 export class AppDate {
-  _raw: Date;
+  _raw: Date
   static in(days: number) {
-    const date = new AppDate();
+    const date = new AppDate()
 
-    return date.add(days);
+    return date.add(days)
   }
 
   static now() {
-    return new AppDate();
+    return new AppDate()
   }
 
   constructor(date?: Date) {
-    this._raw = date || new Date();
+    this._raw = date || new Date()
   }
 
   private get date() {
-    return dayjs(this._raw);
+    return dayjs(this._raw)
   }
 
   add(day: number) {
-    const newDate = this.date.add(day, "day");
+    const newDate = this.date.add(day, "day")
 
-    return new AppDate(newDate.toDate());
+    return new AppDate(newDate.toDate())
   }
 
   toString() {
-    return this.date.format("YYYY-MM-DD");
+    return this.date.format("YYYY-MM-DD")
   }
 }
 
 export class AppDateTime {
-  _raw: Date;
+  _raw: Date
   static now() {
-    new AppDateTime();
+    new AppDateTime()
   }
 
   constructor(date?: Date) {
-    this._raw = date || new Date();
+    this._raw = date || new Date()
   }
 
   private get date() {
-    return dayjs(this._raw);
+    return dayjs(this._raw)
   }
 
   toString() {
-    return this.date.format("YYYY-MM-DD HH:MM:SS");
+    return this.date.format("YYYY-MM-DD HH:MM:SS")
   }
 }

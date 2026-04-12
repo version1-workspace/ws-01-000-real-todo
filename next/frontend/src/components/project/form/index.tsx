@@ -1,31 +1,31 @@
-import styles from "./index.module.css";
-import { useForm } from "@/hooks/useForm";
-import api from "@/services/api";
-import TextInput from "@/components/shared/input/text";
-import DateInput from "@/components/shared/input/date";
-import { Project } from "@/services/api/models/project";
-import { join } from "@/lib/cls";
-import Button from "@/components/shared/button";
-import { useToast } from "@/lib/toast/hook";
-import ErrorMessage from "@/components/shared/errorMessage";
+import styles from "./index.module.css"
+import { useForm } from "@/hooks/useForm"
+import api from "@/services/api"
+import TextInput from "@/components/shared/input/text"
+import DateInput from "@/components/shared/input/date"
+import { Project } from "@/services/api/models/project"
+import { join } from "@/lib/cls"
+import Button from "@/components/shared/button"
+import { useToast } from "@/lib/toast/hook"
+import ErrorMessage from "@/components/shared/errorMessage"
 
 interface Props {
-  title: string;
-  data?: Project;
-  onSubmit: (form: Form) => void;
-  onCancel: () => void;
+  title: string
+  data?: Project
+  onSubmit: (form: Form) => void
+  onCancel: () => void
 }
 
 interface Form {
-  name: string;
-  goal: string;
-  shouldbe: string;
-  slug: string;
-  deadline: string;
+  name: string
+  goal: string
+  shouldbe: string
+  slug: string
+  deadline: string
 }
 
 const Form = ({ title, data, onSubmit, onCancel }: Props) => {
-  const toast = useToast();
+  const toast = useToast()
   const { submit, change, errors, form } = useForm<Form>({
     initialValues: {
       name: data?.name || "",
@@ -36,37 +36,37 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
     },
     validate: (values, { errors }) => {
       if (!values.name) {
-        errors.set("name", "プロジェクト名を設定してください");
+        errors.set("name", "プロジェクト名を設定してください")
       }
 
       if (!values.goal) {
-        errors.set("goal", "ゴールを設定してください");
+        errors.set("goal", "ゴールを設定してください")
       }
 
       if (!values.deadline) {
-        errors.set("deadline", "期限を設定してください");
+        errors.set("deadline", "期限を設定してください")
       }
 
       if (!values.slug) {
-        errors.set("deadline", "スラッグを設定してください");
+        errors.set("deadline", "スラッグを設定してください")
       }
 
-      return errors;
+      return errors
     },
     onSubmit: async (values: Form) => {
       try {
-        await api.updateProject(data?.slug || "", values);
+        await api.updateProject(data?.slug || "", values)
 
-        onSubmit(values);
+        onSubmit(values)
 
-        toast.success("プロジェクトを更新しました。");
+        toast.success("プロジェクトを更新しました。")
       } catch {
-        toast.error("プロジェクトの更新に失敗しました。");
+        toast.error("プロジェクトの更新に失敗しました。")
       }
     },
-  });
+  })
 
-  const errorMessages = errors.object;
+  const errorMessages = errors.object
 
   return (
     <div className={styles.container}>
@@ -85,7 +85,7 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
                 value={form.name}
                 placeholder="プロジェクト名を入力"
                 onChange={(e) => {
-                  change({ name: e.target.value });
+                  change({ name: e.target.value })
                 }}
               />
               <ErrorMessage message={errorMessages.title} />
@@ -99,7 +99,7 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
                 value={form.slug}
                 placeholder="スラッグを入力"
                 onChange={(e) => {
-                  change({ slug: e.target.value });
+                  change({ slug: e.target.value })
                 }}
               />
               <ErrorMessage message={errorMessages.slug} />
@@ -113,7 +113,7 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
                 value={form.goal}
                 placeholder="目標を入力"
                 onChange={(e) => {
-                  change({ goal: e.target.value });
+                  change({ goal: e.target.value })
                 }}
               />
               <ErrorMessage message={errorMessages.goal} />
@@ -127,7 +127,7 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
                 value={form.shouldbe}
                 placeholder="あるべき姿を入力"
                 onChange={(e) => {
-                  change({ shouldbe: e.target.value });
+                  change({ shouldbe: e.target.value })
                 }}
               />
               <ErrorMessage message={errorMessages.goal} />
@@ -139,7 +139,7 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
               <DateInput
                 value={form.deadline}
                 onChange={(e) => {
-                  change({ deadline: e.target.value });
+                  change({ deadline: e.target.value })
                 }}
               />
               <ErrorMessage message={errorMessages.deadline} />
@@ -151,8 +151,9 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
             <Button
               variant="primary"
               onClick={() => {
-                submit();
-              }}>
+                submit()
+              }}
+            >
               <span className={styles.buttonText}>更新</span>
             </Button>
             <Button variant="secondary" onClick={onCancel}>
@@ -162,7 +163,7 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Form;
+export default Form

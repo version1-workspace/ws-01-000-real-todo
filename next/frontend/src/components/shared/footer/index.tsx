@@ -1,5 +1,5 @@
-import styles from "./index.module.scss";
-import Link from "next/link";
+import styles from "./index.module.scss"
+import Link from "next/link"
 
 const footerMenus = [
   {
@@ -53,7 +53,7 @@ const footerMenus = [
       },
     ],
   },
-];
+]
 
 export default function FooterComponent() {
   return (
@@ -71,7 +71,7 @@ export default function FooterComponent() {
           <div className={styles.menu}>
             {footerMenus.map((menu) => {
               if (!menu.list.length) {
-                return;
+                return
               }
 
               return (
@@ -85,11 +85,11 @@ export default function FooterComponent() {
                     ))}
                   </ul>
                 </div>
-              );
+              )
             })}
           </div>
         </div>
       </div>
     </footer>
-  );
+  )
 }

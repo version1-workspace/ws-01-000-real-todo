@@ -1,15 +1,15 @@
-"use client";
-import styles from "./page.module.css";
-import { User } from "@/services/api/models/user";
-import TextInput from "@/components/shared/input/text";
-import Button from "@/components/shared/button";
-import { useForm } from "@/hooks/useForm";
-import UsersLayout from "@/components/users/layout";
-import { useAuth } from "@/components/auth";
-import { useNotice, useUnimplementedPage } from "@/hooks/useNotice";
+"use client"
+import styles from "./page.module.css"
+import { User } from "@/services/api/models/user"
+import TextInput from "@/components/shared/input/text"
+import Button from "@/components/shared/button"
+import { useForm } from "@/hooks/useForm"
+import UsersLayout from "@/components/users/layout"
+import { useAuth } from "@/components/auth"
+import { useNotice, useUnimplementedPage } from "@/hooks/useNotice"
 
 interface PageProps {
-  user: User;
+  user: User
 }
 
 function MailForm({ user }: PageProps) {
@@ -19,12 +19,12 @@ function MailForm({ user }: PageProps) {
       confirmation: "",
     },
     validate: (values, { errors }) => {
-      return errors;
+      return errors
     },
     onSubmit: () => {},
-  });
+  })
 
-  const { unimplementedFunc } = useNotice();
+  const { unimplementedFunc } = useNotice()
 
   return (
     <div className={styles.form}>
@@ -56,15 +56,16 @@ function MailForm({ user }: PageProps) {
           <Button
             variant="primary"
             onClick={() => {
-              unimplementedFunc();
-            }}>
+              unimplementedFunc()
+            }}
+          >
             更新
           </Button>
           <Button onClick={reset}>リセット</Button>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function PasswordForm({ user }: PageProps) {
@@ -74,11 +75,11 @@ function PasswordForm({ user }: PageProps) {
       confirmation: "",
     },
     validate: (values, { errors }) => {
-      return errors;
+      return errors
     },
     onSubmit: () => {},
-  });
-  const { unimplementedFunc } = useNotice();
+  })
+  const { unimplementedFunc } = useNotice()
 
   return (
     <form className={styles.form} autoComplete="off">
@@ -112,23 +113,24 @@ function PasswordForm({ user }: PageProps) {
           <Button
             variant="primary"
             onClick={() => {
-              unimplementedFunc();
-            }}>
+              unimplementedFunc()
+            }}
+          >
             更新
           </Button>
           <Button onClick={reset}>リセット</Button>
         </div>
       </div>
     </form>
-  );
+  )
 }
 
 export default function Auth() {
-  const { user } = useAuth();
-  useUnimplementedPage();
+  const { user } = useAuth()
+  useUnimplementedPage()
 
   if (!user) {
-    return null;
+    return null
   }
 
   return (
@@ -140,5 +142,5 @@ export default function Auth() {
         </div>
       </div>
     </UsersLayout>
-  );
+  )
 }

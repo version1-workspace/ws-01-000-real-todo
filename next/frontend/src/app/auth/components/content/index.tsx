@@ -1,21 +1,21 @@
-"use client";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import styles from "./index.module.scss";
-import Header from "@/components/shared/header/public";
-import Footer from "@/components/shared/footer";
-import LoginForm from "@/components/auth/loginForm";
+"use client"
+import { useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
+import styles from "./index.module.scss"
+import Header from "@/components/shared/header/public"
+import Footer from "@/components/shared/footer"
+import LoginForm from "@/components/auth/loginForm"
 import {
   Login as LoginCover,
   SignUp as SignUpCover,
-} from "@/components/auth/cover";
-import SignUpForm from "@/components/auth/signupForm";
-import Transition from "../transition";
-import { useToast } from "@/lib/toast/hook";
+} from "@/components/auth/cover"
+import SignUpForm from "@/components/auth/signupForm"
+import Transition from "../transition"
+import { useToast } from "@/lib/toast/hook"
 
 interface Props {
-  light?: boolean;
-  initialScene?: Scene;
+  light?: boolean
+  initialScene?: Scene
 }
 
 function SceneContent({
@@ -23,39 +23,39 @@ function SceneContent({
   login,
   signup,
 }: {
-  scene: Scene;
-  login: React.ReactNode;
-  signup: React.ReactNode;
+  scene: Scene
+  login: React.ReactNode
+  signup: React.ReactNode
 }) {
   if (scene === "login") {
-    return login;
+    return login
   }
 
   if (scene === "signup") {
-    return signup;
+    return signup
   }
 
-  return null;
+  return null
 }
 
-type Scene = "login" | "signup" | "transition";
+type Scene = "login" | "signup" | "transition"
 
 const Content = ({ light, initialScene }: Props) => {
-  const searchParams = useSearchParams();
-  const toast = useToast();
-  const [scene, setScene] = useState<Scene>(initialScene || "login");
+  const searchParams = useSearchParams()
+  const toast = useToast()
+  const [scene, setScene] = useState<Scene>(initialScene || "login")
 
-  const position = scene === "login" ? "left" : "right";
+  const position = scene === "login" ? "left" : "right"
 
   useEffect(() => {
-    const error = searchParams.get("error");
+    const error = searchParams.get("error")
     if (error) {
       if (error === "loginRequired") {
         // 開発環境だとトーストが2回表示されるので対策する
-        toast.error("ログインが必要です");
+        toast.error("ログインが必要です")
       }
     }
-  }, [searchParams]);
+  }, [searchParams])
 
   return (
     <>
@@ -79,16 +79,16 @@ const Content = ({ light, initialScene }: Props) => {
                 login={
                   <SignUpCover
                     onSwitch={() => {
-                      setScene("transition");
-                      setTimeout(() => setScene("signup"), 200);
+                      setScene("transition")
+                      setTimeout(() => setScene("signup"), 200)
                     }}
                   />
                 }
                 signup={
                   <LoginCover
                     onSwitch={() => {
-                      setScene("transition");
-                      setTimeout(() => setScene("login"), 200);
+                      setScene("transition")
+                      setTimeout(() => setScene("login"), 200)
                     }}
                   />
                 }
@@ -99,7 +99,7 @@ const Content = ({ light, initialScene }: Props) => {
       </section>
       <Footer />
     </>
-  );
-};
+  )
+}
 
-export default Content;
+export default Content

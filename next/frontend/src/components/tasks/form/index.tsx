@@ -1,53 +1,53 @@
-import styles from "./index.module.css";
-import { useForm } from "@/hooks/useForm";
-import api from "@/services/api";
-import TextInput from "@/components/shared/input/text";
-import DateInput from "@/components/shared/input/date";
-import { Project } from "@/services/api/models/project";
-import { AppDate } from "@/lib/date";
+import styles from "./index.module.css"
+import { useForm } from "@/hooks/useForm"
+import api from "@/services/api"
+import TextInput from "@/components/shared/input/text"
+import DateInput from "@/components/shared/input/date"
+import { Project } from "@/services/api/models/project"
+import { AppDate } from "@/lib/date"
 import {
   selectableStatus,
   statusOptions,
   StatusType,
   Task,
   TaskParams,
-} from "@/services/api/models/task";
-import Select, { OptionItem } from "@/components/shared/select";
-import TextArea from "@/components/shared/input/textarea";
-import { join } from "@/lib/cls";
-import Button from "@/components/shared/button";
-import { useToast } from "@/lib/toast/hook";
-import ErrorMessage from "@/components/shared/errorMessage";
-import useMilestones from "@/hooks/useMilestones";
-import { useEffect } from "react";
-import useProjects from "@/contexts/projects";
+} from "@/services/api/models/task"
+import Select, { OptionItem } from "@/components/shared/select"
+import TextArea from "@/components/shared/input/textarea"
+import { join } from "@/lib/cls"
+import Button from "@/components/shared/button"
+import { useToast } from "@/lib/toast/hook"
+import ErrorMessage from "@/components/shared/errorMessage"
+import useMilestones from "@/hooks/useMilestones"
+import { useEffect } from "react"
+import useProjects from "@/contexts/projects"
 
 interface Props {
-  title: string;
-  data?: Task;
-  onSubmit: () => void;
-  onCancel: () => void;
+  title: string
+  data?: Task
+  onSubmit: () => void
+  onCancel: () => void
 }
 
 interface Form {
-  project?: Project;
-  parent: Task;
-  title: string;
-  description: string;
-  startingAt?: string;
-  deadline: string;
-  status?: StatusType;
-  children: TaskParams[];
+  project?: Project
+  parent: Task
+  title: string
+  description: string
+  startingAt?: string
+  deadline: string
+  status?: StatusType
+  children: TaskParams[]
 }
 
 const Form = ({ title, data, onSubmit, onCancel }: Props) => {
-  const toast = useToast();
-  const { projects, options: projectOptions } = useProjects();
+  const toast = useToast()
+  const { projects, options: projectOptions } = useProjects()
   const {
     fetch: fetchMilestones,
     milestones,
     options: milestoneOptions,
-  } = useMilestones();
+  } = useMilestones()
   const { submit, change, errors, form } = useForm<Form>({
     initialValues: {
       project: data?.project,
@@ -61,42 +61,42 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
     },
     validate: (values, { errors }) => {
       if (!values.project) {
-        errors.set("project", "プロジェクトを設定してください");
+        errors.set("project", "プロジェクトを設定してください")
       }
 
       if (!values.title) {
-        errors.set("title", "タイトルを設定してください");
+        errors.set("title", "タイトルを設定してください")
       }
 
       if (!values.deadline) {
-        errors.set("deadline", "期限を設定してください");
+        errors.set("deadline", "期限を設定してください")
       }
 
-      return errors;
+      return errors
     },
     onSubmit: async (values: Form) => {
-      const { project, ...rest } = values;
+      const { project, ...rest } = values
       try {
         await api.createTask({
           data: { ...rest, projectId: project?.id, kind: "task" },
-        });
+        })
 
-        onSubmit();
+        onSubmit()
 
-        toast.success("タスクを追加しました。");
+        toast.success("タスクを追加しました。")
       } catch {
-        toast.error("タスクの追加に失敗しました。");
+        toast.error("タスクの追加に失敗しました。")
       }
     },
-  });
+  })
 
-  const errorMessages = errors.object;
+  const errorMessages = errors.object
 
   useEffect(() => {
     if (data?.project) {
-      fetchMilestones({ slug: data.project.slug });
+      fetchMilestones({ slug: data.project.slug })
     }
-  }, [data]);
+  }, [data])
 
   return (
     <div className={styles.container}>
@@ -118,10 +118,10 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
                   value: "",
                 }}
                 onSelect={(option) => {
-                  const project = projects.find((it) => it.id === option.value);
-                  change({ project });
+                  const project = projects.find((it) => it.id === option.value)
+                  change({ project })
                   if (project) {
-                    fetchMilestones({ slug: project.slug });
+                    fetchMilestones({ slug: project.slug })
                   }
                 }}
               />
@@ -142,9 +142,9 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
                   onSelect={(option) => {
                     const parent = milestones.find(
                       (it) => it.id === option.value,
-                    );
+                    )
 
-                    change({ parent });
+                    change({ parent })
                   }}
                 />
                 <ErrorMessage message={errorMessages.milestone} />
@@ -159,7 +159,7 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
                 value={form.title}
                 placeholder="タスクを入力。 例)  英会話レッスンの予約、React公式ドキュメントを1ページ読む"
                 onChange={(e) => {
-                  change({ title: e.target.value });
+                  change({ title: e.target.value })
                 }}
               />
               <ErrorMessage message={errorMessages.title} />
@@ -173,7 +173,7 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
                 rows={5}
                 placeholder="タスクの説明・メモ"
                 onChange={(e) => {
-                  change({ description: e.target.value });
+                  change({ description: e.target.value })
                 }}
               />
             </div>
@@ -184,7 +184,7 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
               <DateInput
                 value={form.deadline}
                 onChange={(e) => {
-                  change({ deadline: e.target.value });
+                  change({ deadline: e.target.value })
                 }}
               />
               <ErrorMessage message={errorMessages.deadline} />
@@ -196,7 +196,7 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
               <DateInput
                 value={form.startingAt}
                 onChange={(e) => {
-                  change({ startingAt: e.target.value });
+                  change({ startingAt: e.target.value })
                 }}
               />
             </div>
@@ -214,8 +214,8 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
                 onSelect={(option) => {
                   const status = selectableStatus.find(
                     (it) => it === option.value,
-                  );
-                  change({ status });
+                  )
+                  change({ status })
                 }}
               />
             </div>
@@ -226,8 +226,9 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
             <Button
               variant="primary"
               onClick={() => {
-                submit();
-              }}>
+                submit()
+              }}
+            >
               <span className={styles.buttonText}>
                 {data ? "更新" : "作成"}
               </span>
@@ -239,7 +240,7 @@ const Form = ({ title, data, onSubmit, onCancel }: Props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Form;
+export default Form

@@ -1,20 +1,20 @@
-import Icon from "@/components/shared/icon";
-import route from "@/lib/route";
-import api from "@/services/api";
-import { factory } from "@/services/api/models";
-import { Task, TaskParams } from "@/services/api/models/task";
-import Link from "next/link";
-import { useState } from "react";
-import styles from "./index.module.css";
+import Icon from "@/components/shared/icon"
+import route from "@/lib/route"
+import api from "@/services/api"
+import { factory } from "@/services/api/models"
+import { Task, TaskParams } from "@/services/api/models/task"
+import Link from "next/link"
+import { useState } from "react"
+import styles from "./index.module.css"
 
 export default function Search() {
-  const [text, setText] = useState("");
-  const [show, setShow] = useState(false);
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [text, setText] = useState("")
+  const [show, setShow] = useState(false)
+  const [tasks, setTasks] = useState<Task[]>([])
 
   const search = async (text: string) => {
     if (text.length <= 1) {
-      return;
+      return
     }
 
     const res = await api.fetchTasks({
@@ -23,16 +23,16 @@ export default function Search() {
       sortType: "deadline",
       sortOrder: "asc",
       status: ["scheduled"],
-    });
-    const list = res.data.data.map((it: TaskParams) => factory.task(it));
-    setTasks(list);
-    setShow(true);
-  };
+    })
+    const list = res.data.data.map((it: TaskParams) => factory.task(it))
+    setTasks(list)
+    setShow(true)
+  }
 
   const close = () => {
-    setShow(false);
-    setText("");
-  };
+    setShow(false)
+    setText("")
+  }
 
   return (
     <div className={styles.container}>
@@ -44,9 +44,9 @@ export default function Search() {
           placeholder="タスクタイトルで検索"
           value={text}
           onChange={(e) => {
-            const text = e.target.value;
-            search(text);
-            setText(text);
+            const text = e.target.value
+            search(text)
+            setText(text)
           }}
         />
       </div>
@@ -59,7 +59,8 @@ export default function Search() {
                   <Link
                     href={route.main.tasks.with(task.id)}
                     className={styles.row}
-                    onClick={close}>
+                    onClick={close}
+                  >
                     <div className={styles.task}>
                       <div className={styles.heading}>{task.title}</div>
                       <div className={styles.sub}>
@@ -69,7 +70,7 @@ export default function Search() {
                     </div>
                   </Link>
                 </li>
-              );
+              )
             })}
             {tasks.length === 0 ? (
               <div className={styles.empty}>該当するタスクがありません</div>
@@ -78,5 +79,5 @@ export default function Search() {
         ) : null}
       </div>
     </div>
-  );
+  )
 }

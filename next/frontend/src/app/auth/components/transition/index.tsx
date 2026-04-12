@@ -1,12 +1,12 @@
-import { useMemo } from "react";
-import styles from "./index.module.css";
+import { useMemo } from "react"
+import styles from "./index.module.css"
 
 interface Props {
-  position: "left" | "right";
-  duration: number;
-  transitioning: boolean;
-  on: React.ReactNode;
-  off: React.ReactNode;
+  position: "left" | "right"
+  duration: number
+  transitioning: boolean
+  on: React.ReactNode
+  off: React.ReactNode
 }
 
 const stylesByParams = {
@@ -40,7 +40,7 @@ const stylesByParams = {
       right: 0,
     },
   },
-};
+}
 
 export default function Transition({
   position,
@@ -49,9 +49,9 @@ export default function Transition({
   on,
   off,
 }: Props) {
-  const defaultStyles = stylesByParams.default[position];
-  const onStyles = stylesByParams.on[position];
-  const offStyles = stylesByParams.off[position];
+  const defaultStyles = stylesByParams.default[position]
+  const onStyles = stylesByParams.on[position]
+  const offStyles = stylesByParams.off[position]
   const baseStyles = useMemo(
     () =>
       ({
@@ -62,21 +62,22 @@ export default function Transition({
         ...defaultStyles,
       }) as React.CSSProperties,
     [defaultStyles, duration],
-  );
+  )
   const contentStyles = useMemo(
     () => ({
       transition: `opacity ${duration}ms`,
       opacity: transitioning ? 0 : 1,
     }),
     [duration, transitioning],
-  );
+  )
   return (
     <div className={styles.container}>
       <div
         style={{
           ...baseStyles,
           ...onStyles,
-        }}>
+        }}
+      >
         <div className={styles.content} style={contentStyles}>
           {!transitioning ? on : null}
         </div>
@@ -86,11 +87,12 @@ export default function Transition({
           ...baseStyles,
           ...offStyles,
           background: "var(--primary-color)",
-        }}>
+        }}
+      >
         <div className={styles.content} style={contentStyles}>
           {!transitioning ? off : null}
         </div>
       </div>
     </div>
-  );
+  )
 }

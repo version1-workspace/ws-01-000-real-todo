@@ -1,29 +1,29 @@
-import styles from "./index.module.css";
-import { Task } from "@/services/api/models/task";
+import styles from "./index.module.css"
+import { Task } from "@/services/api/models/task"
 import {
   IoCalendarOutline as Calendar,
   IoCheckmark as Check,
   IoPencil as Edit,
   IoCheckmark as Done,
   IoArchiveOutline as Archive,
-} from "react-icons/io5";
-import Icon from "@/components/shared/icon";
-import { join } from "@/lib/cls";
-import PopupMenu from "@/components/shared/popupMenu";
+} from "react-icons/io5"
+import Icon from "@/components/shared/icon"
+import { join } from "@/lib/cls"
+import PopupMenu from "@/components/shared/popupMenu"
 
 interface Props {
-  data: Task;
-  containerStyle?: { [key: string]: any };
-  onComplete: (task: Task) => void;
-  onReopen: (task: Task) => void;
-  onArchive: (task: Task) => void;
-  onEdit: (task: Task) => void;
+  data: Task
+  containerStyle?: { [key: string]: any }
+  onComplete: (task: Task) => void
+  onReopen: (task: Task) => void
+  onArchive: (task: Task) => void
+  onEdit: (task: Task) => void
 }
 
 interface Actions {
-  onEdit: () => void;
-  onArchive: () => void;
-  onComplete: () => void;
+  onEdit: () => void
+  onArchive: () => void
+  onComplete: () => void
 }
 
 const getActions = ({ onEdit, onComplete, onArchive }: Actions) => [
@@ -46,7 +46,7 @@ const getActions = ({ onEdit, onComplete, onArchive }: Actions) => [
     danger: true,
     onClick: onArchive,
   },
-];
+]
 
 export default function TaskItem({
   containerStyle,
@@ -60,13 +60,14 @@ export default function TaskItem({
     onEdit: () => onEdit(data),
     onComplete: () => onComplete(data),
     onArchive: () => onArchive(data),
-  });
+  })
 
   return (
     <div
       className={styles.container}
       style={containerStyle}
-      onClick={() => onEdit(data)}>
+      onClick={() => onEdit(data)}
+    >
       <div className={styles.left}>
         {data.isCompleted ? (
           <div
@@ -74,11 +75,12 @@ export default function TaskItem({
             onClick={(e) => {
               e.stopPropagation()
               if (!confirm("このタスクを未完了にしますか？")) {
-                return;
+                return
               }
 
-              onReopen(data);
-            }}>
+              onReopen(data)
+            }}
+          >
             <Check />
           </div>
         ) : (
@@ -87,7 +89,8 @@ export default function TaskItem({
             onClick={(e) => {
               e.stopPropagation()
               onComplete(data)
-            }}></div>
+            }}
+          ></div>
         )}
       </div>
       <div className={styles.middle}>
@@ -126,5 +129,5 @@ export default function TaskItem({
         />
       </div>
     </div>
-  );
+  )
 }

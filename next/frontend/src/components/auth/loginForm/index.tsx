@@ -1,64 +1,64 @@
-"use client";
-import { Metadata } from "next";
-import { useRouter } from "next/navigation";
-import styles from "./index.module.css";
-import Input from "@/components/shared/input/text";
-import Button from "@/components/shared/button";
-import ShowIf from "@/components/shared/showIf";
-import { useForm } from "@/hooks/useForm";
-import api, { setUserId } from "@/services/api";
-import { useToast } from "@/lib/toast/hook";
-import Checkbox from "@/components/shared/checkbox";
+"use client"
+import { Metadata } from "next"
+import { useRouter } from "next/navigation"
+import styles from "./index.module.css"
+import Input from "@/components/shared/input/text"
+import Button from "@/components/shared/button"
+import ShowIf from "@/components/shared/showIf"
+import { useForm } from "@/hooks/useForm"
+import api, { setUserId } from "@/services/api"
+import { useToast } from "@/lib/toast/hook"
+import Checkbox from "@/components/shared/checkbox"
 
 export const metadata: Metadata = {
   title: "Turvo | ログイン",
-};
+}
 
 interface Form {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-  authentication?: boolean;
+  email: string
+  password: string
+  rememberMe: boolean
+  authentication?: boolean
 }
 
 const mailFormat =
-  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
 export default function Login() {
-  const router = useRouter();
-  const { error } = useToast();
+  const router = useRouter()
+  const { error } = useToast()
   const { submit, change, errors, form } = useForm<Form>({
     initialValues: { email: "", password: "", rememberMe: false },
     validate: (values, { errors }) => {
       if (!values.email) {
-        errors.set("email", "メールアドレスを入力してください");
+        errors.set("email", "メールアドレスを入力してください")
       }
 
       if (!values.email.match(mailFormat)) {
-        errors.set("email", "メールアドレス形式で入力してください");
+        errors.set("email", "メールアドレス形式で入力してください")
       }
 
       if (!values.password) {
-        errors.set("password", "パスワードを入力してください");
+        errors.set("password", "パスワードを入力してください")
       }
 
-      return errors;
+      return errors
     },
     onSubmit: async (values: Form) => {
       try {
-        const res = await api.authenticate(values);
-        const { data } = res;
-        api.client.setAccessToken(data.accessToken);
-        setUserId(data.uuid);
+        const res = await api.authenticate(values)
+        const { data } = res
+        api.client.setAccessToken(data.accessToken)
+        setUserId(data.uuid)
 
-        router.push("/main");
+        router.push("/main")
       } catch (e) {
-        error("メールアドレスかパスワードに誤りがあります。");
+        error("メールアドレスかパスワードに誤りがあります。")
       }
     },
-  });
+  })
 
-  const errorMessages = errors.object;
+  const errorMessages = errors.object
 
   return (
     <div className={styles.form}>
@@ -76,7 +76,7 @@ export default function Login() {
           placeholder="turbo@example.com"
           inputClassName={styles.input}
           onChange={(e) => {
-            change({ email: e.target.value });
+            change({ email: e.target.value })
           }}
         />
         <ShowIf value={errorMessages.email}>
@@ -90,7 +90,7 @@ export default function Login() {
           placeholder="***********"
           inputClassName={styles.input}
           onChange={(e) => {
-            change({ password: e.target.value });
+            change({ password: e.target.value })
           }}
         />
         <ShowIf value={errorMessages.password}>
@@ -111,5 +111,5 @@ export default function Login() {
         </ShowIf>
       </div>
     </div>
-  );
+  )
 }

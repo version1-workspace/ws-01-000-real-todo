@@ -1,10 +1,10 @@
-import styles from "@/components/project/forms/goal/index.module.css";
-import Goal from "@/components/project/goal";
-import { join } from "@/lib/cls";
-import Project from "@/components/project/forms/project";
+import styles from "@/components/project/forms/goal/index.module.css"
+import Goal from "@/components/project/goal"
+import { join } from "@/lib/cls"
+import Project from "@/components/project/forms/project"
 
 interface Props {
-  className?: string;
+  className?: string
 }
 
 export default function GoalForm({ className }: Props) {
@@ -14,5 +14,5 @@ export default function GoalForm({ className }: Props) {
       <div className={styles.border}></div>
       <Goal />
     </div>
-  );
+  )
 }

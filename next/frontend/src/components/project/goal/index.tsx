@@ -1,22 +1,23 @@
-import dayjs from "dayjs";
-import styles from "./index.module.css";
-import useForm from "@/app/main/projects/new/context";
-import { classHelper } from "@/lib/cls";
+import dayjs from "dayjs"
+import styles from "./index.module.css"
+import useForm from "@/app/main/projects/new/context"
+import { classHelper } from "@/lib/cls"
 
 interface Props {
-  shadow?: boolean;
-  readOnly?: boolean;
+  shadow?: boolean
+  readOnly?: boolean
 }
 
 export default function Goal({ shadow, readOnly }: Props) {
-  const { project, errors, setProject } = useForm();
+  const { project, errors, setProject } = useForm()
 
   return (
     <div
       className={classHelper({
         [styles.container]: true,
         [styles.shadow]: shadow,
-      })}>
+      })}
+    >
       <h3 className={styles.title}>ゴール設定</h3>
       <div className={styles.content}>
         <div className={styles.row}>
@@ -34,7 +35,7 @@ export default function Goal({ shadow, readOnly }: Props) {
                 placeholder="目標 (期限日までに転職する etc...)"
                 value={project.goal}
                 onChange={(e) => {
-                  setProject(project.withGoal(e.target.value)!);
+                  setProject(project.withGoal(e.target.value)!)
                 }}
               />
             )}
@@ -55,7 +56,7 @@ export default function Goal({ shadow, readOnly }: Props) {
                   placeholder="あるべき姿 (目標に向かう上で常に意識すべきこと）"
                   value={project.shouldbe}
                   onChange={(e) => {
-                    setProject(project.withShouldbe(e.target.value)!);
+                    setProject(project.withShouldbe(e.target.value)!)
                   }}
                 />
               )}
@@ -78,7 +79,7 @@ export default function Goal({ shadow, readOnly }: Props) {
                 value={project.deadline.toString()}
                 type="date"
                 onChange={(e) => {
-                  setProject(project.withDeadline(e.target.value)!);
+                  setProject(project.withDeadline(e.target.value)!)
                 }}
               />
             )}
@@ -87,5 +88,5 @@ export default function Goal({ shadow, readOnly }: Props) {
         </div>
       </div>
     </div>
-  );
+  )
 }

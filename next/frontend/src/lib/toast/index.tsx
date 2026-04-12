@@ -1,48 +1,48 @@
-"use client";
-import React, { createContext, useState, useRef } from "react";
+"use client"
+import React, { createContext, useState, useRef } from "react"
 import {
   IoCloseOutline as Close,
   IoCheckmarkCircleOutline as Success,
   IoInformationCircleOutline as Info,
   IoAlertCircleOutline as Error,
-} from "react-icons/io5";
-import { Position } from "./config";
-import { capitalFirstChar } from "./util";
-import styles from "./index.module.css";
+} from "react-icons/io5"
+import { Position } from "./config"
+import { capitalFirstChar } from "./util"
+import styles from "./index.module.css"
 
 interface Config {
-  variant: "info" | "success" | "error";
-  message: string | React.ReactNode;
-  duration?: number;
+  variant: "info" | "success" | "error"
+  message: string | React.ReactNode
+  duration?: number
 }
 
 interface DefaultConfig {
-  position: Position;
-  maxCount?: number;
+  position: Position
+  maxCount?: number
 }
 
 interface Element {
-  id: number;
-  config: Config;
+  id: number
+  config: Config
 }
 
 const icons = {
   info: Info,
   success: Success,
   error: Error,
-};
+}
 
 export const Toast = ({
   config,
   style,
   onClose,
 }: {
-  config: Config;
-  style?: React.CSSProperties;
-  onClose: () => void;
+  config: Config
+  style?: React.CSSProperties
+  onClose: () => void
 }) => {
-  const variantStyle = styles[config.variant];
-  const Icon = icons[config.variant];
+  const variantStyle = styles[config.variant]
+  const Icon = icons[config.variant]
 
   return (
     <div className={[styles.container, variantStyle].join(" ")} style={style}>
@@ -58,75 +58,75 @@ export const Toast = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export const ToastContext = createContext({
   push: (_config: Config) => -100 as number,
   remove: (_id: number) => {},
-});
+})
 
 export const ToastContainer = ({
   config: defaultConfig,
   children,
 }: {
-  config: DefaultConfig;
-  children: React.ReactNode;
+  config: DefaultConfig
+  children: React.ReactNode
 }) => {
-  const [noticeList, setNoticeList] = useState<Element[]>([]);
+  const [noticeList, setNoticeList] = useState<Element[]>([])
   const ref = useRef({
     id: 0,
     notices: {} as { [key: string]: Element },
-  });
+  })
 
   const push = (config: Config) => {
-    const { notices } = ref.current;
-    const id = ref.current.id + 10;
+    const { notices } = ref.current
+    const id = ref.current.id + 10
     const newNotices: { [key: string]: Element } = {
       ...notices,
       [id]: {
         id,
         config,
       },
-    };
+    }
 
-    const maxCount = defaultConfig.maxCount || 10;
-    const keys = Object.keys(newNotices);
+    const maxCount = defaultConfig.maxCount || 10
+    const keys = Object.keys(newNotices)
     if (keys.length > maxCount) {
       keys
         .slice(0, keys.length - maxCount)
-        .forEach((key) => delete newNotices[key]);
+        .forEach((key) => delete newNotices[key])
     }
 
     ref.current = {
       id,
       notices: newNotices,
-    };
+    }
 
-    setNoticeList(Object.values(newNotices));
-    scrollTo(0, 0);
+    setNoticeList(Object.values(newNotices))
+    scrollTo(0, 0)
 
-    return id;
-  };
+    return id
+  }
 
   const remove = (id: number) => {
-    const { notices } = ref.current;
-    const newNotices = structuredClone(notices);
-    delete newNotices[id];
+    const { notices } = ref.current
+    const newNotices = structuredClone(notices)
+    delete newNotices[id]
     ref.current = {
       id: ref.current.id + 10,
       notices: newNotices,
-    };
+    }
 
-    setNoticeList(Object.values(newNotices));
-  };
+    setNoticeList(Object.values(newNotices))
+  }
 
   const positionStyle =
-    styles[`position${capitalFirstChar(defaultConfig.position)}`];
+    styles[`position${capitalFirstChar(defaultConfig.position)}`]
 
   const list = defaultConfig.position.startsWith("top")
     ? Object.values(noticeList).reverse()
-    : Object.values(noticeList);
+    : Object.values(noticeList)
 
   return (
     <ToastContext.Provider value={{ push, remove }}>
@@ -137,16 +137,16 @@ export const ToastContainer = ({
         remove={remove}
       />
     </ToastContext.Provider>
-  );
-};
+  )
+}
 
 type ToastListProps = {
-  list: Element[];
-  positionStyle: string;
-  remove: (id: number) => void;
-};
+  list: Element[]
+  positionStyle: string
+  remove: (id: number) => void
+}
 
-const MemoizedToastList = React.memo(ToastList);
+const MemoizedToastList = React.memo(ToastList)
 
 function ToastList({ list, positionStyle, remove }: ToastListProps) {
   return (
@@ -156,8 +156,8 @@ function ToastList({ list, positionStyle, remove }: ToastListProps) {
           <li key={item.id}>
             <Toast config={item.config} onClose={() => remove(item.id)} />
           </li>
-        );
+        )
       })}
     </ul>
-  );
+  )
 }

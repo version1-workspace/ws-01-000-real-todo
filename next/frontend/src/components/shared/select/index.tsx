@@ -1,20 +1,20 @@
-import { useEffect, useRef, useState } from "react";
-import styles from "@/components/shared/select/index.module.css";
-import { classHelper, join } from "@/lib/cls";
-import Icon from "../icon";
+import { useEffect, useRef, useState } from "react"
+import styles from "@/components/shared/select/index.module.css"
+import { classHelper, join } from "@/lib/cls"
+import Icon from "../icon"
 
 interface Props {
-  data: OptionItem[];
-  value?: string;
-  defaultOption: OptionItem;
-  onSelect?: (item: OptionItem) => void;
-  containerStyleClass?: string;
-  flat?: boolean;
+  data: OptionItem[]
+  value?: string
+  defaultOption: OptionItem
+  onSelect?: (item: OptionItem) => void
+  containerStyleClass?: string
+  flat?: boolean
 }
 
 export interface OptionItem {
-  label: string | React.ReactNode;
-  value: string;
+  label: string | React.ReactNode
+  value: string
 }
 
 export default function Select({
@@ -25,42 +25,44 @@ export default function Select({
   containerStyleClass,
   flat,
 }: Props) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
 
   useEffect(() => {
     const close = (e: MouseEvent) => {
       if (!open) {
-        return;
+        return
       }
 
       if (
         ref.current &&
         (ref.current as HTMLElement).contains(e.target as Node)
       ) {
-        return;
+        return
       }
-      setOpen(false);
-    };
-    document.addEventListener("click", close);
+      setOpen(false)
+    }
+    document.addEventListener("click", close)
 
     return () => {
-      document.removeEventListener("click", close);
-    };
-  }, [open]);
+      document.removeEventListener("click", close)
+    }
+  }, [open])
 
-  const valueItem = data.find((it) => it.value === value);
+  const valueItem = data.find((it) => it.value === value)
 
   return (
     <div
       ref={ref}
       className={join(styles.container, containerStyleClass)}
-      onClick={() => setOpen((open) => !open)}>
+      onClick={() => setOpen((open) => !open)}
+    >
       <div
         className={classHelper({
           [styles.valueContainer]: true,
           [styles.flatValueContainer]: flat,
-        })}>
+        })}
+      >
         <p className={styles.value}>
           {valueItem?.label || defaultOption.label}
         </p>
@@ -70,7 +72,8 @@ export default function Select({
         className={classHelper({
           [styles.pullDownContainer]: true,
           [styles.pullDownShow]: open,
-        })}>
+        })}
+      >
         <ul className={styles.pullDown}>
           {data.map((item) => {
             return (
@@ -79,18 +82,19 @@ export default function Select({
                 className={styles.option}
                 value={item.value}
                 onClick={(e) => {
-                  e.stopPropagation();
-                  setOpen(false);
+                  e.stopPropagation()
+                  setOpen(false)
                   if (onSelect) {
-                    onSelect(item);
+                    onSelect(item)
                   }
-                }}>
+                }}
+              >
                 {item.label}
               </li>
-            );
+            )
           })}
         </ul>
       </div>
     </div>
-  );
+  )
 }

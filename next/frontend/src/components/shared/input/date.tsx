@@ -1,15 +1,15 @@
-import { join } from "@/lib/cls";
-import { ChangeEvent, ForwardedRef, forwardRef } from "react";
-import styles from "./date.module.css";
+import { join } from "@/lib/cls"
+import { ChangeEvent, ForwardedRef, forwardRef } from "react"
+import styles from "./date.module.css"
 
 interface Props {
-  value?: string;
-  placeholder?: string;
-  max?: string;
-  min?: string;
-  containerClassName?: string;
-  inputClassName?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  value?: string
+  placeholder?: string
+  max?: string
+  min?: string
+  containerClassName?: string
+  inputClassName?: string
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 export default forwardRef(function DateInput(
@@ -24,7 +24,7 @@ export default forwardRef(function DateInput(
   }: Props,
   ref: ForwardedRef<HTMLInputElement>,
 ) {
-  const _value = (value?.toString() || "").replaceAll("/", "-");
+  const _value = (value?.toString() || "").replaceAll("/", "-")
   return (
     <div className={join(styles.container, containerClassName)}>
       <input
@@ -38,5 +38,5 @@ export default forwardRef(function DateInput(
         onChange={onChange}
       />
     </div>
-  );
-});
+  )
+})

@@ -1,49 +1,47 @@
-import dayjs from "dayjs";
+import dayjs from "dayjs"
 
 export const StatsType = {
   todo: "todo",
   completed: "completed",
-};
+}
 
 export interface StatsParams {
-  label: string;
-  type: keyof typeof StatsType;
-  data: Data[];
+  label: string
+  type: keyof typeof StatsType
+  data: Data[]
 }
 
 interface Data {
-  date: number;
-  value: number;
+  date: number
+  value: number
 }
 
 export class StatsModel {
-  readonly _raw: StatsParams;
+  readonly _raw: StatsParams
 
   constructor(params: StatsParams) {
-    this._raw = params;
+    this._raw = params
   }
 
   labels(unit: string) {
     if (!this._raw) {
-      return [];
+      return []
     }
 
-    const dataset = this._raw;
+    const dataset = this._raw
     switch (unit) {
       case "year":
-        return dataset.data.map((item) => dayjs(item.date).format("YYYY"));
+        return dataset.data.map((item) => dayjs(item.date).format("YYYY"))
       case "month":
-        return dataset.data.map((item) => dayjs(item.date).format("YYYY / MM"));
+        return dataset.data.map((item) => dayjs(item.date).format("YYYY / MM"))
       case "week":
         return dataset.data.map(
           (item) => dayjs(item.date).format("MM-DD") + " ~ ",
-        );
+        )
       case "day":
-        return dataset.data.map((item) => dayjs(item.date).format("M / DD"));
+        return dataset.data.map((item) => dayjs(item.date).format("M / DD"))
       default:
-        return dataset.data.map((item) =>
-          dayjs(item.date).format("YYYY-MM-DD"),
-        );
+        return dataset.data.map((item) => dayjs(item.date).format("YYYY-MM-DD"))
     }
   }
 }
@@ -59,11 +57,11 @@ const chartOptions = {
     backgroundColor: "#8fe3c740",
     stack: "stack-0",
   },
-};
+}
 
 export const dataset = (data: Stats[], unit: string) => {
   if (data.length === 0) {
-    return [];
+    return []
   }
 
   return {
@@ -72,10 +70,10 @@ export const dataset = (data: Stats[], unit: string) => {
       return {
         label: item.label,
         data: item.data.map((it) => it.value),
-        ...chartOptions[item.type]
-      };
+        ...chartOptions[item.type],
+      }
     }),
-  };
-};
+  }
+}
 
-export type Stats = StatsParams & StatsModel;
+export type Stats = StatsParams & StatsModel

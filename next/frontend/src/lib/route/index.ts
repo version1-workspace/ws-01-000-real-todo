@@ -1,47 +1,47 @@
 interface Config {
-  path: string;
+  path: string
 }
 
 interface Functions {
-  toString: () => string;
-  with: (path: string) => string;
+  toString: () => string
+  with: (path: string) => string
 }
-type RouteNodeValue = Config & RouteNode & Functions;
+type RouteNodeValue = Config & RouteNode & Functions
 
 interface RouteNode {
-  [key: string]: RouteNodeValue;
+  [key: string]: RouteNodeValue
 }
 
 const handler = {
   get: (target: RouteNode, prop: string): RouteNode => {
     if (prop in target) {
-      return target[prop as keyof { config: Config }] as RouteNode;
+      return target[prop as keyof { config: Config }] as RouteNode
     }
 
-    const config = target.config as Config;
+    const config = target.config as Config
 
     const route: any = {
       config: {
         path: config.path,
       },
-    };
+    }
     route.with = (path: string) => {
       if (route.config.path.slice(-1) === "/") {
-        return route.config.path + path;
+        return route.config.path + path
       }
-      return route.config.path + "/" + path;
-    };
-    route.config.path = route.with(prop);
+      return route.config.path + "/" + path
+    }
+    route.config.path = route.with(prop)
     route.toString = () => {
-      return route.config.path;
-    };
+      return route.config.path
+    }
 
-    return new Proxy(route, handler);
+    return new Proxy(route, handler)
   },
-};
+}
 
-const root = { config: { path: "" } } as any;
+const root = { config: { path: "" } } as any
 
-const route = new Proxy(root, handler);
+const route = new Proxy(root, handler)
 
-export default route as RouteNode;
+export default route as RouteNode

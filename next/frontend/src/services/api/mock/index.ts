@@ -1,14 +1,14 @@
-import { factory } from "@/services/api/models";
-import dayjs from "dayjs";
-import { Pagination } from "@/services/api/models/pagination";
-import { Task } from "@/services/api/models/task";
+import { factory } from "@/services/api/models"
+import dayjs from "dayjs"
+import { Pagination } from "@/services/api/models/pagination"
+import { Task } from "@/services/api/models/task"
 
 const mockApi = <T>({ data }: { data: T }) => {
   return {
     data,
     status: 200,
-  };
-};
+  }
+}
 
 const fetchProjects = () => {
   return Promise.resolve(
@@ -94,8 +94,8 @@ const fetchProjects = () => {
         }),
       ],
     }),
-  );
-};
+  )
+}
 
 const fetchStats = () => {
   return Promise.resolve(
@@ -171,17 +171,17 @@ const fetchStats = () => {
         }),
       ],
     }),
-  );
-};
+  )
+}
 
 interface FetchTasksParams {
-  page?: number;
+  page?: number
 }
 
 export const fetchTasks = ({ page }: FetchTasksParams) => {
-  const total = 100;
-  const _page = page || 1;
-  const per = 10;
+  const total = 100
+  const _page = page || 1
+  const per = 10
   const _data = new Array(total)
     .fill("")
     .map((_, index) =>
@@ -223,7 +223,7 @@ export const fetchTasks = ({ page }: FetchTasksParams) => {
         },
       }),
     )
-    .slice((_page - 1) * per, _page * per);
+    .slice((_page - 1) * per, _page * per)
   const pagination = new Pagination<Task>({
     list: _data,
     pageInfo: {
@@ -231,17 +231,17 @@ export const fetchTasks = ({ page }: FetchTasksParams) => {
       limit: per,
       totalCount: total,
       hasNext: false,
-      hasPrevious: false
+      hasPrevious: false,
     },
-  });
+  })
 
-  return Promise.resolve(mockApi({ data: pagination }));
-};
+  return Promise.resolve(mockApi({ data: pagination }))
+}
 
 const api = {
   fetchProjects,
   fetchStats,
   fetchTasks,
-};
+}
 
-export default api;
+export default api

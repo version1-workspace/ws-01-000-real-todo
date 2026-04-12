@@ -1,13 +1,13 @@
-import styles from "./index.module.css";
-import { classHelper } from "@/lib/cls";
-import Icon from "@/components/shared/icon";
+import styles from "./index.module.css"
+import { classHelper } from "@/lib/cls"
+import Icon from "@/components/shared/icon"
 
 interface Props {
-  page: number;
-  pageCount: number;
-  hasNext?: boolean;
-  hasPrevious?: boolean;
-  onFetch?: (page: number) => void;
+  page: number
+  pageCount: number
+  hasNext?: boolean
+  hasPrevious?: boolean
+  onFetch?: (page: number) => void
 }
 
 export default function Pagination({
@@ -23,13 +23,14 @@ export default function Pagination({
         className={styles.page}
         onClick={() => {
           if (!hasPrevious) {
-            return;
+            return
           }
 
           if (onFetch) {
-            onFetch(page - 1);
+            onFetch(page - 1)
           }
-        }}>
+        }}
+      >
         <Icon name="back" />
       </li>
       {new Array(pageCount || 0).fill("").map((_, index) => {
@@ -42,30 +43,32 @@ export default function Pagination({
             key={`pagination-${index}`}
             onClick={() => {
               if (index + 1 === page) {
-                return;
+                return
               }
 
               if (onFetch) {
-                onFetch(index + 1);
+                onFetch(index + 1)
               }
-            }}>
+            }}
+          >
             {index + 1}
           </li>
-        );
+        )
       })}
       <li
         className={styles.page}
         onClick={() => {
           if (!hasNext) {
-            return;
+            return
           }
 
           if (onFetch) {
-            onFetch(page + 1);
+            onFetch(page + 1)
           }
-        }}>
+        }}
+      >
         <Icon name="forward" />
       </li>
     </ul>
-  );
+  )
 }

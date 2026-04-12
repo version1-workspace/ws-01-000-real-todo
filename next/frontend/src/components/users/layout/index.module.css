@@ -41,10 +41,8 @@
 }
 
 .subMenu {
-
 }
 
 .activeMenu {
   background: var(--hover-color);
 }
-

@@ -1,5 +1,5 @@
-import styles from "./index.module.css";
-import { IoCheckmarkCircle as Check } from "react-icons/io5";
+import styles from "./index.module.css"
+import { IoCheckmarkCircle as Check } from "react-icons/io5"
 
 export default function Complete() {
   return (
@@ -13,5 +13,5 @@ export default function Complete() {
         <p>プロジェクトページからさらに詳細を決めましょう。</p>
       </div>
     </div>
-  );
+  )
 }

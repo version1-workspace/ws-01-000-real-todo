@@ -1,9 +1,10 @@
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
-    'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
-    'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
+  --font-mono:
+    ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
+    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
   --popup-bg-color: #fefefe;
   --background-color: #fefefe;
@@ -12,10 +13,10 @@
 
   --primary-color: #42b883;
   --primary-color-darker: #0d864f;
-  --secondary-color: #1C3041;
-  --info-color: #9ED8DB;
+  --secondary-color: #1c3041;
+  --info-color: #9ed8db;
   --danger-color: #d64045;
-  --warn-color: #F9A03F;
+  --warn-color: #f9a03f;
   --success-color: #66bda6;
 
   --overlay-color: #22222220;
@@ -36,7 +37,6 @@
 
   /* shadow */
   --button-shadow: #22222220;
-
 
   /* z-index */
   --z-index-modal: 10;
@@ -96,12 +96,15 @@ body {
   background: var(--background-color);
 }
 
-input, textarea {
+input,
+textarea {
   color: var(--font-color-dark);
   background: var(--background-color);
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus,
+textarea:focus,
+select:focus {
   outline: none;
 }
 

@@ -1,33 +1,33 @@
-"use client";
-import { useState } from "react";
-import styles from "@/app/main/projects/new/page.module.css";
-import Button from "@/components/shared/button";
-import { Project } from "@/services/api/models/project";
-import { factory } from "@/services/api/models";
-import GoalForm from "@/components/project/forms/goal";
-import MilestoneForm from "@/components/project/forms/milestone";
-import ConfirmForm from "@/components/project/forms/confirm";
-import CompleteForm from "@/components/project/forms/complete";
-import Validator, { Errors } from "@/models/validator";
-import { FormContext } from "./context";
-import { AppDate } from "@/lib/date";
-import api from "@/services/api";
-import route from "@/lib/route";
-import { useRouter } from "next/navigation";
-import { useToast } from "@/lib/toast/hook";
-import Icon from "@/components/shared/icon";
+"use client"
+import { useState } from "react"
+import styles from "@/app/main/projects/new/page.module.css"
+import Button from "@/components/shared/button"
+import { Project } from "@/services/api/models/project"
+import { factory } from "@/services/api/models"
+import GoalForm from "@/components/project/forms/goal"
+import MilestoneForm from "@/components/project/forms/milestone"
+import ConfirmForm from "@/components/project/forms/confirm"
+import CompleteForm from "@/components/project/forms/complete"
+import Validator, { Errors } from "@/models/validator"
+import { FormContext } from "./context"
+import { AppDate } from "@/lib/date"
+import api from "@/services/api"
+import route from "@/lib/route"
+import { useRouter } from "next/navigation"
+import { useToast } from "@/lib/toast/hook"
+import Icon from "@/components/shared/icon"
 
 interface StepParams {
-  label: string;
-  skippable?: boolean;
+  label: string
+  skippable?: boolean
 }
 
 interface Router {
-  push: (path: string) => void;
+  push: (path: string) => void
 }
 
 interface Toast {
-  error: (msg: string) => void;
+  error: (msg: string) => void
 }
 
 const buildSteps = (router: Router, toast: Toast) => [
@@ -55,9 +55,9 @@ const buildSteps = (router: Router, toast: Toast) => [
           label: "期限日",
           validator: ["required", "date"],
         },
-      });
+      })
 
-      return validator.validate(project);
+      return validator.validate(project)
     },
   },
   {
@@ -80,14 +80,14 @@ const buildSteps = (router: Router, toast: Toast) => [
             return {
               title: it.title,
               deadline: it.deadline?.forHtml || "",
-            };
+            }
           }),
-        });
-        return true;
+        })
+        return true
       } catch (e) {
-        console.error(e);
-        toast.error("プロジェクトの追加に失敗しました。");
-        return false;
+        console.error(e)
+        toast.error("プロジェクトの追加に失敗しました。")
+        return false
       }
     },
   },
@@ -96,14 +96,14 @@ const buildSteps = (router: Router, toast: Toast) => [
     preventBack: true,
     submitLabel: "プロジェクト詳細へ",
     onNext: async (project: Project) => {
-      router.push(route.main.projects.with(project.slug));
+      router.push(route.main.projects.with(project.slug))
     },
   },
-];
+]
 
 interface StepsProps {
-  index: number;
-  steps: StepParams[];
+  index: number
+  steps: StepParams[]
 }
 
 function Steps({ index, steps }: StepsProps) {
@@ -130,16 +130,16 @@ function Steps({ index, steps }: StepsProps) {
         </ul>
       </div>
     </div>
-  );
+  )
 }
 
-const now = AppDate.now();
+const now = AppDate.now()
 
 export default function ProjectsNew() {
-  const router = useRouter();
-  const toast = useToast();
-  const [index, setIndex] = useState(0);
-  const [errors, setErrors] = useState<undefined | Errors>();
+  const router = useRouter()
+  const toast = useToast()
+  const [index, setIndex] = useState(0)
+  const [errors, setErrors] = useState<undefined | Errors>()
   const [project, setProject] = useState<Project>(
     factory.project({
       name: "",
@@ -154,14 +154,15 @@ export default function ProjectsNew() {
       createdAt: now.toString(),
       updatedAt: now.toString(),
     }),
-  );
+  )
 
-  const steps = buildSteps(router, toast);
-  const step = steps[index];
+  const steps = buildSteps(router, toast)
+  const step = steps[index]
 
   return (
     <FormContext.Provider
-      value={{ project, errors, mutations: { setProject, setErrors } }}>
+      value={{ project, errors, mutations: { setProject, setErrors } }}
+    >
       <div className={styles.container}>
         <div className={styles.content}>
           <div className={styles.header}>
@@ -208,20 +209,21 @@ export default function ProjectsNew() {
                   variant="primary"
                   onClick={async () => {
                     if (step.validation) {
-                      const validator = step.validation(project);
+                      const validator = step.validation(project)
 
                       if (!validator.valid) {
-                        setErrors(validator.errors);
-                        return;
+                        setErrors(validator.errors)
+                        return
                       }
                     }
 
-                    setErrors(undefined);
-                    const success = await step.onNext?.(project);
+                    setErrors(undefined)
+                    const success = await step.onNext?.(project)
                     if ((!step.onNext || success) && index < steps.length - 1) {
-                      setIndex((index) => index + 1);
+                      setIndex((index) => index + 1)
                     }
-                  }}>
+                  }}
+                >
                   <div className={styles.nextContent}>
                     {step.submitLabel ? step.submitLabel : "次へ"}
                     <Icon name="arrowForward" />
@@ -233,5 +235,5 @@ export default function ProjectsNew() {
         </div>
       </div>
     </FormContext.Provider>
-  );
+  )
 }

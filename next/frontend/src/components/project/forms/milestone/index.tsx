@@ -1,25 +1,25 @@
-"use client";
-import styles from "@/components/project/forms/milestone/index.module.css";
-import dayjs from "dayjs";
-import { useState } from "react";
-import useForm from "@/app/main/projects/new/context";
-import { Task } from "@/services/api/models/task";
-import Goal from "@/components/project/goal";
-import Item from "@/components/project/forms/milestone/item";
-import { classHelper, join } from "@/lib/cls";
-import { IoAddOutline as Add } from "react-icons/io5";
-import { factory } from "@/services/api/models";
+"use client"
+import styles from "@/components/project/forms/milestone/index.module.css"
+import dayjs from "dayjs"
+import { useState } from "react"
+import useForm from "@/app/main/projects/new/context"
+import { Task } from "@/services/api/models/task"
+import Goal from "@/components/project/goal"
+import Item from "@/components/project/forms/milestone/item"
+import { classHelper, join } from "@/lib/cls"
+import { IoAddOutline as Add } from "react-icons/io5"
+import { factory } from "@/services/api/models"
 
 interface Props {
-  readOnly?: boolean;
-  className?: string;
+  readOnly?: boolean
+  className?: string
 }
 
 export default function Milestone({ className, readOnly }: Props) {
-  const { project, setProject } = useForm();
-  const [milestone, setMilestone] = useState<Task | undefined>(undefined);
+  const { project, setProject } = useForm()
+  const [milestone, setMilestone] = useState<Task | undefined>(undefined)
 
-  const milestones = [...project.milestones, ...(milestone ? [milestone] : [])];
+  const milestones = [...project.milestones, ...(milestone ? [milestone] : [])]
 
   return (
     <div className={join(styles.container, className)}>
@@ -43,21 +43,21 @@ export default function Milestone({ className, readOnly }: Props) {
                 }
                 onSave={(task: Task) => {
                   if (task.isPersist) {
-                    setProject(project.setMilestone(index, task)!);
+                    setProject(project.setMilestone(index, task)!)
                   } else {
-                    setProject(project.addMilestone(task.scheduled()));
-                    setMilestone(undefined);
+                    setProject(project.addMilestone(task.scheduled()))
+                    setMilestone(undefined)
                   }
                 }}
                 onRemove={() => {
                   if (item.isPersist) {
-                    setProject(project.removeMilestone(index));
+                    setProject(project.removeMilestone(index))
                   } else {
-                    setMilestone(undefined);
+                    setMilestone(undefined)
                   }
                 }}
               />
-            );
+            )
           })}
           {!readOnly ? (
             <div className={styles.add}>
@@ -77,10 +77,11 @@ export default function Milestone({ className, readOnly }: Props) {
                         deadline: dayjs().format("YYYY-MM-DD"),
                         project: project.params()!,
                         children: [],
-                      });
+                      })
 
-                      setMilestone(milestone);
-                    }}>
+                      setMilestone(milestone)
+                    }}
+                  >
                     <Add />
                   </div>
                 ) : null}
@@ -91,12 +92,13 @@ export default function Milestone({ className, readOnly }: Props) {
             className={classHelper({
               [styles.current]: true,
               [styles.withoutMilestone]: !milestones.length,
-            })}>
+            })}
+          >
             <div className={styles.circle}></div>
             <p className={styles.date}>今日 ({dayjs().format("YYYY-MM-DD")})</p>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }

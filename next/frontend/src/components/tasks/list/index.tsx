@@ -1,28 +1,28 @@
-"use client";
-import { ReactNode, useEffect } from "react";
-import styles from "./index.module.css";
-import useFilter from "@/components/tasks/list/hooks/useFilter";
-import useTasks from "@/contexts/tasks";
-import TaskTable from "../table";
-import Pagination from "@/components/shared/pagination";
-import { CheckContainer } from "@/contexts/check";
-import TaskListHeader from "./header";
+"use client"
+import { ReactNode, useEffect } from "react"
+import styles from "./index.module.css"
+import useFilter from "@/components/tasks/list/hooks/useFilter"
+import useTasks from "@/contexts/tasks"
+import TaskTable from "../table"
+import Pagination from "@/components/shared/pagination"
+import { CheckContainer } from "@/contexts/check"
+import TaskListHeader from "./header"
 
 interface Props {
-  header?: ReactNode;
-  footer?: ReactNode;
+  header?: ReactNode
+  footer?: ReactNode
 }
 
 export default function TaskList({ header, footer }: Props) {
-  const { data, fetch } = useTasks();
-  const filter = useFilter();
+  const { data, fetch } = useTasks()
+  const filter = useFilter()
 
   useEffect(() => {
-    fetch(filter.replica);
-  }, [filter.replica]);
+    fetch(filter.replica)
+  }, [filter.replica])
 
   if (!data) {
-    return null;
+    return null
   }
 
   return (
@@ -38,14 +38,14 @@ export default function TaskList({ header, footer }: Props) {
               hasNext={data.hasNext}
               hasPrevious={data.hasPrevious}
               onFetch={(page) => {
-                const newReplica = { ...filter.replica, page };
-                filter.save(newReplica);
-                fetch(newReplica);
+                const newReplica = { ...filter.replica, page }
+                filter.save(newReplica)
+                fetch(newReplica)
               }}
             />
           </div>
         )}
       </div>
     </CheckContainer>
-  );
+  )
 }

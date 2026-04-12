@@ -1,11 +1,11 @@
-import styles from "./index.module.css";
-import { User } from "@/services/api/models/user";
-import TextInput from "@/components/shared/input/text";
-import Button from "@/components/shared/button";
-import { useForm } from "@/hooks/useForm";
+import styles from "./index.module.css"
+import { User } from "@/services/api/models/user"
+import TextInput from "@/components/shared/input/text"
+import Button from "@/components/shared/button"
+import { useForm } from "@/hooks/useForm"
 
 interface PageProps {
-  user: User;
+  user: User
 }
 
 function MailForm({ user }: PageProps) {
@@ -15,10 +15,10 @@ function MailForm({ user }: PageProps) {
       confirmation: "",
     },
     validate: (values, { errors }) => {
-      return errors;
+      return errors
     },
     onSubmit: () => {},
-  });
+  })
 
   return (
     <div className={styles.form}>
@@ -52,7 +52,7 @@ function MailForm({ user }: PageProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function PasswordForm({ user }: PageProps) {
@@ -62,10 +62,10 @@ function PasswordForm({ user }: PageProps) {
       confirmation: "",
     },
     validate: (values, { errors }) => {
-      return errors;
+      return errors
     },
     onSubmit: () => {},
-  });
+  })
 
   return (
     <form className={styles.form} autoComplete="off">
@@ -101,7 +101,7 @@ function PasswordForm({ user }: PageProps) {
         </div>
       </div>
     </form>
-  );
+  )
 }
 
 export default function Auth({ user }: PageProps) {
@@ -112,5 +112,5 @@ export default function Auth({ user }: PageProps) {
         <PasswordForm user={user} />
       </div>
     </div>
-  );
+  )
 }

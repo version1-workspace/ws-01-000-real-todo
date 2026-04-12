@@ -1,11 +1,11 @@
-import { ChangeEvent } from "react";
-import styles from "./textarea.module.css";
+import { ChangeEvent } from "react"
+import styles from "./textarea.module.css"
 
 interface Props {
-  value: string;
-  placeholder?: string;
-  rows?: number;
-  onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  value: string
+  placeholder?: string
+  rows?: number
+  onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void
 }
 
 export default function TextArea({
@@ -24,5 +24,5 @@ export default function TextArea({
         onChange={onChange}
       />
     </div>
-  );
+  )
 }

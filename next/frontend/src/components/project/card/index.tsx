@@ -1,13 +1,13 @@
-import styles from "@/components/project/card/index.module.css";
-import { Project } from "@/services/api/models/project";
+import styles from "@/components/project/card/index.module.css"
+import { Project } from "@/services/api/models/project"
 import {
   IoCalendarClear as Calendar,
   IoGitCommit as Milestone,
   IoDocument as Task,
-} from "react-icons/io5";
+} from "react-icons/io5"
 
 interface Props {
-  data: Project;
+  data: Project
 }
 
 export default function Projet({ data }: Props) {
@@ -17,7 +17,8 @@ export default function Projet({ data }: Props) {
       className={styles.card}
       style={{
         borderLeft: `5px solid ${data.color}`,
-      }}>
+      }}
+    >
       <div className={styles.header}>
         <h2 className={styles.title} style={{ color: data.color }}>
           {data.name}
@@ -60,5 +61,5 @@ export default function Projet({ data }: Props) {
         </div>
       </div>
     </div>
-  );
+  )
 }

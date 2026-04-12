@@ -1,10 +1,10 @@
-import styles from "./page.module.scss";
-import Image from "next/image";
-import Link from "next/link";
-import Header from "@/components/shared/header/public";
-import Footer from "@/components/shared/footer";
-import { join } from "@/lib/cls";
-import Icon from "@/components/shared/icon";
+import styles from "./page.module.scss"
+import Image from "next/image"
+import Link from "next/link"
+import Header from "@/components/shared/header/public"
+import Footer from "@/components/shared/footer"
+import { join } from "@/lib/cls"
+import Icon from "@/components/shared/icon"
 
 const images = {
   reviewImage1: {
@@ -22,7 +22,7 @@ const images = {
     width: 64,
     height: 64,
   },
-};
+}
 
 function CheckIcon() {
   return (
@@ -31,28 +31,28 @@ function CheckIcon() {
         <Icon name="complete" color="#4BCAA0" />
       </div>
     </div>
-  );
+  )
 }
 
 type Position = {
-  top: string;
-  right: string;
-  left: string;
-  bottom: string;
-};
+  top: string
+  right: string
+  left: string
+  bottom: string
+}
 
 function Donut({
   color,
   position,
 }: {
-  color: string;
-  position: Partial<Position>;
+  color: string
+  position: Partial<Position>
 }) {
   return (
     <div className={styles.donut} style={{ background: color, ...position }}>
       <div className={styles.donutInner}></div>
     </div>
-  );
+  )
 }
 
 export default function Home() {
@@ -363,5 +363,5 @@ export default function Home() {
       </div>
       <Footer />
     </main>
-  );
+  )
 }

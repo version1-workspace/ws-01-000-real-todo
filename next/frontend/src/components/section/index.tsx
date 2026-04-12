@@ -1,15 +1,15 @@
-import styles from "./index.module.scss";
-import Image, { StaticImageData } from "next/image";
+import styles from "./index.module.scss"
+import Image, { StaticImageData } from "next/image"
 
 interface Element {
-  description: string[];
-  image: StaticImageData;
-  alt: string;
+  description: string[]
+  image: StaticImageData
+  alt: string
 }
 
 interface Props {
-  title: string;
-  elements: Element[];
+  title: string
+  elements: Element[]
 }
 
 export default function Section({ title, elements }: Props) {
@@ -29,7 +29,7 @@ export default function Section({ title, elements }: Props) {
                           <p className={styles.descriptionText} key={line}>
                             {line}
                           </p>
-                        );
+                        )
                       })}
                     </div>
                   </div>
@@ -42,11 +42,11 @@ export default function Section({ title, elements }: Props) {
                     />
                   </div>
                 </div>
-              );
+              )
             })}
           </div>
         </div>
       </div>
     </section>
-  );
+  )
 }

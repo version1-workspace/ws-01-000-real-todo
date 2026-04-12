@@ -1,5 +1,4 @@
 .container {
-
 }
 
 .bar {
@@ -73,7 +72,7 @@
 }
 
 .withoutMilestone {
-  margin-top: 64px
+  margin-top: 64px;
 }
 
 .current .date {

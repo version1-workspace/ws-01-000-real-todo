@@ -1,4 +1,10 @@
-export type Position = "top" | "topRight" | "topLeft" | "bottom" | "bottomRight" | "bottomLeft"
+export type Position =
+  | "top"
+  | "topRight"
+  | "topLeft"
+  | "bottom"
+  | "bottomRight"
+  | "bottomLeft"
 
 export const position: { [key: string]: Position } = {
   TOP: "top",
@@ -6,6 +12,5 @@ export const position: { [key: string]: Position } = {
   TOP_LEFT: "topLeft",
   BOTTOM: "bottom",
   BOTTOM_RIGHT: "bottomRight",
-  BOTTOM_LEFT: "bottomLeft"
+  BOTTOM_LEFT: "bottomLeft",
 }
-

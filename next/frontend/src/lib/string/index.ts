@@ -7,5 +7,5 @@ export const truncate = (
     return value
   }
 
-  return value.slice(0, length) + " " + suffix;
-};
+  return value.slice(0, length) + " " + suffix
+}

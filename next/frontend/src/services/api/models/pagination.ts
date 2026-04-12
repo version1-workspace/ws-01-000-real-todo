@@ -1,19 +1,19 @@
 interface PageInfo {
-  page: number;
-  limit: number;
-  totalCount: number;
-  hasNext: boolean;
-  hasPrevious: boolean;
+  page: number
+  limit: number
+  totalCount: number
+  hasNext: boolean
+  hasPrevious: boolean
 }
 
 export interface PaginationParams<T> {
-  list: T[];
-  pageInfo: PageInfo;
+  list: T[]
+  pageInfo: PageInfo
 }
 
 export class Pagination<T> {
-  list: T[];
-  pageInfo: PageInfo;
+  list: T[]
+  pageInfo: PageInfo
 
   static create<T>(params?: PageInfo) {
     return new Pagination<T>({
@@ -25,41 +25,41 @@ export class Pagination<T> {
         hasNext: false,
         hasPrevious: false,
       },
-    });
+    })
   }
 
   constructor(params: PaginationParams<T>) {
-    this.list = params.list;
-    this.pageInfo = params.pageInfo;
+    this.list = params.list
+    this.pageInfo = params.pageInfo
   }
 
   get page() {
-    return this.pageInfo.page;
+    return this.pageInfo.page
   }
 
   get total() {
-    return this.pageInfo.totalCount;
+    return this.pageInfo.totalCount
   }
 
   get hasNext() {
-    return this.pageInfo.hasNext;
+    return this.pageInfo.hasNext
   }
 
   get hasPrevious() {
-    return this.pageInfo.hasPrevious;
+    return this.pageInfo.hasPrevious
   }
 
   get pageCount() {
-    return Math.ceil(this.total / this.pageInfo.limit);
+    return Math.ceil(this.total / this.pageInfo.limit)
   }
 
   set(index: number, data: T) {
-    const list = [...this.list];
-    list[index] = data;
+    const list = [...this.list]
+    list[index] = data
 
     return new Pagination<T>({
       list,
       pageInfo: this.pageInfo,
-    });
+    })
   }
 }

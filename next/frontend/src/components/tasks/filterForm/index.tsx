@@ -1,38 +1,38 @@
-"use client";
-import { useState } from "react";
-import styles from "./index.module.css";
-import { FieldTypes, OrderType } from "@/components/tasks/list/hooks/useFilter";
-import Icon from "@/components/shared/icon";
-import useProjects from "@/contexts/projects";
+"use client"
+import { useState } from "react"
+import styles from "./index.module.css"
+import { FieldTypes, OrderType } from "@/components/tasks/list/hooks/useFilter"
+import Icon from "@/components/shared/icon"
+import useProjects from "@/contexts/projects"
 
 interface DateParams {
-  start?: string;
-  end?: string;
-  type: FieldTypes;
+  start?: string
+  end?: string
+  type: FieldTypes
 }
 
 interface OrderParams {
-  type: FieldTypes;
-  value: OrderType;
+  type: FieldTypes
+  value: OrderType
 }
 
 interface UpdateParams {
-  text: string;
-  projectId?: string;
-  date: DateParams;
-  order: OrderParams;
-  statuses: { [key: string]: boolean };
-  limit: number;
-  page: number;
+  text: string
+  projectId?: string
+  date: DateParams
+  order: OrderParams
+  statuses: { [key: string]: boolean }
+  limit: number
+  page: number
 }
 
 interface Props {
-  trigger: React.ReactNode;
-  value: UpdateParams;
-  onShow: () => void;
-  onSubmit: () => void;
-  onChange: (params: UpdateParams) => void;
-  onCancel: () => void;
+  trigger: React.ReactNode
+  value: UpdateParams
+  onShow: () => void
+  onSubmit: () => void
+  onChange: (params: UpdateParams) => void
+  onCancel: () => void
 }
 
 export default function Popup({
@@ -43,23 +43,23 @@ export default function Popup({
   onChange,
   onCancel,
 }: Props) {
-  const [show, setShow] = useState(false);
-  const { projects } = useProjects();
+  const [show, setShow] = useState(false)
+  const { projects } = useProjects()
 
   const onChangeStatuses = (status: string) => {
-    const newStatuses = { ...value.statuses };
+    const newStatuses = { ...value.statuses }
     if (newStatuses[status]) {
-      delete newStatuses[status];
+      delete newStatuses[status]
     } else {
-      newStatuses[status] = true;
+      newStatuses[status] = true
     }
     const newValue = {
       ...value,
       statuses: newStatuses,
-    };
+    }
 
-    onChange(newValue);
-  };
+    onChange(newValue)
+  }
 
   const onChangeOrder = (o: OrderType) => {
     onChange({
@@ -68,8 +68,8 @@ export default function Popup({
         ...value.order,
         value: o,
       },
-    });
-  };
+    })
+  }
 
   return (
     <>
@@ -77,16 +77,18 @@ export default function Popup({
         <div
           className={styles.overlay}
           onClick={() => {
-            setShow(false);
-            onCancel();
-          }}></div>
+            setShow(false)
+            onCancel()
+          }}
+        ></div>
       ) : null}
       <div className={styles.container}>
         <div
           onClick={() => {
-            setShow(true);
-            onShow();
-          }}>
+            setShow(true)
+            onShow()
+          }}
+        >
           {trigger}
         </div>
         {show ? (
@@ -107,8 +109,9 @@ export default function Popup({
                         ...value.order,
                         type: e.target.value as FieldTypes,
                       },
-                    });
-                  }}>
+                    })
+                  }}
+                >
                   <option value="deadline">締切日順</option>
                   <option value="updatedAt">更新日順</option>
                   <option value="createdAt">作成日順</option>
@@ -124,7 +127,7 @@ export default function Popup({
                         value="asc"
                         checked={value.order.value === "asc"}
                         onChange={(e) => {
-                          onChangeOrder(e.target.value as OrderType);
+                          onChangeOrder(e.target.value as OrderType)
                         }}
                       />
                       昇順
@@ -138,7 +141,7 @@ export default function Popup({
                         value="desc"
                         checked={value.order.value === "desc"}
                         onChange={(e) => {
-                          onChangeOrder(e.target.value as OrderType);
+                          onChangeOrder(e.target.value as OrderType)
                         }}
                       />
                       降順
@@ -157,15 +160,16 @@ export default function Popup({
                   className={styles.selector}
                   value={value.projectId}
                   onChange={(e) => {
-                    onChange({ ...value, projectId: e.target.value });
-                  }}>
+                    onChange({ ...value, projectId: e.target.value })
+                  }}
+                >
                   <option value="">指定なし</option>
                   {projects.map((it) => {
                     return (
                       <option key={it.id} value={it.id}>
                         {it.name}
                       </option>
-                    );
+                    )
                   })}
                 </select>
               </div>
@@ -185,7 +189,7 @@ export default function Popup({
                     onChange({
                       ...value,
                       text: e.target.value,
-                    });
+                    })
                   }}
                 />
                 <div className={styles.statusesContainer}>
@@ -197,7 +201,7 @@ export default function Popup({
                           type="checkbox"
                           checked={value.statuses.scheduled}
                           onClick={() => {
-                            onChangeStatuses("scheduled");
+                            onChangeStatuses("scheduled")
                           }}
                           readOnly
                         />
@@ -210,7 +214,7 @@ export default function Popup({
                           type="checkbox"
                           checked={value.statuses.completed}
                           onClick={() => {
-                            onChangeStatuses("completed");
+                            onChangeStatuses("completed")
                           }}
                           readOnly
                         />
@@ -223,7 +227,7 @@ export default function Popup({
                           type="checkbox"
                           checked={value.statuses.archived}
                           onClick={() => {
-                            onChangeStatuses("archived");
+                            onChangeStatuses("archived")
                           }}
                           readOnly
                         />
@@ -254,8 +258,9 @@ export default function Popup({
                               ...value.date,
                               type: e.target.value as FieldTypes,
                             },
-                          });
-                        }}>
+                          })
+                        }}
+                      >
                         <option value="deadline">締切日</option>
                         <option value="updatedAt">更新日</option>
                         <option value="createdAt">作成日</option>
@@ -277,7 +282,7 @@ export default function Popup({
                               ...value.date,
                               start: e.target.value,
                             },
-                          });
+                          })
                         }}
                       />
                     </label>
@@ -296,7 +301,7 @@ export default function Popup({
                               ...value.date,
                               end: e.target.value,
                             },
-                          });
+                          })
                         }}
                       />
                     </label>
@@ -308,19 +313,21 @@ export default function Popup({
               <button
                 className={styles.submit}
                 onClick={(e) => {
-                  e.stopPropagation();
-                  onSubmit();
-                  setShow(false);
-                }}>
+                  e.stopPropagation()
+                  onSubmit()
+                  setShow(false)
+                }}
+              >
                 フィルタ
               </button>
               <button
                 className={styles.cancel}
                 onClick={(e) => {
-                  e.stopPropagation();
-                  onCancel();
-                  setShow(false);
-                }}>
+                  e.stopPropagation()
+                  onCancel()
+                  setShow(false)
+                }}
+              >
                 キャンセル
               </button>
             </li>
@@ -328,5 +335,5 @@ export default function Popup({
         ) : null}
       </div>
     </>
-  );
+  )
 }

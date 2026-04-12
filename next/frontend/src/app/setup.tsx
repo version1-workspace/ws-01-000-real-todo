@@ -1,5 +1,5 @@
-"use client";
+"use client"
 
 export default function Setup() {
-  return undefined;
+  return undefined
 }

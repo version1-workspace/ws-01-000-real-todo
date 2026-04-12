@@ -80,7 +80,6 @@
 }
 
 .checkIconVisible {
-
 }
 
 .title {
@@ -117,5 +116,5 @@
 
 .detailIcon {
   color: var(--font-color);
-  cursor:pointer;
+  cursor: pointer;
 }

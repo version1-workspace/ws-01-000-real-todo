@@ -90,7 +90,6 @@
 }
 
 .message {
-
 }
 
 .body {
@@ -162,7 +161,6 @@
 .positionBottomRight .container {
   animation-name: slideinFromRight;
 }
-
 
 .info {
   border-bottom: 4px solid var(--info-color);

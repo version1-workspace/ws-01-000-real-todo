@@ -1,15 +1,15 @@
-import styles from "@/components/shared/option/index.module.css";
-import { classHelper } from "@/lib/cls";
+import styles from "@/components/shared/option/index.module.css"
+import { classHelper } from "@/lib/cls"
 
 interface Props {
-  data: OptionItem[];
-  value: string;
-  onSelect: (item: OptionItem) => void;
+  data: OptionItem[]
+  value: string
+  onSelect: (item: OptionItem) => void
 }
 
 interface OptionItem {
-  label: string | React.ReactNode;
-  value: string;
+  label: string | React.ReactNode
+  value: string
 }
 
 export default function Option({ data, value, onSelect }: Props) {
@@ -23,15 +23,15 @@ export default function Option({ data, value, onSelect }: Props) {
                 [styles.optionItem]: true,
                 [styles.optionItemLast]: index === data.length - 1,
                 [styles.optionItemFirst]: index === 0,
-                [styles.active]: item.value === value
+                [styles.active]: item.value === value,
               })}
               onClick={() => onSelect && onSelect(item)}
             >
               {item.label}
             </span>
           </li>
-        );
+        )
       })}
     </ul>
-  );
+  )
 }

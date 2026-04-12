@@ -1,8 +1,8 @@
-import styles from "./index.module.css";
-import Button from "@/components/shared/button";
+import styles from "./index.module.css"
+import Button from "@/components/shared/button"
 
 interface Props {
-  onSwitch?: () => void;
+  onSwitch?: () => void
 }
 
 export function Login({ onSwitch }: Props) {
@@ -18,12 +18,13 @@ export function Login({ onSwitch }: Props) {
         <Button
           className={styles.signUpButton}
           variant="secondary"
-          onClick={onSwitch}>
+          onClick={onSwitch}
+        >
           サインイン
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 export function SignUp({ onSwitch }: Props) {
@@ -39,10 +40,11 @@ export function SignUp({ onSwitch }: Props) {
         <Button
           className={styles.signUpButton}
           variant="secondary"
-          onClick={onSwitch}>
+          onClick={onSwitch}
+        >
           新規登録
         </Button>
       </div>
     </div>
-  );
+  )
 }

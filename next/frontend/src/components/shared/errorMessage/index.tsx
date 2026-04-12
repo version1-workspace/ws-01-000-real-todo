@@ -1,8 +1,8 @@
-import styles from "./index.module.css";
-import ShowIf from "../showIf";
+import styles from "./index.module.css"
+import ShowIf from "../showIf"
 
 interface Props {
-  message?: string;
+  message?: string
 }
 
 const ErrorMessage = ({ message }: Props) => {
@@ -10,7 +10,7 @@ const ErrorMessage = ({ message }: Props) => {
     <ShowIf value={message}>
       <p className={styles.message}>{message}</p>
     </ShowIf>
-  );
-};
+  )
+}
 
-export default ErrorMessage;
+export default ErrorMessage

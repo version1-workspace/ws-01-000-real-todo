@@ -1,23 +1,23 @@
-import { useState } from "react";
-import Link from "next/link";
-import styles from "./index.module.css";
-import { classHelper, join } from "@/lib/cls";
-import { statusOptions, Task } from "@/services/api/models/task";
-import route from "@/lib/route";
-import Select, { OptionItem } from "@/components/shared/select";
-import Icon from "@/components/shared/icon";
-import EditableField from "@/components/shared/editableField";
-import useProjects from "@/contexts/projects";
-import api from "@/services/api";
-import useCheck from "@/contexts/check";
+import { useState } from "react"
+import Link from "next/link"
+import styles from "./index.module.css"
+import { classHelper, join } from "@/lib/cls"
+import { statusOptions, Task } from "@/services/api/models/task"
+import route from "@/lib/route"
+import Select, { OptionItem } from "@/components/shared/select"
+import Icon from "@/components/shared/icon"
+import EditableField from "@/components/shared/editableField"
+import useProjects from "@/contexts/projects"
+import api from "@/services/api"
+import useCheck from "@/contexts/check"
 
 interface Props {
-  data: Task[];
+  data: Task[]
 }
 
 const TaskTable = ({ data }: Props) => {
-  const { check, checkAll, checked, allChecked } = useCheck();
-  const ids = data.map((it) => it.id);
+  const { check, checkAll, checked, allChecked } = useCheck()
+  const ids = data.map((it) => it.id)
 
   return (
     <div className={styles.table}>
@@ -28,7 +28,8 @@ const TaskTable = ({ data }: Props) => {
             [styles.check]: true,
             [styles.unchecked]: !allChecked,
             [styles.checked]: allChecked,
-          })}>
+          })}
+        >
           <Icon
             className={styles.checkIcon}
             name="checkOutline"
@@ -60,21 +61,21 @@ const TaskTable = ({ data }: Props) => {
               data={it}
               checked={checked[it.id]}
               onCheck={() => {
-                check(it.id);
+                check(it.id)
               }}
             />
-          );
+          )
         })}
       </div>
     </div>
-  );
-};
+  )
+}
 
 interface SelectorProxyProps {
-  options: OptionItem[];
-  defaultValue: string;
-  defaultOption: OptionItem;
-  onSelect: (option: OptionItem) => void;
+  options: OptionItem[]
+  defaultValue: string
+  defaultOption: OptionItem
+  onSelect: (option: OptionItem) => void
 }
 
 const SelectorProxy = ({
@@ -83,7 +84,7 @@ const SelectorProxy = ({
   defaultOption,
   onSelect,
 }: SelectorProxyProps) => {
-  const [value, setValue] = useState(defaultValue);
+  const [value, setValue] = useState(defaultValue)
 
   return (
     <Select
@@ -91,23 +92,23 @@ const SelectorProxy = ({
       value={value}
       defaultOption={defaultOption}
       onSelect={(option) => {
-        setValue(option.value);
-        onSelect(option);
+        setValue(option.value)
+        onSelect(option)
       }}
       containerStyleClass={styles.selector}
       flat
     />
-  );
-};
+  )
+}
 
 interface RowProps {
-  data: Task;
-  checked?: boolean;
-  onCheck?: () => void;
+  data: Task
+  checked?: boolean
+  onCheck?: () => void
 }
 
 const Row = ({ data, checked, onCheck }: RowProps) => {
-  const { options: projectOptions } = useProjects();
+  const { options: projectOptions } = useProjects()
 
   return (
     <div key={data.id} className={styles.tableRow}>
@@ -117,7 +118,8 @@ const Row = ({ data, checked, onCheck }: RowProps) => {
           [styles.check]: true,
           [styles.unchecked]: !checked,
           [styles.checked]: checked,
-        })}>
+        })}
+      >
         <Icon
           className={styles.checkIcon}
           name="checkOutline"
@@ -128,7 +130,7 @@ const Row = ({ data, checked, onCheck }: RowProps) => {
         <EditableField
           defaultValue={data.title}
           onChangeEnd={async (value) => {
-            await api.updateTask(data.id, { title: value });
+            await api.updateTask(data.id, { title: value })
           }}
         />
       </div>
@@ -141,7 +143,7 @@ const Row = ({ data, checked, onCheck }: RowProps) => {
             value: "",
           }}
           onSelect={async (option) => {
-            await api.updateTask(data.id, { projectId: option.value });
+            await api.updateTask(data.id, { projectId: option.value })
           }}
         />
       </div>
@@ -154,7 +156,7 @@ const Row = ({ data, checked, onCheck }: RowProps) => {
             value: "",
           }}
           onSelect={async (option) => {
-            await api.updateTask(data.id, { status: option.value });
+            await api.updateTask(data.id, { status: option.value })
           }}
         />
       </div>
@@ -163,7 +165,7 @@ const Row = ({ data, checked, onCheck }: RowProps) => {
           type="date"
           defaultValue={data.deadline.format() || ""}
           onChangeEnd={(value) => {
-            api.updateTask(data.id, { deadline: value });
+            api.updateTask(data.id, { deadline: value })
           }}
         />
       </div>
@@ -174,7 +176,7 @@ const Row = ({ data, checked, onCheck }: RowProps) => {
           defaultValue={data.startingAt?.format() || ""}
           max={data.deadline?.forHtml}
           onChangeEnd={(value) => {
-            api.updateTask(data.id, { startingAt: value });
+            api.updateTask(data.id, { startingAt: value })
           }}
         />
       </div>
@@ -184,7 +186,7 @@ const Row = ({ data, checked, onCheck }: RowProps) => {
           placeholder="日時を入力..."
           defaultValue={data.finishedAt?.format() || ""}
           onChangeEnd={(value) => {
-            api.updateTask(data.id, { finishedAt: value });
+            api.updateTask(data.id, { finishedAt: value })
           }}
         />
       </div>
@@ -196,7 +198,7 @@ const Row = ({ data, checked, onCheck }: RowProps) => {
         </Link>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TaskTable;
+export default TaskTable

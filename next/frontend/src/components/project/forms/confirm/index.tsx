@@ -1,6 +1,6 @@
-import styles from "@/components/project/forms/confirm/index.module.css";
-import Milestone from "@/components/project/forms/milestone";
-import Project from "@/components/project/forms/project";
+import styles from "@/components/project/forms/confirm/index.module.css"
+import Milestone from "@/components/project/forms/milestone"
+import Project from "@/components/project/forms/project"
 
 export default function Confirm() {
   return (
@@ -19,5 +19,5 @@ export default function Confirm() {
         <Milestone readOnly />
       </div>
     </div>
-  );
+  )
 }

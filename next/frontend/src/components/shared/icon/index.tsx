@@ -37,9 +37,9 @@ import {
   IoGridOutline,
   IoAddCircle,
   IoLogoGithub,
-} from "react-icons/io5";
-import styles from "./index.module.css";
-import { classHelper } from "@/lib/cls";
+} from "react-icons/io5"
+import styles from "./index.module.css"
+import { classHelper } from "@/lib/cls"
 
 const icons = {
   unknown: IoCodeOutline,
@@ -81,17 +81,17 @@ const icons = {
   menu: IoEllipsisVerticalOutline,
   layout: IoListOutline,
   github: IoLogoGithub,
-};
+}
 
-type IconType = typeof icons;
+type IconType = typeof icons
 
 interface Props {
-  name: keyof IconType;
-  className?: string;
-  interactive?: "pulse" | "hover" | "hoverDark";
-  size?: number | string;
-  color?: string;
-  onClick?: () => void;
+  name: keyof IconType
+  className?: string
+  interactive?: "pulse" | "hover" | "hoverDark"
+  size?: number | string
+  color?: string
+  onClick?: () => void
 }
 
 const Icon = ({
@@ -102,7 +102,7 @@ const Icon = ({
   className,
   onClick,
 }: Props) => {
-  const Component = icons[name];
+  const Component = icons[name]
   return (
     <div
       className={classHelper({
@@ -112,10 +112,11 @@ const Icon = ({
         [styles.interactiveHover]: interactive === "hover",
         [styles.interactiveHoverDark]: interactive === "hoverDark",
       })}
-      onClick={onClick}>
+      onClick={onClick}
+    >
       {<Component className={className} size={size} color={color} />}
     </div>
-  );
-};
+  )
+}
 
-export default Icon;
+export default Icon

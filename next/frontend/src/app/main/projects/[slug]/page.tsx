@@ -1,21 +1,21 @@
-"use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
-import api from "@/services/api";
-import { factory } from "@/services/api/models";
-import type { Project } from "@/services/api/models/project";
-import styles from "./page.module.css";
-import { join } from "@/lib/cls";
-import Icon from "@/components/shared/icon";
-import route from "@/lib/route";
-import TaskForm from "@/components/tasks/form";
-import TextInput from "@/components/shared/input/text";
-import MilestoneList from "@/components/milestones/list";
-import PopupMenu from "@/components/shared/popupMenu";
-import { useModal } from "@/lib/modal";
-import { useToast } from "@/lib/toast/hook";
-import useProjects from "@/contexts/projects";
-import ProjectForm from "@/components/project/form";
+"use client"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { useParams } from "next/navigation"
+import api from "@/services/api"
+import { factory } from "@/services/api/models"
+import type { Project } from "@/services/api/models/project"
+import styles from "./page.module.css"
+import { join } from "@/lib/cls"
+import Icon from "@/components/shared/icon"
+import route from "@/lib/route"
+import TaskForm from "@/components/tasks/form"
+import TextInput from "@/components/shared/input/text"
+import MilestoneList from "@/components/milestones/list"
+import PopupMenu from "@/components/shared/popupMenu"
+import { useModal } from "@/lib/modal"
+import { useToast } from "@/lib/toast/hook"
+import useProjects from "@/contexts/projects"
+import ProjectForm from "@/components/project/form"
 
 const projectActions = ({
   project,
@@ -23,10 +23,10 @@ const projectActions = ({
   onArchive,
   onReopen,
 }: {
-  project?: Project;
-  onEdit: () => void;
-  onArchive: () => Promise<void>;
-  onReopen: () => Promise<void>;
+  project?: Project
+  onEdit: () => void
+  onArchive: () => Promise<void>
+  onReopen: () => Promise<void>
 }) => [
   {
     key: "edit",
@@ -49,31 +49,31 @@ const projectActions = ({
         danger: true,
         onClick: onArchive,
       },
-];
+]
 
 export default function Project() {
-  const params = useParams();
-  const slug = params.slug as string;
-  const [project, setProject] = useState<Project>();
-  const { projects, refetch: refetchGlobalProjects } = useProjects();
-  const { open, hide } = useModal();
-  const toast = useToast();
+  const params = useParams()
+  const slug = params.slug as string
+  const [project, setProject] = useState<Project>()
+  const { projects, refetch: refetchGlobalProjects } = useProjects()
+  const { open, hide } = useModal()
+  const toast = useToast()
   // FIXME: set color code by project in BE.
   const color = useMemo(
     () => projects.find((it) => it.slug === slug)?.color,
     [slug, projects],
-  );
+  )
 
   const doFetch = useCallback(
     async ({ slug }: { slug: string }) => {
-      const res = await api.fetchProject({ slug });
+      const res = await api.fetchProject({ slug })
       const item = factory.project({
         ...res.data.data,
-      });
-      return item;
+      })
+      return item
     },
     [slug],
-  );
+  )
 
   const actions = projectActions({
     project,
@@ -84,68 +84,68 @@ export default function Project() {
             title="プロジェクトを編集"
             data={project}
             onSubmit={async (form) => {
-              refetchGlobalProjects();
-              const item = await doFetch({ slug: form.slug });
-              setProject(item);
+              refetchGlobalProjects()
+              const item = await doFetch({ slug: form.slug })
+              setProject(item)
               if (project?.slug !== form.slug) {
                 history.replaceState(
                   null,
                   "",
                   route.main.projects.with(form.slug),
-                );
+                )
               }
 
-              hide();
+              hide()
             }}
             onCancel={hide}
           />
         ),
-      });
+      })
     },
     onReopen: async () => {
       if (!project) {
-        return;
+        return
       }
 
       try {
-        await api.reopenProject({ slug: project.slug });
-        toast.success("プロジェクトを元に戻しました");
-        await refetchGlobalProjects();
+        await api.reopenProject({ slug: project.slug })
+        toast.success("プロジェクトを元に戻しました")
+        await refetchGlobalProjects()
       } catch {
-        toast.error("アーカイブに失敗しました");
+        toast.error("アーカイブに失敗しました")
       }
     },
     onArchive: async () => {
       if (!project) {
-        return;
+        return
       }
 
       if (!confirm("プロジェクトをアーカイブしますがよろしいですか？")) {
-        return;
+        return
       }
 
       try {
-        await api.archiveProject({ slug: project.slug });
-        toast.success("プロジェクトをアーカイブしました");
-        await refetchGlobalProjects();
+        await api.archiveProject({ slug: project.slug })
+        toast.success("プロジェクトをアーカイブしました")
+        await refetchGlobalProjects()
       } catch {
-        toast.error("アーカイブに失敗しました");
+        toast.error("アーカイブに失敗しました")
       }
     },
-  });
+  })
 
   useEffect(() => {
     const fetch = async ({ slug }: { slug: string }) => {
-      const item = await doFetch({ slug });
+      const item = await doFetch({ slug })
 
-      setProject(item);
-    };
+      setProject(item)
+    }
 
-    fetch({ slug });
-  }, [slug, doFetch]);
+    fetch({ slug })
+  }, [slug, doFetch])
 
   if (!project) {
-    return null;
+    return null
   }
 
   return (
@@ -156,7 +156,8 @@ export default function Project() {
             className={styles.project}
             style={{
               borderLeft: `5px solid ${color}`,
-            }}>
+            }}
+          >
             <div className={styles.header}>
               <h1 className={styles.title} style={{ color }}>
                 {project.isArchived ? "（アーカイブ）" : null}
@@ -252,13 +253,14 @@ export default function Project() {
                         children: [],
                       })}
                       onSubmit={() => {
-                        hide();
+                        hide()
                       }}
                       onCancel={hide}
                     />
                   ),
-                });
-              }}>
+                })
+              }}
+            >
               <Icon name="add" />
               <p>マイルストーンを追加する</p>
             </div>
@@ -269,5 +271,5 @@ export default function Project() {
         </div>
       </div>
     </div>
-  );
+  )
 }

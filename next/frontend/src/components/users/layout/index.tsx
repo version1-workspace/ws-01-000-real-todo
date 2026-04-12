@@ -1,13 +1,13 @@
-import styles from "./index.module.css";
-import { classHelper } from "@/lib/cls";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import route from "@/lib/route";
+import styles from "./index.module.css"
+import { classHelper } from "@/lib/cls"
+import { usePathname } from "next/navigation"
+import Link from "next/link"
+import route from "@/lib/route"
 
 interface MenuSetting {
-  title: string;
-  key: string;
-  children?: MenuSetting[];
+  title: string
+  key: string
+  children?: MenuSetting[]
 }
 
 const menuSettings: MenuSetting[] = [
@@ -37,14 +37,14 @@ const menuSettings: MenuSetting[] = [
       },
     ],
   },
-];
+]
 
 interface Props {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export default function UsersLayout({ children }: Props) {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   return (
     <div className={styles.container}>
@@ -56,7 +56,7 @@ export default function UsersLayout({ children }: Props) {
               {menuSettings.map((it) => {
                 const href = it.children
                   ? "#!"
-                  : route.main.users[it.key].toString();
+                  : route.main.users[it.key].toString()
                 return (
                   <li key={it.key}>
                     <Link href={href}>
@@ -65,7 +65,8 @@ export default function UsersLayout({ children }: Props) {
                           [styles.menuItem]: true,
                           [styles.activeMenu]:
                             route.main.users[it.key].toString() === pathname,
-                        })}>
+                        })}
+                      >
                         {it.title}
                       </p>
                     </Link>
@@ -75,7 +76,8 @@ export default function UsersLayout({ children }: Props) {
                           return (
                             <li key={child.key}>
                               <Link
-                                href={route.main.users[child.key].toString()}>
+                                href={route.main.users[child.key].toString()}
+                              >
                                 <p
                                   className={classHelper({
                                     [styles.menuItem]: true,
@@ -83,17 +85,18 @@ export default function UsersLayout({ children }: Props) {
                                     [styles.activeMenu]:
                                       route.main.users[child.key].toString() ===
                                       pathname,
-                                  })}>
+                                  })}
+                                >
                                   {child.title}
                                 </p>
                               </Link>
                             </li>
-                          );
+                          )
                         })}
                       </ul>
                     ) : null}
                   </li>
-                );
+                )
               })}
             </ul>
           </div>
@@ -101,5 +104,5 @@ export default function UsersLayout({ children }: Props) {
         </div>
       </div>
     </div>
-  );
+  )
 }

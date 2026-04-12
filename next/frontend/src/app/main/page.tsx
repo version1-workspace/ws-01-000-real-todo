@@ -1,20 +1,18 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import styles from "@/app/main/page.module.css";
-import Card from "@/components/project/card";
-import Chart from "@/components/project/chart";
-import TaskList from "@/components/tasks/list";
-import route from "@/lib/route";
-import useProjects from "@/contexts/projects";
-import useTasks from "@/contexts/tasks";
-import Icon from "@/components/shared/icon";
-
-
+import Link from "next/link"
+import styles from "@/app/main/page.module.css"
+import Card from "@/components/project/card"
+import Chart from "@/components/project/chart"
+import TaskList from "@/components/tasks/list"
+import route from "@/lib/route"
+import useProjects from "@/contexts/projects"
+import useTasks from "@/contexts/tasks"
+import Icon from "@/components/shared/icon"
 
 export default function Main() {
-  const { projects } = useProjects();
-  const { data } = useTasks();
+  const { projects } = useProjects()
+  const { data } = useTasks()
 
   return (
     <div className={styles.projects}>
@@ -33,16 +31,18 @@ export default function Main() {
               return (
                 <Link
                   key={item.slug}
-                  href={route.main.projects.with(item.slug)}>
+                  href={route.main.projects.with(item.slug)}
+                >
                   <Card data={item} />
                 </Link>
-              );
+              )
             })}
           </div>
           <div className={styles.projectListFooter}>
             <Link
               className={styles.projectListLink}
-              href={route.main.projects.toString()}>
+              href={route.main.projects.toString()}
+            >
               プロジェクト一覧
             </Link>
           </div>
@@ -77,5 +77,5 @@ export default function Main() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,25 +1,25 @@
-"use client";
-import Link from "next/link";
-import { useState } from "react";
-import styles from "./index.module.css";
-import { useModal } from "@/lib/modal";
-import route from "@/lib/route";
-import TaskForm from "@/components/tasks/form";
-import Icon from "../../icon";
-import useTasks from "@/contexts/tasks";
-import { useAuth } from "@/components/auth";
-import Search from "@/components/tasks/search";
+"use client"
+import Link from "next/link"
+import { useState } from "react"
+import styles from "./index.module.css"
+import { useModal } from "@/lib/modal"
+import route from "@/lib/route"
+import TaskForm from "@/components/tasks/form"
+import Icon from "../../icon"
+import useTasks from "@/contexts/tasks"
+import { useAuth } from "@/components/auth"
+import Search from "@/components/tasks/search"
 
 interface DropdownProps {
-  trigger: React.ReactNode;
+  trigger: React.ReactNode
 }
 
 function Dropdown({ trigger }: DropdownProps) {
-  const { user, logout } = useAuth();
-  const [show, setShow] = useState(false);
+  const { user, logout } = useAuth()
+  const [show, setShow] = useState(false)
 
   if (!user) {
-    return null;
+    return null
   }
 
   return (
@@ -35,11 +35,13 @@ function Dropdown({ trigger }: DropdownProps) {
           <li
             className={styles.dropdownItem}
             onClick={() => {
-              setShow(false);
-            }}>
+              setShow(false)
+            }}
+          >
             <Link
               className={styles.dropdownLink}
-              href={route.main.users.profile.toString()}>
+              href={route.main.users.profile.toString()}
+            >
               <div className={styles.dropdownIcon}>
                 <Icon name="person" size={20} />
               </div>
@@ -52,9 +54,10 @@ function Dropdown({ trigger }: DropdownProps) {
           <li
             className={styles.dropdownItem}
             onClick={() => {
-              logout();
-              setShow(false);
-            }}>
+              logout()
+              setShow(false)
+            }}
+          >
             <div className={styles.dropdownLink}>
               <div className={styles.dropdownIcon}>
                 <Icon name="logout" size={20} color="var(--danger-color)" />
@@ -65,12 +68,12 @@ function Dropdown({ trigger }: DropdownProps) {
         </ul>
       ) : null}
     </div>
-  );
+  )
 }
 
 export default function Header() {
-  const { open, hide } = useModal();
-  const { fetchDefault: fetchTasks } = useTasks();
+  const { open, hide } = useModal()
+  const { fetchDefault: fetchTasks } = useTasks()
 
   return (
     <header className={styles.header}>
@@ -98,13 +101,13 @@ export default function Header() {
                       <TaskForm
                         title="タスクを追加"
                         onSubmit={() => {
-                          fetchTasks();
-                          hide();
+                          fetchTasks()
+                          hide()
                         }}
                         onCancel={hide}
                       />
                     ),
-                  });
+                  })
                 }}
               />
             </li>
@@ -127,5 +130,5 @@ export default function Header() {
         </div>
       </div>
     </header>
-  );
+  )
 }

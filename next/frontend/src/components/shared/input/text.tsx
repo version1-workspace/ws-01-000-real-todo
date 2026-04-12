@@ -1,14 +1,14 @@
-import { join } from "@/lib/cls";
-import { ChangeEvent, ForwardedRef, forwardRef } from "react";
-import styles from "./text.module.css";
+import { join } from "@/lib/cls"
+import { ChangeEvent, ForwardedRef, forwardRef } from "react"
+import styles from "./text.module.css"
 
 interface Props {
-  value: string;
-  type?: "text" | "password";
-  placeholder?: string;
-  containerClassName?: string;
-  inputClassName?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  value: string
+  type?: "text" | "password"
+  placeholder?: string
+  containerClassName?: string
+  inputClassName?: string
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 export default forwardRef(function Input(
@@ -33,5 +33,5 @@ export default forwardRef(function Input(
         onChange={onChange}
       />
     </div>
-  );
-});
+  )
+})
