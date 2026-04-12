@@ -97,6 +97,8 @@ Turvo は 学習用のサンプルアプリで
 | --- | --- |
 | CI/CD | Github Action |
 
+## CI
 
+[docs/ci.md](docs/ci.md) を参照してください。
 
 

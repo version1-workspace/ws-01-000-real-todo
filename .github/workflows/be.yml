@@ -1,0 +1,44 @@
+name: Backend Pipeline
+run-name: Backend Pipeline
+
+on: [push]
+
+jobs:
+  be-pipeline:
+    name: Backend Pipeline
+    runs-on: ubuntu-latest
+    env:
+      AUTH_SECRET: testsecret
+      AUTH_SUGAR: testsugar
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+      DATABASE_HOST: localhost
+      NODE_ENV: test
+    defaults:
+      run:
+        working-directory: ./api
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup api
+        uses: ./.github/actions/setup-node-project
+        with:
+          node-version: '20.x'
+          working-directory: ./api
+          cache-dependency-path: ./api/package-lock.json
+      - name: MySQL
+        run: which mysql
+      - name: Lint
+        run: npm run lint
+      - name: Compile
+        run: npm run tsc
+      - name: Build
+        run: npm run build
+      - name: Test
+        run: npm run test
+      - name: E2E Test - Start Database Service
+        run: sudo systemctl start mysql.service
+      - name: E2E Test - Setup Database & Run
+        run: |
+          npm run db:test:create
+          npm run db:test:setup
+          npm run test:e2e

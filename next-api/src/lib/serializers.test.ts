@@ -179,7 +179,7 @@ describe('serializers', () => {
       deadline: '2026-01-02',
       startingAt: '2026-01-02',
       startedAt: now.toISOString(),
-      finishedAt: '2026-01-02',
+      finishedAt: now.toISOString(),
       project: {
         uuid: 'project-uuid',
       },

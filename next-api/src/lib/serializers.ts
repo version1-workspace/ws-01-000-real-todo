@@ -95,7 +95,7 @@ export const serializeTask = (
   deadline: task.deadline.toISOString().slice(0, 10),
   startingAt: task.startingAt?.toISOString().slice(0, 10) ?? null,
   startedAt: task.startedAt?.toISOString() ?? null,
-  finishedAt: task.finishedAt?.toISOString().slice(0, 10) ?? task.finishedAt?.toISOString() ?? null,
+  finishedAt: task.finishedAt?.toISOString() ?? null,
   archivedAt: task.archivedAt?.toISOString() ?? null,
   parentId: task.parentId ?? null,
   userId: task.userId,

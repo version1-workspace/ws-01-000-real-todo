@@ -1,0 +1,62 @@
+name: API Spec E2E
+run-name: API Spec E2E
+
+on: [push]
+
+jobs:
+  api-spec-e2e:
+    name: API Spec E2E
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: real_todo
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d real_todo"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      PORT: 3001
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/real_todo?schema=public
+      ALLOW_REQUEST_URL: http://localhost:3000
+      AUTH_SECRET: testsecret
+      AUTH_SUGAR: testsugar
+      JWT_EXPIRES_IN: 30m
+      API_BASE_URL: http://127.0.0.1:3001/api/v1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare next-api
+        uses: ./.github/actions/prepare-next-api
+        with:
+          node-version: '20.x'
+      - name: Setup Database
+        working-directory: ./next-api
+        run: |
+          npm run prisma:push
+          npm run prisma:seed
+      - name: Build next-api
+        working-directory: ./next-api
+        run: npm run build
+      - name: Start next-api
+        working-directory: ./next-api
+        run: nohup node dist/src/server.js > ../next-api-e2e.log 2>&1 &
+      - name: Wait for next-api
+        uses: ./.github/actions/wait-for-http
+        with:
+          url: ${{ env.API_BASE_URL }}/
+          failure-log-path: next-api-e2e.log
+      - name: Setup api-spec
+        uses: ./.github/actions/setup-node-project
+        with:
+          node-version: '20.x'
+          working-directory: ./api-spec
+          cache-dependency-path: ./api-spec/package-lock.json
+      - name: Run api-spec E2E
+        working-directory: ./api-spec
+        run: npm test
