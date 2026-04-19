@@ -104,7 +104,7 @@ const Icon = ({
 }: Props) => {
   const Component = icons[name]
   return (
-    <div
+    <span
       className={classHelper({
         [styles.container]: true,
         [styles.interactive]: !!interactive,
@@ -115,7 +115,7 @@ const Icon = ({
       onClick={onClick}
     >
       {<Component className={className} size={size} color={color} />}
-    </div>
+    </span>
   )
 }
 

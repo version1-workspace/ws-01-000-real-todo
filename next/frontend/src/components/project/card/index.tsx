@@ -1,16 +1,16 @@
-import styles from "@/components/project/card/index.module.css"
-import { Project } from "@/viewmodels/project"
 import {
   IoCalendarClear as Calendar,
   IoGitCommit as Milestone,
   IoDocument as Task,
-} from "react-icons/io5"
+} from "react-icons/io5";
+import styles from "@/components/project/card/index.module.css";
+import { Project } from "@/viewmodels/project";
 
 interface Props {
-  data: Project
+  data: Project;
 }
 
-export default function Projet({ data }: Props) {
+export default function Card({ data }: Props) {
   return (
     <div
       key={data.slug}
@@ -29,7 +29,7 @@ export default function Projet({ data }: Props) {
             color={data.color}
             size="10px"
           />
-          <p className={styles.deadlineDate}>{data.deadline.format()}</p>
+          <span className={styles.deadlineDate}>{data.deadline.format()}</span>
         </p>
       </div>
       <div className={styles.body}>
@@ -61,5 +61,5 @@ export default function Projet({ data }: Props) {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -26,11 +26,13 @@ class Client {
   timeout: number;
   withCredentials?: boolean;
   headers: Record<string, string>;
+  handleError?: (error: ApiErrorResponse) => ApiErrorResponse | undefined;
 
   constructor(config: {
     baseURL: string;
     timeout: number;
     withCredentials?: boolean;
+    handleError?: (error: ApiErrorResponse) => ApiErrorResponse | undefined;
     headers: {
       Authorization?: string;
     };
@@ -46,6 +48,19 @@ class Client {
       this.headers = {
         ...(config.headers || {}),
         Authorization: token ? `Bearer ${token}` : "",
+      };
+    }
+
+    if (config.handleError) {
+      this.handleError = config.handleError;
+    } else {
+      this.handleError = (error: ApiErrorResponse): undefined => {
+        console.error("API Error:", error);
+        if (error.response) {
+          console.error("Status:", error.response.status);
+          console.error("Data:", error.response.data);
+        }
+        return;
       };
     }
   }
@@ -147,7 +162,10 @@ class Client {
           `Request failed with status ${response.status}`,
         ) as ApiErrorResponse<T>;
         error.response = result;
-        throw error;
+        const handledError = this.handleError?.(error);
+        if (handledError) {
+          throw handledError;
+        }
       }
 
       return result;
@@ -164,4 +182,13 @@ export const apiClient = new Client({
   timeout: 1000,
   withCredentials: true,
   headers: { Authorization: getAccessToken() },
+  handleError: (error): undefined => {
+    alert("An error occurred while processing your request.");
+    console.log("API Error:", error);
+    if (error.response) {
+      console.log("Status:", error.response.status);
+      console.log("Data:", error.response.data);
+    }
+    return;
+  },
 });
