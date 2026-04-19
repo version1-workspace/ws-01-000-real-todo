@@ -1,11 +1,11 @@
 "use client"
+import { useRouter } from "next/navigation"
+import { createContext, useContext, useEffect, useState } from "react"
+import route from "@/lib/route"
 import api, { getAccessToken, getUserId } from "@/services/api"
+import { ApiErrorResponse } from "@/services/api/client"
 import { factory } from "@/viewmodels"
 import { User } from "@/viewmodels/user"
-import { useRouter } from "next/navigation"
-import { useContext, useEffect, useState, createContext } from "react"
-import route from "@/lib/route"
-import { ApiErrorResponse } from "@/services/api/client"
 
 interface IAuthContext {
   user?: User
@@ -34,8 +34,10 @@ const AuthContainer = ({ children, isPublic }: Props) => {
       try {
         if (!getAccessToken()) {
           const uuid = getUserId()
-          const r1 = await api.refreshToken({ uuid })
-          api.client.setAccessToken(r1.data.data.accessToken)
+          if (uuid) {
+            const r1 = await api.refreshToken({ uuid })
+            api.client.setAccessToken(r1.data.data.accessToken)
+          }
         }
 
         const r2 = await api.fetchUser()

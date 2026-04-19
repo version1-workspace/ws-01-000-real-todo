@@ -8,5 +8,5 @@ export const classHelper = (obj: { [key: string]: boolean | undefined }) =>
   }, "")
 
 export const join = (...args: (string | undefined)[]) => {
-  return args.join(" ")
+  return args.filter((it) => !!it).join(" ")
 }

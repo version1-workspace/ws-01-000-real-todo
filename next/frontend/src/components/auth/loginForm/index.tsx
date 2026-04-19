@@ -1,14 +1,14 @@
 "use client"
 import { Metadata } from "next"
 import { useRouter } from "next/navigation"
-import styles from "./index.module.css"
-import Input from "@/components/shared/input/text"
 import Button from "@/components/shared/button"
+import Checkbox from "@/components/shared/checkbox"
+import Input from "@/components/shared/input/text"
 import ShowIf from "@/components/shared/showIf"
 import { useForm } from "@/hooks/useForm"
-import api, { setUserId } from "@/services/api"
 import { useToast } from "@/lib/toast/hook"
-import Checkbox from "@/components/shared/checkbox"
+import api, { setUserId } from "@/services/api"
+import styles from "./index.module.css"
 
 export const metadata: Metadata = {
   title: "Turvo | ログイン",
@@ -48,8 +48,12 @@ export default function Login() {
       try {
         const res = await api.authenticate(values)
         const { data } = res
-        api.client.setAccessToken(data.accessToken)
-        setUserId(data.uuid)
+        if (data.accessToken) {
+          api.client.setAccessToken(data.accessToken)
+        }
+        if (data.uuid) {
+          setUserId(data.uuid)
+        }
 
         router.push("/main")
       } catch (e) {

@@ -10,13 +10,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <AuthContainer isPublic>
-      <html lang="ja">
-        <body>{children}</body>
-      </html>
-    </AuthContainer>
-  )
+  return <AuthContainer isPublic>{children}</AuthContainer>
 }
 
 export const dynamic = "error"

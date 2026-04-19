@@ -1,18 +1,19 @@
 "use client"
-import { ReactNode, useMemo, useState } from "react"
-import styles from "@/components/shared/sidebar/index.module.css"
+
 import { usePathname } from "next/navigation"
+import { Fragment, ReactNode, useMemo, useState } from "react"
 import {
-  IoChevronForward as ShowIcon,
   IoChevronBack as HiddenIcon,
+  IoChevronForward as ShowIcon,
 } from "react-icons/io5"
-import route from "@/lib/route"
-import useProjects from "@/contexts/projects"
 import Icon from "@/components/shared/icon"
-import { Project } from "@/viewmodels/project"
 import Link from "@/components/shared/link"
+import styles from "@/components/shared/sidebar/index.module.css"
+import useProjects from "@/contexts/projects"
 import { classHelper } from "@/lib/cls"
+import route from "@/lib/route"
 import { truncate } from "@/lib/string"
+import { Project } from "@/viewmodels/project"
 
 interface MenuItem {
   title: string | ReactNode
@@ -99,7 +100,7 @@ export default function Sidebar() {
               <ul className={styles.menu}>
                 {list.map((menuItem: MenuItem) => {
                   return (
-                    <>
+                    <Fragment key={menuItem.path}>
                       <li key={menuItem.path}>
                         <Link href={menuItem.path}>
                           <div
@@ -159,7 +160,7 @@ export default function Sidebar() {
                       <div className={styles.menuItemFooter}>
                         {menuItem.footer}
                       </div>
-                    </>
+                    </Fragment>
                   )
                 })}
               </ul>

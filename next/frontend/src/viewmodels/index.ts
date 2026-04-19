@@ -1,8 +1,4 @@
-import {
-  Project,
-  ProjectParams,
-  ProjectModel,
-} from "@/viewmodels/project"
+import { Project, ProjectParams, ProjectModel } from "@/viewmodels/project"
 import { Stats, StatsParams, StatsModel } from "@/viewmodels/stats"
 import { Task, TaskParams, TaskModel } from "@/viewmodels/task"
 

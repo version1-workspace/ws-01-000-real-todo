@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import { Metadata } from "next"
 import { ToastContainer } from "@/lib/toast"
 import { position } from "@/lib/toast/config"
@@ -11,7 +12,9 @@ export default function Login() {
   return (
     <main>
       <ToastContainer config={{ position: position.BOTTOM_LEFT }}>
-        <Content light initialScene="signup" />
+        <Suspense>
+          <Content light initialScene="signup" />
+        </Suspense>
       </ToastContainer>
     </main>
   )

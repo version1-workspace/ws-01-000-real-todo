@@ -1,22 +1,22 @@
 "use client"
-import { useEffect, useState } from "react"
 import dayjs from "dayjs"
-import styles from "./index.module.css"
-import { classHelper } from "@/lib/cls"
-import TaskTable from "../table"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 import Icon from "@/components/shared/icon"
+import PopupMenu from "@/components/shared/popupMenu"
+import TaskForm from "@/components/tasks/form"
 import { CheckContainer } from "@/contexts/check"
 import useMilestones from "@/hooks/useMilestones"
-import TaskForm from "@/components/tasks/form"
-import Link from "next/link"
-import route from "@/lib/route"
+import { classHelper } from "@/lib/cls"
 import { useModal } from "@/lib/modal"
+import route from "@/lib/route"
+import { useToast } from "@/lib/toast/hook"
+import api from "@/services/api"
 import { factory } from "@/viewmodels"
 import { Project } from "@/viewmodels/project"
-import PopupMenu from "@/components/shared/popupMenu"
-import { useRouter } from "next/navigation"
-import api from "@/services/api"
-import { useToast } from "@/lib/toast/hook"
+import TaskTable from "../table"
+import styles from "./index.module.css"
 
 interface CollapseProps {
   header: React.ReactNode
@@ -125,6 +125,9 @@ export default function MilestoneList({ project }: Props) {
       </div>
       <div className={styles.container}>
         {milestones.map((it) => {
+          if (!it.children) {
+            return null
+          }
           return (
             <div className={styles.milestone} key={it.uuid}>
               <Collapse

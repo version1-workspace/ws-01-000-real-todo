@@ -12,7 +12,10 @@
 .interactivePulse {
   border-radius: 50%;
   padding: 8px;
-  transition: opacity 0.5s, background 0.5s, color 0.5s;
+  transition:
+    opacity 0.5s,
+    background 0.5s,
+    color 0.5s;
 }
 
 .interactivePulse:hover {

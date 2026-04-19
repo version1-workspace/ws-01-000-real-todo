@@ -1,5 +1,5 @@
-import { join } from "@/lib/cls"
 import { ChangeEvent, ForwardedRef, forwardRef } from "react"
+import { join } from "@/lib/cls"
 import styles from "./text.module.css"
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
   placeholder?: string
   containerClassName?: string
   inputClassName?: string
+  readOnly?: boolean
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -18,6 +19,7 @@ export default forwardRef(function Input(
     placeholder,
     containerClassName,
     inputClassName,
+    readOnly,
     onChange,
   }: Props,
   ref: ForwardedRef<HTMLInputElement>,
@@ -30,7 +32,8 @@ export default forwardRef(function Input(
         type={type}
         value={value}
         placeholder={placeholder}
-        onChange={onChange}
+        readOnly={readOnly ?? !onChange}
+        onChange={onChange ? (e) => onChange(e) : undefined}
       />
     </div>
   )

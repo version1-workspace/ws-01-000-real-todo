@@ -34,7 +34,9 @@ describe.sequential('swagger.yaml E2E', () => {
 
     expect(response.status).toBe(200);
     accessToken = response.json.data.accessToken;
-    refreshCookie = response.headers.get('set-cookie')?.split(';')[0] ?? '';
+    refreshCookie = response.headers.getSetCookie?.()
+      .map((c: string) => c.split(';')[0])
+      .join('; ') ?? '';
 
     await assertResponseMatchesSpec({
       pathKey: '/auth/login',
