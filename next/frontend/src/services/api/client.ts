@@ -38,10 +38,16 @@ class Client {
     this.baseURL = config.baseURL;
     this.timeout = config.timeout;
     this.withCredentials = config.withCredentials;
+    const token = getAccessToken();
     this.headers = {
       ...(config.headers || {}),
-      Authorization: `Bearer ${getAccessToken()}`,
     };
+    if (token) {
+      this.headers = {
+        ...(config.headers || {}),
+        Authorization: token ? `Bearer ${token}` : "",
+      };
+    }
   }
 
   get instance() {
@@ -60,8 +66,12 @@ class Client {
   }
 
   setAccessToken = (token: string) => {
-    _sessionStorage?.setItem("token", token);
-    this.headers.Authorization = token ? `Bearer ${token}` : "";
+    if (token) {
+      _sessionStorage?.setItem("token", token);
+      this.headers.Authorization = `Bearer ${token}`;
+    } else {
+      delete this.headers.Authorization;
+    }
   };
 
   private buildUrl(url: string, params?: Record<string, unknown>) {

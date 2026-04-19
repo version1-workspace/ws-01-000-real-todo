@@ -6,7 +6,6 @@ export const stretchCount = (createdAt: Date) =>
   Math.max(1, Math.floor(createdAt.getSeconds()) % 5);
 
 export const hashPassword = async (password: string, createdAt: Date) => {
-  console.log("debug ==============+", env.AUTH_SUGAR, password);
   return bcrypt.hash(
     [password, env.AUTH_SUGAR].join("_"),
     stretchCount(createdAt),
@@ -14,7 +13,6 @@ export const hashPassword = async (password: string, createdAt: Date) => {
 };
 
 export const comparePassword = async (password: string, hashed: string) => {
-  console.log("debug ==============+", env.AUTH_SUGAR, password);
   return bcrypt.compare([password, env.AUTH_SUGAR].join("_"), hashed);
 };
 
