@@ -2,12 +2,12 @@ import {
   IoCalendarClear as Calendar,
   IoGitCommit as Milestone,
   IoDocument as Task,
-} from "react-icons/io5";
-import styles from "@/components/project/card/index.module.css";
-import { Project } from "@/viewmodels/project";
+} from "react-icons/io5"
+import styles from "@/components/project/card/index.module.css"
+import { Project } from "@/viewmodels/project"
 
 interface Props {
-  data: Project;
+  data: Project
 }
 
 export default function Card({ data }: Props) {
@@ -61,5 +61,5 @@ export default function Card({ data }: Props) {
         </div>
       </div>
     </div>
-  );
+  )
 }

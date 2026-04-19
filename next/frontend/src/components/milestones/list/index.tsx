@@ -1,30 +1,30 @@
-"use client";
-import dayjs from "dayjs";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import Icon from "@/components/shared/icon";
-import PopupMenu from "@/components/shared/popupMenu";
-import TaskForm from "@/components/tasks/form";
-import { CheckContainer } from "@/contexts/check";
-import useMilestones from "@/hooks/useMilestones";
-import { classHelper } from "@/lib/cls";
-import { useModal } from "@/lib/modal";
-import route from "@/lib/route";
-import { useToast } from "@/lib/toast/hook";
-import api from "@/services/api";
-import { factory } from "@/viewmodels";
-import { Project } from "@/viewmodels/project";
-import TaskTable from "../table";
-import styles from "./index.module.css";
+"use client"
+import dayjs from "dayjs"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import Icon from "@/components/shared/icon"
+import PopupMenu from "@/components/shared/popupMenu"
+import TaskForm from "@/components/tasks/form"
+import { CheckContainer } from "@/contexts/check"
+import useMilestones from "@/hooks/useMilestones"
+import { classHelper } from "@/lib/cls"
+import { useModal } from "@/lib/modal"
+import route from "@/lib/route"
+import { useToast } from "@/lib/toast/hook"
+import api from "@/services/api"
+import { factory } from "@/viewmodels"
+import { Project } from "@/viewmodels/project"
+import TaskTable from "../table"
+import styles from "./index.module.css"
 
 interface CollapseProps {
-  header: React.ReactNode;
-  children: React.ReactNode;
-  disable?: boolean;
-  maxHeight: number;
-  line?: boolean;
-  showMoreText?: string;
+  header: React.ReactNode
+  children: React.ReactNode
+  disable?: boolean
+  maxHeight: number
+  line?: boolean
+  showMoreText?: string
 }
 
 const Collapse = ({
@@ -34,7 +34,7 @@ const Collapse = ({
   header,
   children,
 }: CollapseProps) => {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false)
 
   return (
     <div className={styles.collapseContainer}>
@@ -88,27 +88,27 @@ const Collapse = ({
         </div>
       ) : null}
     </div>
-  );
-};
-
-interface Props {
-  project: Project;
+  )
 }
 
-const rowHeight = 60;
+interface Props {
+  project: Project
+}
+
+const rowHeight = 60
 
 export default function MilestoneList({ project }: Props) {
-  const toast = useToast();
-  const { milestones, orphans, fetch } = useMilestones();
-  const { open, hide } = useModal();
-  const router = useRouter();
+  const toast = useToast()
+  const { milestones, orphans, fetch } = useMilestones()
+  const { open, hide } = useModal()
+  const router = useRouter()
 
   useEffect(() => {
-    fetch({ slug: project.slug });
-  }, []);
+    fetch({ slug: project.slug })
+  }, [])
 
   if (!milestones) {
-    return null;
+    return null
   }
 
   return (
@@ -126,7 +126,7 @@ export default function MilestoneList({ project }: Props) {
       <div className={styles.container}>
         {milestones.map((it) => {
           if (!it.children) {
-            return null;
+            return null
           }
           return (
             <div className={styles.milestone} key={it.uuid}>
@@ -160,7 +160,7 @@ export default function MilestoneList({ project }: Props) {
                               text: "編集する",
                               logo: <Icon name="edit" />,
                               onClick: () => {
-                                router.push(route.main.tasks.with(it.id));
+                                router.push(route.main.tasks.with(it.id))
                               },
                             },
                             {
@@ -174,20 +174,20 @@ export default function MilestoneList({ project }: Props) {
                                     "子タスクもまとめてアーカイブされますがよろしいでしょうか？",
                                   )
                                 ) {
-                                  return;
+                                  return
                                 }
 
                                 try {
                                   await api.archiveMilestone({
                                     slug: project.slug,
                                     id: it.id,
-                                  });
+                                  })
                                   toast.success(
                                     "マイルストーンをアーカイブしました。",
-                                  );
-                                  await fetch({ slug: project.slug });
+                                  )
+                                  await fetch({ slug: project.slug })
                                 } catch (e) {
-                                  toast.error("アーカイブに失敗しました。");
+                                  toast.error("アーカイブに失敗しました。")
                                 }
                               },
                             },
@@ -226,13 +226,13 @@ export default function MilestoneList({ project }: Props) {
                                 children: [],
                               })}
                               onSubmit={() => {
-                                fetch({ slug: project.slug });
-                                hide();
+                                fetch({ slug: project.slug })
+                                hide()
                               }}
                               onCancel={hide}
                             />
                           ),
-                        });
+                        })
                       }}
                     >
                       タスクを登録する
@@ -241,7 +241,7 @@ export default function MilestoneList({ project }: Props) {
                 )}
               </Collapse>
             </div>
-          );
+          )
         })}
         <div className={styles.complete}>
           <p className={styles.deadlineText}>{project.deadline.format()}</p>
@@ -278,5 +278,5 @@ export default function MilestoneList({ project }: Props) {
         <div className={styles.footer}></div>
       </div>
     </CheckContainer>
-  );
+  )
 }

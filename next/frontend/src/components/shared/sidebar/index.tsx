@@ -1,29 +1,29 @@
-"use client";
+"use client"
 
-import { usePathname } from "next/navigation";
-import { Fragment, ReactNode, useMemo, useState } from "react";
+import { usePathname } from "next/navigation"
+import { Fragment, ReactNode, useMemo, useState } from "react"
 import {
   IoChevronBack as HiddenIcon,
   IoChevronForward as ShowIcon,
-} from "react-icons/io5";
-import Icon from "@/components/shared/icon";
-import Link from "@/components/shared/link";
-import styles from "@/components/shared/sidebar/index.module.css";
-import useProjects from "@/contexts/projects";
-import { classHelper } from "@/lib/cls";
-import route from "@/lib/route";
-import { truncate } from "@/lib/string";
-import { Project } from "@/viewmodels/project";
+} from "react-icons/io5"
+import Icon from "@/components/shared/icon"
+import Link from "@/components/shared/link"
+import styles from "@/components/shared/sidebar/index.module.css"
+import useProjects from "@/contexts/projects"
+import { classHelper } from "@/lib/cls"
+import route from "@/lib/route"
+import { truncate } from "@/lib/string"
+import { Project } from "@/viewmodels/project"
 
 interface MenuItem {
-  title: string | ReactNode;
-  path: string;
-  children?: MenuItem[];
-  footer?: ReactNode;
-  options?: Record<string, any>;
+  title: string | ReactNode
+  path: string
+  children?: MenuItem[]
+  footer?: ReactNode
+  options?: Record<string, any>
 }
 
-const projectCountLimit = 5;
+const projectCountLimit = 5
 
 const sidebarMenulist = (projects: Project[]) => [
   {
@@ -52,11 +52,11 @@ const sidebarMenulist = (projects: Project[]) => [
           deadline: it.deadline?.format(),
           color: it.color,
         },
-      };
+      }
     }),
     footer: (function () {
       if (projects.length <= projectCountLimit) {
-        return null;
+        return null
       }
 
       return (
@@ -65,17 +65,17 @@ const sidebarMenulist = (projects: Project[]) => [
             あと {projects.length - projectCountLimit} プロジェクト
           </p>
         </Link>
-      );
+      )
     })(),
   },
-];
+]
 
 export default function Sidebar() {
-  const { projects } = useProjects();
-  const [show, setShow] = useState(true);
-  const pathname = usePathname();
+  const { projects } = useProjects()
+  const [show, setShow] = useState(true)
+  const pathname = usePathname()
 
-  const list = useMemo(() => sidebarMenulist(projects), [projects]);
+  const list = useMemo(() => sidebarMenulist(projects), [projects])
 
   return (
     <div
@@ -153,7 +153,7 @@ export default function Sidebar() {
                                   </div>
                                 </Link>
                               </li>
-                            );
+                            )
                           })}
                         </ul>
                       ) : null}
@@ -161,7 +161,7 @@ export default function Sidebar() {
                         {menuItem.footer}
                       </div>
                     </Fragment>
-                  );
+                  )
                 })}
               </ul>
             </>
@@ -170,5 +170,5 @@ export default function Sidebar() {
         <div className={styles.footer}></div>
       </div>
     </div>
-  );
+  )
 }
