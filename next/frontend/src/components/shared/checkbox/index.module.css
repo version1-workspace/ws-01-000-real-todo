@@ -1,24 +1,27 @@
 .container {
-  padding: 8px;
 }
 
 .label {
   cursor: pointer;
   display: flex;
   align-items: center;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .box {
-  border-radius: 2px;
-  height: 12px;
-  width: 12px;
-  border: 1px solid var(--border-color);
-  margin-right: 8px;
+  border-radius: 4px;
+  height: 16px;
+  width: 16px;
+  border: 1px solid var(--primary-color);
+  margin-right: 12px;
 }
 
 .check {
   position: relative;
-  top: 0px;
-  left: 0px;
+  top: 1px;
+  left: 1px;
+}
+
+.checked {
+  background: var(--primary-color);
 }

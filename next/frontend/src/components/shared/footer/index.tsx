@@ -1,5 +1,6 @@
-import styles from "./index.module.scss"
 import Link from "next/link"
+import Icon from "@/components/shared/icon"
+import styles from "./index.module.scss"
 
 const footerMenus = [
   {
@@ -66,6 +67,23 @@ export default function FooterComponent() {
             <br />
             より良い生活を手に入れよう。
           </div>
+          <ul className={styles.socialLinks}>
+            <li className={styles.socialLinkItem}>
+              <Link className={styles.iconCircle} href="">
+                <Icon name="github" size={20} />
+              </Link>
+            </li>
+            <li className={styles.socialLinkItem}>
+              <Link className={styles.iconCircle} href="">
+                <Icon name="youtube" size={20} />
+              </Link>
+            </li>
+            <li className={styles.socialLinkItem}>
+              <Link className={styles.iconCircle} href="">
+                <Icon name="mail" size={20} />
+              </Link>
+            </li>
+          </ul>
         </div>
         <div className={styles.right}>
           <div className={styles.menu}>
@@ -89,6 +107,9 @@ export default function FooterComponent() {
             })}
           </div>
         </div>
+      </div>
+      <div className={styles.copyright}>
+        &copy; 2024 Turvo. All rights reserved.
       </div>
     </footer>
   )

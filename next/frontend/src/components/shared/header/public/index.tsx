@@ -1,14 +1,14 @@
-import styles from "./index.module.scss"
+import Image from "next/image"
 import Link from "next/link"
 import Button from "@/components/shared/button"
-import Image from "next/image"
 import Icon from "@/components/shared/icon"
+import styles from "./index.module.scss"
 
 const images = {
   logo: {
     src: "/assets/logo.png",
-    width: 24,
-    height: 24,
+    width: 36,
+    height: 36,
   },
 }
 

@@ -3,6 +3,7 @@ import { Metadata } from "next"
 import { useRouter } from "next/navigation"
 import Button from "@/components/shared/button"
 import Checkbox from "@/components/shared/checkbox"
+import Icon from "@/components/shared/icon"
 import Input from "@/components/shared/input/text"
 import ShowIf from "@/components/shared/showIf"
 import { useForm } from "@/hooks/useForm"
@@ -20,6 +21,8 @@ interface Form {
   rememberMe: boolean
   authentication?: boolean
 }
+
+const iconColor = "#4b4c4d"
 
 const mailFormat =
   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -67,15 +70,17 @@ export default function Login() {
   return (
     <div className={styles.form}>
       <div className={styles.copy}>
-        <span className={styles.emoticon}>🏠</span>Welcome Back
+        <span className={styles.emoticon}>🏠</span>
+        <span className={styles.copyText}>Welcome Back</span>
         <span className={styles.emoticon}>😃</span>
       </div>
-
       <h2 className={styles.formTitle}>
         <div className={styles.formSubtitle}>ログインして Turvo を使う</div>
       </h2>
       <div className={styles.inputField}>
+        <div className={styles.inputLabel}>メールアドレス</div>
         <Input
+          icon={<Icon name="mail" size={16} color={iconColor} />}
           value={form.email}
           placeholder="turbo@example.com"
           inputClassName={styles.input}
@@ -88,7 +93,9 @@ export default function Login() {
         </ShowIf>
       </div>
       <div className={styles.inputField}>
+        <div className={styles.inputLabel}>パスワード</div>
         <Input
+          icon={<Icon name="lock" size={16} color={iconColor} />}
           type="password"
           value={form.password}
           placeholder="***********"
@@ -101,13 +108,19 @@ export default function Login() {
           <p className={styles.errorMessage}>{errorMessages.password}</p>
         </ShowIf>
       </div>
-      <Checkbox
-        label="自動的にログインする"
-        defaultValue={form.rememberMe}
-        onClick={(checked) => change({ rememberMe: checked })}
-      />
+      <div className={styles.autoLogin}>
+        <Checkbox
+          label="自動的にログインする"
+          defaultValue={form.rememberMe}
+          onClick={(checked) => change({ rememberMe: checked })}
+        />
+      </div>
       <div className={styles.field}>
-        <Button variant="primary" onClick={submit}>
+        <Button
+          className={styles.loginButton}
+          variant="primary"
+          onClick={submit}
+        >
           ログイン
         </Button>
         <ShowIf value={errorMessages.authentication}>

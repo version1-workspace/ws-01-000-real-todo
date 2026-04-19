@@ -5,6 +5,7 @@ import styles from "./text.module.css"
 interface Props {
   value: string
   type?: "text" | "password"
+  icon?: React.ReactNode
   placeholder?: string
   containerClassName?: string
   inputClassName?: string
@@ -16,6 +17,7 @@ export default forwardRef(function Input(
   {
     type,
     value,
+    icon,
     placeholder,
     containerClassName,
     inputClassName,
@@ -24,6 +26,21 @@ export default forwardRef(function Input(
   }: Props,
   ref: ForwardedRef<HTMLInputElement>,
 ) {
+  if (icon) {
+    return (
+      <InputWithIcon
+        type={type}
+        value={value}
+        icon={icon}
+        placeholder={placeholder}
+        containerClassName={containerClassName}
+        inputClassName={inputClassName}
+        readOnly={readOnly}
+        onChange={onChange}
+      />
+    )
+  }
+
   return (
     <div className={join(styles.container, containerClassName)}>
       <input
@@ -38,3 +55,28 @@ export default forwardRef(function Input(
     </div>
   )
 })
+
+function InputWithIcon({
+  type,
+  value,
+  icon,
+  placeholder,
+  containerClassName,
+  inputClassName,
+  readOnly,
+  onChange,
+}: Props) {
+  return (
+    <div className={join(styles.withIconContainer, containerClassName)}>
+      {icon ? <div className={styles.icon}>{icon}</div> : null}
+      <input
+        className={join(styles.textWithIcon, inputClassName)}
+        type={type}
+        value={value}
+        placeholder={placeholder}
+        readOnly={readOnly ?? !onChange}
+        onChange={onChange ? (e) => onChange(e) : undefined}
+      />
+    </div>
+  )
+}

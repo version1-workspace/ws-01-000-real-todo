@@ -86,7 +86,6 @@ export default function Transition({
         style={{
           ...baseStyles,
           ...offStyles,
-          background: "var(--primary-color)",
         }}
       >
         <div className={styles.content} style={contentStyles}>
