@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { IoCheckmark } from "react-icons/io5"
+import { classHelper } from "@/lib/cls"
 import styles from "./index.module.css"
 
 interface Props {
@@ -22,8 +23,15 @@ export default function Checkbox({ label, defaultValue, onClick }: Props) {
           onClick(next)
         }}
       >
-        <div className={styles.box}>
-          {checked ? <IoCheckmark className={styles.check} /> : null}
+        <div
+          className={classHelper({
+            [styles.box]: true,
+            [styles.checked]: checked,
+          })}
+        >
+          {checked ? (
+            <IoCheckmark className={styles.check} color="white" />
+          ) : null}
         </div>
         <p>{label}</p>
       </label>

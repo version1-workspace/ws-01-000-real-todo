@@ -2,14 +2,13 @@
 }
 
 .text {
-  border-radius: 4px;
+  border-radius: 8px;
   padding: 8px 12px;
   width: 100%;
   font-weight: 300;
   font-size: 12px;
   color: var(--font-color-dark);
-  border: 0;
-  box-shadow: 0px 0px 4px 1px #22222210;
+  border: 1px solid var(--border-weak-color);
 }
 
 .text::placeholder {
@@ -19,4 +18,31 @@
 
 .text:focus {
   outline: 1.5px solid var(--input-outline-color);
+}
+
+.withIconContainer {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--border-weak-color);
+}
+
+.icon {
+  position: relative;
+  width: 0px;
+  left: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.textWithIcon {
+  padding: 16px;
+  padding-left: 36px;
+  width: 100%;
+  font-weight: 300;
+  font-size: 12px;
+  color: var(--font-color-dark);
+  border: 0;
 }

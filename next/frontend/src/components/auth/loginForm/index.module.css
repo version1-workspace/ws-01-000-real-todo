@@ -15,7 +15,8 @@
 }
 
 .formTitle {
-  margin: 32px 0;
+  margin: 12px 0;
+  margin-bottom: 32px;
   font-weight: normal;
   font-size: 14px;
 }
@@ -30,8 +31,9 @@
   margin: 0 0;
 }
 
-input.input {
-  padding: 16px;
+.inputLabel {
+  font-size: 12px;
+  margin-bottom: 8px;
 }
 
 .field {
@@ -44,7 +46,15 @@ input.input {
 
 .copy {
   font-size: 28px;
-  margin-bottom: 64px;
+  margin-bottom: 8px;
+}
+
+.copyText {
+  display: inline-block;
+  margin-left: 8px;
+  margin-right: 8px;
+  color: var(--basic-font-color);
+  font-weight: bold;
 }
 
 .link {
@@ -54,4 +64,13 @@ input.input {
 
 .errorMessage {
   color: var(--danger-color);
+}
+
+.loginButton {
+  padding: 16px;
+}
+
+.autoLogin {
+  margin-top: 0;
+  margin-bottom: 32px;
 }

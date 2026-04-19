@@ -9,11 +9,12 @@
   margin: auto;
   max-width: 1920px;
   padding: 64px 128px;
+  padding-bottom: 32px;
   display: flex;
   justify-content: space-evenly;
   width: 100%;
 
-  background: #f9f9f9;
+  background: #fafafe;
 
   @include m.lg {
     flex-wrap: wrap;
@@ -23,8 +24,8 @@
 
 .logo {
   font-size: 24px;
+  color: var(--basic-font-color);
   font-weight: bold;
-  letter-spacing: 4px;
   margin-bottom: 32px;
 }
 
@@ -71,4 +72,30 @@
 
 .linkItem {
   margin-bottom: 16px;
+}
+
+.socialLinks {
+  display: flex;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.socialLinkItem {
+  margin-right: 16px;
+}
+
+.iconCircle {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copyright {
+  text-align: center;
+  padding: 16px;
 }
