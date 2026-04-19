@@ -9,6 +9,6 @@ describe("cls", () => {
   })
 
   it("join で未定義値を含む文字列を連結する", () => {
-    expect(join("button", undefined, "primary")).toBe("button  primary")
+    expect(join("button", undefined, "primary")).toBe("button primary")
   })
 })

@@ -30,7 +30,7 @@ describe("tokenCookie", () => {
 		});
 
 		it("cookies が undefined なら undefined を返す", () => {
-			const req = { cookies: undefined } as Parameters<
+			const req = { cookies: undefined } as unknown as Parameters<
 				typeof tokenCookie.getAccessToken
 			>[0];
 			expect(tokenCookie.getAccessToken(req)).toBeUndefined();
