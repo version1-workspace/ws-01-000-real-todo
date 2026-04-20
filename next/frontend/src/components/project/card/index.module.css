@@ -1,9 +1,11 @@
 .card {
   padding: 16px;
+  padding-bottom: 8px;
   border: 0;
-  box-shadow: 1px 1px 3px 1px #22222210;
+  border-radius: 8px;
+  box-shadow: 0px 1px 2px 0px #22222240;
+  background: #fafafe60;
   margin-bottom: 16px;
-  background: var(--background-color);
   color: var(--font-color-dark-weak);
   transition: all 0.5s;
 }
@@ -17,6 +19,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.titleWrapper {
+  display: inline-block;
+  border-radius: 4px;
+  padding: 2px 8px;
 }
 
 .deadline {
@@ -34,7 +42,7 @@
 
 .deadlineDate {
   font-size: 10px;
-  font-weight: bold;
+  color: #636363;
 }
 
 .title {
@@ -52,7 +60,7 @@
   align-items: center;
   margin-right: 16px;
   margin-bottom: 8px;
-  font-size: 20px;
+  font-size: 16px;
   color: var(--font-color-dark);
   font-weight: bold;
 }
@@ -67,7 +75,7 @@
 .shouldbe {
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 100;
   color: var(--font-color-weak);
 }
@@ -85,7 +93,7 @@
 
 .footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   color: var(--font-color-dark-weak);
 }
 
@@ -99,11 +107,12 @@
   cursor: pointer;
   display: flex;
   align-items: center;
+  margin-right: 10px;
 }
 
 .statsText {
   font-size: 12px;
-  color: var(--font-color-dark-weak);
+  color: #636363;
 }
 
 .slash {
