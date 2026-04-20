@@ -9,6 +9,7 @@ import {
 import Icon, { IconName } from "@/components/shared/icon"
 import Link from "@/components/shared/link"
 import styles from "@/components/shared/sidebar/index.module.css"
+import Switcher from "@/components/shared/switcher"
 import useProjects from "@/contexts/projects"
 import { classHelper } from "@/lib/cls"
 import route from "@/lib/route"
@@ -199,8 +200,9 @@ export default function Sidebar() {
             <div className={styles.theme}>
               <div className={styles.darkModeToggle}>
                 <Icon className={styles.darkModeIcon} name="bulb" size={16} />
-                ダークモード
+                <span className={styles.darkModeText}>ダークモード</span>
               </div>
+              <Switcher />
             </div>
           </div>
         ) : null}
