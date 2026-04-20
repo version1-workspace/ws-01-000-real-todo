@@ -1,10 +1,10 @@
+import Link from "next/link"
+import { useState } from "react"
 import Icon from "@/components/shared/icon"
 import route from "@/lib/route"
 import api from "@/services/api"
 import { factory } from "@/viewmodels"
 import { Task, TaskParams } from "@/viewmodels/task"
-import Link from "next/link"
-import { useState } from "react"
 import styles from "./index.module.css"
 
 export default function Search() {
@@ -38,7 +38,12 @@ export default function Search() {
     <div className={styles.container}>
       {show ? <div className={styles.overlay} onClick={close}></div> : null}
       <div className={styles.search}>
-        <Icon name="search" size={24} color="#94ae9f" />
+        <Icon
+          className={styles.searchIcon}
+          name="search"
+          size={16}
+          color="#94ae9f"
+        />
         <input
           type="text"
           placeholder="タスクタイトルで検索"

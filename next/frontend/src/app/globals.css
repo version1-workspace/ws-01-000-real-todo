@@ -12,6 +12,11 @@
   --shadow-color: #eee;
 
   --primary-color: #16a34a;
+  --primary-500-color: #22c55e;
+  --primary-400-color: #4ade80;
+  --primary-300-color: #86efac;
+  --primary-200-color: #bbf7d0;
+  --primary-100-color: #dcfce7;
   --primary-50-color: #f0fdf4;
   --primary-color-darker: #0d864f;
   --secondary-color: #1c3041;
@@ -36,6 +41,8 @@
   --top-font-weak-color: #677772;
   --bg-color-light: #fafafe;
   --bg-color-light-2: #f9f9fa;
+
+  --bg-color-white: #fefefe;
 
   --input-outline-color: #22222240;
 

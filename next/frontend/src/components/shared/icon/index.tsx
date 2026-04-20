@@ -9,6 +9,7 @@ import {
   IoArrowUndoOutline,
   IoArrowUpOutline,
   IoBarChart,
+  IoBulbOutline,
   IoCalendarOutline,
   IoCaretDown,
   IoCheckmark,
@@ -27,6 +28,7 @@ import {
   IoFilter,
   IoGitCommit,
   IoGridOutline,
+  IoHelpCircleOutline,
   IoInformationCircleSharp,
   IoListOutline,
   IoLockClosedOutline,
@@ -40,6 +42,7 @@ import {
   IoPerson,
   IoScanOutline,
   IoSearch,
+  IoSettingsOutline,
   IoSwapVertical,
   IoTrashOutline,
 } from "react-icons/io5"
@@ -48,6 +51,12 @@ import styles from "./index.module.css"
 
 const icons = {
   unknown: IoCodeOutline,
+  dashboard: IoBarChart,
+  project: IoGridOutline,
+  tasks: IoDocumentText,
+  bulb: IoBulbOutline,
+  help: IoHelpCircleOutline,
+  settings: IoSettingsOutline,
   logout: IoExit,
   filter: IoFilter,
   folder: IoGridOutline,
@@ -94,9 +103,10 @@ const icons = {
 }
 
 type IconType = typeof icons
+export type IconName = keyof IconType
 
 interface Props {
-  name: keyof IconType
+  name: IconName
   className?: string
   interactive?: "pulse" | "hover" | "hoverDark"
   size?: number | string
