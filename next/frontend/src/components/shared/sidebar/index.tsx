@@ -6,7 +6,7 @@ import {
   IoChevronBack as HiddenIcon,
   IoChevronForward as ShowIcon,
 } from "react-icons/io5"
-import Icon from "@/components/shared/icon"
+import Icon, { IconName } from "@/components/shared/icon"
 import Link from "@/components/shared/link"
 import styles from "@/components/shared/sidebar/index.module.css"
 import useProjects from "@/contexts/projects"
@@ -17,6 +17,7 @@ import { Project } from "@/viewmodels/project"
 
 interface MenuItem {
   title: string | ReactNode
+  icon?: IconName
   path: string
   children?: MenuItem[]
   footer?: ReactNode
@@ -25,24 +26,20 @@ interface MenuItem {
 
 const projectCountLimit = 5
 
-const sidebarMenulist = (projects: Project[]) => [
+const sidebarMenulist = (projects: Project[]): MenuItem[] => [
   {
+    icon: "dashboard",
     title: "ダッシュボード",
     path: route.main.toString(),
   },
   {
     title: "タスク",
+    icon: "tasks",
     path: route.main.tasks.toString(),
   },
   {
-    title: (
-      <>
-        プロジェクト
-        <Link href={route.main.projects.new.toString()}>
-          <Icon name="add" />
-        </Link>
-      </>
-    ),
+    title: <>プロジェクト</>,
+    icon: "project",
     path: route.main.projects.toString(),
     children: projects.slice(0, projectCountLimit).map((it) => {
       return {
@@ -60,11 +57,20 @@ const sidebarMenulist = (projects: Project[]) => [
       }
 
       return (
-        <Link href={route.main.projects.toString()}>
-          <p className={styles.showMoreProjects}>
-            あと {projects.length - projectCountLimit} プロジェクト
-          </p>
-        </Link>
+        <>
+          <Link href={route.main.projects.toString()}>
+            <p className={styles.showMoreProjects}>
+              あと {projects.length - projectCountLimit} プロジェクト
+            </p>
+          </Link>
+          <Link
+            className={styles.addProject}
+            href={route.main.projects.new.toString()}
+          >
+            <Icon className={styles.addProjectIcon} name="add" />
+            <p>新しいプロジェクトを作成</p>
+          </Link>
+        </>
       )
     })(),
   },
@@ -91,7 +97,7 @@ export default function Sidebar() {
             className={styles.sidebarToggle}
             onClick={() => setShow((show) => !show)}
           >
-            {show ? <HiddenIcon /> : <ShowIcon />}
+            {show ? <HiddenIcon size={12} /> : <ShowIcon size={12} />}
           </span>
         </div>
         <div className={styles.body}>
@@ -110,6 +116,9 @@ export default function Sidebar() {
                                 pathname === menuItem.path,
                             })}
                           >
+                            <div className={styles.menuIconWrapper}>
+                              <Icon name={menuItem.icon ?? "unknown"} />
+                            </div>
                             <p
                               className={classHelper({
                                 [styles.menuTitle]: true,
@@ -130,11 +139,15 @@ export default function Sidebar() {
                                 key={item.path}
                                 className={classHelper({
                                   [styles.menuItem]: true,
+                                  [styles.menuItemChildren]: true,
                                   [styles.menuItemActive]:
                                     pathname === item.path,
                                 })}
                               >
-                                <Link href={item.path}>
+                                <Link
+                                  className={styles.projectLink}
+                                  href={item.path}
+                                >
                                   <div className={styles.project}>
                                     <div>
                                       <span
@@ -167,7 +180,30 @@ export default function Sidebar() {
             </>
           ) : null}
         </div>
-        <div className={styles.footer}></div>
+        {show ? (
+          <div className={styles.footer}>
+            <ul className={styles.footerMenu}>
+              <li className={styles.footerLinkItem}>
+                <Link className={styles.footerLink} href="#!">
+                  <Icon className={styles.footerLinkIcon} name="settings" />
+                  <span className={styles.footerText}>設定</span>
+                </Link>
+              </li>
+              <li className={styles.footerLinkItem}>
+                <Link className={styles.footerLink} href="#!">
+                  <Icon className={styles.footerLinkIcon} name="help" />
+                  <span className={styles.footerText}>ヘルプ</span>
+                </Link>
+              </li>
+            </ul>
+            <div className={styles.theme}>
+              <div className={styles.darkModeToggle}>
+                <Icon className={styles.darkModeIcon} name="bulb" size={16} />
+                ダークモード
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   )

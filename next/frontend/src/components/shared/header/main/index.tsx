@@ -1,18 +1,20 @@
 "use client"
 import Link from "next/link"
 import { useState } from "react"
-import styles from "./index.module.css"
+import { useAuth } from "@/components/auth"
+import TaskForm from "@/components/tasks/form"
+import Search from "@/components/tasks/search"
+import useTasks from "@/contexts/tasks"
 import { useModal } from "@/lib/modal"
 import route from "@/lib/route"
-import TaskForm from "@/components/tasks/form"
 import Icon from "../../icon"
-import useTasks from "@/contexts/tasks"
-import { useAuth } from "@/components/auth"
-import Search from "@/components/tasks/search"
+import styles from "./index.module.css"
 
 interface DropdownProps {
   trigger: React.ReactNode
 }
+
+const iconSize = 20
 
 function Dropdown({ trigger }: DropdownProps) {
   const { user, logout } = useAuth()
@@ -79,11 +81,13 @@ export default function Header() {
     <header className={styles.header}>
       <div className={styles.content}>
         <div className={styles.left}>
-          <Link href={route.main.toString()}>
-            <div className={styles.logo}>
-              <h2>Turvo</h2>
-            </div>
-          </Link>
+          <div className={styles.logoContainer}>
+            <Link href={route.main.toString()}>
+              <div className={styles.logo}>
+                <h2>Turvo</h2>
+              </div>
+            </Link>
+          </div>
           <div className={styles.searchForm}>
             <Search />
           </div>
@@ -112,17 +116,25 @@ export default function Header() {
               />
             </li>
             <li className={styles.menuItem}>
-              <Icon name="info" interactive="hoverDark" size={24} />
+              <Icon name="info" interactive="hoverDark" size={iconSize} />
             </li>
             <li className={styles.menuItem}>
-              <Icon name="notification" interactive="hoverDark" size={24} />
+              <Icon
+                name="notification"
+                interactive="hoverDark"
+                size={iconSize}
+              />
             </li>
           </ul>
           <div className={styles.avatarIcon}>
             <Dropdown
               trigger={
                 <div className={styles.avatarCircleContaiener}>
-                  <Icon name="person" interactive="hover" size={20} />
+                  <Icon
+                    name="person"
+                    interactive="hover"
+                    size={iconSize * 0.8}
+                  />
                 </div>
               }
             />

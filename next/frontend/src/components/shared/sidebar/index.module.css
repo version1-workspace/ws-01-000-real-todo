@@ -1,5 +1,6 @@
 .sidebar {
-  background: var(--bg-color-light-2);
+  background: var(--bg-color-white);
+  display: flex;
   height: 100%;
 }
 
@@ -17,7 +18,10 @@
 }
 
 .content {
-  height: calc(100% - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .body {
@@ -25,15 +29,26 @@
 }
 
 .menuItem {
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 16px;
   padding-left: 32px;
   font-size: 14px;
   white-space: nowrap;
 }
 
+.menuItemChildren {
+}
+
+.menuIconWrapper {
+  margin-right: 16px;
+}
+
+.menuIcon {
+}
+
 .menuItem:hover {
-  background: #8fe3c740;
+  background: var(--primary-50-color);
 }
 
 .menuItem > a {
@@ -41,23 +56,23 @@
 }
 
 .menuItemActive {
-  background: var(--hover-color);
-  color: var(--font-color-dark);
-  font-weight: bold;
+  background: var(--primary-50-color);
+  color: var(--primary-color);
 }
 
 .children {
   margin: 16px 0;
-  margin-left: 32px;
+  margin-top: 0;
   color: var(--font-color-dark);
 }
 
 .dot {
   display: inline-block;
-  height: 8px;
-  width: 8px;
+  height: 6px;
+  width: 6px;
   border-radius: 4px;
-  margin-right: 8px;
+  margin-left: 4px;
+  margin-right: 16px;
 }
 
 .menuTitle {
@@ -70,15 +85,35 @@
 }
 
 .menuTitleActive {
-  color: var(--font-color-dark);
-  font-weight: bold;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.addProject {
+  display: flex;
+  align-items: center;
+  color: var(--primary-color);
+  font-size: 12px;
+  margin-top: 16px;
+  margin-left: 32px;
+}
+
+.addProjectIcon {
+  display: inline-block;
+  margin-right: 8px;
 }
 
 .project {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
+  font-size: 12px;
+  width: 100%;
   color: var(--font-color-dark);
+}
+
+.projectLink {
+  width: 100%;
 }
 
 .deadline {
@@ -90,8 +125,7 @@
 .header {
   display: flex;
   justify-content: flex-end;
-  height: 40px;
-  padding: 16px;
+  padding: 8px;
 }
 
 .sidebarToggle {
@@ -104,8 +138,44 @@
 }
 
 .showMoreProjects {
-  color: var(--primary-color);
-  font-size: 12px;
+  color: var(--font-color-weak);
+  font-size: 10px;
   display: flex;
+  margin-top: -12px;
+  margin-bottom: 32px;
   justify-content: flex-end;
+}
+
+.footer {
+  padding: 16px 32px;
+  padding-right: 8px;
+  font-size: 14px;
+}
+
+.footerLink {
+  display: flex;
+  align-items: center;
+}
+
+.footerLinkItem {
+  margin-bottom: 32px;
+}
+
+.footerLinkIcon {
+  margin-right: 8px;
+}
+
+.darkModeToggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid #22222220;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 12px;
+}
+
+.darkModeIcon {
+  display: inline-block;
+  margin-right: 12px;
 }
