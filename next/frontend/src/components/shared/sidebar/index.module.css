@@ -169,8 +169,6 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  border: 1px solid #22222220;
-  border-radius: 8px;
   padding: 16px;
   font-size: 12px;
 }
@@ -178,4 +176,19 @@
 .darkModeIcon {
   display: inline-block;
   margin-right: 12px;
+}
+
+.darkModeText {
+  display: inline-block;
+  margin-right: 16px;
+  border-radius: 8px;
+}
+
+.theme {
+  padding: 0px;
+  padding-right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #22222220;
 }
