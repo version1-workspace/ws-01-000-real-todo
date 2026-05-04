@@ -32,6 +32,22 @@
   align-items: center;
 }
 
+.legendList {
+  display: flex;
+  gap: 32px;
+  font-size: 12px;
+}
+
+.legendLabel {
+  position: relative;
+  top: 2px;
+  display: inline-block;
+  width: 20px;
+  height: 12px;
+  border-radius: 2px;
+  margin-right: 8px;
+}
+
 .kind {
   display: flex;
 }

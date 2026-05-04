@@ -4,11 +4,11 @@ import Link from "next/link"
 import styles from "@/app/main/page.module.css"
 import Card from "@/components/project/card"
 import Chart from "@/components/project/chart"
+import Icon from "@/components/shared/icon"
 import TaskList from "@/components/tasks/list"
-import route from "@/lib/route"
 import useProjects from "@/contexts/projects"
 import useTasks from "@/contexts/tasks"
-import Icon from "@/components/shared/icon"
+import route from "@/lib/route"
 
 export default function Main() {
   const { projects } = useProjects()
@@ -16,10 +16,11 @@ export default function Main() {
 
   return (
     <div className={styles.projects}>
+      <h1 className={styles.title}>ダッシュボード</h1>
       <div className={styles.dashboard}>
         <div className={styles.projectList}>
           <h2 className={styles.sectionTitle}>
-            プロジェクト
+            <span className={styles.projectListTitle}>最近のプロジェクト</span>
             <p className={styles.addProject}>
               <Link href={route.main.projects.new.toString()}>
                 <Icon size={20} className={styles.projectAddIcon} name="add" />
@@ -43,12 +44,13 @@ export default function Main() {
               className={styles.projectListLink}
               href={route.main.projects.toString()}
             >
-              プロジェクト一覧
+              すべてのプロジェクトをみる
+              <span className={styles.projectListLinkArrow}>→</span>
             </Link>
           </div>
         </div>
         <div className={styles.chart}>
-          <h2 className={styles.sectionTitle}>進捗</h2>
+          <h2 className={styles.sectionTitle}>進捗サマリー</h2>
           <div className={styles.content}>
             <Chart />
           </div>

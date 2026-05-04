@@ -3,40 +3,62 @@
   height: 100%;
 }
 
+.title {
+  font-size: 14px;
+  font-weight: 100;
+  padding-bottom: 16px;
+}
+
 .content {
   padding: 16px 0;
+  padding-bottom: 8px;
 }
 
 .projectList {
   flex: 1;
   margin-right: 32px;
+  border: 1px solid var(--border-color-light);
+  border-radius: 8px;
+  background: var(--bg-color-white);
+  padding: 16px;
 }
 
 .projectListFooter {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .projectListLink {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--primary-color);
+}
+
+.projectListLinkArrow {
+  position: relative;
+  top: -1px;
+  display: inline-block;
+  margin-left: 4px;
+  font-weight: bold;
 }
 
 .chart {
   flex: 1;
+  padding: 16px;
+  border: 1px solid var(--border-color-light);
+  border-radius: 8px;
   background: var(--background-color);
 }
 
 .dashboard {
-  padding: 32px;
   display: flex;
   justify-content: space-between;
-  background: var(--background-color);
+  margin-bottom: 32px;
 }
 
 .sectionTitle {
-  font-size: 14px;
-  font-weight: 100;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -68,6 +90,8 @@
 .todos {
   padding: 32px;
   background: var(--background-color);
+  border: 1px solid var(--border-color-light);
+  border-radius: 8px;
 }
 
 .todos .content {

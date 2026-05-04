@@ -1,27 +1,23 @@
 "use client"
-import { SetStateAction, useEffect, useState } from "react"
-import dayjs from "dayjs"
-import styles from "@/components/project/chart/index.module.css"
 import {
-  Chart as ChartJS,
+  BarElement,
   CategoryScale,
+  Chart as ChartJS,
+  Legend,
   LinearScale,
   LineElement,
-  BarElement,
   PointElement,
   Tooltip,
-  Legend,
 } from "chart.js"
-import { Bar, Line } from "react-chartjs-2"
+import dayjs from "dayjs"
+import { SetStateAction, useEffect, useState } from "react"
+import { Bar } from "react-chartjs-2"
+import { IoBarChart as BarChart } from "react-icons/io5"
+import styles from "@/components/project/chart/index.module.css"
 import Option from "@/components/shared/option"
 import Select from "@/components/shared/select"
 import api from "@/services/api"
 import { dataset } from "@/viewmodels/stats"
-
-import {
-  IoBarChart as BarChart,
-  IoAnalytics as LineChart,
-} from "react-icons/io5"
 
 ChartJS.register(
   CategoryScale,
@@ -36,13 +32,18 @@ ChartJS.register(
 const options = {
   plugins: {
     legend: {
-      position: "bottom" as const,
+      display: false,
     },
   },
   responsive: true,
   interaction: {
     mode: "index" as const,
     intersect: false,
+  },
+  datasets: {
+    bar: {
+      maxBarThickness: 40,
+    },
   },
   scales: {
     x: {
@@ -70,19 +71,7 @@ const groupOptions = [
 
 const ChartType = {
   bar: "bar" as const,
-  line: "line" as const,
 }
-
-const chartOptions = [
-  {
-    label: <BarChart size="16px" />,
-    value: ChartType.bar,
-  },
-  {
-    label: <LineChart size="16px" />,
-    value: ChartType.line,
-  },
-]
 
 const defaultDate = () => {
   const now = dayjs()
@@ -92,17 +81,9 @@ const defaultDate = () => {
   return { start, end }
 }
 
-const projects = [
-  { value: "programming", label: "プログラミング" },
-  { value: "english", label: "英語" },
-  { value: "private", label: "プライベート" },
-]
-
 export default function Chart() {
   const [unit, setUnit] = useState(Unit.day)
-  const [chartType, setChartType] = useState(ChartType.bar)
   const [date, setDate] = useState(defaultDate)
-  const [project, setProject] = useState("all")
   const [data, setData] = useState([])
 
   useEffect(() => {
@@ -124,21 +105,23 @@ export default function Chart() {
     <div className={styles.container}>
       <div className={styles.body}>
         <div className={styles.control}>
-          <div className={styles.group}>
-            <Option
-              data={chartOptions}
-              value={chartType}
-              onSelect={(item) =>
-                setChartType(item.value as SetStateAction<"bar">)
-              }
-            />
-          </div>
-          <div className={styles.group}>
-            <Option
-              data={groupOptions}
-              value={unit}
-              onSelect={(item) => setUnit(item.value)}
-            />
+          <div className={styles.legend}>
+            <ul className={styles.legendList}>
+              <li>
+                <span
+                  className={styles.legendLabel}
+                  style={{ backgroundColor: "#16a34a" }}
+                ></span>
+                完了タスク
+              </li>
+              <li>
+                <span
+                  className={styles.legendLabel}
+                  style={{ backgroundColor: "#16a34a40" }}
+                ></span>
+                予定タスク
+              </li>
+            </ul>
           </div>
           <div className={styles.group}>
             <input
@@ -157,23 +140,9 @@ export default function Chart() {
           </div>
         </div>
         <div className={styles.chart}>
-          {
-            {
-              bar: <Bar options={options} data={data as any} />,
-              line: <Line options={options} data={data as any} />,
-            }[chartType]
-          }
+          <Bar options={options} data={data as any} />
         </div>
-        <div className={styles.footer}>
-          <label>グループ : </label>
-          <Select
-            data={projects}
-            value={project}
-            defaultOption={{ label: "全てのプロジェクト", value: "all" }}
-            onSelect={(item) => setProject(item.value)}
-            flat
-          />
-        </div>
+        <div className={styles.footer}></div>
       </div>
     </div>
   )
