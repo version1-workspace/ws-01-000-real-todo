@@ -1,15 +1,13 @@
-import {
-  IoCalendarClear as Calendar,
-  IoGitCommit as Milestone,
-  IoDocument as Task,
-} from "react-icons/io5"
-import styles from "@/components/project/card/index.module.css"
-import { rgbaToHex } from "@/lib/cls"
-import { Project } from "@/viewmodels/project"
+import styles from "@/components/project/card/index.module.css";
+import Icon from "@/components/shared/icon";
+import { rgbaToHex } from "@/lib/cls";
+import { Project } from "@/viewmodels/project";
 
 interface Props {
-  data: Project
+  data: Project;
 }
+
+const iconColor = "#636363";
 
 export default function Card({ data }: Props) {
   return (
@@ -30,10 +28,11 @@ export default function Card({ data }: Props) {
           </span>
         </h2>
         <p className={styles.deadline}>
-          <Calendar
+          <Icon
             className={styles.deadlineIcon}
+            name="clearCalendar"
             size="12px"
-            color="#636363"
+            color={iconColor}
           />
           <span className={styles.deadlineDate}>{data.deadline.format()}</span>
         </p>
@@ -49,7 +48,7 @@ export default function Card({ data }: Props) {
           <div className={styles.stats}>
             <p className={styles.milestone}>
               <span className={styles.icon}>
-                <Milestone size="12px" color="#636363" />
+                <Icon name="milestone" size="12px" color={iconColor} />
               </span>
               <span className={styles.statsText}>
                 {data.stats?.kinds.milestone || 0}
@@ -57,7 +56,7 @@ export default function Card({ data }: Props) {
             </p>
             <p className={styles.task}>
               <span className={styles.icon}>
-                <Task size="12px" color="#636363" />
+                <Icon name="tasks" size="12px" color={iconColor} />
               </span>
               <span className={styles.statsText}>{data.stats?.kinds.task}</span>
             </p>
@@ -65,5 +64,5 @@ export default function Card({ data }: Props) {
         </div>
       </div>
     </div>
-  )
+  );
 }
