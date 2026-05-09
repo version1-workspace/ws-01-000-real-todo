@@ -1,4 +1,5 @@
 "use client"
+import type { ChartData } from "chart.js"
 import {
   BarElement,
   CategoryScale,
@@ -10,14 +11,17 @@ import {
   Tooltip,
 } from "chart.js"
 import dayjs from "dayjs"
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Bar } from "react-chartjs-2"
-import { IoBarChart as BarChart } from "react-icons/io5"
 import styles from "@/components/project/chart/index.module.css"
-import Option from "@/components/shared/option"
-import Select from "@/components/shared/select"
+import ProjectMetricsCard from "@/components/project/chart/metrics-card"
+import ChartUnitSelect, {
+  ChartUnit,
+  type ChartUnitType,
+} from "@/components/project/chart/unit-select"
 import api from "@/services/api"
-import { dataset } from "@/viewmodels/stats"
+import type { ProgressSummaryMetric, Stats } from "@/viewmodels/stats"
+import { dataset, progressSummary } from "@/viewmodels/stats"
 
 ChartJS.register(
   CategoryScale,
@@ -55,24 +59,6 @@ const options = {
   },
 }
 
-const Unit = {
-  year: "year",
-  month: "month",
-  week: "week",
-  day: "day",
-}
-
-const groupOptions = [
-  { label: "年", value: Unit.year },
-  { label: "月", value: Unit.month },
-  { label: "週", value: Unit.week },
-  { label: "日", value: Unit.day },
-]
-
-const ChartType = {
-  bar: "bar" as const,
-}
-
 const defaultDate = () => {
   const now = dayjs()
   const end = now.add(3, "day").format("YYYY-MM-DD")
@@ -82,28 +68,43 @@ const defaultDate = () => {
 }
 
 export default function Chart() {
-  const [unit, setUnit] = useState(Unit.day)
+  const [unit, setUnit] = useState<ChartUnitType>(ChartUnit.week)
   const [date, setDate] = useState(defaultDate)
-  const [data, setData] = useState([])
+  const [data, setData] = useState<ChartData<"bar"> | undefined>()
+  const [stats, setStats] = useState<Stats[]>([])
+  const [summary, setSummary] = useState<ProgressSummaryMetric[]>([])
 
   useEffect(() => {
     const init = async () => {
       const res = await api.fetchStats()
-      const data = dataset(res.data, unit)
-      setData(data as any)
+      const stats = res.data as Stats[]
+      setStats(stats)
+      setSummary(progressSummary(stats))
     }
 
     init()
   }, [])
 
+  useEffect(() => {
+    if (stats.length === 0) {
+      return
+    }
+
+    setData(dataset(stats, unit) as ChartData<"bar">)
+  }, [stats, unit])
+
   // TODO: implemt loader
-  if (data.length === 0) {
+  if (!data) {
     return null
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.body}>
+        <div className={styles.header}>
+          <h2 className={styles.title}>進捗サマリー</h2>
+          <ChartUnitSelect value={unit} onChange={setUnit} />
+        </div>
         <div className={styles.control}>
           <div className={styles.legend}>
             <ul className={styles.legendList}>
@@ -123,7 +124,7 @@ export default function Chart() {
               </li>
             </ul>
           </div>
-          <div className={styles.group}>
+          <div className={styles.dateRange}>
             <input
               className={styles.input}
               type="date"
@@ -140,9 +141,13 @@ export default function Chart() {
           </div>
         </div>
         <div className={styles.chart}>
-          <Bar options={options} data={data as any} />
+          <Bar options={options} data={data} />
         </div>
-        <div className={styles.footer}></div>
+        <div className={styles.footer}>
+          {summary.map((metric) => (
+            <ProjectMetricsCard key={metric.label} metric={metric} />
+          ))}
+        </div>
       </div>
     </div>
   )

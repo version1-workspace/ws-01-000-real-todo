@@ -50,7 +50,6 @@ export default function Main() {
           </div>
         </div>
         <div className={styles.chart}>
-          <h2 className={styles.sectionTitle}>進捗サマリー</h2>
           <div className={styles.content}>
             <Chart />
           </div>

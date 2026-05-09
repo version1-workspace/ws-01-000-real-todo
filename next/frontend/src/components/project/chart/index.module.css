@@ -3,10 +3,20 @@
 }
 
 .title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 12px 0 0;
 }
 
 .body {
   height: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .chart {
@@ -14,10 +24,10 @@
 }
 
 .footer {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-top: 32px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
 }
 
 .footer label {
@@ -26,7 +36,7 @@
 }
 
 .control {
-  margin: 18px 0;
+  margin: 12px 0 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -52,8 +62,30 @@
   display: flex;
 }
 
+.dateRange {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .input {
   padding: 8px;
   border-radius: 4px;
   border: 0;
+}
+
+@media screen and (max-width: 960px) {
+  .header {
+    flex-direction: column;
+  }
+
+  .control {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .footer {
+    grid-template-columns: 1fr;
+  }
 }
