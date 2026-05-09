@@ -10,6 +10,7 @@ import {
   IoArrowUpOutline,
   IoBarChart,
   IoBulbOutline,
+  IoCalendarClearOutline,
   IoCalendarOutline,
   IoCaretDown,
   IoCheckmark,
@@ -22,11 +23,13 @@ import {
   IoCloseOutline,
   IoCodeOutline,
   IoCompassOutline,
+  IoDocumentOutline,
   IoDocumentText,
   IoEllipsisVerticalOutline,
   IoExit,
   IoFilter,
   IoGitCommit,
+  IoGitCommitOutline,
   IoGridOutline,
   IoHelpCircleOutline,
   IoInformationCircleSharp,
@@ -45,15 +48,15 @@ import {
   IoSettingsOutline,
   IoSwapVertical,
   IoTrashOutline,
-} from "react-icons/io5"
-import { classHelper } from "@/lib/cls"
-import styles from "./index.module.css"
+} from "react-icons/io5";
+import { classHelper } from "@/lib/cls";
+import styles from "./index.module.css";
 
 const icons = {
   unknown: IoCodeOutline,
   dashboard: IoBarChart,
   project: IoGridOutline,
-  tasks: IoDocumentText,
+  tasks: IoDocumentOutline,
   bulb: IoBulbOutline,
   help: IoHelpCircleOutline,
   settings: IoSettingsOutline,
@@ -77,6 +80,7 @@ const icons = {
   notification: IoNotificationsSharp,
   info: IoInformationCircleSharp,
   calendar: IoCalendarOutline,
+  clearCalendar: IoCalendarClearOutline,
   order: IoSwapVertical,
   check: IoCheckmarkCircle,
   checkOutline: IoCheckmarkOutline,
@@ -90,7 +94,7 @@ const icons = {
   remove: IoTrashOutline,
   barChart: IoBarChart,
   lineChart: IoAnalytics,
-  milestone: IoGitCommit,
+  milestone: IoGitCommitOutline,
   task: IoDocumentText,
   menu: IoEllipsisVerticalOutline,
   layout: IoListOutline,
@@ -100,18 +104,18 @@ const icons = {
   mailFilled: IoMail,
   youtube: IoLogoYoutube,
   lock: IoLockClosedOutline,
-}
+};
 
-type IconType = typeof icons
-export type IconName = keyof IconType
+type IconType = typeof icons;
+export type IconName = keyof IconType;
 
 interface Props {
-  name: IconName
-  className?: string
-  interactive?: "pulse" | "hover" | "hoverDark"
-  size?: number | string
-  color?: string
-  onClick?: () => void
+  name: IconName;
+  className?: string;
+  interactive?: "pulse" | "hover" | "hoverDark";
+  size?: number | string;
+  color?: string;
+  onClick?: () => void;
 }
 
 const Icon = ({
@@ -122,7 +126,7 @@ const Icon = ({
   className,
   onClick,
 }: Props) => {
-  const Component = icons[name]
+  const Component = icons[name];
   return (
     <span
       className={classHelper({
@@ -136,7 +140,7 @@ const Icon = ({
     >
       {<Component className={className} size={size} color={color} />}
     </span>
-  )
-}
+  );
+};
 
-export default Icon
+export default Icon;

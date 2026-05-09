@@ -1,27 +1,27 @@
 "use client"
-import { SetStateAction, useEffect, useState } from "react"
-import dayjs from "dayjs"
-import styles from "@/components/project/chart/index.module.css"
+import type { ChartData } from "chart.js"
 import {
-  Chart as ChartJS,
+  BarElement,
   CategoryScale,
+  Chart as ChartJS,
+  Legend,
   LinearScale,
   LineElement,
-  BarElement,
   PointElement,
   Tooltip,
-  Legend,
 } from "chart.js"
-import { Bar, Line } from "react-chartjs-2"
-import Option from "@/components/shared/option"
-import Select from "@/components/shared/select"
+import dayjs from "dayjs"
+import { useEffect, useState } from "react"
+import { Bar } from "react-chartjs-2"
+import styles from "@/components/project/chart/index.module.css"
+import ProjectMetricsCard from "@/components/project/chart/metrics-card"
+import ChartUnitSelect, {
+  ChartUnit,
+  type ChartUnitType,
+} from "@/components/project/chart/unit-select"
 import api from "@/services/api"
-import { dataset } from "@/viewmodels/stats"
-
-import {
-  IoBarChart as BarChart,
-  IoAnalytics as LineChart,
-} from "react-icons/io5"
+import type { ProgressSummaryMetric, Stats } from "@/viewmodels/stats"
+import { dataset, progressSummary } from "@/viewmodels/stats"
 
 ChartJS.register(
   CategoryScale,
@@ -36,13 +36,18 @@ ChartJS.register(
 const options = {
   plugins: {
     legend: {
-      position: "bottom" as const,
+      display: false,
     },
   },
   responsive: true,
   interaction: {
     mode: "index" as const,
     intersect: false,
+  },
+  datasets: {
+    bar: {
+      maxBarThickness: 40,
+    },
   },
   scales: {
     x: {
@@ -54,36 +59,6 @@ const options = {
   },
 }
 
-const Unit = {
-  year: "year",
-  month: "month",
-  week: "week",
-  day: "day",
-}
-
-const groupOptions = [
-  { label: "年", value: Unit.year },
-  { label: "月", value: Unit.month },
-  { label: "週", value: Unit.week },
-  { label: "日", value: Unit.day },
-]
-
-const ChartType = {
-  bar: "bar" as const,
-  line: "line" as const,
-}
-
-const chartOptions = [
-  {
-    label: <BarChart size="16px" />,
-    value: ChartType.bar,
-  },
-  {
-    label: <LineChart size="16px" />,
-    value: ChartType.line,
-  },
-]
-
 const defaultDate = () => {
   const now = dayjs()
   const end = now.add(3, "day").format("YYYY-MM-DD")
@@ -92,55 +67,64 @@ const defaultDate = () => {
   return { start, end }
 }
 
-const projects = [
-  { value: "programming", label: "プログラミング" },
-  { value: "english", label: "英語" },
-  { value: "private", label: "プライベート" },
-]
-
 export default function Chart() {
-  const [unit, setUnit] = useState(Unit.day)
-  const [chartType, setChartType] = useState(ChartType.bar)
+  const [unit, setUnit] = useState<ChartUnitType>(ChartUnit.week)
   const [date, setDate] = useState(defaultDate)
-  const [project, setProject] = useState("all")
-  const [data, setData] = useState([])
+  const [data, setData] = useState<ChartData<"bar"> | undefined>()
+  const [stats, setStats] = useState<Stats[]>([])
+  const [summary, setSummary] = useState<ProgressSummaryMetric[]>([])
 
   useEffect(() => {
     const init = async () => {
       const res = await api.fetchStats()
-      const data = dataset(res.data, unit)
-      setData(data as any)
+      const stats = res.data as Stats[]
+      setStats(stats)
+      setSummary(progressSummary(stats))
     }
 
     init()
   }, [])
 
+  useEffect(() => {
+    if (stats.length === 0) {
+      return
+    }
+
+    setData(dataset(stats, unit) as ChartData<"bar">)
+  }, [stats, unit])
+
   // TODO: implemt loader
-  if (data.length === 0) {
+  if (!data) {
     return null
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.body}>
+        <div className={styles.header}>
+          <h2 className={styles.title}>進捗サマリー</h2>
+          <ChartUnitSelect value={unit} onChange={setUnit} />
+        </div>
         <div className={styles.control}>
-          <div className={styles.group}>
-            <Option
-              data={chartOptions}
-              value={chartType}
-              onSelect={(item) =>
-                setChartType(item.value as SetStateAction<"bar">)
-              }
-            />
+          <div className={styles.legend}>
+            <ul className={styles.legendList}>
+              <li>
+                <span
+                  className={styles.legendLabel}
+                  style={{ backgroundColor: "#16a34a" }}
+                ></span>
+                完了タスク
+              </li>
+              <li>
+                <span
+                  className={styles.legendLabel}
+                  style={{ backgroundColor: "#16a34a40" }}
+                ></span>
+                予定タスク
+              </li>
+            </ul>
           </div>
-          <div className={styles.group}>
-            <Option
-              data={groupOptions}
-              value={unit}
-              onSelect={(item) => setUnit(item.value)}
-            />
-          </div>
-          <div className={styles.group}>
+          <div className={styles.dateRange}>
             <input
               className={styles.input}
               type="date"
@@ -157,22 +141,12 @@ export default function Chart() {
           </div>
         </div>
         <div className={styles.chart}>
-          {
-            {
-              bar: <Bar options={options} data={data as any} />,
-              line: <Line options={options} data={data as any} />,
-            }[chartType]
-          }
+          <Bar options={options} data={data} />
         </div>
         <div className={styles.footer}>
-          <label>グループ : </label>
-          <Select
-            data={projects}
-            value={project}
-            defaultOption={{ label: "全てのプロジェクト", value: "all" }}
-            onSelect={(item) => setProject(item.value)}
-            flat
-          />
+          {summary.map((metric) => (
+            <ProjectMetricsCard key={metric.label} metric={metric} />
+          ))}
         </div>
       </div>
     </div>
