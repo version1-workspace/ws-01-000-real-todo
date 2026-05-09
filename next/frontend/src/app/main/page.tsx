@@ -57,7 +57,7 @@ export default function Main() {
       </div>
       <div className={styles.todos}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>タスク</h2>
+          <h2 className={styles.sectionTitle}>タスク一覧</h2>
           <Link href={route.main.tasks.toString()} className={styles.link}>
             タスク一覧
             <Icon size={10} className={styles.linkIcon} name="arrowForward" />

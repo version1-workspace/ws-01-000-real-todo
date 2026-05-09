@@ -11,8 +11,7 @@
 }
 
 .card:hover {
-  transform: scale(1.05);
-  box-shadow: 1px 1px 8px 1px #22222220;
+  transform: scale(1.01);
 }
 
 .header {
