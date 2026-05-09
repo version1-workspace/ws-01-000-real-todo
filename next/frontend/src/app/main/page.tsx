@@ -64,7 +64,7 @@ export default function Main() {
           </Link>
         </div>
         <div className={styles.content}>
-          <TaskList header={<></>} footer={<></>} />
+          <TaskList header={<></>} footer={<></>} checkable={false} />
         </div>
         <div className={styles.sectionFooter}>
           {data ? (
