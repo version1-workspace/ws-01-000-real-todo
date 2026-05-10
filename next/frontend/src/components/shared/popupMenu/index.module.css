@@ -2,6 +2,11 @@
   position: relative;
 }
 
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 .popupMenu {
   right: 0px;
   z-index: var(--z-index-popup-menu);

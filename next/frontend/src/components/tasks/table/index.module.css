@@ -1,16 +1,19 @@
 .table {
   width: 100%;
+  border: 1px solid var(--table-border-color);
+  background: var(--background-color);
+  border-radius: 8px;
 }
 
 .tableHeader {
   display: flex;
   border-bottom: 1px solid var(--table-border-color);
+  padding: 8px 0px;
 }
 
 .tableHeaderCell {
   padding: 4px;
   font-size: 10px;
-  font-weight: bold;
   width: 10%;
 }
 
@@ -21,11 +24,11 @@
 .tableRow {
   display: flex;
   padding: 8px 0px;
+  border-bottom: 1px solid var(--table-border-color);
   transition: all 0.5s;
 }
 
 .tableRow:hover {
-  transform: scale(1.01);
   box-shadow: 1px 1px 3px 1px #22222210;
 }
 
@@ -34,11 +37,17 @@
   align-items: center;
   width: 10%;
   padding: 8px 0;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .tableCell:last-child {
   border-right: 0;
+}
+
+.checkCell {
+  display: flex;
+  justify-content: center;
+  width: 5%;
 }
 
 .text {
@@ -53,11 +62,16 @@
   min-height: 100%;
 }
 
+.selectorText {
+  font-size: 10px;
+}
+
 .check {
-  display: flex;
-  justify-content: center;
+  border: 1px solid var(--table-border-color);
+  border-radius: 50%;
+  height: 18px;
+  width: 18px;
   cursor: pointer;
-  width: 5%;
 }
 
 .unchecked {
@@ -65,11 +79,12 @@
 }
 
 .unchecked:hover {
-  color: inherit;
+  /* color: inherit; */
 }
 
 .checked {
-  color: var(--primary-color);
+  color: var(--background-color);
+  background-color: var(--primary-color);
   font-size: 1.2em;
 }
 
@@ -83,7 +98,7 @@
 }
 
 .title {
-  width: 40%;
+  width: 35%;
 }
 
 .status {
@@ -91,12 +106,18 @@
   width: 12%;
 }
 
+.statusContent {
+  padding: 4px 4px;
+  padding-right: 42px;
+  width: 100%;
+}
+
 .statusHeader {
   width: 12%;
 }
 
 .project {
-  width: 14%;
+  width: 16%;
 }
 
 .detail {

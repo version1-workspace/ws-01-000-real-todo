@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  padding-left: 16px;
+}
+
+.state {
+  background: var(--background-color);
+  padding: 8px 16px;
+  padding-right: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--table-border-color);
+  font-size: 10px;
+  margin-right: 8px;
+  letter-spacing: 0.8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.state svg {
+  margin: auto 2px;
+}
+
+.state label {
+  margin-right: 4px;
+}
+
+.close {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+  border: 0;
+  border-left: 1px solid white;
+  padding: 4px;
+  background: transparent;
+  color: inherit;
+}

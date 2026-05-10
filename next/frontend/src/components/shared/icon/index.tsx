@@ -48,9 +48,9 @@ import {
   IoSettingsOutline,
   IoSwapVertical,
   IoTrashOutline,
-} from "react-icons/io5";
-import { classHelper } from "@/lib/cls";
-import styles from "./index.module.css";
+} from "react-icons/io5"
+import { classHelper } from "@/lib/cls"
+import styles from "./index.module.css"
 
 const icons = {
   unknown: IoCodeOutline,
@@ -104,18 +104,18 @@ const icons = {
   mailFilled: IoMail,
   youtube: IoLogoYoutube,
   lock: IoLockClosedOutline,
-};
+}
 
-type IconType = typeof icons;
-export type IconName = keyof IconType;
+type IconType = typeof icons
+export type IconName = keyof IconType
 
 interface Props {
-  name: IconName;
-  className?: string;
-  interactive?: "pulse" | "hover" | "hoverDark";
-  size?: number | string;
-  color?: string;
-  onClick?: () => void;
+  name: IconName
+  className?: string
+  interactive?: "pulse" | "hover" | "hoverDark"
+  size?: number | string
+  color?: string
+  onClick?: () => void
 }
 
 const Icon = ({
@@ -126,7 +126,7 @@ const Icon = ({
   className,
   onClick,
 }: Props) => {
-  const Component = icons[name];
+  const Component = icons[name]
   return (
     <span
       className={classHelper({
@@ -140,7 +140,7 @@ const Icon = ({
     >
       {<Component className={className} size={size} color={color} />}
     </span>
-  );
-};
+  )
+}
 
-export default Icon;
+export default Icon

@@ -1,13 +1,13 @@
-import styles from "@/components/project/card/index.module.css";
-import Icon from "@/components/shared/icon";
-import { rgbaToHex } from "@/lib/cls";
-import { Project } from "@/viewmodels/project";
+import styles from "@/components/project/card/index.module.css"
+import Icon from "@/components/shared/icon"
+import { rgbaToHex } from "@/lib/cls"
+import { Project } from "@/viewmodels/project"
 
 interface Props {
-  data: Project;
+  data: Project
 }
 
-const iconColor = "#636363";
+const iconColor = "#636363"
 
 export default function Card({ data }: Props) {
   return (
@@ -64,5 +64,5 @@ export default function Card({ data }: Props) {
         </div>
       </div>
     </div>
-  );
+  )
 }

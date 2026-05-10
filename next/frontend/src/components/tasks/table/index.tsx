@@ -1,21 +1,21 @@
-import { useState } from "react"
 import Link from "next/link"
-import styles from "./index.module.css"
-import { classHelper, join } from "@/lib/cls"
-import { statusOptions, Task } from "@/viewmodels/task"
-import route from "@/lib/route"
-import Select, { OptionItem } from "@/components/shared/select"
-import Icon from "@/components/shared/icon"
+import { useState } from "react"
 import EditableField from "@/components/shared/editableField"
-import useProjects from "@/contexts/projects"
-import api from "@/services/api"
+import Icon from "@/components/shared/icon"
+import Select, { OptionItem } from "@/components/shared/select"
 import useCheck from "@/contexts/check"
+import { classHelper, join } from "@/lib/cls"
+import route from "@/lib/route"
+import api from "@/services/api"
+import { statusOptions, Task } from "@/viewmodels/task"
+import styles from "./index.module.css"
 
 interface Props {
   data: Task[]
+  checkable?: boolean
 }
 
-const TaskTable = ({ data }: Props) => {
+const TaskTable = ({ data, checkable = true }: Props) => {
   const { check, checkAll, checked, allChecked } = useCheck()
   const ids = data.map((it) => it.id)
 
@@ -25,16 +25,24 @@ const TaskTable = ({ data }: Props) => {
         <div
           className={classHelper({
             [styles.tableHeaderCell]: true,
-            [styles.check]: true,
-            [styles.unchecked]: !allChecked,
-            [styles.checked]: allChecked,
+            [styles.checkCell]: true,
           })}
         >
-          <Icon
-            className={styles.checkIcon}
-            name="checkOutline"
-            onClick={() => checkAll(ids)}
-          />
+          {checkable ? (
+            <div
+              className={classHelper({
+                [styles.check]: true,
+                [styles.unchecked]: !allChecked,
+                [styles.checked]: allChecked,
+              })}
+            >
+              <Icon
+                className={styles.checkIcon}
+                name="checkOutline"
+                onClick={() => checkAll(ids)}
+              />
+            </div>
+          ) : null}
         </div>
         <div className={join(styles.tableHeaderCell, styles.title)}>タスク</div>
         <div className={join(styles.tableHeaderCell, styles.project)}>
@@ -57,6 +65,7 @@ const TaskTable = ({ data }: Props) => {
         {data.map((it) => {
           return (
             <Row
+              checkable={checkable}
               key={it.id}
               data={it}
               checked={checked[it.id]}
@@ -96,6 +105,7 @@ const SelectorProxy = ({
         onSelect(option)
       }}
       containerStyleClass={styles.selector}
+      textStyleClass={styles.selectorText}
       flat
     />
   )
@@ -103,28 +113,35 @@ const SelectorProxy = ({
 
 interface RowProps {
   data: Task
+  checkable?: boolean
   checked?: boolean
   onCheck?: () => void
 }
 
-const Row = ({ data, checked, onCheck }: RowProps) => {
-  const { options: projectOptions } = useProjects()
-
+const Row = ({ data, checkable, checked, onCheck }: RowProps) => {
   return (
     <div key={data.id} className={styles.tableRow}>
       <div
         className={classHelper({
           [styles.tableCell]: true,
-          [styles.check]: true,
-          [styles.unchecked]: !checked,
-          [styles.checked]: checked,
+          [styles.checkCell]: true,
         })}
       >
-        <Icon
-          className={styles.checkIcon}
-          name="checkOutline"
-          onClick={onCheck}
-        />
+        {checkable ? (
+          <div
+            className={classHelper({
+              [styles.check]: true,
+              [styles.unchecked]: !checked,
+              [styles.checked]: checked,
+            })}
+          >
+            <Icon
+              className={styles.checkIcon}
+              name="checkOutline"
+              onClick={onCheck}
+            />
+          </div>
+        ) : null}
       </div>
       <div className={join(styles.tableCell, styles.title)}>
         <EditableField
@@ -135,30 +152,22 @@ const Row = ({ data, checked, onCheck }: RowProps) => {
         />
       </div>
       <div className={join(styles.tableCell, styles.project)}>
-        <SelectorProxy
-          options={projectOptions}
-          defaultValue={data.project.id}
-          defaultOption={{
-            label: "プロジェクトを選択してください",
-            value: "",
-          }}
-          onSelect={async (option) => {
-            await api.updateTask(data.id, { projectId: option.value })
-          }}
-        />
+        {data.project.name}
       </div>
       <div className={join(styles.tableCell, styles.status)}>
-        <SelectorProxy
-          options={statusOptions}
-          defaultValue={data.status}
-          defaultOption={{
-            label: "ステータスを選択してください",
-            value: "",
-          }}
-          onSelect={async (option) => {
-            await api.updateTask(data.id, { status: option.value })
-          }}
-        />
+        <div className={styles.statusContent}>
+          <SelectorProxy
+            options={statusOptions}
+            defaultValue={data.status}
+            defaultOption={{
+              label: "ステータスを選択してください",
+              value: "",
+            }}
+            onSelect={async (option) => {
+              await api.updateTask(data.id, { status: option.value })
+            }}
+          />
+        </div>
       </div>
       <div className={styles.tableCell}>
         <EditableField

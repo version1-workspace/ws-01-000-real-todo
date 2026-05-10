@@ -9,6 +9,7 @@ interface Props {
   defaultOption: OptionItem
   onSelect?: (item: OptionItem) => void
   containerStyleClass?: string
+  textStyleClass?: string
   flat?: boolean
 }
 
@@ -23,6 +24,7 @@ export default function Select({
   defaultOption,
   onSelect,
   containerStyleClass,
+  textStyleClass,
   flat,
 }: Props) {
   const [open, setOpen] = useState(false)
@@ -63,7 +65,12 @@ export default function Select({
           [styles.flatValueContainer]: flat,
         })}
       >
-        <p className={styles.value}>
+        <p
+          className={classHelper({
+            [styles.value]: true,
+            [textStyleClass!]: !!textStyleClass,
+          })}
+        >
           {valueItem?.label || defaultOption.label}
         </p>
         <Icon name="caretDown" />
