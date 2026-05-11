@@ -1,14 +1,15 @@
 "use client"
-import styles from "@/components/project/forms/milestone/index.module.css"
 import dayjs from "dayjs"
 import { useState } from "react"
-import useForm from "@/app/main/projects/new/context"
-import { Task } from "@/viewmodels/task"
-import Goal from "@/components/project/goal"
-import Item from "@/components/project/forms/milestone/item"
-import { classHelper, join } from "@/lib/cls"
 import { IoAddOutline as Add } from "react-icons/io5"
+import useForm from "@/app/main/projects/new/context"
+import FormGuide from "@/components/project/forms/guide"
+import styles from "@/components/project/forms/milestone/index.module.css"
+import Item from "@/components/project/forms/milestone/item"
+import Goal from "@/components/project/goal"
+import { classHelper, join } from "@/lib/cls"
 import { factory } from "@/viewmodels"
+import { Task } from "@/viewmodels/task"
 
 interface Props {
   readOnly?: boolean
@@ -99,6 +100,9 @@ export default function Milestone({ className, readOnly }: Props) {
           </div>
         </div>
       </div>
+      {!readOnly ? (
+        <FormGuide message="マイルストーンを追加して、プロジェクトの進捗を管理しましょう。" />
+      ) : null}
     </div>
   )
 }

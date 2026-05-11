@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 48px;
+  margin-top: 40px;
+  padding: 0 32px;
+  border: 1px solid var(--primary-100-color);
+  border-radius: 8px;
+  background: var(--primary-50-color);
+  color: var(--form-label-color);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+}
+
+.text {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+}

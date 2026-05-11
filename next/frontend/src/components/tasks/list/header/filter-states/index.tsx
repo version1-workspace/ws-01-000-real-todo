@@ -1,20 +1,20 @@
-import { IoCloseCircle as Close } from "react-icons/io5";
-import Icon from "@/components/shared/icon";
-import type { Params } from "@/components/tasks/list/hooks/useFilter";
-import { ja } from "@/lib/transltate";
-import styles from "./index.module.css";
+import { IoCloseCircle as Close } from "react-icons/io5"
+import Icon from "@/components/shared/icon"
+import type { Params } from "@/components/tasks/list/hooks/useFilter"
+import { ja } from "@/lib/transltate"
+import styles from "./index.module.css"
 
-const taskTranslations = ja.derive("task")!;
-const taskStatuses = ja.derive("task.status")!;
+const taskTranslations = ja.derive("task")!
+const taskStatuses = ja.derive("task.status")!
 
 interface Props {
-  date: Params["date"];
-  isDateSet: boolean;
-  order: Params["order"];
-  projectName?: string;
-  statuses: Params["statuses"];
-  text: Params["text"];
-  onReset: (key: keyof Params) => void;
+  date: Params["date"]
+  isDateSet: boolean
+  order: Params["order"]
+  projectName?: string
+  statuses: Params["statuses"]
+  text: Params["text"]
+  onReset: (key: keyof Params) => void
 }
 
 export default function FilterStates({
@@ -93,5 +93,5 @@ export default function FilterStates({
         </button>
       </span>
     </div>
-  );
+  )
 }

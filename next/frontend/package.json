@@ -13,7 +13,7 @@
     "format": "biome format --write .",
     "check": "biome check .",
     "check:write": "biome check --write .",
-    "tsc": "tsc --project tsconfig.json",
+    "compile": "tsc --project tsconfig.json",
     "test": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest run",
     "test:watch": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest"
   },
