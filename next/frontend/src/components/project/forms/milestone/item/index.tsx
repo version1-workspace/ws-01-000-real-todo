@@ -1,16 +1,17 @@
 "use client"
 import { useState } from "react"
-import styles from "@/components/project/forms/milestone/item/index.module.css"
-import { Task } from "@/viewmodels/task"
-import { Project, within } from "@/viewmodels/project"
-import { classHelper, join } from "@/lib/cls"
-import Validator, { Errors } from "@/models/validator"
 import {
   IoCloseOutline as Close,
   IoPencil as Edit,
-  IoCheckmark as Save,
   IoTrashOutline as Remove,
+  IoCheckmark as Save,
 } from "react-icons/io5"
+import styles from "@/components/project/forms/milestone/item/index.module.css"
+import Icon from "@/components/shared/icon"
+import { classHelper, join } from "@/lib/cls"
+import Validator, { Errors } from "@/models/validator"
+import { Project, within } from "@/viewmodels/project"
+import { Task } from "@/viewmodels/task"
 
 interface EditProps {
   active: boolean
@@ -81,7 +82,13 @@ export default function MilestoneItem({
 
   return (
     <div className={join(styles.container, className)}>
-      <div className={styles.circle}></div>
+      {item.isPersist ? (
+        <div className={join(styles.circle, styles.filled)}>
+          <Icon name="save" color="#fff" size="12px" />
+        </div>
+      ) : (
+        <div className={styles.circle}></div>
+      )}
       <p className={styles.date}>
         <EditForm
           active={shouldEdit}
@@ -115,6 +122,7 @@ export default function MilestoneItem({
                 <div>
                   <input
                     className={styles.input}
+                    placeholder="マイルストーン名を入力してください "
                     type="text"
                     value={form.title}
                     onChange={(e) => {

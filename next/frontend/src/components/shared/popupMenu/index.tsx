@@ -1,40 +1,40 @@
-"use client";
-import { useEffect, useState } from "react";
-import { classHelper } from "@/lib/cls";
-import styles from "./index.module.css";
+"use client"
+import { useEffect, useState } from "react"
+import { classHelper } from "@/lib/cls"
+import styles from "./index.module.css"
 
 interface Props {
-  disabled?: boolean;
-  trigger: React.ReactNode;
-  actions: Action[];
+  disabled?: boolean
+  trigger: React.ReactNode
+  actions: Action[]
 }
 
 export interface Action {
-  key: string;
-  logo: React.ReactNode;
-  text: string;
-  danger?: boolean;
-  hidden?: boolean;
-  onClick: () => void;
+  key: string
+  logo: React.ReactNode
+  text: string
+  danger?: boolean
+  hidden?: boolean
+  onClick: () => void
 }
 
 export default function PopupMenu({ disabled, trigger, actions }: Props) {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false)
 
   useEffect(() => {
     const listener = (e: MouseEvent) => {
-      const ele = e.target as HTMLElement;
-      const parent = ele?.closest("." + styles.container);
+      const ele = e.target as HTMLElement
+      const parent = ele?.closest("." + styles.container)
       if (!parent) {
-        setShow(false);
+        setShow(false)
       }
-    };
-    document.body.addEventListener("click", listener);
+    }
+    document.body.addEventListener("click", listener)
 
     return () => {
-      document.body.removeEventListener("click", listener);
-    };
-  }, [show]);
+      document.body.removeEventListener("click", listener)
+    }
+  }, [show])
 
   return (
     <div
@@ -45,11 +45,11 @@ export default function PopupMenu({ disabled, trigger, actions }: Props) {
     >
       <div
         onClick={(e) => {
-          e.stopPropagation();
+          e.stopPropagation()
           if (disabled) {
-            return;
+            return
           }
-          setShow(true);
+          setShow(true)
         }}
       >
         {trigger}
@@ -63,8 +63,8 @@ export default function PopupMenu({ disabled, trigger, actions }: Props) {
                 <li
                   key={it.text}
                   onClick={() => {
-                    it.onClick();
-                    setShow(false);
+                    it.onClick()
+                    setShow(false)
                   }}
                 >
                   <div
@@ -78,11 +78,11 @@ export default function PopupMenu({ disabled, trigger, actions }: Props) {
                     <p className={styles.text}>{it.text}</p>
                   </div>
                 </li>
-              );
+              )
             })}
           </ul>
         </div>
       ) : null}
     </div>
-  );
+  )
 }

@@ -1,6 +1,6 @@
 import { useContext } from "react"
-import styles from "@/components/project/forms/goal/index.module.css"
 import { FormContext } from "@/app/main/projects/new/context"
+import styles from "@/components/project/forms/goal/index.module.css"
 import { classHelper } from "@/lib/cls"
 
 interface Props {
@@ -25,8 +25,13 @@ export default function ProjectForm({ shadow, readOnly }: Props) {
       <h3 className={styles.title}>プロジェクト</h3>
       <div className={styles.row}>
         <div className={styles.left}>
-          プロジェクト名
-          <span className={styles.required}>*</span>
+          <p className={styles.label}>
+            プロジェクト名
+            <span className={styles.required}>*</span>
+          </p>
+          <p className={styles.description}>
+            プロジェクトの名称を入力してください
+          </p>
         </div>
         <div className={styles.col}>
           <input
@@ -44,7 +49,10 @@ export default function ProjectForm({ shadow, readOnly }: Props) {
       </div>
       <div className={styles.row}>
         <div className={styles.left}>
-          スラッグ<span className={styles.required}>*</span>
+          <p className={styles.label}>
+            スラッグ<span className={styles.required}>*</span>
+          </p>
+          <p className={styles.description}>URLに使用される一意の識別子です</p>
         </div>
         <div className={styles.col}>
           <input

@@ -43,6 +43,12 @@
   --bg-color-light-2: #f9f9fa;
 
   --bg-color-white: #fefefe;
+  --form-card-bg-color: #ffffff;
+  --form-card-border-color: #e8edf0;
+  --form-card-shadow-color: #1c304108;
+  --form-label-color: #1c3041;
+  --form-description-color: #68798a;
+  --form-placeholder-color: #a6b1bd;
 
   --input-outline-color: #22222240;
 

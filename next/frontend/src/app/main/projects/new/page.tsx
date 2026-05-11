@@ -1,21 +1,22 @@
 "use client"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import styles from "@/app/main/projects/new/page.module.css"
-import Button from "@/components/shared/button"
-import { Project } from "@/viewmodels/project"
-import { factory } from "@/viewmodels"
+import CompleteForm from "@/components/project/forms/complete"
+import ConfirmForm from "@/components/project/forms/confirm"
 import GoalForm from "@/components/project/forms/goal"
 import MilestoneForm from "@/components/project/forms/milestone"
-import ConfirmForm from "@/components/project/forms/confirm"
-import CompleteForm from "@/components/project/forms/complete"
-import Validator, { Errors } from "@/models/validator"
-import { FormContext } from "./context"
-import { AppDate } from "@/lib/date"
-import api from "@/services/api"
-import route from "@/lib/route"
-import { useRouter } from "next/navigation"
-import { useToast } from "@/lib/toast/hook"
+import Steps from "@/components/project/steps"
+import Button from "@/components/shared/button"
 import Icon from "@/components/shared/icon"
+import { AppDate } from "@/lib/date"
+import route from "@/lib/route"
+import { useToast } from "@/lib/toast/hook"
+import Validator, { Errors } from "@/models/validator"
+import api from "@/services/api"
+import { factory } from "@/viewmodels"
+import { Project } from "@/viewmodels/project"
+import { FormContext } from "./context"
 
 interface StepParams {
   label: string
@@ -94,44 +95,13 @@ const buildSteps = (router: Router, toast: Toast) => [
   {
     label: "完了",
     preventBack: true,
+    hideFooter: true,
     submitLabel: "プロジェクト詳細へ",
     onNext: async (project: Project) => {
       router.push(route.main.projects.with(project.slug))
     },
   },
 ]
-
-interface StepsProps {
-  index: number
-  steps: StepParams[]
-}
-
-function Steps({ index, steps }: StepsProps) {
-  return (
-    <div className={styles.stepsContainer}>
-      <div className={styles.stepsContent}>
-        <div className={styles.bar}>
-          <p className={styles.barContent}></p>
-        </div>
-        <ul className={styles.steps}>
-          {steps.map((it, number) => (
-            <li key={it.label} className={styles.step}>
-              <div className={styles.item}>
-                <div className={styles.circle}>
-                  {index !== number ? <div className={styles.overlay} /> : null}
-                  <p>{number + 1}</p>
-                </div>
-                <div className={styles.textContainer}>
-                  <p className={styles.text}>{it.label}</p>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  )
-}
 
 const now = AppDate.now()
 
@@ -181,57 +151,62 @@ export default function ProjectsNew() {
               }
             </div>
           </div>
-          <div className={styles.footer}>
-            <div className={styles.left}>
-              {step.preventBack ? null : (
-                <div>
-                  {index !== 0 ? (
-                    <Button onClick={() => setIndex((index) => index - 1)}>
-                      <div className={styles.backContent}>
-                        <Icon name="arrowBack" />
-                        戻る
-                      </div>
+          {step.hideFooter ? null : (
+            <div className={styles.footer}>
+              <div className={styles.left}>
+                {step.preventBack ? null : (
+                  <div>
+                    {index !== 0 ? (
+                      <Button onClick={() => setIndex((index) => index - 1)}>
+                        <div className={styles.backContent}>
+                          <Icon name="arrowBack" />
+                          戻る
+                        </div>
+                      </Button>
+                    ) : null}
+                  </div>
+                )}
+              </div>
+              <div className={styles.right}>
+                <div className={styles.skip}>
+                  {step.skippable ? (
+                    <Button onClick={() => setIndex((index) => index + 1)}>
+                      <div className={styles.skipContent}>スキップ</div>
                     </Button>
                   ) : null}
                 </div>
-              )}
-            </div>
-            <div className={styles.right}>
-              <div className={styles.skip}>
-                {step.skippable ? (
-                  <Button onClick={() => setIndex((index) => index + 1)}>
-                    <div className={styles.skipContent}>スキップ</div>
-                  </Button>
-                ) : null}
-              </div>
-              <div className={styles.next}>
-                <Button
-                  variant="primary"
-                  onClick={async () => {
-                    if (step.validation) {
-                      const validator = step.validation(project)
+                <div className={styles.next}>
+                  <Button
+                    variant="primary"
+                    onClick={async () => {
+                      if (step.validation) {
+                        const validator = step.validation(project)
 
-                      if (!validator.valid) {
-                        setErrors(validator.errors)
-                        return
+                        if (!validator.valid) {
+                          setErrors(validator.errors)
+                          return
+                        }
                       }
-                    }
 
-                    setErrors(undefined)
-                    const success = await step.onNext?.(project)
-                    if ((!step.onNext || success) && index < steps.length - 1) {
-                      setIndex((index) => index + 1)
-                    }
-                  }}
-                >
-                  <div className={styles.nextContent}>
-                    {step.submitLabel ? step.submitLabel : "次へ"}
-                    <Icon name="arrowForward" />
-                  </div>
-                </Button>
+                      setErrors(undefined)
+                      const success = await step.onNext?.(project)
+                      if (
+                        (!step.onNext || success) &&
+                        index < steps.length - 1
+                      ) {
+                        setIndex((index) => index + 1)
+                      }
+                    }}
+                  >
+                    <div className={styles.nextContent}>
+                      {step.submitLabel ? step.submitLabel : "次へ"}
+                      <Icon name="arrowForward" />
+                    </div>
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </FormContext.Provider>

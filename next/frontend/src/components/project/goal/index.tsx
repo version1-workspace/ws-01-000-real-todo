@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
-import styles from "./index.module.css"
 import useForm from "@/app/main/projects/new/context"
 import { classHelper } from "@/lib/cls"
+import styles from "./index.module.css"
 
 interface Props {
   shadow?: boolean
@@ -22,7 +22,12 @@ export default function Goal({ shadow, readOnly }: Props) {
       <div className={styles.content}>
         <div className={styles.row}>
           <div className={styles.left}>
-            目標<span className={styles.required}>*</span>
+            <p className={styles.label}>
+              目標<span className={styles.required}>*</span>
+            </p>
+            <p className={styles.description}>
+              期限日までに達成する目標を記載してください
+            </p>
           </div>
           <div className={styles.col}>
             {readOnly ? (
@@ -44,7 +49,12 @@ export default function Goal({ shadow, readOnly }: Props) {
         </div>
         {!(readOnly && project.shouldbe === "") ? (
           <div className={styles.row}>
-            <div className={styles.left}>あるべき姿</div>
+            <div className={styles.left}>
+              <p className={styles.label}>あるべき姿</p>
+              <p className={styles.description}>
+                目標達成後の理想の状態を具体的に
+              </p>
+            </div>
             <div className={styles.col}>
               {readOnly ? (
                 <p>{project.shouldbe}</p>
@@ -66,7 +76,12 @@ export default function Goal({ shadow, readOnly }: Props) {
         ) : null}
         <div className={styles.row}>
           <div className={styles.left}>
-            期限日<span className={styles.required}>*</span>
+            <p className={styles.label}>
+              期限日<span className={styles.required}>*</span>
+            </p>
+            <p className={styles.description}>
+              目標の達成期限を設定してください
+            </p>
           </div>
           <div className={styles.col}>
             {readOnly ? (

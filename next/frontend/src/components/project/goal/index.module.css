@@ -2,45 +2,62 @@
 }
 
 .shadow {
-  box-shadow: 0px 0px 4px 1px #22222220;
+  border: 1px solid var(--form-card-border-color);
   border-radius: 8px;
+  background: var(--form-card-bg-color);
+  box-shadow: 0px 1px 4px 1px var(--form-card-shadow-color);
+  padding: 32px;
 }
 
 .title {
-  font-size: 14px;
+  color: var(--form-label-color);
+  font-size: 20px;
   font-weight: bold;
-  padding: 32px;
+  padding: 0 0 32px;
 }
 
 .left {
-  min-width: 240px;
+  min-width: 260px;
+  color: var(--form-label-color);
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.description {
+  margin-top: 8px;
+  color: var(--form-description-color);
   font-size: 12px;
+  font-weight: 300;
 }
 
 .content {
-  padding: 32px;
-  padding-top: 0;
+  padding: 0;
 }
 
 .input {
   border-radius: 8px;
-  padding: 8px;
-  border: 0;
-  box-shadow: 0px 0px 4px 1px #22222210;
+  padding: 12px 16px;
+  border: 1px solid var(--form-card-border-color);
+  box-shadow: none;
   width: 100%;
+  color: var(--form-label-color);
 }
 
 .input::placeholder {
-  color: var(--font-color-dark-weak);
+  color: var(--form-placeholder-color);
 }
 
 .row {
   display: flex;
   width: 100%;
-  padding: 18px 32px;
-  margin-bottom: 32px;
+  padding: 0;
+  margin-bottom: 40px;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 40px;
 }
 
 .col {
