@@ -38,7 +38,6 @@ export * from './projectStats';
 export * from './projectStatsKinds';
 export * from './projectStatsStates';
 export * from './projectStatus';
-export * from './refreshRequest';
 export * from './tag';
 export * from './tagListResponse';
 export * from './tagStatus';

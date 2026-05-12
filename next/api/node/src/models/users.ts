@@ -13,11 +13,22 @@ export const usersModel = {
 		return prisma.user.findUnique({ where: { username } });
 	},
 
-	updateRefreshToken(id: number, refreshToken: string) {
+	findByRefreshToken(refreshToken: string) {
+		return prisma.user.findFirst({ where: { refreshToken } });
+	},
+
+	updateRefreshToken(
+		id: number,
+		refreshToken: string,
+		refreshTokenExpiresAt: Date | null,
+		refreshTokenRememberMe: boolean,
+	) {
 		return prisma.user.update({
 			where: { id },
 			data: {
 				refreshToken,
+				refreshTokenExpiresAt,
+				refreshTokenRememberMe,
 				updatedAt: new Date(),
 			},
 		});

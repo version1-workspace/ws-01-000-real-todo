@@ -1,10 +1,6 @@
-const _sessionStorage =
-  typeof sessionStorage !== "undefined" ? sessionStorage : undefined
+let accessToken = ""
 
-export const getAccessToken = () => _sessionStorage?.getItem("token") || ""
-
-export const setUserId = (uuid: string) => localStorage.setItem("uuid", uuid)
-export const getUserId = () => localStorage.getItem("uuid") || ""
+export const getAccessToken = () => accessToken
 
 export interface ApiResponse<T> {
   data: T
@@ -21,12 +17,19 @@ interface RequestConfig {
   headers?: Record<string, string>
 }
 
+type AuthTokenResponse = {
+  data: {
+    accessToken: string
+  }
+}
+
 class Client {
   baseURL: string
   timeout: number
   withCredentials?: boolean
   headers: Record<string, string>
   handleError?: (error: ApiErrorResponse) => ApiErrorResponse | undefined
+  private refreshRequest?: Promise<string>
 
   constructor(config: {
     baseURL: string
@@ -40,15 +43,8 @@ class Client {
     this.baseURL = config.baseURL
     this.timeout = config.timeout
     this.withCredentials = config.withCredentials
-    const token = getAccessToken()
     this.headers = {
       ...(config.headers || {}),
-    }
-    if (token) {
-      this.headers = {
-        ...(config.headers || {}),
-        Authorization: token ? `Bearer ${token}` : "",
-      }
     }
 
     if (config.handleError) {
@@ -81,8 +77,8 @@ class Client {
   }
 
   setAccessToken = (token: string) => {
+    accessToken = token
     if (token) {
-      _sessionStorage?.setItem("token", token)
       this.headers.Authorization = `Bearer ${token}`
     } else {
       delete this.headers.Authorization
@@ -116,12 +112,51 @@ class Client {
     return requestUrl.toString()
   }
 
+  private isRefreshableRequest(url: string) {
+    return !url.startsWith("/auth/login") && !url.startsWith("/auth/refresh")
+  }
+
+  private async refreshAccessToken() {
+    if (!this.refreshRequest) {
+      this.refreshRequest = this.request<AuthTokenResponse>(
+        "/auth/refresh",
+        {
+          method: "POST",
+        },
+        { skipAuthRefresh: true },
+      )
+        .then((response) => {
+          const token = response.data.data.accessToken
+          this.setAccessToken(token)
+          return token
+        })
+        .finally(() => {
+          this.refreshRequest = undefined
+        })
+    }
+
+    return this.refreshRequest
+  }
+
+  private redirectToLogin() {
+    if (typeof window === "undefined") {
+      return
+    }
+
+    if (window.location.pathname.startsWith("/auth/login")) {
+      return
+    }
+
+    window.location.href = "/auth/login?error=loginRequired"
+  }
+
   async request<T>(
     url: string,
     options: RequestConfig & {
       method: string
       body?: unknown
     },
+    internal: { skipAuthRefresh?: boolean } = {},
   ): Promise<ApiResponse<T>> {
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), this.timeout)
@@ -158,6 +193,20 @@ class Client {
       }
 
       if (!response.ok) {
+        if (
+          response.status === 401 &&
+          !internal.skipAuthRefresh &&
+          this.isRefreshableRequest(url)
+        ) {
+          try {
+            await this.refreshAccessToken()
+            return this.request<T>(url, options, { skipAuthRefresh: true })
+          } catch (_error) {
+            this.setAccessToken("")
+            this.redirectToLogin()
+          }
+        }
+
         const error = new Error(
           `Request failed with status ${response.status}`,
         ) as ApiErrorResponse<T>
@@ -181,5 +230,5 @@ export const apiClient = new Client({
   baseURL: `${baseURL}/api/v1`,
   timeout: 1000,
   withCredentials: true,
-  headers: { Authorization: getAccessToken() },
+  headers: {},
 })

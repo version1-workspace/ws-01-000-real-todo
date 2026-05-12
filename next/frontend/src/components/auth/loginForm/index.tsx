@@ -8,7 +8,7 @@ import Input from "@/components/shared/input/text"
 import ShowIf from "@/components/shared/showIf"
 import { useForm } from "@/hooks/useForm"
 import { useToast } from "@/lib/toast/hook"
-import api, { setUserId } from "@/services/api"
+import api from "@/services/api"
 import styles from "./index.module.css"
 
 export const metadata: Metadata = {
@@ -53,9 +53,6 @@ export default function Login() {
         const { data } = res
         if (data.accessToken) {
           api.client.setAccessToken(data.accessToken)
-        }
-        if (data.uuid) {
-          setUserId(data.uuid)
         }
 
         router.push("/main")

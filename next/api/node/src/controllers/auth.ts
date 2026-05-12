@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
 import { z } from "zod";
 import { HttpError } from "../lib/http-error.js";
-import { tokenCookie } from "./cookie/token.js";
 import { authService } from "../services/auth.js";
+import { tokenCookie } from "./cookie/token.js";
 
 const loginSchema = z.object({
 	email: z.string().email(),
@@ -10,35 +10,30 @@ const loginSchema = z.object({
 	rememberMe: z.boolean().optional(),
 });
 
-const refreshSchema = z.object({
-	uuid: z.string().uuid(),
+const authResponse = (data: Awaited<ReturnType<typeof authService.login>>) => ({
+	uuid: data.uuid,
+	accessToken: data.accessToken,
 });
 
 export const authController = {
 	async login(req: Request, res: Response) {
 		const body = loginSchema.parse(req.body);
-		const data = await authService.login(body.email, body.password);
+		const rememberMe = Boolean(body.rememberMe);
+		const data = await authService.login(body.email, body.password, rememberMe);
 
-		tokenCookie.setAccessToken(res, data.accessToken);
-		if (body.rememberMe) {
-			tokenCookie.setRefreshToken(res, data.refreshToken);
-		}
+		tokenCookie.setRefreshToken(res, data.refreshToken, rememberMe);
 
-		res.json({ data });
+		res.json({ data: authResponse(data) });
 	},
 
 	async refresh(req: Request, res: Response) {
-		const body = refreshSchema.parse(req.body);
 		try {
-			const data = await authService.refresh(
-				body.uuid,
-				tokenCookie.getRefreshToken(req),
-			);
-			tokenCookie.setAccessToken(res, data.accessToken);
-			tokenCookie.setRefreshToken(res, data.refreshToken);
-			res.json({ data });
+			const data = await authService.refresh(tokenCookie.getRefreshToken(req));
+			tokenCookie.setRefreshToken(res, data.refreshToken, data.rememberMe);
+			res.json({ data: authResponse(data) });
 		} catch (error) {
 			if (error instanceof HttpError && error.statusCode === 401) {
+				tokenCookie.clearAll(res);
 				res.status(401).json({ message: error.message });
 				return;
 			}
@@ -46,7 +41,8 @@ export const authController = {
 		}
 	},
 
-	clearRefresh(_req: Request, res: Response) {
+	async clearRefresh(req: Request, res: Response) {
+		await authService.revokeRefreshToken(tokenCookie.getRefreshToken(req));
 		tokenCookie.clearAll(res);
 		res.status(200).send();
 	},
