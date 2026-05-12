@@ -15,7 +15,7 @@ export const router = Router();
 router.get("/", appController.version);
 router.post("/auth/login", asyncHandler(authController.login));
 router.post("/auth/refresh", asyncHandler(authController.refresh));
-router.delete("/auth/refresh", authController.clearRefresh);
+router.delete("/auth/refresh", asyncHandler(authController.clearRefresh));
 
 router.use(requireAuth);
 

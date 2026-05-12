@@ -1,7 +1,8 @@
-import dayjs from "dayjs";
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { PrismaPg } from "@prisma/adapter-pg";
+import dayjs from "dayjs";
 import { PrismaClient } from "../generated/prisma/client.js";
+import { refreshTokenPolicy } from "../src/config/auth.js";
 import { env } from "../src/config/env.js";
 import { generateRefreshToken, hashPassword } from "../src/lib/password.js";
 
@@ -43,6 +44,10 @@ const main = async () => {
 				email: `user.${i}@example.com`,
 				password: await hashPassword("AndyBobCharrie", createdAt),
 				refreshToken: await generateRefreshToken(),
+				refreshTokenExpiresAt: now
+					.add(refreshTokenPolicy.expiresInDays, "day")
+					.toDate(),
+				refreshTokenRememberMe: false,
 				status: "active",
 				createdAt,
 				updatedAt: createdAt,

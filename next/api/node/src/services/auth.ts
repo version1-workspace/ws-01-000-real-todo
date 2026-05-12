@@ -1,11 +1,28 @@
-import { comparePassword, generateRefreshToken } from "../lib/password.js";
+import { refreshTokenPolicy } from "../config/auth.js";
 import { signAccessToken } from "../lib/auth.js";
 import { HttpError } from "../lib/http-error.js";
+import { comparePassword, generateRefreshToken } from "../lib/password.js";
+import type { User } from "../models/prisma.js";
 import { usersModel } from "../models/users.js";
-import { prisma } from "../models/prisma.js";
+
+type AuthUser = Pick<User, "id" | "uuid" | "username">;
+
+const createRefreshTokenExpiresAt = () => {
+	const expiresAt = new Date();
+	expiresAt.setDate(expiresAt.getDate() + refreshTokenPolicy.expiresInDays);
+	return expiresAt;
+};
+
+const isExpired = (date: Date | null) => {
+	if (!date) {
+		return true;
+	}
+
+	return date.getTime() <= Date.now();
+};
 
 export const authService = {
-	async login(email: string, password: string) {
+	async login(email: string, password: string, rememberMe = false) {
 		const user = await usersModel.findByEmail(email);
 		if (!user) {
 			throw new HttpError(401, "Unauthorized");
@@ -16,32 +33,56 @@ export const authService = {
 			throw new HttpError(401, "Unauthorized");
 		}
 
-		return this.issueTokens(user.id);
+		return this.issueTokens(user, rememberMe);
 	},
 
-	async refresh(uuid: string, refreshToken: string | undefined) {
-		const user = await usersModel.findByUuid(uuid);
-		if (!user || !refreshToken || user.refreshToken !== refreshToken) {
-			throw new HttpError(401, "invalid refresh token or uuid");
+	async refresh(refreshToken: string | undefined) {
+		if (!refreshToken) {
+			throw new HttpError(401, "invalid refresh token");
 		}
 
-		return this.issueTokens(user.id);
+		const user = await usersModel.findByRefreshToken(refreshToken);
+		if (!user) {
+			throw new HttpError(401, "invalid refresh token");
+		}
+
+		if (isExpired(user.refreshTokenExpiresAt)) {
+			await usersModel.clearRefreshToken(user.id);
+			throw new HttpError(401, "invalid refresh token");
+		}
+
+		return this.issueTokens(user, user.refreshTokenRememberMe);
 	},
 
-	async issueTokens(userId: number) {
-		const user = await prisma.user.findUniqueOrThrow({
-			where: { id: userId },
-		});
+	async issueTokens(user: AuthUser, rememberMe = false) {
 		const refreshToken = await generateRefreshToken();
-		const updated = await usersModel.updateRefreshToken(user.id, refreshToken);
+		const updated = await usersModel.updateRefreshToken(
+			user.id,
+			refreshToken,
+			createRefreshTokenExpiresAt(),
+			rememberMe,
+		);
 
 		return {
-			uuid: updated.uuid,
+			uuid: user.uuid,
 			accessToken: signAccessToken({
-				sub: updated.username,
-				refreshToken: updated.refreshToken,
+				sub: user.username,
 			}),
 			refreshToken: updated.refreshToken,
+			rememberMe,
 		};
+	},
+
+	async revokeRefreshToken(refreshToken: string | undefined) {
+		if (!refreshToken) {
+			return;
+		}
+
+		const user = await usersModel.findByRefreshToken(refreshToken);
+		if (!user) {
+			return;
+		}
+
+		await usersModel.clearRefreshToken(user.id);
 	},
 };

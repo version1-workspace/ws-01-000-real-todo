@@ -47,7 +47,7 @@ paths:
             Set-Cookie:
               schema:
                 type: string
-              description: '`rememberMe=true` の場合は `refreshToken` Cookie を返します。'
+              description: '`refreshToken` HttpOnly Cookie を返します。`rememberMe=true` の場合は 2 週間、未指定の場合は session cookie です。'
           content:
             application/json:
               schema:
@@ -65,13 +65,7 @@ paths:
           required: false
           schema:
             type: string
-          description: '`rememberMe` 利用時に保存される Cookie。'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RefreshRequest'
+          description: 'HttpOnly Cookie に保存されるリフレッシュトークン。'
       responses:
         '200':
           description: 再発行成功
@@ -602,13 +596,11 @@ components:
           type: integer
     AuthToken:
       type: object
-      required: [uuid, accessToken, refreshToken]
+      required: [uuid, accessToken]
       properties:
         uuid:
           $ref: '#/components/schemas/UUID'
         accessToken:
-          type: string
-        refreshToken:
           type: string
     AuthTokenResponse:
       type: object
@@ -627,12 +619,6 @@ components:
           type: string
         rememberMe:
           type: boolean
-    RefreshRequest:
-      type: object
-      required: [uuid]
-      properties:
-        uuid:
-          $ref: '#/components/schemas/UUID'
     User:
       type: object
       required: [uuid, username, email, status, createdAt, updatedAt]

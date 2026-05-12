@@ -1,5 +1,4 @@
 import type { NextFunction, Request, Response } from "express";
-import { tokenCookie } from "../controllers/cookie/token.js";
 import { verifyAccessToken } from "../lib/auth.js";
 import { HttpError } from "../lib/http-error.js";
 import { usersModel } from "../models/users.js";
@@ -14,11 +13,8 @@ export const requireAuth = async (
 	next: NextFunction,
 ) => {
 	const [type, headerToken] = req.headers.authorization?.split(" ") ?? [];
-	const headerTokenExists = Boolean(type === "Bearer" && headerToken);
-	const cookieToken = tokenCookie.getAccessToken(req);
-	const token = headerTokenExists ? headerToken : cookieToken;
-	if (!token) {
-		console.log("No token found in Authorization header or cookies");
+	if (type !== "Bearer" || !headerToken) {
+		console.log("No token found in Authorization header");
 		next(
 			new HttpError(
 				401,
@@ -29,7 +25,7 @@ export const requireAuth = async (
 	}
 
 	try {
-		const payload = verifyAccessToken(token);
+		const payload = verifyAccessToken(headerToken);
 		const user = await usersModel.findByUsername(payload.sub);
 		if (!user) {
 			throw new HttpError(401, "Unauthorized");

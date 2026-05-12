@@ -12,8 +12,10 @@
 		"test": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest run",
 		"test:watch": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest",
 		"prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
 		"prisma:push": "prisma db push",
-		"prisma:seed": "prisma db seed"
+		"prisma:seed": "prisma db seed",
+    "prisma:reset": "prisma migrate reset --force"
 	},
 	"dependencies": {
 		"@prisma/adapter-pg": "^7.3.0",

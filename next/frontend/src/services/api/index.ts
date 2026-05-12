@@ -1,5 +1,4 @@
-import mockApi from "./mock"
-import { apiClient, getAccessToken, getUserId, setUserId } from "./client"
+import { apiClient, getAccessToken } from "./client"
 import {
   deleteAuthRefresh,
   getProjectsSlugMilestones,
@@ -24,6 +23,7 @@ import {
   putUsersTasksIdComplete,
   putUsersTasksIdReopen,
 } from "./generated"
+import mockApi from "./mock"
 
 const client = apiClient
 
@@ -58,8 +58,8 @@ const wrap = async <
 
 const api = {
   client,
-  refreshToken: ({ uuid }: { uuid: string }) => {
-    return wrap(postAuthRefresh({ uuid }))
+  refreshToken: () => {
+    return wrap(postAuthRefresh())
   },
   logout: () => {
     return wrap(deleteAuthRefresh())
@@ -249,5 +249,5 @@ const api = {
 }
 
 export default api
-export { apiClient, getAccessToken, getUserId, setUserId }
 export * as generatedApi from "./generated"
+export { apiClient, getAccessToken }

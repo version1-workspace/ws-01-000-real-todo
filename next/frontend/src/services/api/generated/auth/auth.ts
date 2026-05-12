@@ -12,7 +12,6 @@ import type {
   AuthTokenResponse,
   LoginRequest,
   MessageResponse,
-  RefreshRequest,
   UnauthorizedResponse
 } from '../model';
 
@@ -91,15 +90,14 @@ export const getPostAuthRefreshUrl = () => {
   return `/auth/refresh`
 }
 
-export const postAuthRefresh = async (refreshRequest: RefreshRequest, options?: RequestInit): Promise<postAuthRefreshResponse> => {
+export const postAuthRefresh = async ( options?: RequestInit): Promise<postAuthRefreshResponse> => {
 
   return customInstance<postAuthRefreshResponse>(getPostAuthRefreshUrl(),
   {
     ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      refreshRequest,)
+    method: 'POST'
+
+
   }
 );}
 

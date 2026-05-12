@@ -1,10 +1,4 @@
-const _sessionStorage =
-  typeof sessionStorage !== "undefined" ? sessionStorage : undefined
-
-export const getAccessToken = () => _sessionStorage?.getItem("token") || ""
-
-export const setUserId = (uuid: string) => localStorage.setItem("uuid", uuid)
-export const getUserId = () => localStorage.getItem("uuid") || ""
+import type { AuthTokenResponse } from "./generated/model/authTokenResponse"
 
 export interface ApiResponse<T> {
   data: T
@@ -21,35 +15,52 @@ interface RequestConfig {
   headers?: Record<string, string>
 }
 
-class Client {
+type RequestOptions = RequestConfig & {
+  method: string
+  body?: unknown
+}
+
+type InternalRequestConfig = {
+  skipAuthRefresh?: boolean
+}
+
+interface ClientConfig {
+  baseURL: string
+  timeout: number
+  withCredentials?: boolean
+  handleError?: (error: ApiErrorResponse) => ApiErrorResponse | undefined
+  onAuthExpired?: () => void
+  headers?: Record<string, string>
+}
+
+const defaultAuthExpiredHandler = () => {
+  if (typeof window === "undefined") {
+    return
+  }
+
+  if (window.location.pathname.startsWith("/auth/login")) {
+    return
+  }
+
+  window.location.href = "/auth/login?error=loginRequired"
+}
+
+export class Client {
   baseURL: string
   timeout: number
   withCredentials?: boolean
   headers: Record<string, string>
   handleError?: (error: ApiErrorResponse) => ApiErrorResponse | undefined
+  onAuthExpired: () => void
+  private refreshRequest?: Promise<string>
+  private accessToken = ""
 
-  constructor(config: {
-    baseURL: string
-    timeout: number
-    withCredentials?: boolean
-    handleError?: (error: ApiErrorResponse) => ApiErrorResponse | undefined
-    headers: {
-      Authorization?: string
-    }
-  }) {
+  constructor(config: ClientConfig) {
     this.baseURL = config.baseURL
     this.timeout = config.timeout
     this.withCredentials = config.withCredentials
-    const token = getAccessToken()
-    this.headers = {
-      ...(config.headers || {}),
-    }
-    if (token) {
-      this.headers = {
-        ...(config.headers || {}),
-        Authorization: token ? `Bearer ${token}` : "",
-      }
-    }
+    this.onAuthExpired = config.onAuthExpired ?? defaultAuthExpiredHandler
+    this.headers = config.headers ?? {}
 
     if (config.handleError) {
       this.handleError = config.handleError
@@ -81,13 +92,10 @@ class Client {
   }
 
   setAccessToken = (token: string) => {
-    if (token) {
-      _sessionStorage?.setItem("token", token)
-      this.headers.Authorization = `Bearer ${token}`
-    } else {
-      delete this.headers.Authorization
-    }
+    this.accessToken = token
   }
+
+  getAccessToken = () => this.accessToken
 
   private buildUrl(url: string, params?: Record<string, unknown>) {
     const normalizedUrl = url.startsWith("/") ? url.slice(1) : url
@@ -116,12 +124,85 @@ class Client {
     return requestUrl.toString()
   }
 
+  private isRefreshableRequest(url: string) {
+    return !url.startsWith("/auth/login") && !url.startsWith("/auth/refresh")
+  }
+
+  private async refreshAccessToken() {
+    if (!this.refreshRequest) {
+      this.refreshRequest = this.request<AuthTokenResponse>(
+        "/auth/refresh",
+        {
+          method: "POST",
+        },
+        { skipAuthRefresh: true },
+      )
+        .then((response) => {
+          const token = response.data.data.accessToken
+          this.setAccessToken(token)
+          return token
+        })
+        .finally(() => {
+          this.refreshRequest = undefined
+        })
+    }
+
+    return this.refreshRequest
+  }
+
+  private shouldRefreshAccessToken(
+    response: Response,
+    url: string,
+    internal: InternalRequestConfig,
+  ) {
+    return (
+      response.status === 401 &&
+      !internal.skipAuthRefresh &&
+      this.isRefreshableRequest(url)
+    )
+  }
+
+  private buildHeaders(options: RequestOptions) {
+    return {
+      ...this.headers,
+      ...(this.accessToken
+        ? { Authorization: `Bearer ${this.accessToken}` }
+        : {}),
+      ...(options.body ? { "Content-Type": "application/json" } : {}),
+      ...(options.headers || {}),
+    }
+  }
+
+  private buildBody(body: unknown) {
+    if (body === undefined) {
+      return undefined
+    }
+
+    return typeof body === "string" ? body : JSON.stringify(body)
+  }
+
+  private async retryAfterRefresh<T>(url: string, options: RequestOptions) {
+    try {
+      await this.refreshAccessToken()
+      return this.request<T>(url, options, { skipAuthRefresh: true })
+    } catch (_error) {
+      this.setAccessToken("")
+      this.onAuthExpired()
+    }
+  }
+
+  private createError<T>(result: ApiResponse<T>) {
+    const error = new Error(
+      `Request failed with status ${result.status}`,
+    ) as ApiErrorResponse<T>
+    error.response = result
+    return error
+  }
+
   async request<T>(
     url: string,
-    options: RequestConfig & {
-      method: string
-      body?: unknown
-    },
+    options: RequestOptions,
+    internal: InternalRequestConfig = {},
   ): Promise<ApiResponse<T>> {
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), this.timeout)
@@ -130,17 +211,8 @@ class Client {
       const response = await fetch(this.buildUrl(url, options.params), {
         method: options.method,
         credentials: this.withCredentials ? "include" : "same-origin",
-        headers: {
-          ...this.headers,
-          ...(options.body ? { "Content-Type": "application/json" } : {}),
-          ...(options.headers || {}),
-        },
-        body:
-          options.body === undefined
-            ? undefined
-            : typeof options.body === "string"
-              ? options.body
-              : JSON.stringify(options.body),
+        headers: this.buildHeaders(options),
+        body: this.buildBody(options.body),
         signal: controller.signal,
       })
 
@@ -158,11 +230,14 @@ class Client {
       }
 
       if (!response.ok) {
-        const error = new Error(
-          `Request failed with status ${response.status}`,
-        ) as ApiErrorResponse<T>
-        error.response = result
-        const handledError = this.handleError?.(error)
+        if (this.shouldRefreshAccessToken(response, url, internal)) {
+          const retryResult = await this.retryAfterRefresh<T>(url, options)
+          if (retryResult) {
+            return retryResult
+          }
+        }
+
+        const handledError = this.handleError?.(this.createError(result))
         if (handledError) {
           throw handledError
         }
@@ -181,5 +256,7 @@ export const apiClient = new Client({
   baseURL: `${baseURL}/api/v1`,
   timeout: 1000,
   withCredentials: true,
-  headers: { Authorization: getAccessToken() },
+  headers: {},
 })
+
+export const getAccessToken = () => apiClient.getAccessToken()

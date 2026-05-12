@@ -13,5 +13,4 @@ import type { Uuid } from './uuid';
 export interface AuthToken {
   uuid: Uuid;
   accessToken: string;
-  refreshToken: string;
 }

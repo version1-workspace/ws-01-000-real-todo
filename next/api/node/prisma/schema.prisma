@@ -8,18 +8,22 @@ datasource db {
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  uuid         String    @unique
-  username     String    @unique
-  email        String    @unique
-  password     String
-  refreshToken String
-  status       String    @default("active")
-  createdAt    DateTime
-  updatedAt    DateTime
-  projects     Project[]
-  tasks        Task[]
-  tags         Tag[]
+  id                     Int       @id @default(autoincrement())
+  uuid                   String    @unique
+  username               String    @unique
+  email                  String    @unique
+  password               String
+  refreshToken           String
+  refreshTokenExpiresAt  DateTime?
+  refreshTokenRememberMe Boolean   @default(false)
+  status                 String    @default("active")
+  createdAt              DateTime
+  updatedAt              DateTime
+  projects               Project[]
+  tasks                  Task[]
+  tags                   Tag[]
+
+  @@index([refreshToken])
 }
 
 model Project {

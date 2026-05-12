@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation"
 import { createContext, useContext, useEffect, useState } from "react"
 import route from "@/lib/route"
-import api, { getAccessToken, getUserId } from "@/services/api"
+import api, { getAccessToken } from "@/services/api"
 import { ApiErrorResponse } from "@/services/api/client"
 import { factory } from "@/viewmodels"
 import { User } from "@/viewmodels/user"
@@ -33,11 +33,8 @@ const AuthContainer = ({ children, isPublic }: Props) => {
     const init = async () => {
       try {
         if (!getAccessToken()) {
-          const uuid = getUserId()
-          if (uuid) {
-            const r1 = await api.refreshToken({ uuid })
-            api.client.setAccessToken(r1.data.data.accessToken)
-          }
+          const r1 = await api.refreshToken()
+          api.client.setAccessToken(r1.data.data.accessToken)
         }
 
         const r2 = await api.fetchUser()
