@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { Client, getAccessToken } from "./client"
+import { Client } from "./client"
 
 const jsonResponse = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -28,7 +28,6 @@ const createClient = (onAuthExpired = vi.fn()) =>
 describe("apiClient", () => {
   beforeEach(() => {
     vi.restoreAllMocks()
-    createClient().setAccessToken("")
     sessionStorage.clear()
     localStorage.clear()
   })
@@ -37,9 +36,19 @@ describe("apiClient", () => {
     const client = createClient()
     client.setAccessToken("access-token")
 
-    expect(getAccessToken()).toBe("access-token")
+    expect(client.getAccessToken()).toBe("access-token")
     expect(sessionStorage.getItem("token")).toBeNull()
     expect(localStorage.getItem("uuid")).toBeNull()
+  })
+
+  it("accessToken は Client インスタンスごとに保持する", () => {
+    const client = createClient()
+    const anotherClient = createClient()
+
+    client.setAccessToken("access-token")
+
+    expect(client.getAccessToken()).toBe("access-token")
+    expect(anotherClient.getAccessToken()).toBe("")
   })
 
   it("同時 401 では refresh を 1 回だけ行い、元リクエストを再試行する", async () => {
@@ -86,7 +95,7 @@ describe("apiClient", () => {
     await expect(Promise.all(requests)).resolves.toHaveLength(2)
     expect(refreshCount).toBe(1)
     expect(userRequestCount).toBe(4)
-    expect(getAccessToken()).toBe("renewed-token")
+    expect(client.getAccessToken()).toBe("renewed-token")
   })
 
   it("refresh 失敗時は token を破棄して onAuthExpired を呼ぶ", async () => {
@@ -107,7 +116,7 @@ describe("apiClient", () => {
     await expect(
       client.request("/users/me", { method: "GET" }),
     ).rejects.toThrow("Request failed with status 401")
-    expect(getAccessToken()).toBe("")
+    expect(client.getAccessToken()).toBe("")
     expect(onAuthExpired).toHaveBeenCalledOnce()
   })
 })

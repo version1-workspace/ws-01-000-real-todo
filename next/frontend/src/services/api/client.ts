@@ -1,9 +1,5 @@
 import type { AuthTokenResponse } from "./generated/model/authTokenResponse"
 
-let accessToken = ""
-
-export const getAccessToken = () => accessToken
-
 export interface ApiResponse<T> {
   data: T
   status: number
@@ -57,6 +53,7 @@ export class Client {
   handleError?: (error: ApiErrorResponse) => ApiErrorResponse | undefined
   onAuthExpired: () => void
   private refreshRequest?: Promise<string>
+  private accessToken = ""
 
   constructor(config: ClientConfig) {
     this.baseURL = config.baseURL
@@ -95,8 +92,10 @@ export class Client {
   }
 
   setAccessToken = (token: string) => {
-    accessToken = token
+    this.accessToken = token
   }
+
+  getAccessToken = () => this.accessToken
 
   private buildUrl(url: string, params?: Record<string, unknown>) {
     const normalizedUrl = url.startsWith("/") ? url.slice(1) : url
@@ -166,7 +165,9 @@ export class Client {
   private buildHeaders(options: RequestOptions) {
     return {
       ...this.headers,
-      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      ...(this.accessToken
+        ? { Authorization: `Bearer ${this.accessToken}` }
+        : {}),
       ...(options.body ? { "Content-Type": "application/json" } : {}),
       ...(options.headers || {}),
     }
@@ -257,3 +258,5 @@ export const apiClient = new Client({
   withCredentials: true,
   headers: {},
 })
+
+export const getAccessToken = () => apiClient.getAccessToken()
