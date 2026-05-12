@@ -22,6 +22,8 @@ model User {
   projects               Project[]
   tasks                  Task[]
   tags                   Tag[]
+
+  @@index([refreshToken])
 }
 
 model Project {

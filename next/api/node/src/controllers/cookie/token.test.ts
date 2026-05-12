@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { refreshTokenPolicy } from "../../config/auth.js";
 import { tokenCookie } from "./token.js";
 
 const cookieOptions = {
@@ -46,7 +47,7 @@ describe("tokenCookie", () => {
 			tokenCookie.setRefreshToken(res, "rt-012", true);
 			expect(res.cookie).toHaveBeenCalledWith("refreshToken", "rt-012", {
 				...cookieOptions,
-				maxAge: 14 * 24 * 60 * 60 * 1000,
+				maxAge: refreshTokenPolicy.maxAgeMs,
 			});
 		});
 	});

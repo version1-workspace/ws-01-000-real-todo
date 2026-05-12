@@ -1,11 +1,11 @@
 import type { Request, Response } from "express";
+import { refreshTokenPolicy } from "../../config/auth.js";
 
 const COOKIE_KEYS = {
 	REFRESH_TOKEN: "refreshToken",
 } as const;
 
 const isProduction = process.env.NODE_ENV === "production";
-const REFRESH_TOKEN_MAX_AGE_MS = 14 * 24 * 60 * 60 * 1000;
 
 const cookieOptions = {
 	httpOnly: true,
@@ -22,7 +22,7 @@ export const tokenCookie = {
 	setRefreshToken(res: Response, token: string, rememberMe: boolean) {
 		res.cookie(COOKIE_KEYS.REFRESH_TOKEN, token, {
 			...cookieOptions,
-			...(rememberMe ? { maxAge: REFRESH_TOKEN_MAX_AGE_MS } : {}),
+			...(rememberMe ? { maxAge: refreshTokenPolicy.maxAgeMs } : {}),
 		});
 	},
 

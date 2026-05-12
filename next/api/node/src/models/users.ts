@@ -5,10 +5,6 @@ export const usersModel = {
 		return prisma.user.findUnique({ where: { email } });
 	},
 
-	findByUuid(uuid: string) {
-		return prisma.user.findUnique({ where: { uuid } });
-	},
-
 	findByUsername(username: string) {
 		return prisma.user.findUnique({ where: { username } });
 	},
@@ -32,5 +28,9 @@ export const usersModel = {
 				updatedAt: new Date(),
 			},
 		});
+	},
+
+	clearRefreshToken(id: number) {
+		return this.updateRefreshToken(id, "", null, false);
 	},
 };

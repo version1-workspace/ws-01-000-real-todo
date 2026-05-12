@@ -10,7 +10,11 @@ const loginSchema = z.object({
 	rememberMe: z.boolean().optional(),
 });
 
-const authResponse = (data: Awaited<ReturnType<typeof authService.login>>) => ({
+type AuthResult = Awaited<ReturnType<typeof authService.login>>;
+
+const toAuthTokenResponse = (
+	data: Pick<AuthResult, "uuid" | "accessToken">,
+) => ({
 	uuid: data.uuid,
 	accessToken: data.accessToken,
 });
@@ -23,14 +27,14 @@ export const authController = {
 
 		tokenCookie.setRefreshToken(res, data.refreshToken, rememberMe);
 
-		res.json({ data: authResponse(data) });
+		res.json({ data: toAuthTokenResponse(data) });
 	},
 
 	async refresh(req: Request, res: Response) {
 		try {
 			const data = await authService.refresh(tokenCookie.getRefreshToken(req));
 			tokenCookie.setRefreshToken(res, data.refreshToken, data.rememberMe);
-			res.json({ data: authResponse(data) });
+			res.json({ data: toAuthTokenResponse(data) });
 		} catch (error) {
 			if (error instanceof HttpError && error.statusCode === 401) {
 				tokenCookie.clearAll(res);

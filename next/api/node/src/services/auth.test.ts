@@ -3,15 +3,9 @@ import type { HttpError } from "../lib/http-error.js";
 
 const usersModel = {
 	findByEmail: vi.fn(),
-	findByUuid: vi.fn(),
 	findByRefreshToken: vi.fn(),
 	updateRefreshToken: vi.fn(),
-};
-
-const prisma = {
-	user: {
-		findUniqueOrThrow: vi.fn(),
-	},
+	clearRefreshToken: vi.fn(),
 };
 
 const comparePassword = vi.fn();
@@ -19,7 +13,6 @@ const generateRefreshToken = vi.fn();
 const signAccessToken = vi.fn();
 
 vi.mock("../models/users.js", () => ({ usersModel }));
-vi.mock("../models/prisma.js", () => ({ prisma }));
 vi.mock("../lib/password.js", () => ({
 	comparePassword,
 	generateRefreshToken,
@@ -72,36 +65,27 @@ describe("authService", () => {
 			refreshToken: "stored-token",
 			refreshTokenExpiresAt: new Date("2025-01-01T00:00:00.000Z"),
 		});
-		usersModel.updateRefreshToken.mockResolvedValue({});
+		usersModel.clearRefreshToken.mockResolvedValue({});
 
 		await expect(authService.refresh("stored-token")).rejects.toMatchObject({
 			statusCode: 401,
 			message: "invalid refresh token",
 		});
-		expect(usersModel.updateRefreshToken).toHaveBeenCalledWith(
-			1,
-			"",
-			null,
-			false,
-		);
+		expect(usersModel.clearRefreshToken).toHaveBeenCalledWith(1);
 	});
 
 	it("refresh は保存済み rememberMe を維持して token を再発行する", async () => {
 		usersModel.findByRefreshToken.mockResolvedValue({
 			id: 1,
+			uuid: "user-uuid",
+			username: "user 1",
 			refreshToken: "stored-token",
 			refreshTokenExpiresAt: new Date("2099-01-01T00:00:00.000Z"),
 			refreshTokenRememberMe: true,
 		});
-		prisma.user.findUniqueOrThrow.mockResolvedValue({
-			id: 1,
-			username: "user 1",
-		});
 		generateRefreshToken.mockResolvedValue("new-refresh-token");
 		usersModel.updateRefreshToken.mockResolvedValue({
 			id: 1,
-			uuid: "user-uuid",
-			username: "user 1",
 			refreshToken: "new-refresh-token",
 		});
 		signAccessToken.mockReturnValue("signed-access-token");
@@ -116,20 +100,19 @@ describe("authService", () => {
 	it("issueTokens は refresh token を更新して access token を返す", async () => {
 		vi.useFakeTimers();
 		vi.setSystemTime(new Date("2026-05-12T00:00:00.000Z"));
-		prisma.user.findUniqueOrThrow.mockResolvedValue({
-			id: 1,
-			username: "user 1",
-		});
 		generateRefreshToken.mockResolvedValue("new-refresh-token");
 		usersModel.updateRefreshToken.mockResolvedValue({
 			id: 1,
-			uuid: "user-uuid",
-			username: "user 1",
 			refreshToken: "new-refresh-token",
 		});
 		signAccessToken.mockReturnValue("signed-access-token");
 
-		await expect(authService.issueTokens(1, true)).resolves.toEqual({
+		await expect(
+			authService.issueTokens(
+				{ id: 1, uuid: "user-uuid", username: "user 1" },
+				true,
+			),
+		).resolves.toEqual({
 			uuid: "user-uuid",
 			accessToken: "signed-access-token",
 			refreshToken: "new-refresh-token",

@@ -1,3 +1,5 @@
+import type { AuthTokenResponse } from "./generated/model/authTokenResponse"
+
 let accessToken = ""
 
 export const getAccessToken = () => accessToken
@@ -17,18 +19,25 @@ interface RequestConfig {
   headers?: Record<string, string>
 }
 
-type AuthTokenResponse = {
-  data: {
-    accessToken: string
+const defaultAuthExpiredHandler = () => {
+  if (typeof window === "undefined") {
+    return
   }
+
+  if (window.location.pathname.startsWith("/auth/login")) {
+    return
+  }
+
+  window.location.href = "/auth/login?error=loginRequired"
 }
 
-class Client {
+export class Client {
   baseURL: string
   timeout: number
   withCredentials?: boolean
   headers: Record<string, string>
   handleError?: (error: ApiErrorResponse) => ApiErrorResponse | undefined
+  onAuthExpired: () => void
   private refreshRequest?: Promise<string>
 
   constructor(config: {
@@ -36,6 +45,7 @@ class Client {
     timeout: number
     withCredentials?: boolean
     handleError?: (error: ApiErrorResponse) => ApiErrorResponse | undefined
+    onAuthExpired?: () => void
     headers: {
       Authorization?: string
     }
@@ -43,6 +53,7 @@ class Client {
     this.baseURL = config.baseURL
     this.timeout = config.timeout
     this.withCredentials = config.withCredentials
+    this.onAuthExpired = config.onAuthExpired ?? defaultAuthExpiredHandler
     this.headers = {
       ...(config.headers || {}),
     }
@@ -138,16 +149,16 @@ class Client {
     return this.refreshRequest
   }
 
-  private redirectToLogin() {
-    if (typeof window === "undefined") {
-      return
-    }
-
-    if (window.location.pathname.startsWith("/auth/login")) {
-      return
-    }
-
-    window.location.href = "/auth/login?error=loginRequired"
+  private shouldRefreshAccessToken(
+    response: Response,
+    url: string,
+    internal: { skipAuthRefresh?: boolean },
+  ) {
+    return (
+      response.status === 401 &&
+      !internal.skipAuthRefresh &&
+      this.isRefreshableRequest(url)
+    )
   }
 
   async request<T>(
@@ -193,17 +204,13 @@ class Client {
       }
 
       if (!response.ok) {
-        if (
-          response.status === 401 &&
-          !internal.skipAuthRefresh &&
-          this.isRefreshableRequest(url)
-        ) {
+        if (this.shouldRefreshAccessToken(response, url, internal)) {
           try {
             await this.refreshAccessToken()
             return this.request<T>(url, options, { skipAuthRefresh: true })
           } catch (_error) {
             this.setAccessToken("")
-            this.redirectToLogin()
+            this.onAuthExpired()
           }
         }
 

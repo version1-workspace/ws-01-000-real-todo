@@ -1,14 +1,15 @@
+import { refreshTokenPolicy } from "../config/auth.js";
 import { signAccessToken } from "../lib/auth.js";
 import { HttpError } from "../lib/http-error.js";
 import { comparePassword, generateRefreshToken } from "../lib/password.js";
-import { prisma } from "../models/prisma.js";
+import type { User } from "../models/prisma.js";
 import { usersModel } from "../models/users.js";
 
-const REFRESH_TOKEN_EXPIRES_IN_DAYS = 14;
+type AuthUser = Pick<User, "id" | "uuid" | "username">;
 
 const createRefreshTokenExpiresAt = () => {
 	const expiresAt = new Date();
-	expiresAt.setDate(expiresAt.getDate() + REFRESH_TOKEN_EXPIRES_IN_DAYS);
+	expiresAt.setDate(expiresAt.getDate() + refreshTokenPolicy.expiresInDays);
 	return expiresAt;
 };
 
@@ -32,7 +33,7 @@ export const authService = {
 			throw new HttpError(401, "Unauthorized");
 		}
 
-		return this.issueTokens(user.id, rememberMe);
+		return this.issueTokens(user, rememberMe);
 	},
 
 	async refresh(refreshToken: string | undefined) {
@@ -41,22 +42,19 @@ export const authService = {
 		}
 
 		const user = await usersModel.findByRefreshToken(refreshToken);
-		if (!user || user.refreshToken !== refreshToken) {
+		if (!user) {
 			throw new HttpError(401, "invalid refresh token");
 		}
 
 		if (isExpired(user.refreshTokenExpiresAt)) {
-			await usersModel.updateRefreshToken(user.id, "", null, false);
+			await usersModel.clearRefreshToken(user.id);
 			throw new HttpError(401, "invalid refresh token");
 		}
 
-		return this.issueTokens(user.id, user.refreshTokenRememberMe);
+		return this.issueTokens(user, user.refreshTokenRememberMe);
 	},
 
-	async issueTokens(userId: number, rememberMe = false) {
-		const user = await prisma.user.findUniqueOrThrow({
-			where: { id: userId },
-		});
+	async issueTokens(user: AuthUser, rememberMe = false) {
 		const refreshToken = await generateRefreshToken();
 		const updated = await usersModel.updateRefreshToken(
 			user.id,
@@ -66,9 +64,9 @@ export const authService = {
 		);
 
 		return {
-			uuid: updated.uuid,
+			uuid: user.uuid,
 			accessToken: signAccessToken({
-				sub: updated.username,
+				sub: user.username,
 			}),
 			refreshToken: updated.refreshToken,
 			rememberMe,
@@ -85,6 +83,6 @@ export const authService = {
 			return;
 		}
 
-		await usersModel.updateRefreshToken(user.id, "", null, false);
+		await usersModel.clearRefreshToken(user.id);
 	},
 };
