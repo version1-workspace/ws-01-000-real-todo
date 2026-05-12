@@ -1,0 +1,9 @@
+node_modules
+dist
+generated
+.env
+.cache
+.npm-cache
+.tmp
+.vitest
+*.log

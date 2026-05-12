@@ -1,0 +1,22 @@
+services:
+  app:
+    build:
+      context: ./api/node
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    expose:
+      - "3000"
+    # env_file は docker copose up コマンドを実行するディレクトリにおく
+    env_file:
+      - .env
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
