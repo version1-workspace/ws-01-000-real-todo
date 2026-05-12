@@ -19,6 +19,24 @@ interface RequestConfig {
   headers?: Record<string, string>
 }
 
+type RequestOptions = RequestConfig & {
+  method: string
+  body?: unknown
+}
+
+type InternalRequestConfig = {
+  skipAuthRefresh?: boolean
+}
+
+interface ClientConfig {
+  baseURL: string
+  timeout: number
+  withCredentials?: boolean
+  handleError?: (error: ApiErrorResponse) => ApiErrorResponse | undefined
+  onAuthExpired?: () => void
+  headers?: Record<string, string>
+}
+
 const defaultAuthExpiredHandler = () => {
   if (typeof window === "undefined") {
     return
@@ -40,23 +58,12 @@ export class Client {
   onAuthExpired: () => void
   private refreshRequest?: Promise<string>
 
-  constructor(config: {
-    baseURL: string
-    timeout: number
-    withCredentials?: boolean
-    handleError?: (error: ApiErrorResponse) => ApiErrorResponse | undefined
-    onAuthExpired?: () => void
-    headers: {
-      Authorization?: string
-    }
-  }) {
+  constructor(config: ClientConfig) {
     this.baseURL = config.baseURL
     this.timeout = config.timeout
     this.withCredentials = config.withCredentials
     this.onAuthExpired = config.onAuthExpired ?? defaultAuthExpiredHandler
-    this.headers = {
-      ...(config.headers || {}),
-    }
+    this.headers = config.headers ?? {}
 
     if (config.handleError) {
       this.handleError = config.handleError
@@ -89,11 +96,6 @@ export class Client {
 
   setAccessToken = (token: string) => {
     accessToken = token
-    if (token) {
-      this.headers.Authorization = `Bearer ${token}`
-    } else {
-      delete this.headers.Authorization
-    }
   }
 
   private buildUrl(url: string, params?: Record<string, unknown>) {
@@ -152,7 +154,7 @@ export class Client {
   private shouldRefreshAccessToken(
     response: Response,
     url: string,
-    internal: { skipAuthRefresh?: boolean },
+    internal: InternalRequestConfig,
   ) {
     return (
       response.status === 401 &&
@@ -161,13 +163,45 @@ export class Client {
     )
   }
 
+  private buildHeaders(options: RequestOptions) {
+    return {
+      ...this.headers,
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      ...(options.body ? { "Content-Type": "application/json" } : {}),
+      ...(options.headers || {}),
+    }
+  }
+
+  private buildBody(body: unknown) {
+    if (body === undefined) {
+      return undefined
+    }
+
+    return typeof body === "string" ? body : JSON.stringify(body)
+  }
+
+  private async retryAfterRefresh<T>(url: string, options: RequestOptions) {
+    try {
+      await this.refreshAccessToken()
+      return this.request<T>(url, options, { skipAuthRefresh: true })
+    } catch (_error) {
+      this.setAccessToken("")
+      this.onAuthExpired()
+    }
+  }
+
+  private createError<T>(result: ApiResponse<T>) {
+    const error = new Error(
+      `Request failed with status ${result.status}`,
+    ) as ApiErrorResponse<T>
+    error.response = result
+    return error
+  }
+
   async request<T>(
     url: string,
-    options: RequestConfig & {
-      method: string
-      body?: unknown
-    },
-    internal: { skipAuthRefresh?: boolean } = {},
+    options: RequestOptions,
+    internal: InternalRequestConfig = {},
   ): Promise<ApiResponse<T>> {
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), this.timeout)
@@ -176,17 +210,8 @@ export class Client {
       const response = await fetch(this.buildUrl(url, options.params), {
         method: options.method,
         credentials: this.withCredentials ? "include" : "same-origin",
-        headers: {
-          ...this.headers,
-          ...(options.body ? { "Content-Type": "application/json" } : {}),
-          ...(options.headers || {}),
-        },
-        body:
-          options.body === undefined
-            ? undefined
-            : typeof options.body === "string"
-              ? options.body
-              : JSON.stringify(options.body),
+        headers: this.buildHeaders(options),
+        body: this.buildBody(options.body),
         signal: controller.signal,
       })
 
@@ -205,20 +230,13 @@ export class Client {
 
       if (!response.ok) {
         if (this.shouldRefreshAccessToken(response, url, internal)) {
-          try {
-            await this.refreshAccessToken()
-            return this.request<T>(url, options, { skipAuthRefresh: true })
-          } catch (_error) {
-            this.setAccessToken("")
-            this.onAuthExpired()
+          const retryResult = await this.retryAfterRefresh<T>(url, options)
+          if (retryResult) {
+            return retryResult
           }
         }
 
-        const error = new Error(
-          `Request failed with status ${response.status}`,
-        ) as ApiErrorResponse<T>
-        error.response = result
-        const handledError = this.handleError?.(error)
+        const handledError = this.handleError?.(this.createError(result))
         if (handledError) {
           throw handledError
         }
