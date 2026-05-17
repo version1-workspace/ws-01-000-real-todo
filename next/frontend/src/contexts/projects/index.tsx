@@ -38,6 +38,7 @@ export const useProjectsWithoutContext = () => {
   const [data, setData] = useState<Pagination<Project>>(
     Pagination.create<Project>(),
   )
+
   const fetch = async (params: SearchParams) => {
     try {
       const res = await api.fetchProjects(params)
