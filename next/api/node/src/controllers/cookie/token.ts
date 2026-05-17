@@ -5,7 +5,7 @@ const COOKIE_KEYS = {
 	REFRESH_TOKEN: "refreshToken",
 } as const;
 
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = process.env.NODE_ENV === "production" || process.env.NEXT_PUBLIC_APP_ENV === "production";
 
 const cookieOptions = {
 	httpOnly: true,
