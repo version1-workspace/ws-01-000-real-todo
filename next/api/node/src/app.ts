@@ -12,7 +12,7 @@ export const createApp = () => {
 	console.log("Allow Request URL:", env.ALLOW_REQUEST_URL);
 	app.use(
 		cors({
-			origin: env.ALLOW_REQUEST_URL,
+			origin: env.ALLOW_REQUEST_URL.split(",").map((url) => url.trim()),
 			methods: ["GET", "HEAD", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"],
 			allowedHeaders: [
 				"Origin",
