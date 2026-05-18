@@ -1,36 +1,91 @@
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-color-light);
+  background: rgba(255, 255, 255, 0.96);
+  color: #0f172a;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+  backdrop-filter: blur(8px);
+}
+
+.header::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
   background: var(--primary-color);
-  color: var(--font-color-light);
+  content: "";
 }
 
 .content {
-  padding: 8px 16px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  min-height: 72px;
+  padding: 16px 32px 12px;
 }
 
 .logoContainer {
-  margin-left: 16px;
-  margin-right: 128px;
+  margin-right: 40px;
 }
 
 .logo {
-  margin-right: 32px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #0f172a;
+}
+
+.logo::after {
+  position: absolute;
+  right: 0;
+  bottom: -10px;
+  width: 36px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--primary-color);
+  content: "";
+}
+
+.logoImage {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
 }
 
 .logo > h2 {
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0;
 }
 
 .menu {
   display: flex;
-  margin-right: 16px;
   align-items: center;
+  gap: 8px;
+  margin-right: 16px;
 }
 
 .menuItem {
-  margin-right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  color: #334155;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.menuItem:hover {
+  background: #ecfdf5;
+  color: var(--primary-color);
 }
 
 .menuItem svg {
@@ -38,9 +93,10 @@
 }
 
 .avatarCircleContaiener {
-  background: #e0e0e0;
-  height: 28px;
-  width: 28px;
+  background: #ecfdf5;
+  color: var(--primary-color);
+  height: 32px;
+  width: 32px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -53,8 +109,18 @@
   gap: 6px;
   border: 0;
   background: transparent;
-  color: var(--font-color-light);
+  color: #334155;
   cursor: pointer;
+  border-radius: 999px;
+  padding: 4px 6px 4px 4px;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.userMenuTrigger:hover {
+  background: #ecfdf5;
+  color: var(--primary-color);
 }
 
 .userMenuHeader {
@@ -97,79 +163,12 @@
 .left {
   display: flex;
   align-items: center;
+  min-width: 0;
+  flex: 1;
 }
 
 .right {
   display: flex;
-  margin-right: 32px;
   align-items: center;
-}
-
-.dropdownContainer {
-  position: relative;
-}
-
-.dropdown {
-  padding: 8px 0;
-  position: absolute;
-  z-index: 1;
-  right: -16px;
-  box-shadow: 1px 1px 4px 1px #22222240;
-  background: var(--bg-color-light);
-  color: var(--font-color-dark);
-}
-
-.dropdownItem {
-  min-width: 200px;
-  cursor: pointer;
-}
-
-.dropdownIcon {
-  margin-right: 8px;
-}
-
-.dropdownItem:hover {
-  background: var(--hover-color);
-}
-
-.dropdownLink {
-  display: flex;
-  padding: 16px;
-}
-
-.border {
-  height: 1px;
-  width: 80%;
-  margin: auto;
-  background: var(--border-color);
-}
-
-.userInfo {
-}
-
-.email {
-  font-size: 10px;
-}
-
-.username {
-  font-weight: 500;
-  margin-bottom: 4px;
-}
-
-.logout {
-  color: var(--danger-color);
-}
-
-.trigger {
-  cursor: pointer;
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #00000005;
-  z-index: 1;
+  margin-left: 24px;
 }

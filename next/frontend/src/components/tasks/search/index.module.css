@@ -22,18 +22,32 @@
 
 .search {
   display: flex;
-  background: var(--bg-color-light);
-  border-radius: 32px;
-  padding: 8px;
-  width: 600px;
+  align-items: center;
+  width: min(520px, 42vw);
+  min-width: 280px;
+  padding: 10px 14px;
+  border: 1px solid var(--border-color-light);
+  border-radius: 12px;
+  background: var(--bg-color-light-2);
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    box-shadow 0.2s;
+}
+
+.search:focus-within {
+  border-color: #dbe7e2;
+  background: var(--bg-color-white);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
 }
 
 .search > input {
   border: 0;
-  margin-left: 16px;
-  letter-spacing: 0.8px;
+  margin-left: 12px;
+  letter-spacing: 0;
   font-size: 12px;
   width: 100%;
+  background: transparent;
 }
 
 .candidates {

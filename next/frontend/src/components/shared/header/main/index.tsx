@@ -1,4 +1,5 @@
 "use client"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/components/auth"
@@ -97,6 +98,13 @@ export default function Header() {
           <div className={styles.logoContainer}>
             <Link href={route.main.toString()}>
               <div className={styles.logo}>
+                <Image
+                  alt="Turvo"
+                  className={styles.logoImage}
+                  height={28}
+                  src="/assets/logo.png"
+                  width={28}
+                />
                 <h2>Turvo</h2>
               </div>
             </Link>
@@ -109,7 +117,7 @@ export default function Header() {
           <ul className={styles.menu}>
             <li className={styles.menuItem}>
               <Icon
-                interactive="hoverDark"
+                interactive="hover"
                 name="add"
                 size={24}
                 onClick={() => {
@@ -129,12 +137,12 @@ export default function Header() {
               />
             </li>
             <li className={styles.menuItem}>
-              <Icon name="info" interactive="hoverDark" size={iconSize} />
+              <Icon name="info" interactive="hover" size={iconSize} />
             </li>
             <li className={styles.menuItem}>
               <Icon
                 name="notification"
-                interactive="hoverDark"
+                interactive="hover"
                 size={iconSize}
               />
             </li>
