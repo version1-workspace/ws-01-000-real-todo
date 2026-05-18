@@ -185,7 +185,10 @@ export default function Sidebar() {
           <div className={styles.footer}>
             <ul className={styles.footerMenu}>
               <li className={styles.footerLinkItem}>
-                <Link className={styles.footerLink} href="#!">
+                <Link
+                  className={styles.footerLink}
+                  href={route.main.users.settings.toString()}
+                >
                   <Icon className={styles.footerLinkIcon} name="settings" />
                   <span className={styles.footerText}>設定</span>
                 </Link>

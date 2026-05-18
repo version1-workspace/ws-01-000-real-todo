@@ -26,16 +26,6 @@ const menuSettings: MenuSetting[] = [
   {
     title: "設定",
     key: "settings",
-    children: [
-      {
-        title: "デザイン",
-        key: "settings/design",
-      },
-      {
-        title: "通知",
-        key: "settings/notification",
-      },
-    ],
   },
 ]
 

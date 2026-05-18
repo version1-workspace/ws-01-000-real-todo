@@ -1,19 +1,30 @@
 .toastContainer {
-  position: absolute;
+  position: fixed;
+  z-index: var(--z-index-modal);
+  width: min(520px, calc(100vw - 32px));
 }
 
 .container {
-  background: white;
-  min-width: 300px;
+  --toast-accent: var(--info-color);
+  --toast-accent-weak: #eef8ff;
+
+  position: relative;
+  overflow: hidden;
   display: flex;
-  border-radius: 4px;
+  width: 100%;
+  min-width: 0;
+  min-height: 92px;
   margin-bottom: 16px;
-  box-shadow: 1px 1px 7px 1px #22222230;
-  font-size: 12px;
+  border: 1px solid var(--border-color-light);
+  border-left: 5px solid var(--toast-accent);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 16px 36px #1c30411f;
   width: 100%;
   animation-duration: 0.2s;
   animation-timing-function: ease-in-out;
-  color: var(--font-color-dark-weak);
+  color: var(--font-color-dark);
+  backdrop-filter: blur(8px);
 }
 
 @keyframes slideinFromRight {
@@ -72,40 +83,69 @@
   }
 }
 
-.header {
-  display: flex;
-  justify-content: flex-end;
-  padding: 8px;
-  padding-bottom: 0;
-}
-
 .icon {
-  position: relative;
-  top: 2px;
-  font-size: 16px;
+  font-size: 28px;
+  color: var(--toast-accent);
 }
 
 .iconContainer {
-  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  margin-right: 20px;
+  border-radius: 50%;
+  background: var(--toast-accent-weak);
 }
 
 .message {
+  min-width: 0;
+  padding-right: 40px;
+  color: var(--font-color-dark);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.55;
 }
 
 .body {
   display: flex;
   align-items: center;
-  padding: 16px;
-  padding-left: 24px;
-  padding-top: 0px;
+  padding: 24px 28px;
 }
 
 .content {
+  position: relative;
   width: 100%;
 }
 
-.close {
+.closeButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #8a8f94;
   cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.closeButton:hover {
+  background: var(--hover-color);
+  color: var(--font-color-dark);
+}
+
+.close {
+  font-size: 24px;
 }
 
 .positionTopRight {
@@ -119,7 +159,8 @@
 
 .positionTop {
   top: 32px;
-  right: 40%;
+  right: 50%;
+  transform: translateX(50%);
 }
 
 .positionTop .container {
@@ -137,7 +178,8 @@
 
 .positionBottom {
   bottom: 32px;
-  right: 40%;
+  right: 50%;
+  transform: translateX(50%);
 }
 
 .positionBottom .container {
@@ -163,16 +205,56 @@
 }
 
 .info {
-  border-bottom: 4px solid var(--info-color);
-  color: #669b9e;
+  --toast-accent: #2d7fd3;
+  --toast-accent-weak: #eef7ff;
 }
 
 .success {
-  border-bottom: 4px solid var(--success-color);
-  color: var(--success-color);
+  --toast-accent: #00985f;
+  --toast-accent-weak: #eefaf4;
 }
 
 .error {
-  border-bottom: 4px solid var(--danger-color);
-  color: #b28383;
+  --toast-accent: #ef4438;
+  --toast-accent-weak: #fff1f0;
+}
+
+@media (max-width: 560px) {
+  .toastContainer {
+    width: calc(100vw - 24px);
+  }
+
+  .positionTopRight,
+  .positionTopLeft,
+  .positionBottomRight,
+  .positionBottomLeft {
+    right: 12px;
+    left: 12px;
+  }
+
+  .body {
+    align-items: flex-start;
+    padding: 20px;
+  }
+
+  .iconContainer {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+    margin-right: 14px;
+  }
+
+  .icon {
+    font-size: 24px;
+  }
+
+  .message {
+    padding-right: 32px;
+    font-size: 14px;
+  }
+
+  .closeButton {
+    top: 16px;
+    right: 16px;
+  }
 }

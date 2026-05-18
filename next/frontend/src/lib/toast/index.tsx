@@ -47,15 +47,20 @@ export const Toast = ({
   return (
     <div className={[styles.container, variantStyle].join(" ")} style={style}>
       <div className={styles.content}>
-        <div className={styles.header}>
-          <Close className={styles.close} onClick={onClose} />
-        </div>
         <div className={styles.body}>
           <div className={styles.iconContainer}>
             <Icon className={styles.icon} />
           </div>
           <div className={styles.message}>{config.message}</div>
         </div>
+        <button
+          aria-label="通知を閉じる"
+          className={styles.closeButton}
+          type="button"
+          onClick={onClose}
+        >
+          <Close className={styles.close} />
+        </button>
       </div>
     </div>
   )

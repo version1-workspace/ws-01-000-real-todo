@@ -1,5 +1,6 @@
 .container {
   position: relative;
+  display: inline-flex;
 }
 
 .disabled {
@@ -8,13 +9,44 @@
 }
 
 .popupMenu {
-  right: 0px;
+  top: calc(100% + 12px);
   z-index: var(--z-index-popup-menu);
-  min-width: 120px;
-  background: var(--popup-bg-color);
-  border: 1px solid var(--border-color);
   position: absolute;
-  padding: 8px 0;
+  width: 240px;
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+}
+
+.popupMenu::before {
+  position: absolute;
+  top: -6px;
+  width: 12px;
+  height: 12px;
+  border-top: 1px solid #f1f5f9;
+  border-left: 1px solid #f1f5f9;
+  background: #ffffff;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.alignRight {
+  right: 0;
+}
+
+.alignRight::before {
+  right: 24px;
+}
+
+.alignLeft {
+  left: 0;
+}
+
+.alignLeft::before {
+  left: 24px;
 }
 
 .border {
@@ -24,35 +56,61 @@
   height: 1px;
 }
 
-.title {
-  font-size: 10px;
-  padding: 0px 8px;
-  padding-bottom: 8px;
+.header {
+  padding: 18px 20px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.content {
+  padding: 8px 0;
 }
 
 .action {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #0f172a;
   cursor: pointer;
-  font-size: 12px;
-  margin-bottom: 8px;
-  padding: 4px 16px;
   display: flex;
   align-items: center;
+  padding: 12px 20px;
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .action:hover {
-  background: #fafafa;
+  background: #ecfdf5;
 }
 
-.lastAction {
-  margin: 0;
+.divider {
+  border-top: 1px solid #f1f5f9;
+  margin-top: 8px;
+  padding-top: 14px;
 }
 
 .logo {
-  margin-right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  margin-right: 14px;
+  color: #64748b;
 }
 
 .danger {
-  color: var(--danger-color);
+  color: #ef4444;
+}
+
+.danger .logo {
+  color: #ef4444;
+}
+
+.danger:hover {
+  background: #fff1f0;
 }
 
 .close {
@@ -67,5 +125,5 @@
 .text {
   display: inline-block;
   white-space: nowrap;
-  margin-left: 8px;
+  line-height: 1.4;
 }

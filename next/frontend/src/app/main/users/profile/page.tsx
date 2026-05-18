@@ -21,9 +21,15 @@ export default function Profile() {
     <UsersLayout>
       <div className={styles.container}>
         <div className={styles.form}>
+          <div className={styles.header}>
+            <h2 className={styles.title}>プロフィール</h2>
+            <p className={styles.description}>
+              アカウントに表示される基本情報を管理します。
+            </p>
+          </div>
           <div className={styles.field}>
             <div className={styles.label}>アイコン:</div>
-            <div className={join(styles.text, styles.avater)}>
+            <div className={join(styles.text, styles.avatar)}>
               <div className={styles.avatarBox}>
                 <Icon className={styles.defaultAvatar} name="person" />
               </div>

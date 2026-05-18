@@ -7,6 +7,8 @@ interface Props {
   disabled?: boolean
   trigger: React.ReactNode
   actions: Action[]
+  header?: React.ReactNode
+  align?: "left" | "right"
 }
 
 export interface Action {
@@ -15,11 +17,19 @@ export interface Action {
   text: string
   danger?: boolean
   hidden?: boolean
+  divider?: boolean
   onClick: () => void
 }
 
-export default function PopupMenu({ disabled, trigger, actions }: Props) {
+export default function PopupMenu({
+  disabled,
+  trigger,
+  actions,
+  header,
+  align = "right",
+}: Props) {
   const [show, setShow] = useState(false)
+  const visibleActions = actions.filter((item) => !item.hidden)
 
   useEffect(() => {
     const listener = (e: MouseEvent) => {
@@ -55,28 +65,33 @@ export default function PopupMenu({ disabled, trigger, actions }: Props) {
         {trigger}
       </div>
       {show ? (
-        <div className={styles.popupMenu}>
-          <p className={styles.title}>アクション</p>
+        <div
+          className={classHelper({
+            [styles.popupMenu]: true,
+            [styles.alignLeft]: align === "left",
+            [styles.alignRight]: align === "right",
+          })}
+        >
+          {header ? <div className={styles.header}>{header}</div> : null}
           <ul className={styles.content}>
-            {(actions || []).map((it, index) => {
+            {visibleActions.map((it) => {
               return (
-                <li
-                  key={it.text}
-                  onClick={() => {
-                    it.onClick()
-                    setShow(false)
-                  }}
-                >
-                  <div
+                <li key={it.key}>
+                  <button
                     className={classHelper({
                       [styles.action]: true,
                       [styles.danger]: it.danger,
-                      [styles.lastAction]: index == actions.length - 1,
+                      [styles.divider]: it.divider,
                     })}
+                    type="button"
+                    onClick={() => {
+                      it.onClick()
+                      setShow(false)
+                    }}
                   >
-                    {it.logo}
-                    <p className={styles.text}>{it.text}</p>
-                  </div>
+                    <span className={styles.logo}>{it.logo}</span>
+                    <span className={styles.text}>{it.text}</span>
+                  </button>
                 </li>
               )
             })}
