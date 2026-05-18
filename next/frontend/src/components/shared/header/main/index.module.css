@@ -2,7 +2,6 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  overflow: hidden;
   border-bottom: 1px solid var(--border-color-light);
   background: rgba(255, 255, 255, 0.96);
   color: #0f172a;

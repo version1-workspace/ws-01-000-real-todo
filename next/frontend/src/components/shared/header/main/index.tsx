@@ -61,7 +61,7 @@ function UserMenu() {
           text: "設定",
           logo: <Icon name="settings" size={16} />,
           onClick: () => {
-            router.push(route.main.users.settings.design.toString())
+            router.push(route.main.users.settings.toString())
           },
         },
         {
@@ -69,7 +69,7 @@ function UserMenu() {
           text: "通知設定",
           logo: <Icon name="notification" size={16} />,
           onClick: () => {
-            router.push(route.main.users.settings.notification.toString())
+            router.push(route.main.users.settings.toString())
           },
         },
         {

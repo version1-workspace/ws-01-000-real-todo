@@ -28,7 +28,12 @@ function MailForm({ user }: PageProps) {
 
   return (
     <div className={styles.form}>
-      <h2 className={styles.title}>メールアドレス変更</h2>
+      <div className={styles.header}>
+        <h2 className={styles.title}>メールアドレス変更</h2>
+        <p className={styles.description}>
+          ログインと通知に利用するメールアドレスを更新します。
+        </p>
+      </div>
       <div className={styles.field}>
         <div className={styles.label}>新規メールアドレス:</div>
         <div className={styles.input}>
@@ -83,7 +88,12 @@ function PasswordForm({ user }: PageProps) {
 
   return (
     <form className={styles.form} autoComplete="off">
-      <h2 className={styles.title}>パスワード変更</h2>
+      <div className={styles.header}>
+        <h2 className={styles.title}>パスワード変更</h2>
+        <p className={styles.description}>
+          次回ログインから使用するパスワードを設定します。
+        </p>
+      </div>
       <div className={styles.field}>
         <div className={styles.label}>新規パスワード:</div>
         <div className={styles.input}>
