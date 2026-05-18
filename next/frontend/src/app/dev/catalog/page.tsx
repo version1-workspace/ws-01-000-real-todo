@@ -198,6 +198,76 @@ export default function Page() {
             </div>
           </div>
         </Section>
+
+        <Section title="Popup Menu" description="一覧やカードの行操作">
+          <div className={styles.popupPreview}>
+            <div>
+              <p className={styles.previewTitle}>山田 花子</p>
+              <p className={styles.previewText}>yamada@example.com</p>
+            </div>
+            <PopupMenu
+              header={
+                <div className={styles.popupHeader}>
+                  <div className={styles.avatar}>山</div>
+                  <div>
+                    <p className={styles.popupHeaderName}>山田 花子</p>
+                    <p className={styles.popupHeaderMail}>yamada@example.com</p>
+                  </div>
+                </div>
+              }
+              trigger={
+                <button
+                  aria-label="ユーザーメニューを開く"
+                  className={styles.iconButton}
+                  type="button"
+                >
+                  <Icon name="menu" size={18} />
+                </button>
+              }
+              actions={[
+                {
+                  key: "profile",
+                  text: "プロフィール",
+                  logo: <Icon name="person" size={16} />,
+                  onClick: () => info("プロフィールを選択しました"),
+                },
+                {
+                  key: "settings",
+                  text: "設定",
+                  logo: <Icon name="settings" size={16} />,
+                  onClick: () => success("設定を選択しました"),
+                },
+                {
+                  key: "notification",
+                  text: "通知設定",
+                  logo: <Icon name="notification" size={16} />,
+                  onClick: () => info("通知設定を選択しました"),
+                },
+                {
+                  key: "help",
+                  text: "ヘルプセンター",
+                  divider: true,
+                  logo: <Icon name="help" size={16} />,
+                  onClick: () => info("ヘルプセンターを選択しました"),
+                },
+                {
+                  key: "contact",
+                  text: "お問い合わせ",
+                  logo: <Icon name="mail" size={16} />,
+                  onClick: () => info("お問い合わせを選択しました"),
+                },
+                {
+                  key: "logout",
+                  text: "ログアウト",
+                  danger: true,
+                  divider: true,
+                  logo: <Icon name="logout" size={16} />,
+                  onClick: () => error("ログアウトを選択しました"),
+                },
+              ]}
+            />
+          </div>
+        </Section>
       </div>
     </div>
   );
