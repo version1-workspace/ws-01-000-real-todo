@@ -1,7 +1,8 @@
 "use client"
 import Link from "next/link"
-import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/components/auth"
+import PopupMenu from "@/components/shared/popupMenu"
 import TaskForm from "@/components/tasks/form"
 import Search from "@/components/tasks/search"
 import useTasks from "@/contexts/tasks"
@@ -10,66 +11,78 @@ import route from "@/lib/route"
 import Icon from "../../icon"
 import styles from "./index.module.css"
 
-interface DropdownProps {
-  trigger: React.ReactNode
-}
-
 const iconSize = 20
 
-function Dropdown({ trigger }: DropdownProps) {
+function UserMenu() {
   const { user, logout } = useAuth()
-  const [show, setShow] = useState(false)
+  const router = useRouter()
 
   if (!user) {
     return null
   }
 
   return (
-    <div className={styles.dropdownContainer}>
-      {show ? (
-        <div className={styles.overlay} onClick={() => setShow(false)}></div>
-      ) : null}
-      <p className={styles.trigger} onClick={() => setShow(true)}>
-        {trigger}
-      </p>
-      {show ? (
-        <ul className={styles.dropdown}>
-          <li
-            className={styles.dropdownItem}
-            onClick={() => {
-              setShow(false)
-            }}
-          >
-            <Link
-              className={styles.dropdownLink}
-              href={route.main.users.profile.toString()}
-            >
-              <div className={styles.dropdownIcon}>
-                <Icon name="person" size={20} />
-              </div>
-              プロフィール
-            </Link>
-          </li>
-          <li>
-            <div className={styles.border}></div>
-          </li>
-          <li
-            className={styles.dropdownItem}
-            onClick={() => {
-              logout()
-              setShow(false)
-            }}
-          >
-            <div className={styles.dropdownLink}>
-              <div className={styles.dropdownIcon}>
-                <Icon name="logout" size={20} color="var(--danger-color)" />
-              </div>
-              <p className={styles.logout}>ログアウト</p>
-            </div>
-          </li>
-        </ul>
-      ) : null}
-    </div>
+    <PopupMenu
+      header={
+        <div className={styles.userMenuHeader}>
+          <div className={styles.userMenuAvatar}>
+            {user.username.slice(0, 1)}
+          </div>
+          <div className={styles.userMenuInfo}>
+            <p className={styles.userMenuName}>{user.username}</p>
+            <p className={styles.userMenuEmail}>{user.email}</p>
+          </div>
+        </div>
+      }
+      trigger={
+        <button
+          aria-label="ユーザーメニューを開く"
+          className={styles.userMenuTrigger}
+          type="button"
+        >
+          <span className={styles.avatarCircleContaiener}>
+            <Icon name="person" interactive="hover" size={iconSize * 0.8} />
+          </span>
+          <Icon name="caretDown" size={14} />
+        </button>
+      }
+      actions={[
+        {
+          key: "profile",
+          text: "プロフィール",
+          logo: <Icon name="person" size={16} />,
+          onClick: () => {
+            router.push(route.main.users.profile.toString())
+          },
+        },
+        {
+          key: "settings",
+          text: "設定",
+          logo: <Icon name="settings" size={16} />,
+          onClick: () => {
+            router.push(route.main.users.settings.design.toString())
+          },
+        },
+        {
+          key: "notification",
+          text: "通知設定",
+          logo: <Icon name="notification" size={16} />,
+          onClick: () => {
+            router.push(route.main.users.settings.notification.toString())
+          },
+        },
+        {
+          key: "logout",
+          text: "ログアウト",
+          danger: true,
+          divider: true,
+          logo: <Icon name="logout" size={16} />,
+          onClick: () => {
+            logout()
+          },
+        },
+      ]}
+    />
   )
 }
 
@@ -127,17 +140,7 @@ export default function Header() {
             </li>
           </ul>
           <div className={styles.avatarIcon}>
-            <Dropdown
-              trigger={
-                <div className={styles.avatarCircleContaiener}>
-                  <Icon
-                    name="person"
-                    interactive="hover"
-                    size={iconSize * 0.8}
-                  />
-                </div>
-              }
-            />
+            <UserMenu />
           </div>
         </div>
       </div>

@@ -47,6 +47,53 @@
   align-items: center;
 }
 
+.userMenuTrigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: var(--font-color-light);
+  cursor: pointer;
+}
+
+.userMenuHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userMenuAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 50%;
+  background: #ecfdf5;
+  color: var(--primary-color);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.userMenuInfo {
+  min-width: 0;
+}
+
+.userMenuName {
+  margin-bottom: 4px;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.userMenuEmail {
+  color: #64748b;
+  font-size: 12px;
+  word-break: break-all;
+}
+
 .left {
   display: flex;
   align-items: center;
