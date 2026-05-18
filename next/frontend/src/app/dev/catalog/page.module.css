@@ -260,6 +260,31 @@
   font-size: 12px;
 }
 
+.dropdownPreview {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--weak-border-color);
+  border-radius: 8px;
+  background: var(--bg-color-white);
+}
+
+.dropdownControl {
+  width: 240px;
+  max-width: 100%;
+}
+
+.dropdownOption {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #0f172a;
+}
+
+.dropdownOption :global(svg) {
+  color: #64748b;
+}
+
 @media (max-width: 920px) {
   .page {
     padding: 24px;

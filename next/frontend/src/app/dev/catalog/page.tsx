@@ -18,6 +18,36 @@ const selectOptions: OptionItem[] = [
   { label: "完了", value: "done" },
 ];
 
+const dropdownOptions: OptionItem[] = [
+  {
+    label: (
+      <span className={styles.dropdownOption}>
+        <Icon name="person" size={16} />
+        プロフィール
+      </span>
+    ),
+    value: "profile",
+  },
+  {
+    label: (
+      <span className={styles.dropdownOption}>
+        <Icon name="settings" size={16} />
+        設定
+      </span>
+    ),
+    value: "settings",
+  },
+  {
+    label: (
+      <span className={styles.dropdownOption}>
+        <Icon name="notification" size={16} />
+        通知設定
+      </span>
+    ),
+    value: "notification",
+  },
+];
+
 const statusCards = [
   {
     label: "Components",
@@ -59,6 +89,7 @@ export default function Page() {
   const { info, success, error } = useToast();
   const [inputValue, setInputValue] = useState("UI カタログ");
   const [selectValue, setSelectValue] = useState("active");
+  const [dropdownValue, setDropdownValue] = useState("profile");
   const [page, setPage] = useState(2);
 
   return (
@@ -266,6 +297,26 @@ export default function Page() {
                 },
               ]}
             />
+          </div>
+        </Section>
+
+        <Section title="Dropdown" description="選択肢のプルダウン">
+          <div className={styles.dropdownPreview}>
+            <div>
+              <p className={styles.previewTitle}>ヘッダーメニュー</p>
+              <p className={styles.previewText}>アイコン付きの選択 UI</p>
+            </div>
+            <div className={styles.dropdownControl}>
+              <Select
+                data={dropdownOptions}
+                value={dropdownValue}
+                defaultOption={dropdownOptions[0]}
+                onSelect={(item) => {
+                  setDropdownValue(item.value);
+                  info(`${item.value} を選択しました`);
+                }}
+              />
+            </div>
           </div>
         </Section>
       </div>
