@@ -1,0 +1,242 @@
+.page {
+  min-height: 100vh;
+  padding: 40px;
+  background: var(--bg-color-light-2);
+  color: var(--font-color-dark);
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin-bottom: 8px;
+  color: var(--primary-color);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.title {
+  color: var(--basic-font-color);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.headerAction {
+  width: 120px;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.summaryCard {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  min-height: 112px;
+  padding: 20px;
+  border: 1px solid var(--border-color-light);
+  border-radius: 8px;
+  background: var(--bg-color-white);
+}
+
+.summaryIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 8px;
+  background: var(--primary-50-color);
+  color: var(--primary-color);
+}
+
+.summaryLabel {
+  margin-bottom: 8px;
+  color: var(--font-color-weak);
+  font-size: 11px;
+}
+
+.summaryValue {
+  margin-bottom: 4px;
+  color: var(--basic-font-color);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.summaryDescription {
+  color: var(--top-font-weak-color);
+  font-size: 12px;
+}
+
+.catalogGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.section {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border-color-light);
+  border-radius: 8px;
+  background: var(--background-color);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--weak-border-color);
+}
+
+.sectionTitle {
+  color: var(--basic-font-color);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.sectionDescription {
+  color: var(--font-color-weak);
+  font-size: 12px;
+  text-align: right;
+}
+
+.sectionBody {
+  padding-top: 20px;
+}
+
+.buttonGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.fieldStack,
+.feedbackStack {
+  display: grid;
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.fieldLabel {
+  color: var(--form-label-color);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.inlineControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.switchControl {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--font-color-dark);
+  font-size: 12px;
+}
+
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.iconItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--weak-border-color);
+  border-radius: 8px;
+  color: var(--font-color-dark);
+  font-size: 11px;
+}
+
+.iconItem :global(svg) {
+  color: var(--primary-color);
+  flex: 0 0 auto;
+}
+
+.menuRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border-color-light);
+  border-radius: 8px;
+  background: var(--background-color);
+  color: var(--font-color-dark);
+  cursor: pointer;
+}
+
+.iconButton:hover {
+  background: var(--primary-50-color);
+  color: var(--primary-color);
+}
+
+@media (max-width: 920px) {
+  .page {
+    padding: 24px;
+  }
+
+  .summaryGrid,
+  .catalogGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding: 16px;
+  }
+
+  .header,
+  .sectionHeader,
+  .menuRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .headerAction {
+    width: 100%;
+  }
+
+  .buttonGrid,
+  .iconGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionDescription {
+    text-align: left;
+  }
+}
