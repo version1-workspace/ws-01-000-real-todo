@@ -28,7 +28,7 @@ npm run dev
 ### Backend
 
 ```
-cd api
+cd api/node
 cp .env.example .env
 docker compose up -d
 npm install
@@ -102,4 +102,3 @@ Turvo は 学習用のサンプルアプリで
 ## CI
 
 [docs/ci.md](docs/ci.md) を参照してください。
-

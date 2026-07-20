@@ -4,10 +4,10 @@ Next.js フロントエンドアプリケーションです。
 
 ## API Server について
 
-API サーバーは [../api](../api) にあります。フロントエンドは API サーバーにリクエストを送信してデータを取得します。
+API サーバーは [../api/node](../api/node) にあります。フロントエンドは API サーバーにリクエストを送信してデータを取得します。
 
 ```bash
-cd ../api
+cd ../api/node
 npm install
 PORT=7000 npm run dev
 ```

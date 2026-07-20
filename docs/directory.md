@@ -2,7 +2,7 @@
 
 このリポジトリは、学習用の Todo / プロジェクト管理アプリを構成するフロントエンド、バックエンド、API 仕様、運用ドキュメントを含みます。
 
-正規版の実装は `frontend/` と `api/` にあります。旧世代の `frontend/core/`、NestJS / TypeORM 版の `api/`、開発中構成の `next/` は削除されました。
+正規版の実装は `frontend/` と `api/node/` にあります。旧世代の `frontend/core/`、NestJS / TypeORM 版バックエンド、開発中構成の `next/` は削除されました。
 
 ## ルート
 
@@ -10,12 +10,14 @@
 | --- | --- |
 | `README.md` | プロジェクト概要、起動手順、デモ環境、使用技術の入口です。 |
 | `AGENTS.md` | エージェント向けの作業方針、応答言語、設計方針を定義します。 |
+| `CLAUDE.md` | `AGENTS.md` への symlink です。Claude 系ツールから同じ作業方針を参照します。 |
 | `Makefile` | ルートから実行する補助コマンドを定義します。Swagger UI と本番想定 compose 操作に使います。 |
 | `compose.prd.yml` | 本番想定の compose 設定です。 |
 | `docker/` | 本番構成向けの Docker / Nginx 設定を置きます。 |
 | `docs/` | CI やディレクトリ構成など、リポジトリ横断の開発者向けドキュメントを置きます。 |
 | `api-spec/` | OpenAPI 仕様と、仕様に対する E2E 検証を管理します。 |
-| `api/` | Express / Prisma / PostgreSQL で実装された API です。 |
+| `api/` | API 実装を言語・ランタイム別に配置するルートです。 |
+| `api/node/` | Express / Prisma / PostgreSQL で実装された Node.js API です。 |
 | `frontend/` | Next.js / React / Biome / Vitest / Orval で実装されたフロントエンドです。 |
 
 ## `docs/`
@@ -42,21 +44,25 @@ API の入出力契約を変更する場合は、実装だけでなく `swagger.
 
 ## `api/`
 
-Express と Prisma を使った API 実装です。
+API 実装を言語・ランタイム別に配置するディレクトリです。現在の正規版 API は `api/node/` にあります。Go など別実装を追加する場合は、`api/go/` のように実装単位でディレクトリを分けます。
+
+## `api/node/`
+
+Express と Prisma を使った Node.js API 実装です。
 
 | パス | 役割 |
 | --- | --- |
-| `api/src/server.ts` | API サーバーの起動点です。 |
-| `api/src/app.ts` | Express アプリケーションの組み立てを行います。 |
-| `api/src/routes/` | ルーティング定義を置きます。 |
-| `api/src/controllers/` | HTTP リクエストとレスポンスの境界を扱います。 |
-| `api/src/services/` | ユースケースやアプリケーションロジックを置きます。 |
-| `api/src/models/` | Prisma などの永続化層に近いモデル操作を置きます。 |
-| `api/src/middlewares/` | 認証、エラーハンドリング、404 などの Express middleware を置きます。 |
-| `api/src/lib/` | 認証、パスワード、ページネーション、serializer、HTTP error などの共通処理を置きます。 |
-| `api/src/config/` | 環境変数や認証設定を置きます。 |
-| `api/prisma/` | Prisma schema、migration、seed を置きます。 |
-| `api/compose.yaml` | ローカル開発用の PostgreSQL を起動する compose 設定です。 |
+| `api/node/src/server.ts` | API サーバーの起動点です。 |
+| `api/node/src/app.ts` | Express アプリケーションの組み立てを行います。 |
+| `api/node/src/routes/` | ルーティング定義を置きます。 |
+| `api/node/src/controllers/` | HTTP リクエストとレスポンスの境界を扱います。 |
+| `api/node/src/services/` | ユースケースやアプリケーションロジックを置きます。 |
+| `api/node/src/models/` | Prisma などの永続化層に近いモデル操作を置きます。 |
+| `api/node/src/middlewares/` | 認証、エラーハンドリング、404 などの Express middleware を置きます。 |
+| `api/node/src/lib/` | 認証、パスワード、ページネーション、serializer、HTTP error などの共通処理を置きます。 |
+| `api/node/src/config/` | 環境変数や認証設定を置きます。 |
+| `api/node/prisma/` | Prisma schema、migration、seed を置きます。 |
+| `api/node/compose.yaml` | ローカル開発用の PostgreSQL を起動する compose 設定です。 |
 
 Prisma schema を変更した場合は、migration、seed、service / model 層、関連テストの更新も合わせて確認してください。
 

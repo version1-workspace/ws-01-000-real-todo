@@ -1,5 +1,5 @@
-name: Prepare API
-description: Install dependencies and generate Prisma client for api
+name: Prepare Node API
+description: Install dependencies and generate Prisma client for api/node
 inputs:
   node-version:
     description: Node.js version
@@ -8,13 +8,13 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Setup API
+    - name: Setup Node API
       uses: ./.github/actions/setup-node-project
       with:
         node-version: ${{ inputs.node-version }}
-        working-directory: ./api
-        cache-dependency-path: ./api/package-lock.json
+        working-directory: ./api/node
+        cache-dependency-path: ./api/node/package-lock.json
     - name: Generate Prisma Client
       shell: bash
-      working-directory: ./api
+      working-directory: ./api/node
       run: npm run prisma:generate

@@ -112,4 +112,4 @@ Cookie を消すだけではサーバー側の token が有効なまま残るた
 
 User テーブルには RefreshToken 管理用のカラムがあるため、環境構築やデプロイ時は Prisma schema の反映が必要になる。
 
-ローカル DB へ反映する場合は `api` 配下で Prisma の DB 反映コマンドを実行する。
+ローカル DB へ反映する場合は `api/node` 配下で Prisma の DB 反映コマンドを実行する。

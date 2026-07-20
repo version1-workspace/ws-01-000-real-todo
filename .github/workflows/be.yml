@@ -16,11 +16,11 @@ jobs:
       JWT_EXPIRES_IN: 30m
     defaults:
       run:
-        working-directory: ./api
+        working-directory: ./api/node
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare API
-        uses: ./.github/actions/prepare-api
+      - name: Prepare Node API
+        uses: ./.github/actions/prepare-node-api
         with:
           node-version: '20.x'
       - name: Test

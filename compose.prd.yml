@@ -1,7 +1,7 @@
 services:
   app:
     build:
-      context: ./api
+      context: ./api/node
       dockerfile: ./Dockerfile
     restart: unless-stopped
     expose:

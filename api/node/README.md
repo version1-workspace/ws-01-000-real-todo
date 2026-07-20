@@ -1,11 +1,11 @@
-# api
+# api/node
 
 Express + Prisma で `api-spec/swagger.yaml` の契約を実装した API です。
 
 ## セットアップ
 
 ```bash
-cd api
+cd api/node
 cp .env.example .env
 docker compose up -d
 npm install
