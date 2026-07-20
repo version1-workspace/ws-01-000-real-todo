@@ -1,11 +1,11 @@
 "use client"
-import { useState } from "react"
 import {
-  IoCloseOutline as Close,
-  IoPencil as Edit,
-  IoTrashOutline as Remove,
-  IoCheckmark as Save,
-} from "react-icons/io5"
+  X as Close,
+  Pencil as Edit,
+  Trash as Remove,
+  Check as Save,
+} from "lucide-react"
+import { useState } from "react"
 import styles from "@/components/project/forms/milestone/item/index.module.css"
 import Icon from "@/components/shared/icon"
 import { classHelper, join } from "@/lib/cls"

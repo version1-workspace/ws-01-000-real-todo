@@ -1,11 +1,11 @@
 "use client"
 
+import {
+  ChevronLeft as HiddenIcon,
+  ChevronRight as ShowIcon,
+} from "lucide-react"
 import { usePathname } from "next/navigation"
 import { Fragment, ReactNode, useMemo, useState } from "react"
-import {
-  IoChevronBack as HiddenIcon,
-  IoChevronForward as ShowIcon,
-} from "react-icons/io5"
 import Icon, { IconName } from "@/components/shared/icon"
 import Link from "@/components/shared/link"
 import styles from "@/components/shared/sidebar/index.module.css"

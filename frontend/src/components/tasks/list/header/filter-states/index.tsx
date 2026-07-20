@@ -1,4 +1,4 @@
-import { IoCloseCircle as Close } from "react-icons/io5"
+import { CircleX as Close } from "lucide-react"
 import Icon from "@/components/shared/icon"
 import type { Params } from "@/components/tasks/list/hooks/useFilter"
 import { ja } from "@/lib/transltate"
