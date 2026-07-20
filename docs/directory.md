@@ -12,6 +12,7 @@
 | `AGENTS.md` | エージェント向けの作業方針、応答言語、設計方針を定義します。 |
 | `CLAUDE.md` | `AGENTS.md` への symlink です。Claude 系ツールから同じ作業方針を参照します。 |
 | `Makefile` | ルートから実行する補助コマンドを定義します。Swagger UI と本番想定 compose 操作に使います。 |
+| `netlify.toml` | Netlify のビルド設定です。`frontend/` を base directory としてデプロイします。 |
 | `compose.prd.yml` | 本番想定の compose 設定です。 |
 | `docker/` | 本番構成向けの Docker / Nginx 設定を置きます。 |
 | `docs/` | CI やディレクトリ構成など、リポジトリ横断の開発者向けドキュメントを置きます。 |
