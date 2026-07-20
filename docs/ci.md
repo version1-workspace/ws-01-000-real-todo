@@ -3,16 +3,16 @@
 GitHub Actions は用途ごとに workflow を分割しています。すべて `push` をトリガーに実行されます。
 
 - `fe.yml`
-  `frontend` を対象に `npm install`、lint、TypeScript compile、test、build を実行します。
+  `frontend` を対象に `npm ci`、OpenAPI クライアント生成、生成物の差分検出、lint、TypeScript compile、test、build を実行します。
 - `be.yml`
-  `api/node` を対象に依存関係の導入、Prisma Client 生成、Vitest、build を実行します。
+  `api/node` を対象に `npm ci`、Prisma Client 生成、Vitest、build を実行します。
 - `e2e.yml`
   PostgreSQL をサービスとして起動し、`api/node` を build / migrate / seed / 起動したうえで、`api-spec` 配下の TypeScript 製 E2E から `swagger.yaml` の仕様検証を行います。
 
 共通処理は `.github/actions/` 配下の composite action に切り出しています。
 
 - `.github/actions/setup-node-project`
-  Node.js のセットアップ、npm キャッシュ、`npm install`
+  Node.js のセットアップ、npm キャッシュ、`npm ci`
 - `.github/actions/prepare-node-api`
   `api/node` 用のセットアップと Prisma Client 生成
 - `.github/actions/wait-for-http`

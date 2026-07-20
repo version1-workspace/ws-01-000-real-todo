@@ -1,5 +1,5 @@
 name: Setup Node Project
-description: Setup Node.js with npm cache and install dependencies for a project
+description: Setup Node.js with npm cache and install locked dependencies for a project
 inputs:
   node-version:
     description: Node.js version
@@ -23,4 +23,4 @@ runs:
     - name: Install dependencies
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-      run: npm install
+      run: npm ci
