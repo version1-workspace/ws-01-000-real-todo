@@ -18,24 +18,41 @@ interface Actions {
   onReopen: () => void
 }
 
+const headerControlIconSize = 14
+const actionLogoIconSize = 14
+
 const getActions = ({ onComplete, onArchive, onReopen }: Actions) =>
   (
     [
       {
         key: "reopen",
-        logo: <Icon name="undo" className={styles.logo} />,
+        logo: (
+          <Icon name="undo" className={styles.logo} size={actionLogoIconSize} />
+        ),
         text: "未完了にする",
         onClick: onReopen,
       },
       {
         key: "complete",
-        logo: <Icon name="complete" className={styles.logo} />,
+        logo: (
+          <Icon
+            name="complete"
+            className={styles.logo}
+            size={actionLogoIconSize}
+          />
+        ),
         text: "完了にする",
         onClick: onComplete,
       },
       {
         key: "archive",
-        logo: <Icon name="archive" className={styles.logo} />,
+        logo: (
+          <Icon
+            name="archive"
+            className={styles.logo}
+            size={actionLogoIconSize}
+          />
+        ),
         text: "アーカイブ",
         danger: true,
         onClick: onArchive,
@@ -116,7 +133,7 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
           <FilterForm
             trigger={
               <div className={styles.display}>
-                <Icon name="filter" />
+                <Icon name="filter" size={headerControlIconSize} />
                 <p>絞り込み</p>
               </div>
             }
@@ -189,7 +206,11 @@ const TaskListHeader = ({ filter }: TaskListHeaderProps) => {
             })}
             trigger={
               <div className={styles.action}>
-                <Icon name="menu" onClick={showActionMenu} />
+                <Icon
+                  name="menu"
+                  size={headerControlIconSize}
+                  onClick={showActionMenu}
+                />
                 <div>
                   <p onClick={showActionMenu}>アクション</p>
                 </div>
