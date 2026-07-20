@@ -19,19 +19,23 @@ https://version1-real-todo.netlify.app
 ### Frontend
 
 ```
-cd frontend/core
+cd frontend
 npm install
+npm run generate:api
 npm run dev
 ```
 
 ### Backend
 
 ```
-cd api
-cp -p .env.development.example .env.development
+cd api/node
+cp .env.example .env
+docker compose up -d
 npm install
-npm run db:setup
-npm run start:dev
+npm run prisma:generate
+npm run prisma:push
+npm run prisma:seed
+npm run dev
 ```
 
 ### Swagger UI
@@ -75,21 +79,19 @@ Turvo は 学習用のサンプルアプリで
 1. React
 1. Next.js
 1. TypeScript
-1. Axios
 1. Dayjs
-1. ESLint
-1. Prettier
+1. Biome
+1. Vitest
+1. Orval
 
 ### Backend
 
-1. Nest.js(Express)
+1. Express
 1. TypeScript
-1. TypeORM(MySQL)
-1. Joi
-1. ESLint
-1. Prettier
-1. jsonapi-serializer
-1. jest
+1. Prisma(PostgreSQL)
+1. Zod
+1. Biome
+1. Vitest
 
 ### Misc
 
@@ -100,5 +102,3 @@ Turvo は 学習用のサンプルアプリで
 ## CI
 
 [docs/ci.md](docs/ci.md) を参照してください。
-
-
