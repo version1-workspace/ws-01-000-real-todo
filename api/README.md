@@ -1,33 +1,18 @@
-## Real Todo API
+# api
 
+Express + Prisma で `api-spec/swagger.yaml` の契約を実装した API です。
 
-### Setup
-
-
-#### Dependencies
-
-```
-- node
-- docker
-```
-
+## セットアップ
 
 ```bash
+cd api
+cp .env.example .env
+docker compose up -d
 npm install
-docker-compose up -d # run mysql8
-# create database `todo_development` on mysql
-npm run db:setup
-npm run db:seed
-npm run start:dev
+npm run prisma:generate
+npm run prisma:push
+npm run prisma:seed
+npm run dev
 ```
 
-### Commands
-
-
-#### generate migration
-
-example creating `create-tags` migration
-
-```bash
-npm run migration:create src/db/migrations/create-tags.ts
-```
+起動後のベース URL は `http://localhost:3001/api/v1` です。

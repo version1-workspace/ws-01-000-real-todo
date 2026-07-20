@@ -1,4 +1,0 @@
-[build]
-  base = "next/frontend/."
-  publish = ".next"
-  command = "npm run build"
