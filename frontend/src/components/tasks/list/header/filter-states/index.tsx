@@ -1,4 +1,4 @@
-import { IoCloseCircle as Close } from "react-icons/io5"
+import { CircleX as Close } from "lucide-react"
 import Icon from "@/components/shared/icon"
 import type { Params } from "@/components/tasks/list/hooks/useFilter"
 import { ja } from "@/lib/transltate"
@@ -6,6 +6,7 @@ import styles from "./index.module.css"
 
 const taskTranslations = ja.derive("task")!
 const taskStatuses = ja.derive("task.status")!
+const orderIconSize = 12
 
 interface Props {
   date: Params["date"]
@@ -83,7 +84,11 @@ export default function FilterStates({
       <span className={styles.state}>
         <label>並び替え: </label>
         {taskTranslations.t(order.type)}
-        {order.value === "asc" ? <Icon name="down" /> : <Icon name="up" />}
+        {order.value === "asc" ? (
+          <Icon name="down" size={orderIconSize} />
+        ) : (
+          <Icon name="up" size={orderIconSize} />
+        )}
         <button
           className={styles.close}
           type="button"

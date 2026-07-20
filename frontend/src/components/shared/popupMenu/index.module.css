@@ -12,7 +12,7 @@
   top: calc(100% + 12px);
   z-index: var(--z-index-popup-menu);
   position: absolute;
-  width: 240px;
+  width: 280px;
   overflow: hidden;
   border: 1px solid #f1f5f9;
   border-radius: 12px;

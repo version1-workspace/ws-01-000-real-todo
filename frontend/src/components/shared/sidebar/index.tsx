@@ -1,11 +1,11 @@
 "use client"
 
+import {
+  ChevronLeft as HiddenIcon,
+  ChevronRight as ShowIcon,
+} from "lucide-react"
 import { usePathname } from "next/navigation"
 import { Fragment, ReactNode, useMemo, useState } from "react"
-import {
-  IoChevronBack as HiddenIcon,
-  IoChevronForward as ShowIcon,
-} from "react-icons/io5"
 import Icon, { IconName } from "@/components/shared/icon"
 import Link from "@/components/shared/link"
 import styles from "@/components/shared/sidebar/index.module.css"
@@ -26,6 +26,8 @@ interface MenuItem {
 }
 
 const projectCountLimit = 5
+const sidebarIconSize = 16
+const sidebarSubIconSize = 14
 
 const sidebarMenulist = (projects: Project[]): MenuItem[] => [
   {
@@ -68,7 +70,11 @@ const sidebarMenulist = (projects: Project[]): MenuItem[] => [
             className={styles.addProject}
             href={route.main.projects.new.toString()}
           >
-            <Icon className={styles.addProjectIcon} name="add" />
+            <Icon
+              className={styles.addProjectIcon}
+              name="add"
+              size={sidebarSubIconSize}
+            />
             <p>新しいプロジェクトを作成</p>
           </Link>
         </>
@@ -118,7 +124,10 @@ export default function Sidebar() {
                             })}
                           >
                             <div className={styles.menuIconWrapper}>
-                              <Icon name={menuItem.icon ?? "unknown"} />
+                              <Icon
+                                name={menuItem.icon ?? "unknown"}
+                                size={sidebarIconSize}
+                              />
                             </div>
                             <p
                               className={classHelper({
@@ -189,13 +198,21 @@ export default function Sidebar() {
                   className={styles.footerLink}
                   href={route.main.users.settings.toString()}
                 >
-                  <Icon className={styles.footerLinkIcon} name="settings" />
+                  <Icon
+                    className={styles.footerLinkIcon}
+                    name="settings"
+                    size={sidebarIconSize}
+                  />
                   <span className={styles.footerText}>設定</span>
                 </Link>
               </li>
               <li className={styles.footerLinkItem}>
                 <Link className={styles.footerLink} href="#!">
-                  <Icon className={styles.footerLinkIcon} name="help" />
+                  <Icon
+                    className={styles.footerLinkIcon}
+                    name="help"
+                    size={sidebarIconSize}
+                  />
                   <span className={styles.footerText}>ヘルプ</span>
                 </Link>
               </li>

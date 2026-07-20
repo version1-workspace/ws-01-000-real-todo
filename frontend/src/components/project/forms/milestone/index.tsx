@@ -1,7 +1,7 @@
 "use client"
 import dayjs from "dayjs"
+import { Plus as Add } from "lucide-react"
 import { useState } from "react"
-import { IoAddOutline as Add } from "react-icons/io5"
 import useForm from "@/app/main/projects/new/context"
 import FormGuide from "@/components/project/forms/guide"
 import styles from "@/components/project/forms/milestone/index.module.css"

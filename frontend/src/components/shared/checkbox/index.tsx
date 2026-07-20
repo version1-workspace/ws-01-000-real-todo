@@ -1,5 +1,5 @@
+import { Check } from "lucide-react"
 import { useState } from "react"
-import { IoCheckmark } from "react-icons/io5"
 import { classHelper } from "@/lib/cls"
 import styles from "./index.module.css"
 
@@ -29,9 +29,7 @@ export default function Checkbox({ label, defaultValue, onClick }: Props) {
             [styles.checked]: checked,
           })}
         >
-          {checked ? (
-            <IoCheckmark className={styles.check} color="white" />
-          ) : null}
+          {checked ? <Check className={styles.check} color="white" /> : null}
         </div>
         <p>{label}</p>
       </label>

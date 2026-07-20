@@ -15,6 +15,8 @@ interface Props {
   checkable?: boolean
 }
 
+const taskDetailIconSize = 14
+
 const TaskTable = ({ data, checkable = true }: Props) => {
   const { check, checkAll, checked, allChecked } = useCheck()
   const ids = data.map((it) => it.id)
@@ -202,7 +204,11 @@ const Row = ({ data, checkable, checked, onCheck }: RowProps) => {
       <div className={join(styles.tableCell, styles.detail)}>
         <Link href={route.main.tasks.with(data.id)}>
           <div className={styles.detailCircle}>
-            <Icon className={styles.detailIcon} name="arrowForward" />
+            <Icon
+              className={styles.detailIcon}
+              name="arrowForward"
+              size={taskDetailIconSize}
+            />
           </div>
         </Link>
       </div>

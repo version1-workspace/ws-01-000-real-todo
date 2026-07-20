@@ -18,6 +18,8 @@ export interface OptionItem {
   value: string
 }
 
+const selectIconSize = 14
+
 export default function Select({
   data,
   value,
@@ -73,7 +75,7 @@ export default function Select({
         >
           {valueItem?.label || defaultOption.label}
         </p>
-        <Icon name="caretDown" />
+        <Icon name="caretDown" size={selectIconSize} />
       </div>
       <div
         className={classHelper({

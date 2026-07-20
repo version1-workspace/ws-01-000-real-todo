@@ -1,5 +1,5 @@
+import { X as Close } from "lucide-react"
 import { ReactNode } from "react"
-import { IoCloseOutline as Close } from "react-icons/io5"
 import { classHelper } from "@/lib/cls"
 import styles from "./index.module.css"
 

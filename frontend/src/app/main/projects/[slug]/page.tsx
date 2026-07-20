@@ -1,21 +1,24 @@
 "use client"
-import { useCallback, useEffect, useMemo, useState } from "react"
 import { useParams } from "next/navigation"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import MilestoneList from "@/components/milestones/list"
+import ProjectForm from "@/components/project/form"
+import Icon from "@/components/shared/icon"
+import TextInput from "@/components/shared/input/text"
+import PopupMenu from "@/components/shared/popupMenu"
+import TaskForm from "@/components/tasks/form"
+import useProjects from "@/contexts/projects"
+import { join } from "@/lib/cls"
+import { useModal } from "@/lib/modal"
+import route from "@/lib/route"
+import { useToast } from "@/lib/toast/hook"
 import api from "@/services/api"
 import { factory } from "@/viewmodels"
 import type { Project } from "@/viewmodels/project"
 import styles from "./page.module.css"
-import { join } from "@/lib/cls"
-import Icon from "@/components/shared/icon"
-import route from "@/lib/route"
-import TaskForm from "@/components/tasks/form"
-import TextInput from "@/components/shared/input/text"
-import MilestoneList from "@/components/milestones/list"
-import PopupMenu from "@/components/shared/popupMenu"
-import { useModal } from "@/lib/modal"
-import { useToast } from "@/lib/toast/hook"
-import useProjects from "@/contexts/projects"
-import ProjectForm from "@/components/project/form"
+
+const projectMenuIconSize = 14
+const projectActionIconSize = 14
 
 const projectActions = ({
   project,
@@ -31,21 +34,21 @@ const projectActions = ({
   {
     key: "edit",
     text: "プロジェクト情報を編集する",
-    logo: <Icon name="edit" />,
+    logo: <Icon name="edit" size={projectActionIconSize} />,
     onClick: onEdit,
   },
   project?.isArchived
     ? {
         key: "reopen",
         text: "プロジェクトを元に戻す",
-        logo: <Icon name="undo" />,
+        logo: <Icon name="undo" size={projectActionIconSize} />,
         danger: true,
         onClick: onReopen,
       }
     : {
         key: "archive",
         text: "プロジェクトをアーカイブする",
-        logo: <Icon name="archive" />,
+        logo: <Icon name="archive" size={projectActionIconSize} />,
         danger: true,
         onClick: onArchive,
       },
@@ -165,7 +168,13 @@ export default function Project() {
               </h1>
               <div className={styles.menu}>
                 <PopupMenu
-                  trigger={<Icon name="menu" interactive="pulse" />}
+                  trigger={
+                    <Icon
+                      name="menu"
+                      interactive="pulse"
+                      size={projectMenuIconSize}
+                    />
+                  }
                   actions={actions}
                 />
               </div>

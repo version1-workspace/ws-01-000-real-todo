@@ -1,14 +1,14 @@
 "use client"
-import React, { createContext, useState, useRef } from "react"
 import {
-  IoCloseOutline as Close,
-  IoCheckmarkCircleOutline as Success,
-  IoInformationCircleOutline as Info,
-  IoAlertCircleOutline as Error,
-} from "react-icons/io5"
+  X as Close,
+  CircleAlert as Error,
+  Info,
+  CircleCheck as Success,
+} from "lucide-react"
+import React, { createContext, useRef, useState } from "react"
 import { Position } from "./config"
-import { capitalFirstChar } from "./util"
 import styles from "./index.module.css"
+import { capitalFirstChar } from "./util"
 
 interface Config {
   variant: "info" | "success" | "error"
