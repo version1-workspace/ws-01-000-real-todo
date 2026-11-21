@@ -1,9 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import { refreshTokenPolicy } from "../../config/auth.js";
-import { tokenCookie } from "./token.js";
+import { createCookieOptions, tokenCookie } from "./token.js";
 
 const cookieOptions = {
 	httpOnly: true,
+	sameSite: "lax",
 	secure: false,
 };
 
@@ -19,6 +20,14 @@ function createMockRes() {
 }
 
 describe("tokenCookie", () => {
+	it("本番では HttpOnly、SameSite=Lax、Secure を維持する", () => {
+		expect(createCookieOptions(true)).toEqual({
+			httpOnly: true,
+			sameSite: "lax",
+			secure: true,
+		});
+	});
+
 	describe("getRefreshToken", () => {
 		it("cookie から refreshToken を取得する", () => {
 			const req = createMockReq({ refreshToken: "rt-456" });

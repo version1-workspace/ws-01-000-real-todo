@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { Client } from "./client"
+import { apiClient, Client } from "./client"
 
 const jsonResponse = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -18,7 +18,7 @@ const deferred = <T>() => {
 
 const createClient = (onAuthExpired = vi.fn()) =>
   new Client({
-    baseURL: "http://localhost:7000/api/v1",
+    baseURL: "/api/v1",
     timeout: 1000,
     withCredentials: true,
     headers: {},
@@ -49,6 +49,26 @@ describe("apiClient", () => {
 
     expect(client.getAccessToken()).toBe("access-token")
     expect(anotherClient.getAccessToken()).toBe("")
+  })
+
+  it("ブラウザ API 呼び出しの timeout は 15 秒である", () => {
+    expect(apiClient.timeout).toBe(15_000)
+  })
+
+  it("相対 API URL に query と Orval の path を保持する", async () => {
+    const client = createClient()
+    const fetchMock = vi.fn(async () => jsonResponse({ data: {} }))
+    vi.stubGlobal("fetch", fetchMock)
+
+    await client.request("/users/projects/a%2Fb", {
+      method: "GET",
+      params: { status: ["active", "archived"], page: 2 },
+    })
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/v1/users/projects/a%2Fb?status=active&status=archived&page=2",
+      expect.any(Object),
+    )
   })
 
   it("同時 401 では refresh を 1 回だけ行い、元リクエストを再試行する", async () => {

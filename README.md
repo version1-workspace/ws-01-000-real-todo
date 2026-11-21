@@ -20,10 +20,13 @@ https://version1-real-todo.netlify.app
 
 ```
 cd frontend
+cp .env.example .env.local
 npm install
 npm run generate:api
 npm run dev
 ```
+
+`frontend/.env.local` の `API_BASE_URL` には `http://localhost:3001/api/v1` を設定します。本番の Netlify では同じ名前をサーバーランタイム環境変数に設定してください。この値はブラウザに公開されず、フロントエンドは同一オリジンの `/api/v1/*` 経由で API を呼び出します。
 
 ### Backend
 
