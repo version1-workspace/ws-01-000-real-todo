@@ -5,14 +5,15 @@ const COOKIE_KEYS = {
 	REFRESH_TOKEN: "refreshToken",
 } as const;
 
-const isProduction = process.env.NODE_ENV === "production" || process.env.NEXT_PUBLIC_APP_ENV === "production";
-
-const cookieOptions = {
+export const createCookieOptions = (isProduction: boolean) => ({
 	httpOnly: true,
-	...(isProduction
-		? { secure: true, sameSite: "none" as const }
-		: { secure: false }),
-};
+	sameSite: "lax" as const,
+	secure: isProduction,
+});
+
+const cookieOptions = createCookieOptions(
+	process.env.NODE_ENV === "production" || process.env.NEXT_PUBLIC_APP_ENV === "production",
+);
 
 export const tokenCookie = {
 	getRefreshToken(req: Request): string | undefined {

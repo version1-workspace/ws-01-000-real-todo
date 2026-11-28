@@ -102,7 +102,13 @@ export class Client {
     const normalizedBaseUrl = this.baseURL.endsWith("/")
       ? this.baseURL
       : `${this.baseURL}/`
-    const requestUrl = new URL(normalizedUrl, normalizedBaseUrl)
+    const isAbsoluteBaseUrl = /^https?:\/\//.test(normalizedBaseUrl)
+    const requestUrl = new URL(
+      normalizedUrl,
+      isAbsoluteBaseUrl
+        ? normalizedBaseUrl
+        : new URL(normalizedBaseUrl, window.location.origin),
+    )
 
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
@@ -121,7 +127,9 @@ export class Client {
       })
     }
 
-    return requestUrl.toString()
+    return isAbsoluteBaseUrl
+      ? requestUrl.toString()
+      : `${requestUrl.pathname}${requestUrl.search}`
   }
 
   private isRefreshableRequest(url: string) {
@@ -250,11 +258,9 @@ export class Client {
   }
 }
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:7000"
-
 export const apiClient = new Client({
-  baseURL: `${baseURL}/api/v1`,
-  timeout: 1000,
+  baseURL: "/api/v1",
+  timeout: 15_000,
   withCredentials: true,
   headers: {},
 })

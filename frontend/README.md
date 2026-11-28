@@ -9,8 +9,16 @@ API サーバーは [../api/node](../api/node) にあります。フロントエ
 ```bash
 cd ../api/node
 npm install
-PORT=7000 npm run dev
+PORT=3001 npm run dev
 ```
+
+フロントエンドはブラウザから API へ直接接続せず、`/api/v1/*` の Next.js Route Handler を経由します。`frontend/.env.local` に、完全な API ベース URL（`/api/v1` を含む）を設定してください。
+
+```bash
+API_BASE_URL=http://localhost:3001/api/v1
+```
+
+Netlify では `API_BASE_URL` をサイトのサーバーランタイム環境変数として設定します。`NEXT_PUBLIC_API_URL` は使用しません。
 
 ## API Client
 
